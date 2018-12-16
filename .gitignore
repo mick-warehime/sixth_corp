@@ -1,0 +1,8 @@
+*.DS_Store
+*cache*
+*coverage_html*
+*htmlcov*
+.coverage
+.idea
+.mypy_cache/
+logging/

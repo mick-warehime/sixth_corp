@@ -1,0 +1,17 @@
+language: python
+python:
+  - 3.6
+install:
+  - pip install -r requirements.txt
+script:
+
+# style enforcement - (exclude views because pyqt output is verbose/unwieldy/not our code)
+  - flake8 src --exclude src/test
+
+## static type checking
+  - mypy -p src --ignore-missing-imports
+
+## run unit tests and coverage
+  - export PYTHONPATH=$PYTHONPATH:src
+  - pytest --cov-report term-missing --cov-config .coveragerc --cov=src src/tests/
+
