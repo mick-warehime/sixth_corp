@@ -36,7 +36,7 @@ I use 3 run configurations
 
 #### Unitests Only (fast)
 
-* Target: [path to project]/sixth_corp/src/tests
+* Target: [path to project]/sixth_corp/src
 * Additional Arguments: -p "*_test.py"
 * Working Directory: [path to project]/sixth_corp/src
 

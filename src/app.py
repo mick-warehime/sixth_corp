@@ -1,5 +1,7 @@
-from constants import VERSION
 from constants import LOG_LEVEL
+from constants import LOGGING_FILE
+from constants import VERSION
+
 import logging
 import os
 import sys
@@ -23,7 +25,7 @@ def make_log(log_file: str) -> None:
 
 
 def initialize_logging() -> None:
-    log_file = 'logging/game.log'
+    log_file = LOGGING_FILE
     clear_log(log_file)
 
     fmt = '%(asctime)s {} [%(levelname)s]  %(message)s'.format(VERSION)

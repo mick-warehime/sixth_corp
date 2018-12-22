@@ -2,10 +2,11 @@ from events import Event
 from typing import Dict
 import csv
 import logging
+from constants import PREFERENCES_FILE
 
 
 class Keybindings(object):
-    preference_file = 'data/bindings.pref'
+    preference_file = PREFERENCES_FILE
     binding_field = 'binding'
     key_field = 'key'
 
