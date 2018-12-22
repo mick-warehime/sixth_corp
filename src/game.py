@@ -6,9 +6,10 @@ from controller import Controller
 from launch_controller import LaunchController
 from settings_controller import SettingsController
 from keyboard import Keyboard
-import sys
 import constants
+import logging
 import pygame
+import sys
 
 
 class GameState(Enum):
@@ -33,7 +34,8 @@ class Game(EventListener):
 
         self.keyboard = Keyboard(self.event_manager)
 
-        self.state = GameState.LOAD_SCREEN
+        self.set_current_state(GameState.LOAD_SCREEN)
+
         self.controller = LaunchController(self.event_manager, self.screen)
 
     def notify(self, event: Event) -> None:
@@ -60,11 +62,15 @@ class Game(EventListener):
     def open_settings(self) -> None:
         if self.state == GameState.SETTINGS:
             return
-        self.state = GameState.SETTINGS
+        self.set_current_state(GameState.SETTINGS)
         self.controller = SettingsController(self.event_manager, self.screen)
 
     def close_settings(self) -> None:
         if self.state == GameState.LOAD_SCREEN:
             return
-        self.state = GameState.LOAD_SCREEN
+        self.set_current_state(GameState.LOAD_SCREEN)
         self.controller = LaunchController(self.event_manager, self.screen)
+
+    def set_current_state(self, state: GameState) -> None:
+        logging.info('GAME STATE: Changing state from: {} to {}'.format(self.state, state))
+        self.state = state
