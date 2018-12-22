@@ -6,7 +6,7 @@ install:
 script:
 
 # style enforcement - (exclude views because pyqt output is verbose/unwieldy/not our code)
-  - flake8 src --exclude src/test
+  - flake8 src
 
 ## static type checking
   - mypy -p src --ignore-missing-imports

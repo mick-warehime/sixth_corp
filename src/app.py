@@ -1,9 +1,10 @@
+from constants import VERSION
+from constants import LOG_LEVEL
 import logging
 import os
 import sys
 
-VERSION = '0.0'
-LOG_LEVEL = 'INFO'
+from game import Game
 
 
 def clear_log(log_file: str) -> None:
@@ -22,7 +23,7 @@ def make_log(log_file: str) -> None:
 
 
 def initialize_logging() -> None:
-    log_file = 'src/logging/game.log'
+    log_file = 'logging/game.log'
     clear_log(log_file)
 
     fmt = '%(asctime)s {} [%(levelname)s]  %(message)s'.format(VERSION)
@@ -42,4 +43,7 @@ def initialize_logging() -> None:
 if __name__ == '__main__':
     initialize_logging()
     logging.info('Start Application')
+
+    g = Game()
+    g.run()
     sys.exit()
