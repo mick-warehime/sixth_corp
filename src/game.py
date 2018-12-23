@@ -76,6 +76,5 @@ class Game(EventListener):
             self.controller = SettingsController(self.event_manager, self.screen)
 
     def set_next_scene(self) -> None:
-        scene_controller = self.scene_machine.build_scene(
+        self.controller = self.scene_machine.build_scene(
             self.world, self.event_manager, self.screen)
-        self.controller = scene_controller
