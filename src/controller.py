@@ -22,3 +22,8 @@ class Controller(EventListener):
 
     def handle_input(self, input_event: InputEvent) -> None:
         raise NotImplementedError('subclasses must implement handle_input()')
+
+    def unregister(self) -> None:
+        self.event_manager.unregister(self.view)
+        self.event_manager.unregister(self.model)
+        self.event_manager.unregister(self)

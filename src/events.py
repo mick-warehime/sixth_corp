@@ -60,6 +60,8 @@ class EventManager(object):
 
     def unregister(self, l: Listener) -> None:
         if l in self.listeners.keys():
+            logging.debug('unregistered listener {0} {1}'.format(
+                len(self.listeners), l))
             del self.listeners[l]
 
     def post(self, event: Event) -> None:
@@ -79,3 +81,6 @@ class EventListener(Listener):
 
     def notify(self, event: Event) -> None:
         pass
+
+    def unregister(self) -> None:
+        self.event_manager.unregister(self)
