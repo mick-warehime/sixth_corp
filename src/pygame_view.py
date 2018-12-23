@@ -1,7 +1,8 @@
-import pygame
+from abstract_view import View
 from events import Event
 from event_manager import EventManager
-from abstract_view import View
+from typing import List
+import pygame
 
 
 class PygameView(View):
@@ -11,7 +12,7 @@ class PygameView(View):
         self.screen = screen
         pygame.display.set_caption('6th Corp')
         self.smallfont = pygame.font.Font(None, 40)
-        self.texts = []
+        self.texts: List[str] = None
 
     def notify(self, event: Event) -> None:
         if event == Event.TICK:
