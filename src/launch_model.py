@@ -1,4 +1,4 @@
-from event_manager import EventManager
+from events import EventManager
 from abstract_model import Model
 
 

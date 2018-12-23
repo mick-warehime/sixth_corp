@@ -1,9 +1,9 @@
-from events import Event
-from events import InputEvent
-from event_listener import EventListener
-from event_manager import EventManager
 from abstract_model import Model
 from abstract_view import View
+from events import Event
+from events import InputEvent
+from events import EventListener
+from events import EventManager
 from pygame import Surface
 
 

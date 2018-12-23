@@ -9,7 +9,7 @@ import pygame
 
 class KeyboardTest(TestCase):
 
-    @patch('event_manager.EventManager')
+    @patch('events.EventManager')
     def get_keyboard(self, EventManager: Any) -> None:
         self.keyboard = Keyboard(EventManager())
 

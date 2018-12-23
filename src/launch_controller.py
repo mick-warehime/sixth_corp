@@ -1,5 +1,5 @@
 from controller import Controller
-from event_manager import EventManager
+from events import EventManager
 from events import Event
 from events import InputEvent
 from launch_model import LaunchModel
