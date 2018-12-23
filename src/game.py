@@ -3,11 +3,10 @@ from events import Event
 from event_listener import EventListener
 from event_manager import EventManager
 from controller import Controller
+from keyboard import Keyboard
 from launch_controller import LaunchController
 from settings_controller import SettingsController
-from keyboard import Keyboard
 import constants
-import logging
 import pygame
 import sys
 
@@ -17,11 +16,19 @@ class GameState(Enum):
     LOAD_SCREEN = 2
 
 
+# TODO(mick): add scene_machine(world) -> scene
+# TODO(mick): add game state (decision scene)
+# TODO(mick): add decision scene
+# TODO(mick): add game state (combat scene)
+# TODO(mick): add combat scene
+# TODO(mick): create player state
+# TODO(mick): create world state
+
+
 class Game(EventListener):
     keyboard: Keyboard = None
     event_manager: EventManager = None
     controller: Controller = None
-    state: GameState = None
 
     def __init__(self) -> None:
         self.event_manager = EventManager()
@@ -34,9 +41,8 @@ class Game(EventListener):
 
         self.keyboard = Keyboard(self.event_manager)
 
-        self.set_current_state(GameState.LOAD_SCREEN)
-
         self.controller = LaunchController(self.event_manager, self.screen)
+
 
     def notify(self, event: Event) -> None:
         if event == Event.QUIT:
@@ -45,10 +51,8 @@ class Game(EventListener):
         elif event == Event.TICK:
             # limit the redraw speed to 30 frames per second
             self.clock.tick(30)
-        elif event == Event.OPEN_SETTINGS:
-            self.open_settings()
-        elif event == Event.CLOSE_SETTINGS:
-            self.close_settings()
+        elif event == Event.SETTINGS:
+            self.toggle_settigns()
 
     def run(self) -> None:
         while True:
@@ -59,18 +63,8 @@ class Game(EventListener):
         pygame.init()
         pygame.font.init()
 
-    def open_settings(self) -> None:
-        if self.state == GameState.SETTINGS:
-            return
-        self.set_current_state(GameState.SETTINGS)
-        self.controller = SettingsController(self.event_manager, self.screen)
-
-    def close_settings(self) -> None:
-        if self.state == GameState.LOAD_SCREEN:
-            return
-        self.set_current_state(GameState.LOAD_SCREEN)
-        self.controller = LaunchController(self.event_manager, self.screen)
-
-    def set_current_state(self, state: GameState) -> None:
-        logging.info('GAME STATE: Changing state from: {} to {}'.format(self.state, state))
-        self.state = state
+    def toggle_settigns(self) -> None:
+        if isinstance(self.controller, SettingsController):
+            self.controller = LaunchController(self.event_manager, self.screen)
+        else:
+            self.controller = SettingsController(self.event_manager, self.screen)

@@ -1,4 +1,6 @@
+import logging
 from controller import Controller
+from events import InputEvent
 from events import Event
 from event_manager import EventManager
 from settings_model import SettingsModel
@@ -13,5 +15,6 @@ class SettingsController(Controller):
         self.model = SettingsModel(self.event_manager)
         self.view = SettingsView(self.event_manager, self.screen)
 
-    def handle_input(self, event: Event) -> None:
-        pass
+    def handle_input(self, input_event: InputEvent) -> None:
+        if input_event.key == 'q':
+            self.event_manager.post(Event.SETTINGS)

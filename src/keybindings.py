@@ -56,8 +56,6 @@ class Keybindings(object):
 
     @classmethod
     def event_for_binding(self, binding: Event) -> Event:
-        if binding == Event.CLOSE_SETTINGS:
-            return Event.CLOSE_SETTINGS
-        elif binding == Event.OPEN_SETTINGS:
-            return Event.OPEN_SETTINGS
+        if binding == Event.SETTINGS:
+            return Event.SETTINGS
         return Event.NONE

@@ -11,6 +11,6 @@ class SettingsView(PygameView):
     def render(self) -> None:
         self.screen.fill((0, 0, 0))
         somewords = self.smallfont.render(
-            'Settings! (press y)', True, (0, 255, 255))
+            'Settings! (q to return)', True, (0, 255, 255))
         self.screen.blit(somewords, (350, 250))
         pygame.display.flip()

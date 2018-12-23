@@ -1,3 +1,4 @@
+import logging
 import pygame
 from events import Event
 from events import InputEvent
@@ -34,6 +35,9 @@ class Keyboard(EventListener):
     def handle_keypress(self, key_name: str) -> None:
         if self.get_binding(key_name) != Event.NONE:
             self.post_bound_event(key=key_name)
+        else:
+            input_event = InputEvent(event=Event.KEYPRESS, key=key_name)
+            self.event_manager.post(input_event)
 
     def handle_mouse_click(self) -> None:
         mouse_event = self.mouse_event()

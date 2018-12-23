@@ -9,10 +9,10 @@ class Event(Enum):
     KEYDOWN = 'KEYDOWN'
     KEYUP = 'KEYUP'
     MOUSE_CLICK = 'MOUSE_CLICK'
+    KEYPRESS = 'KEYPRESS'
 
     # bindable events
-    OPEN_SETTINGS = 'OPEN_SETTINGS'
-    CLOSE_SETTINGS = 'CLOSE_SETTINGS'
+    SETTINGS = 'SETTINGS'
 
     # comparing enums gives wrong result without this
     # has to do with this file being imported twice
