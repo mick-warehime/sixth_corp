@@ -71,8 +71,8 @@ class Game(EventListener):
 
     def toggle_settings(self) -> None:
         if isinstance(self.controller, SettingsController):
+            self.remove_controller(self.controller)
             self.controller = self.prev_controller
-            del self.prev_controller
         else:
             self.prev_controller = self.controller
             self.controller = SettingsController(self.event_manager, self.screen)
@@ -81,5 +81,10 @@ class Game(EventListener):
         self.controller = LaunchController(self.event_manager, self.screen)
 
     def set_next_scene(self) -> None:
+        self.remove_controller(self.controller)
         self.controller = self.scene_machine.build_scene(
             self.world, self.event_manager, self.screen)
+
+    def remove_controller(self, controller: Controller) -> None:
+        self.controller.unregister()
+        del controller
