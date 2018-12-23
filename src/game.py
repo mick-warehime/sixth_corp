@@ -17,6 +17,7 @@ class GameState(Enum):
     SETTINGS = 1
     LOAD_SCREEN = 2
 
+
 # TODO(mick): add decision scene
 # TODO(mick): add combat scene
 # TODO(mick): create player state
@@ -39,12 +40,13 @@ class Game(EventListener):
 
         self.keyboard = Keyboard(self.event_manager)
 
-        # Change controller to change what is shown on the screen.
-        self.controller = LaunchController(self.event_manager, self.screen)
-        self.prev_controller = None
-
         self.scene_machine = SceneMachine()
         self.world = World()
+
+        # Change controller to change what is shown on the screen.
+        self.controller = None
+        self.prev_controller = None
+        self.new_game()
 
     def notify(self, event: Event) -> None:
         if event == Event.QUIT:
@@ -75,7 +77,9 @@ class Game(EventListener):
             self.prev_controller = self.controller
             self.controller = SettingsController(self.event_manager, self.screen)
 
+    def new_game(self) -> None:
+        self.controller = LaunchController(self.event_manager, self.screen)
+
     def set_next_scene(self) -> None:
-        scene_controller = self.scene_machine.build_scene(
+        self.controller = self.scene_machine.build_scene(
             self.world, self.event_manager, self.screen)
-        self.controller = scene_controller
