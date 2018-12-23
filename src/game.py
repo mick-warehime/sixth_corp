@@ -1,4 +1,5 @@
 from enum import Enum
+
 from events import Event
 from events import EventListener
 from events import EventManager
@@ -22,7 +23,6 @@ class GameState(Enum):
 # TODO(mick): add combat scene
 # TODO(mick): create player state
 
-
 class Game(EventListener):
     keyboard: Keyboard = None
     event_manager: EventManager = None
@@ -32,7 +32,7 @@ class Game(EventListener):
     def __init__(self) -> None:
         self.event_manager = EventManager()
         super(Game, self).__init__(self.event_manager)
-        self.inialize_pygame()
+        self.initialize_pygame()
 
         self.clock: pygame.Clock = pygame.time.Clock()
         self.screen: pygame.Surface = pygame.display.set_mode(
@@ -54,7 +54,8 @@ class Game(EventListener):
             sys.exit()
         elif event == Event.TICK:
             # limit the redraw speed to 30 frames per second
-            self.clock.tick(30)
+
+            self.clock.tick(constants.FRAMES_PER_SECOND)
         elif event == Event.SETTINGS:
             self.toggle_settings()
         elif event == Event.NEW_SCENE:
@@ -64,7 +65,7 @@ class Game(EventListener):
         while True:
             self.event_manager.post(Event.TICK)
 
-    def inialize_pygame(self) -> None:
+    def initialize_pygame(self) -> None:
         pygame.mixer.pre_init(44100, -16, 4, 2048)
         pygame.init()
         pygame.font.init()
