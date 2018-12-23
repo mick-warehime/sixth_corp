@@ -1,11 +1,11 @@
+from events import Event
 import logging
 from listener import Listener
-from events import Event
+from weakref import WeakKeyDictionary
 
 
 class EventManager(object):
     def __init__(self) -> None:
-        from weakref import WeakKeyDictionary
         self.listeners: WeakKeyDictionary = WeakKeyDictionary()
 
     def register(self, l: Listener) -> None:
