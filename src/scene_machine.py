@@ -1,6 +1,6 @@
 from world import World
 from scene_controller import SceneController
-from event_manager import EventManager
+from events import EventManager
 from pygame import Surface
 
 

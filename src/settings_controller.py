@@ -1,6 +1,6 @@
 from controller import Controller
 from events import InputEvent
-from event_manager import EventManager
+from events import EventManager
 from settings_model import SettingsModel
 from settings_view import SettingsView
 from pygame import Surface

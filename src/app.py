@@ -1,12 +1,10 @@
 from constants import LOG_LEVEL
 from constants import LOGGING_FILE
 from constants import VERSION
-
+from game import Game
 import logging
 import os
 import sys
-
-from game import Game
 
 
 def clear_log(log_file: str) -> None:

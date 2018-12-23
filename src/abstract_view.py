@@ -1,4 +1,4 @@
-from event_listener import EventListener
+from events import EventListener
 
 
 class View(EventListener):

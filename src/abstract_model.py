@@ -1,6 +1,6 @@
 from events import Event
-from event_listener import EventListener
-from event_manager import EventManager
+from events import EventListener
+from events import EventManager
 
 
 class Model(EventListener):
