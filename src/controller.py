@@ -8,12 +8,12 @@ from pygame import Surface
 
 
 class Controller(EventListener):
-    view: View = None
-    model: Model = None
 
     def __init__(self, event_manager: EventManager, screen: Surface) -> None:
         super(Controller, self).__init__(event_manager)
         self.screen = screen
+        self.view: View = None
+        self.model: Model = None
 
     def notify(self, event: Event) -> None:
         # handle user inputs/ changes view/model
