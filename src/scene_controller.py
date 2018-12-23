@@ -1,7 +1,6 @@
 from controller import Controller
 from events import InputEvent
 from event_manager import EventManager
-import logging
 from pygame import Surface
 from scene_model import SceneModel
 from scene_view import SceneView

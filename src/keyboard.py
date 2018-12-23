@@ -1,4 +1,3 @@
-import logging
 import pygame
 from events import Event
 from events import InputEvent

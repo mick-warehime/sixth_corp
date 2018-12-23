@@ -33,13 +33,13 @@ class KeyboardTest(TestCase):
         self.keyboard.event_manager.post.never_called()
 
     def test_bound_key_posts_bound_event(self) -> None:
-        self.keyboard.get_binding = MagicMock(return_value=Event.OPEN_SETTINGS)
+        self.keyboard.get_binding = MagicMock(return_value=Event.SETTINGS)
         event = [pygame.event.Event(pygame.KEYDOWN, {'unicode': 'x', 'key': 97})]
         self.keyboard.get_pygame_events = MagicMock(return_value=event)
 
         self.keyboard.notify(Event.TICK)
 
-        self.keyboard.event_manager.post.assert_called_once_with(Event.OPEN_SETTINGS)
+        self.keyboard.event_manager.post.assert_called_once_with(Event.SETTINGS)
 
     def test_mouse_click_posts_mouse_event(self) -> None:
         mouse = (460, 680)

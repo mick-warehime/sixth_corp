@@ -1,4 +1,3 @@
-import logging
 from controller import Controller
 from events import InputEvent
 from events import Event

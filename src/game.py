@@ -43,7 +43,6 @@ class Game(EventListener):
 
         self.controller = LaunchController(self.event_manager, self.screen)
 
-
     def notify(self, event: Event) -> None:
         if event == Event.QUIT:
             pygame.quit()
