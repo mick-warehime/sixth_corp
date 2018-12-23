@@ -1,4 +1,5 @@
 from controller import Controller
+from events import Event
 from events import InputEvent
 from event_manager import EventManager
 from pygame import Surface
@@ -14,4 +15,5 @@ class SceneController(Controller):
         self.view = SceneView(self.event_manager, self.screen, scene_name)
 
     def handle_input(self, input_event: InputEvent) -> None:
-        pass
+        if input_event.key == 'n':
+            self.event_manager.post(Event.NEW_SCENE)

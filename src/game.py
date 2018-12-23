@@ -6,6 +6,8 @@ from controller import Controller
 from keyboard import Keyboard
 from launch_controller import LaunchController
 from settings_controller import SettingsController
+from scene_machine import SceneMachine
+from world import World
 import constants
 import pygame
 import sys
@@ -15,20 +17,16 @@ class GameState(Enum):
     SETTINGS = 1
     LOAD_SCREEN = 2
 
-
-# TODO(mick): add scene_machine(world) -> scene
-# TODO(mick): add game state (decision scene)
 # TODO(mick): add decision scene
-# TODO(mick): add game state (combat scene)
 # TODO(mick): add combat scene
 # TODO(mick): create player state
-# TODO(mick): create world state
 
 
 class Game(EventListener):
     keyboard: Keyboard = None
     event_manager: EventManager = None
     controller: Controller = None
+    prev_controller: Controller = None
 
     def __init__(self) -> None:
         self.event_manager = EventManager()
@@ -41,7 +39,12 @@ class Game(EventListener):
 
         self.keyboard = Keyboard(self.event_manager)
 
+        # Change controller to change what is shown on the screen.
         self.controller = LaunchController(self.event_manager, self.screen)
+        self.prev_controller = None
+
+        self.scene_machine = SceneMachine()
+        self.world = World()
 
     def notify(self, event: Event) -> None:
         if event == Event.QUIT:
@@ -51,7 +54,9 @@ class Game(EventListener):
             # limit the redraw speed to 30 frames per second
             self.clock.tick(30)
         elif event == Event.SETTINGS:
-            self.toggle_settigns()
+            self.toggle_settings()
+        elif event == Event.NEW_SCENE:
+            self.set_next_scene()
 
     def run(self) -> None:
         while True:
@@ -62,8 +67,15 @@ class Game(EventListener):
         pygame.init()
         pygame.font.init()
 
-    def toggle_settigns(self) -> None:
+    def toggle_settings(self) -> None:
         if isinstance(self.controller, SettingsController):
-            self.controller = LaunchController(self.event_manager, self.screen)
+            self.controller = self.prev_controller
+            del self.prev_controller
         else:
+            self.prev_controller = self.controller
             self.controller = SettingsController(self.event_manager, self.screen)
+
+    def set_next_scene(self) -> None:
+        scene_controller = self.scene_machine.build_scene(
+            self.world, self.event_manager, self.screen)
+        self.controller = scene_controller

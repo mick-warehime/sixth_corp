@@ -8,10 +8,11 @@ class SceneView(PygameView):
                  screen: pygame.Surface, scene_name: str) -> None:
         super(SceneView, self).__init__(event_manager, screen)
         self.name = scene_name
+        self.texts = [
+            'Hark! Scene {}'.format(scene_name),
+            'N: Continue',
+            'X: Settings',
+            'Esc: Quit']
 
     def render(self) -> None:
-        self.screen.fill((0, 0, 0))
-        scene_text = 'Scene: {}'.format(self.name)
-        somewords = self.smallfont.render(scene_text, True, (0, 255, 255))
-        self.screen.blit(somewords, (350, 250))
-        pygame.display.flip()
+        self.render_text()

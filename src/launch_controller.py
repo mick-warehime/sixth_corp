@@ -1,9 +1,9 @@
 from controller import Controller
 from event_manager import EventManager
+from events import Event
 from events import InputEvent
 from launch_model import LaunchModel
 from launch_view import LaunchView
-import logging
 from pygame import Surface
 
 
@@ -15,4 +15,5 @@ class LaunchController(Controller):
         self.view = LaunchView(self.event_manager, self.screen)
 
     def handle_input(self, input_event: InputEvent) -> None:
-        logging.debug('pressed button {}'.format(input_event))
+        if input_event.key == 's':
+            self.event_manager.post(Event.NEW_SCENE)
