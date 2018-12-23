@@ -20,5 +20,5 @@ class Controller(EventListener):
         if isinstance(event, InputEvent):
             self.handle_input(event)
 
-    def handle_input(self, event: Event) -> None:
+    def handle_input(self, input_event: InputEvent) -> None:
         raise NotImplementedError('subclasses must implement handle_input()')

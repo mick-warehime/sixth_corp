@@ -9,7 +9,7 @@ import csv
 class KeybindingsTest(TestCase):
 
     def default_binding(self) -> Dict[str, Event]:
-        return {'y': Event.OPEN_SETTINGS}
+        return {'y': Event.SETTINGS}
 
     def load_bindings(self, bindings: Dict[str, Event]) -> None:
         self.preference_file = tempfile.NamedTemporaryFile(mode='w')
@@ -31,7 +31,7 @@ class KeybindingsTest(TestCase):
 
         self.assertEqual(
             self.keybindings.get_binding('y'),
-            Event.OPEN_SETTINGS)
+            Event.SETTINGS)
 
     def test_save_settings(self) -> None:
         self.load_bindings(self.default_binding())
@@ -44,20 +44,20 @@ class KeybindingsTest(TestCase):
         self.keybindings = Keybindings()
         self.keybindings.preference_file = new_prefs_file.name
         self.keybindings.load()
-        self.assertEqual(self.keybindings.get_binding('y'), Event.OPEN_SETTINGS)
+        self.assertEqual(self.keybindings.get_binding('y'), Event.SETTINGS)
 
     def test_update_settings(self) -> None:
         self.load_bindings(self.default_binding())
-        self.keybindings.update_binding('y', Event.CLOSE_SETTINGS)
+        self.keybindings.update_binding('y', Event.NONE)
 
-        self.assertEqual(self.keybindings.get_binding('y'), Event.CLOSE_SETTINGS)
+        self.assertEqual(self.keybindings.get_binding('y'), Event.NONE)
 
     def test_update_settings_are_saved(self) -> None:
         self.load_bindings(self.default_binding())
-        self.keybindings.update_binding('y', Event.CLOSE_SETTINGS)
+        self.keybindings.update_binding('y', Event.NONE)
 
         # ensure key change persists through saving
         self.keybindings = Keybindings()
         self.keybindings.preference_file = self.preference_file.name
         self.keybindings.load()
-        self.assertEqual(self.keybindings.get_binding('y'), Event.CLOSE_SETTINGS)
+        self.assertEqual(self.keybindings.get_binding('y'), Event.NONE)

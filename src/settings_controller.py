@@ -1,5 +1,5 @@
 from controller import Controller
-from events import Event
+from events import InputEvent
 from event_manager import EventManager
 from settings_model import SettingsModel
 from settings_view import SettingsView
@@ -13,5 +13,5 @@ class SettingsController(Controller):
         self.model = SettingsModel(self.event_manager)
         self.view = SettingsView(self.event_manager, self.screen)
 
-    def handle_input(self, event: Event) -> None:
+    def handle_input(self, input_event: InputEvent) -> None:
         pass
