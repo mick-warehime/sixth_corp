@@ -86,5 +86,5 @@ class Game(EventListener):
             self.world, self.event_manager, self.screen)
 
     def remove_controller(self, controller: Controller) -> None:
-        self.controller.unregister()
+        controller.unregister()
         del controller
