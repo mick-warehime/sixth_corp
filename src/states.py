@@ -5,8 +5,9 @@ from enum import Enum
 
 
 class State(Enum):
-    DEAD = 'dead'
+    """Label for basic state condition requiring no internal logic to check."""
     ON_FIRE = 'on fire'
+    INANIMATE = 'inanimate'
 
     def __str__(self):
         return self.value
@@ -45,10 +46,17 @@ class HasState(object):
         self._attributes[attribute] = value
 
 
-class Condition(metaclass=abc.ABC):
+class Condition(metaclass=abc.ABCMeta):
     """Represents a boolean statement that can be tested on HasState objects.
     """
 
     @abc.abstractmethod
-    def of(self, target: HasState) -> bool:
+    def check(self, target: HasState) -> bool:
         """Evaluate this on a HasState object to determine condition value."""
+
+
+class IsDead(Condition):
+
+    @classmethod
+    def check(cls, target: HasState) -> bool:
+        return not target.get_attribute(Attribute.HEALTH)
