@@ -16,8 +16,14 @@ class Condition(metaclass=abc.ABCMeta):
             return NotImplemented
         return _And(self, other)
 
+    def __or__(self, other):
+        if not isinstance(other, Condition):
+            return NotImplemented
+        return _Or(self, other)
+
 
 class _And(Condition):
+    """Conditional AND of one or more Conditions."""
 
     def __init__(self, *conditions: Condition):
         all_conds = set()
@@ -29,6 +35,21 @@ class _And(Condition):
 
     def check(self, target: Stateful):
         return all(c.check(target) for c in self._conditions)
+
+
+class _Or(Condition):
+    """Conditional OR of one or more Conditions."""
+
+    def __init__(self, *conditions: Condition):
+        all_conds = set()
+        for cond in (c for c in conditions if isinstance(c, _Or)):
+            all_conds.update(cond._conditions)
+
+        all_conds.update(conditions)
+        self._conditions = all_conds
+
+    def check(self, target: Stateful):
+        return any(c.check(target) for c in self._conditions)
 
 
 class HasState(Condition):
