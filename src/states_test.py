@@ -1,6 +1,7 @@
 """Tests for states.py"""
 
-from states import Stateful, Attribute, IsDead, State, HasState
+from states import Stateful, Attribute, State
+from conditions import IsDead
 
 
 def test_alive_to_dead():
@@ -18,12 +19,3 @@ def test_str_methods():
     assert str(Attribute.HEALTH) == 'health'
 
 
-def test_condition_and():
-    stateful = Stateful()
-
-    cond = HasState(State.ON_FIRE) & IsDead()
-    assert not cond.check(stateful)
-    stateful.set_state(State.ON_FIRE, True)
-    assert cond.check(stateful)
-
-    assert not (cond & HasState(State.INANIMATE)).check(stateful)
