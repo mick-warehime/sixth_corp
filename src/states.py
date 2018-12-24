@@ -6,7 +6,7 @@ from enum import Enum
 class State(Enum):
     """Label for basic state condition requiring no internal logic to check."""
     ON_FIRE = 'on fire'
-    INANIMATE = 'inanimate'
+    FROZEN = 'frozen'
 
     def __str__(self):
         return self.value

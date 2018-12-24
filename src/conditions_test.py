@@ -10,7 +10,7 @@ def test_condition_and():
     stateful.set_state(State.ON_FIRE, True)
     assert cond.check(stateful)
 
-    assert not (cond & HasState(State.INANIMATE)).check(stateful)
+    assert not (cond & HasState(State.FROZEN)).check(stateful)
 
 
 def test_condition_or():
@@ -21,8 +21,8 @@ def test_condition_or():
     stateful.set_attribute(Attribute.HEALTH, 1)
     assert not cond.check(stateful)
 
-    stateful.set_state(State.INANIMATE, True)
-    assert (cond | HasState(State.INANIMATE)).check(stateful)
+    stateful.set_state(State.FROZEN, True)
+    assert (cond | HasState(State.FROZEN)).check(stateful)
 
 
 def test_condition_not():
