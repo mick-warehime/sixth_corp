@@ -1,7 +1,8 @@
-from world import World
-from scene_controller import SceneController
+from decision_scene_controller import DecisionSceneController
+from decision_scene_option import DecisionOption
 from events import EventManager
 from pygame import Surface
+from world import World
 
 
 class SceneMachine(object):
@@ -13,7 +14,13 @@ class SceneMachine(object):
             self,
             world: World,
             event_manager: EventManager,
-            screen: Surface) -> SceneController:
-        next_scene_name = 'Scene: {}'.format(world.scene_count)
-        world.scene_count += 1
-        return SceneController(event_manager, screen, next_scene_name)
+            screen: Surface) -> DecisionSceneController:
+        options = {}
+        for i in range(3):
+            scene_name = '{}'.format(i)
+            options[scene_name] = DecisionOption(world.scene_count)
+            world.scene_count += 1
+
+        main_text = 'scene {}: select next scene'.format(world.current_scene)
+
+        return DecisionSceneController(event_manager, screen, world, main_text, options)
