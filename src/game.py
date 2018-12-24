@@ -24,6 +24,7 @@ class GameState(Enum):
 # TODO(mick): create player state
 
 class Game(EventListener):
+    """Loads scenes, stores world, and handles framerate and quit event."""
     keyboard: Keyboard = None
     event_manager: EventManager = None
     controller: Controller = None
