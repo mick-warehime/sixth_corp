@@ -15,4 +15,3 @@ echo "done."
 echo -n "unit tests:"
 export PYTHONPATH=${PYTHONPATH}:src
 pytest src
-echo "done."
