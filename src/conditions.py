@@ -21,6 +21,9 @@ class Condition(metaclass=abc.ABCMeta):
             return NotImplemented
         return _Or(self, other)
 
+    def __invert__(self):
+        return _Not(self)
+
 
 class _And(Condition):
     """Conditional AND of one or more Conditions."""
@@ -52,6 +55,15 @@ class _Or(Condition):
         return any(c.check(target) for c in self._conditions)
 
 
+class _Not(Condition):
+
+    def __init__(self, condition: Condition) -> None:
+        self._condition = condition
+
+    def check(self, target: Stateful):
+        return not self._condition.check(target)
+
+
 class HasState(Condition):
 
     def __init__(self, state: State) -> None:
@@ -63,6 +75,5 @@ class HasState(Condition):
 
 class IsDead(Condition):
 
-    @classmethod
-    def check(cls, target: Stateful) -> bool:
+    def check(self, target: Stateful) -> bool:
         return not target.get_attribute(Attribute.HEALTH)

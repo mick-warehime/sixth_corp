@@ -23,3 +23,13 @@ def test_condition_or():
 
     stateful.set_state(State.INANIMATE, True)
     assert (cond | HasState(State.INANIMATE)).check(stateful)
+
+
+def test_condition_not():
+    stateful = Stateful()
+    cond = HasState(State.ON_FIRE)
+
+    assert ~cond.check(stateful)
+    assert (~cond).check(stateful)
+    assert not (cond & ~cond).check(stateful)
+    assert (cond | ~cond).check(stateful)
