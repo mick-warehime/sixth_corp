@@ -33,3 +33,13 @@ def test_condition_not():
     assert (~cond).check(stateful)
     assert not (cond & ~cond).check(stateful)
     assert (cond | ~cond).check(stateful)
+
+
+def test_alive_to_dead():
+    stateful = Stateful()
+
+    assert IsDead().check(stateful)
+    stateful.set_attribute(Attribute.HEALTH, 3)
+    assert not IsDead().check(stateful)
+    stateful.set_attribute(Attribute.HEALTH, 0)
+    assert IsDead().check(stateful)
