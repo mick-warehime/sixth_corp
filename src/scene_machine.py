@@ -1,5 +1,6 @@
 import pygame
 
+import constants
 from controller import Controller
 from launch_controller import LaunchController
 from settings_controller import SettingsController
@@ -12,11 +13,11 @@ from pygame import Surface
 class SceneMachine(EventListener):
     """Handles transitions between scenes."""
 
-    def __init__(self, event_manager: EventManager, world: World,
-                 screen: pygame.Surface) -> None:
+    def __init__(self, event_manager: EventManager) -> None:
         super().__init__(event_manager)
-        self.world = world
-        self.screen = screen
+        self.world = World()
+        self.screen: pygame.Surface = pygame.display.set_mode(
+            constants.SCREEN_SIZE)
 
         self.controller = LaunchController(self.event_manager, self.screen)
         self.prev_controller = None
@@ -29,7 +30,7 @@ class SceneMachine(EventListener):
 
     def _set_next_scene(self) -> None:
         self._remove_controller(self.controller)
-        self.controller = self.build_scene(
+        self.controller = self._build_scene(
             self.world, self.event_manager, self.screen)
 
     def _remove_controller(self, controller: Controller) -> None:
@@ -45,7 +46,7 @@ class SceneMachine(EventListener):
             self.controller = SettingsController(self.event_manager,
                                                  self.screen)
 
-    def build_scene(
+    def _build_scene(
             self,
             world: World,
             event_manager: EventManager,

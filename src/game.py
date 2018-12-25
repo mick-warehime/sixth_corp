@@ -24,7 +24,7 @@ class GameState(Enum):
 # TODO(mick): create player state
 
 class Game(EventListener):
-    """Loads scenes, stores world, and handles framerate and quit event."""
+    """Stores sceneMachine and keyboard, andles framerate and quit event."""
     keyboard: Keyboard = None
     event_manager: EventManager = None
     controller: Controller = None
@@ -36,15 +36,10 @@ class Game(EventListener):
         self._initialize_pygame()
 
         self.clock: pygame.Clock = pygame.time.Clock()
-        self.screen: pygame.Surface = pygame.display.set_mode(
-            constants.SCREEN_SIZE)
 
         self.keyboard = Keyboard(self.event_manager)
 
-        self.world = World()
-
-        self.scene_machine = SceneMachine(self.event_manager, self.world,
-                                          self.screen)
+        self.scene_machine = SceneMachine(self.event_manager)
 
     def notify(self, event: Event) -> None:
         if event == Event.QUIT:
