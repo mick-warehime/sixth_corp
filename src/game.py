@@ -1,13 +1,11 @@
 from enum import Enum
+
 from events import Event
 from events import EventListener
 from events import EventManager
 from controller import Controller
 from keyboard import Keyboard
-from launch_controller import LaunchController
-from settings_controller import SettingsController
 from scene_machine import SceneMachine
-from world import World
 import constants
 import pygame
 import sys
@@ -22,8 +20,8 @@ class GameState(Enum):
 # TODO(mick): add combat scene
 # TODO(mick): create player state
 
-
 class Game(EventListener):
+    """Stores sceneMachine and keyboard, handles framerate and quit event."""
     keyboard: Keyboard = None
     event_manager: EventManager = None
     controller: Controller = None
@@ -32,21 +30,13 @@ class Game(EventListener):
     def __init__(self) -> None:
         self.event_manager = EventManager()
         super(Game, self).__init__(self.event_manager)
-        self.inialize_pygame()
+        self._initialize_pygame()
 
         self.clock: pygame.Clock = pygame.time.Clock()
-        self.screen: pygame.Surface = pygame.display.set_mode(
-            constants.SCREEN_SIZE)
 
         self.keyboard = Keyboard(self.event_manager)
 
-        self.scene_machine = SceneMachine()
-        self.world = World()
-
-        # Change controller to change what is shown on the screen.
-        self.controller = None
-        self.prev_controller = None
-        self.new_game()
+        self.scene_machine = SceneMachine(self.event_manager)
 
     def notify(self, event: Event) -> None:
         if event == Event.QUIT:
@@ -54,37 +44,14 @@ class Game(EventListener):
             sys.exit()
         elif event == Event.TICK:
             # limit the redraw speed to 30 frames per second
-            self.clock.tick(30)
-        elif event == Event.SETTINGS:
-            self.toggle_settings()
-        elif event == Event.NEW_SCENE:
-            self.set_next_scene()
+
+            self.clock.tick(constants.FRAMES_PER_SECOND)
 
     def run(self) -> None:
         while True:
             self.event_manager.post(Event.TICK)
 
-    def inialize_pygame(self) -> None:
+    def _initialize_pygame(self) -> None:
         pygame.mixer.pre_init(44100, -16, 4, 2048)
         pygame.init()
         pygame.font.init()
-
-    def toggle_settings(self) -> None:
-        if isinstance(self.controller, SettingsController):
-            self.remove_controller(self.controller)
-            self.controller = self.prev_controller
-        else:
-            self.prev_controller = self.controller
-            self.controller = SettingsController(self.event_manager, self.screen)
-
-    def new_game(self) -> None:
-        self.controller = LaunchController(self.event_manager, self.screen)
-
-    def set_next_scene(self) -> None:
-        self.remove_controller(self.controller)
-        self.controller = self.scene_machine.build_scene(
-            self.world, self.event_manager, self.screen)
-
-    def remove_controller(self, controller: Controller) -> None:
-        controller.unregister()
-        del controller
