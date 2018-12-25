@@ -15,12 +15,12 @@ class SceneMachine(EventListener):
 
     def __init__(self, event_manager: EventManager) -> None:
         super().__init__(event_manager)
-        self.world = World()
-        self.screen: pygame.Surface = pygame.display.set_mode(
+        self._world = World()
+        self._screen: pygame.Surface = pygame.display.set_mode(
             constants.SCREEN_SIZE)
 
-        self.controller = LaunchController(self.event_manager, self.screen)
-        self.prev_controller = None
+        self._controller = LaunchController(self.event_manager, self._screen)
+        self._prev_controller = None
 
     def notify(self, event: Event) -> None:
         if event == Event.SETTINGS:
@@ -29,22 +29,22 @@ class SceneMachine(EventListener):
             self._set_next_scene()
 
     def _set_next_scene(self) -> None:
-        self._remove_controller(self.controller)
-        self.controller = self._build_scene(
-            self.world, self.event_manager, self.screen)
+        self._remove_controller(self._controller)
+        self._controller = self._build_scene(
+            self._world, self.event_manager, self._screen)
 
     def _remove_controller(self, controller: Controller) -> None:
-        self.controller.unregister()
+        self._controller.unregister()
         del controller
 
     def _toggle_settings(self) -> None:
-        if isinstance(self.controller, SettingsController):
-            self._remove_controller(self.controller)
-            self.controller = self.prev_controller
+        if isinstance(self._controller, SettingsController):
+            self._remove_controller(self._controller)
+            self._controller = self._prev_controller
         else:
-            self.prev_controller = self.controller
-            self.controller = SettingsController(self.event_manager,
-                                                 self.screen)
+            self._prev_controller = self._controller
+            self._controller = SettingsController(self.event_manager,
+                                                  self._screen)
 
     def _build_scene(
             self,
