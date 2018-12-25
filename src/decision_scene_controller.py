@@ -1,5 +1,4 @@
 from controller import Controller
-from decision_scene_model import DecisionSceneModel
 from decision_scene_option import DecisionOption
 from decision_scene_view import DecisionSceneView
 from events import Event
@@ -15,7 +14,6 @@ class DecisionSceneController(Controller):
     def __init__(self, event_manager: EventManager, screen: Surface, world: World, main_text: str,
                  options: Dict[str, DecisionOption]) -> None:
         super(DecisionSceneController, self).__init__(event_manager, screen)
-        self.model = DecisionSceneModel(self.event_manager)
         self.view = DecisionSceneView(self.event_manager, self.screen, main_text, options)
         self.options = options
         self.world = world
