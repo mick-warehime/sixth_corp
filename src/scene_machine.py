@@ -46,11 +46,11 @@ class SceneMachine(EventListener):
             self,
             world: World,
             screen: Surface) -> DecisionSceneController:
-        # Builds 3 options for keys 0,1 and 2 that just point to a new scene number.
-        # If the option is selected it modifies the world object.
-        # The decision_scene_controller listens for key presses and if the name of the key pressed
-        # matches the option_key then it executes the corresponding action.
-        # Feel free to change any of this.
+        # Builds 3 options for keys 0,1 and 2 that just point to a new scene
+        # number. If the option is selected it modifies the world object.
+        # The decision_scene_controller listens for key presses and if the name
+        # of the key pressed matches the option_key then it executes the
+        # corresponding action. Feel free to change any of this.
 
         options = {}
         for option_key in range(4):
