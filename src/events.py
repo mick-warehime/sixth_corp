@@ -40,25 +40,20 @@ class InputEvent(object):
         self.pressed = pressed
 
     def __str__(self) -> str:
-        return '%s, key=%s, mouse=%s, pressed=%s' % (self.event, self.key, self.mouse, self.pressed)
-
-
-class Listener(object):
-
-    def notify(self, event: Event) -> None:
-        raise NotImplementedError("Subclasses must implement notify()")
+        return '%s, key=%s, mouse=%s, pressed=%s' % (
+            self.event, self.key, self.mouse, self.pressed)
 
 
 class EventManager(object):
     def __init__(self) -> None:
         self.listeners: WeakKeyDictionary = WeakKeyDictionary()
 
-    def register(self, l: Listener) -> None:
+    def register(self, l: 'EventListener') -> None:
         self.listeners[l] = 1
         logging.debug('registered listener {0} {1}'.format(
             len(self.listeners), l))
 
-    def unregister(self, l: Listener) -> None:
+    def unregister(self, l: 'EventListener') -> None:
         if l in self.listeners.keys():
             logging.debug('unregistered listener {0} {1}'.format(
                 len(self.listeners), l))
@@ -73,14 +68,14 @@ class EventManager(object):
             l.notify(event)
 
 
-class EventListener(Listener):
+class EventListener(object):
 
     def __init__(self, event_manager: EventManager) -> None:
         event_manager.register(self)
         self.event_manager = event_manager
 
     def notify(self, event: Event) -> None:
-        pass
+        raise NotImplementedError('Subclesses must implement this method.')
 
     def unregister(self) -> None:
         self.event_manager.unregister(self)
