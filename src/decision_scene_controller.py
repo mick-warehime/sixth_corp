@@ -11,10 +11,10 @@ from world import World
 
 class DecisionSceneController(Controller):
 
-    def __init__(self, event_manager: EventManager, screen: Surface, world: World, main_text: str,
+    def __init__(self, screen: Surface, world: World, main_text: str,
                  options: Dict[str, DecisionOption]) -> None:
-        super(DecisionSceneController, self).__init__(event_manager, screen)
-        self.view = DecisionSceneView(self.event_manager, self.screen, main_text, options)
+        super(DecisionSceneController, self).__init__(screen)
+        self.view = DecisionSceneView(self.screen, main_text, options)
         self.options = options
         self.world = world
 

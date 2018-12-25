@@ -6,9 +6,8 @@ import pygame
 
 
 class PygameView(View):
-    def __init__(self, event_manager: EventManager,
-                 screen: pygame.Surface) -> None:
-        super(View, self).__init__(event_manager)
+    def __init__(self, screen: pygame.Surface) -> None:
+        super(View, self).__init__()
         self.screen = screen
         pygame.display.set_caption('6th Corp')
         self.smallfont = pygame.font.Font(None, 40)

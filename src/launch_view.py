@@ -4,9 +4,8 @@ from pygame_view import PygameView
 
 
 class LaunchView(PygameView):
-    def __init__(self, event_manager: EventManager,
-                 screen: pygame.Surface) -> None:
-        super(LaunchView, self).__init__(event_manager, screen)
+    def __init__(self, screen: pygame.Surface) -> None:
+        super(LaunchView, self).__init__(screen)
         self.texts = ['New Game!', 'X: Settings', 'S: Start Game']
 
     def render(self) -> None:

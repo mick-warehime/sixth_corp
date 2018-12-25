@@ -9,8 +9,8 @@ from pygame import Surface
 
 class Controller(EventListener):
 
-    def __init__(self, event_manager: EventManager, screen: Surface) -> None:
-        super(Controller, self).__init__(event_manager)
+    def __init__(self, screen: Surface) -> None:
+        super(Controller, self).__init__()
         self.screen = screen
         self.view: View = None
         self.model: Model = None

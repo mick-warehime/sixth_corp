@@ -8,8 +8,8 @@ from keybindings import Keybindings
 
 
 class Keyboard(EventListener):
-    def __init__(self, event_manager: EventManager) -> None:
-        super(Keyboard, self).__init__(event_manager)
+    def __init__(self) -> None:
+        super(Keyboard, self).__init__()
         self.bindings = Keybindings()
         self.bindings.load()
 
@@ -43,7 +43,8 @@ class Keyboard(EventListener):
         EventManager.post(mouse_event)
 
     def mouse_event(self) -> InputEvent:
-        return InputEvent(event=Event.MOUSE_CLICK, key='', mouse=self.mouse_pos())
+        return InputEvent(event=Event.MOUSE_CLICK, key='',
+                          mouse=self.mouse_pos())
 
     def mouse_pos(self) -> Tuple[int, int]:
         return pygame.mouse.get_pos()
