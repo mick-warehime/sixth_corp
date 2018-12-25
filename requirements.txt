@@ -4,3 +4,4 @@ flake8==3.5.0
 mypy==0.550
 pycodestyle<2.4.0,>=2.0.0
 pygame>=1.9.4
+pytest>=4.0
