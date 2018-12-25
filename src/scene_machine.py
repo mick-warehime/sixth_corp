@@ -15,12 +15,20 @@ class SceneMachine(object):
             world: World,
             event_manager: EventManager,
             screen: Surface) -> DecisionSceneController:
+        # Builds 3 options for keys 0,1 and 2 that just point to a new scene number.
+        # If the option is selected it modifies the world object.
+        # The decision_scene_controller listens for key presses and if the name of the key pressed
+        # matches the option_key then it executes the corresponding action.
+        # Feel free to change any of this.
+
         options = {}
-        for i in range(3):
-            scene_name = '{}'.format(i)
+        for option_key in range(4):
+            scene_name = str(option_key)
             options[scene_name] = DecisionOption(world.scene_count)
             world.scene_count += 1
 
-        main_text = 'scene {}: select next scene'.format(world.current_scene)
+        main_text = 'scene {}: this is a very long description of an a scene ' \
+                    'and it includes a newline.\n' \
+                    'what a compelling decision i must make.'.format(world.current_scene)
 
         return DecisionSceneController(event_manager, screen, world, main_text, options)
