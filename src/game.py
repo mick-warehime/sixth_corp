@@ -41,13 +41,10 @@ class Game(EventListener):
 
         self.keyboard = Keyboard(self.event_manager)
 
-        self.scene_machine = SceneMachine()
         self.world = World()
 
-        # Change controller to change what is shown on the screen.
-        self.controller = None
-        self.prev_controller = None
-        self._new_game()
+        self.scene_machine = SceneMachine(self.event_manager, self.world,
+                                          self.screen)
 
     def notify(self, event: Event) -> None:
         if event == Event.QUIT:
@@ -57,10 +54,6 @@ class Game(EventListener):
             # limit the redraw speed to 30 frames per second
 
             self.clock.tick(constants.FRAMES_PER_SECOND)
-        elif event == Event.SETTINGS:
-            self._toggle_settings()
-        elif event == Event.NEW_SCENE:
-            self._set_next_scene()
 
     def run(self) -> None:
         while True:
@@ -70,23 +63,3 @@ class Game(EventListener):
         pygame.mixer.pre_init(44100, -16, 4, 2048)
         pygame.init()
         pygame.font.init()
-
-    def _toggle_settings(self) -> None:
-        if isinstance(self.controller, SettingsController):
-            self._remove_controller(self.controller)
-            self.controller = self.prev_controller
-        else:
-            self.prev_controller = self.controller
-            self.controller = SettingsController(self.event_manager, self.screen)
-
-    def _new_game(self) -> None:
-        self.controller = LaunchController(self.event_manager, self.screen)
-
-    def _set_next_scene(self) -> None:
-        self._remove_controller(self.controller)
-        self.controller = self.scene_machine.build_scene(
-            self.world, self.event_manager, self.screen)
-
-    def _remove_controller(self, controller: Controller) -> None:
-        self.controller.unregister()
-        del controller
