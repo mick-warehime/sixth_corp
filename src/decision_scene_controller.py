@@ -22,4 +22,4 @@ class DecisionSceneController(Controller):
         if input_event.key in self.options:
             option = self.options[input_event.key]
             option.execute(self.world)
-            self.event_manager.post(Event.NEW_SCENE)
+            EventManager.post(Event.NEW_SCENE)

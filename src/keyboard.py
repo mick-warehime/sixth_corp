@@ -22,7 +22,7 @@ class Keyboard(EventListener):
         for pg_event in self.get_pygame_events():
             # handle window manager closing our window
             if self.is_quit_event(pg_event):
-                self.event_manager.post(Event(Event.QUIT))
+                EventManager.post(Event(Event.QUIT))
             # handle key down events
             elif pg_event.type == pygame.KEYDOWN:
                 self.handle_keypress(pg_event.unicode)
@@ -36,11 +36,11 @@ class Keyboard(EventListener):
             self.post_bound_event(key=key_name)
         else:
             input_event = InputEvent(event=Event.KEYPRESS, key=key_name)
-            self.event_manager.post(input_event)
+            EventManager.post(input_event)
 
     def handle_mouse_click(self) -> None:
         mouse_event = self.mouse_event()
-        self.event_manager.post(mouse_event)
+        EventManager.post(mouse_event)
 
     def mouse_event(self) -> InputEvent:
         return InputEvent(event=Event.MOUSE_CLICK, key='', mouse=self.mouse_pos())
@@ -54,7 +54,7 @@ class Keyboard(EventListener):
     def post_bound_event(self, key: str) -> None:
         binding = self.get_binding(key)
         event = self.bindings.event_for_binding(binding)
-        return self.event_manager.post(Event(event))
+        EventManager.post(Event(event))
 
     def get_pygame_events(self) -> List[pygame.event.EventType]:
         return pygame.event.get()

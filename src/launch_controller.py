@@ -14,4 +14,4 @@ class LaunchController(Controller):
 
     def handle_input(self, input_event: InputEvent) -> None:
         if input_event.key == 's':
-            self.event_manager.post(Event.NEW_SCENE)
+            EventManager.post(Event.NEW_SCENE)
