@@ -72,11 +72,11 @@ class EventManager(object):
 class EventListener(object):
 
     def __init__(self, event_manager: EventManager) -> None:
-        event_manager.register(self)
+        EventManager.register(self)
         self.event_manager = event_manager
 
     def notify(self, event: Event) -> None:
         raise NotImplementedError('Subclesses must implement this method.')
 
     def unregister(self) -> None:
-        self.event_manager.unregister(self)
+        EventManager.unregister(self)
