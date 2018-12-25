@@ -1,6 +1,7 @@
 from controller import Controller
 from decision_scene_controller import DecisionSceneController
-from decision_scene_option import DecisionOption
+from decision_scene import DecisionOption
+from controller import Controller
 from launch_controller import LaunchController
 from settings_controller import SettingsController
 from events import EventListener, Event
