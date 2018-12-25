@@ -1,5 +1,5 @@
 import logging
-from _weakrefset import WeakSet
+from weakref import WeakSet
 from enum import Enum
 from typing import Tuple
 
@@ -47,22 +47,25 @@ class InputEvent(object):
 class EventManager(object):
     listeners: WeakSet = WeakSet()
 
-    def register(self, l: 'EventListener') -> None:
-        self.listeners.add(l)
+    @classmethod
+    def register(cls, l: 'EventListener') -> None:
+        cls.listeners.add(l)
         logging.debug('registered listener {0} {1}'.format(
-            len(self.listeners), l))
+            len(cls.listeners), l))
 
-    def unregister(self, l: 'EventListener') -> None:
-        if l in self.listeners:
+    @classmethod
+    def unregister(cls, l: 'EventListener') -> None:
+        if l in cls.listeners:
             logging.debug('unregistered listener {0} {1}'.format(
-                len(self.listeners), l))
-            self.listeners.remove(l)
+                len(cls.listeners), l))
+            cls.listeners.remove(l)
 
-    def post(self, event: Event) -> None:
+    @classmethod
+    def post(cls, event: Event) -> None:
         if not event == Event.TICK:
             logging.debug('EVENT: {}'.format(str(event)))
 
-        for l in self.listeners.copy():
+        for l in cls.listeners.copy():
             l.notify(event)
 
 
