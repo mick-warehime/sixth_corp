@@ -1,7 +1,7 @@
 import logging
+from _weakrefset import WeakSet
 from enum import Enum
 from typing import Tuple
-from weakref import WeakKeyDictionary
 
 
 class Event(Enum):
@@ -45,26 +45,24 @@ class InputEvent(object):
 
 
 class EventManager(object):
-    def __init__(self) -> None:
-        self.listeners: WeakKeyDictionary = WeakKeyDictionary()
+    listeners: WeakSet = WeakSet()
 
     def register(self, l: 'EventListener') -> None:
-        self.listeners[l] = 1
+        self.listeners.add(l)
         logging.debug('registered listener {0} {1}'.format(
             len(self.listeners), l))
 
     def unregister(self, l: 'EventListener') -> None:
-        if l in self.listeners.keys():
+        if l in self.listeners:
             logging.debug('unregistered listener {0} {1}'.format(
                 len(self.listeners), l))
-            del self.listeners[l]
+            self.listeners.remove(l)
 
     def post(self, event: Event) -> None:
         if not event == Event.TICK:
             logging.debug('EVENT: {}'.format(str(event)))
 
-        # use a list to avoid generator changing size during the loop
-        for l in list(self.listeners.keys()):
+        for l in self.listeners.copy():
             l.notify(event)
 
 
