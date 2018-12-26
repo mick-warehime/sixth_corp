@@ -52,6 +52,9 @@ class InputEvent(object):
             self.event, self.key, self.mouse, self.pressed)
 
 
+EventType = Union[Event, InputEvent, NewSceneEvent]
+
+
 class EventManager(object):
     listeners: WeakSet = WeakSet()
 
@@ -62,7 +65,7 @@ class EventManager(object):
             len(cls.listeners), l))
 
     @classmethod
-    def post(cls, event: Union[Event, InputEvent, NewSceneEvent]) -> None:
+    def post(cls, event: EventType) -> None:
         if not event == Event.TICK:
             logging.debug('EVENT: {}'.format(str(event)))
 
@@ -75,5 +78,5 @@ class EventListener(object):
     def __init__(self) -> None:
         EventManager.register(self)
 
-    def notify(self, event: Event) -> None:
+    def notify(self, event: EventType) -> None:
         raise NotImplementedError('Subclesses must implement this method.')

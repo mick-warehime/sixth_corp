@@ -1,7 +1,7 @@
 import logging
 
 from abstract_view import View
-from events import EventListener, Event
+from events import EventListener, EventType
 from pygame import Surface
 
 
@@ -22,5 +22,5 @@ class Controller(EventListener):
         logging.debug('Deactivating {}'.format(self))
         self._active = False
 
-    def notify(self, event: Event) -> None:
+    def notify(self, event: EventType) -> None:
         raise NotImplementedError

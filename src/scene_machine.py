@@ -5,7 +5,7 @@ from launch_controller import LaunchController
 from scene_examples import start_scene
 from scenes_base import Scene
 from settings_controller import SettingsController
-from events import EventListener, Event, NewSceneEvent
+from events import EventListener, Event, NewSceneEvent, EventType
 from world import World
 import constants
 import pygame
@@ -24,7 +24,7 @@ class SceneMachine(EventListener):
                                             start_scene(self._world))
         self._prev_controller: Controller = None
 
-    def notify(self, event: Event) -> None:
+    def notify(self, event: EventType) -> None:
         if event == Event.SETTINGS:
             self._toggle_settings()
         elif isinstance(event, NewSceneEvent):

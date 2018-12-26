@@ -1,4 +1,4 @@
-from events import Event
+from events import Event, EventType
 from typing import Dict
 import csv
 import logging
@@ -36,7 +36,7 @@ class Keybindings(object):
                 writer.writerow(
                     {self.binding_field: binding, self.key_field: key})
 
-    def update_binding(self, key: str, event: Event) -> None:
+    def update_binding(self, key: str, event: EventType) -> None:
         self.bindings[key] = event
 
         self.save()
@@ -44,7 +44,7 @@ class Keybindings(object):
         logging.debug('Updated keybindings')
         logging.debug(str(self))
 
-    def get_binding(self, key: str) -> Event:
+    def get_binding(self, key: str) -> EventType:
         return self.bindings.get(key, Event.NONE)
 
     def __str__(self) -> str:
@@ -55,7 +55,7 @@ class Keybindings(object):
         return '\n'.join(keys)
 
     @classmethod
-    def event_for_binding(self, binding: Event) -> Event:
+    def event_for_binding(self, binding: EventType) -> Event:
         if binding == Event.SETTINGS:
             return Event.SETTINGS
         return Event.NONE

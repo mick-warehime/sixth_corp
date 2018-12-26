@@ -1,5 +1,5 @@
 import pygame
-from events import Event
+from events import Event, EventType
 from events import InputEvent
 from events import EventListener
 from events import EventManager
@@ -13,7 +13,7 @@ class Keyboard(EventListener):
         self.bindings = Keybindings()
         self.bindings.load()
 
-    def notify(self, event: Event) -> None:
+    def notify(self, event: EventType) -> None:
         if event == Event.TICK:
             self.handle_inputs()
 

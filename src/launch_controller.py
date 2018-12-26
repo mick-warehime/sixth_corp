@@ -1,5 +1,5 @@
 from controller import Controller
-from events import EventManager, NewSceneEvent
+from events import EventManager, NewSceneEvent, EventType
 from events import Event
 from events import InputEvent
 from launch_view import LaunchView
@@ -15,7 +15,7 @@ class LaunchController(Controller):
         self.view = LaunchView(self.screen)
         self._start_scene = start_scene
 
-    def notify(self, event: Event) -> None:
+    def notify(self, event: EventType) -> None:
         if not self._active:
             return
         if event == Event.TICK:

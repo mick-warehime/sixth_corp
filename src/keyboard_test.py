@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock
 from unittest import TestCase
 from keyboard import Keyboard
-from events import Event, EventListener, InputEvent
+from events import Event, EventListener, InputEvent, EventType
 import pygame
 
 
@@ -11,7 +11,7 @@ class BasicListener(EventListener):
         super().__init__()
         self.events = []
 
-    def notify(self, event: Event) -> None:
+    def notify(self, event: EventType) -> None:
         self.events.append(event)
 
 

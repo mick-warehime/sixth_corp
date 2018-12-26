@@ -1,6 +1,6 @@
 from enum import Enum
 
-from events import Event
+from events import Event, EventType
 from events import EventListener
 from events import EventManager
 from keyboard import Keyboard
@@ -33,7 +33,7 @@ class Game(EventListener):
 
         self.scene_machine = SceneMachine()
 
-    def notify(self, event: Event) -> None:
+    def notify(self, event: EventType) -> None:
         if event == Event.QUIT:
             pygame.quit()
             sys.exit()
