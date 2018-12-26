@@ -1,7 +1,8 @@
 """Simple decision scene examples."""
 from combat_scene import CombatScene
 from decision_scene import DecisionScene, DecisionOption
-from effects import ChangeSceneName, IncrementSceneCount
+from effects import IncrementSceneCount, IncrementPlayerAttribute
+from states import Attribute
 from world import World
 
 
@@ -10,28 +11,30 @@ def start_scene(world: World) -> DecisionScene:
     for option_key in range(4):
         scene_name = str(option_key)
         options[scene_name] = DecisionOption(scene_name,
-                                             ChangeSceneName(scene_name),
+                                             IncrementSceneCount(),
                                              second_scene)
 
     options['5'] = DecisionOption('COMBAT!', ChangeSceneName('COMBAT!'), example_combat_scene)
 
     main_text = (
-        'scene {}: this is a very long description of an a scene and it '
+        'Start scene: this is a very long description of an a scene and it '
         'includes a newline.\nwhat a compelling decision i must '
-        'make.'.format(world.current_scene))
+        'make.')
     return DecisionScene(main_text, options)
 
 
 def second_scene(world: World) -> DecisionScene:
-    main_text = 'Scene name is now {}. Scene count is now {}.'.format(
-        world.current_scene, world.scene_count)
+    main_text = 'Player HP: {}. Scene count is now {}.'.format(
+        world.player.get_attribute(Attribute.HEALTH), world.scene_count)
 
     options = {
-        '0': DecisionOption('hahah',
-                            (ChangeSceneName('hahah'), IncrementSceneCount()),
+        '0': DecisionOption('Gain 1 HP',
+                            (IncrementSceneCount(),
+                             IncrementPlayerAttribute(Attribute.HEALTH, 1)),
                             second_scene),
-        '1': DecisionOption('hoho',
-                            (ChangeSceneName('hoho'), IncrementSceneCount()),
+        '1': DecisionOption('Lose 1 HP',
+                            (IncrementSceneCount(),
+                             IncrementPlayerAttribute(Attribute.HEALTH, -1)),
                             second_scene)
     }
     return DecisionScene(main_text, options)

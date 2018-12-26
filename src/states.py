@@ -41,7 +41,8 @@ class Stateful(object):
         If not otherwise set, default value is 0."""
         return self._attributes[attribute]
 
+    def increment_attribute(self, attribute: Attribute, delta: int) -> None:
+        self._attributes[attribute] += delta
+
     def set_attribute(self, attribute: Attribute, value: int) -> None:
         self._attributes[attribute] = value
-
-
