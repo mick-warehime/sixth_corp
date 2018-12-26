@@ -28,6 +28,6 @@ class DecisionSceneController(Controller):
 
     def _handle_input(self, input_event: InputEvent) -> None:
         if input_event.key in self.options:
-            option = self.options[input_event.key]
-            option.execute(self.world)
+            for effect in self.options[input_event.key].effects:
+                effect.execute(self.world)
             EventManager.post(Event.NEW_SCENE)

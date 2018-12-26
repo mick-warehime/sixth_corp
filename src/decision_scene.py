@@ -1,17 +1,19 @@
-from typing import Dict
+from typing import Dict, Sequence
 
-from events import Event, EventManager
-from scenes import Scene, Resolution
+from effects import ChangeSceneName
+from scenes_base import Scene, Resolution, Effect
 from world import World
 
 
 class DecisionOption(Resolution):
 
     def __init__(self, name: str) -> None:
+        self._effects = (ChangeSceneName(name),)
         self.name = name
 
-    def execute(self, world: World) -> None:
-        world.current_scene = self.name
+    @property
+    def effects(self) -> Sequence[Effect]:
+        return self._effects
 
     def next_scene(self, world: World) -> Scene:
         pass
@@ -24,9 +26,6 @@ class DecisionScene(Scene):
         self._choices = choices
 
     def is_resolved(self) -> bool:
-        pass
-
-    def notify(self, event: Event) -> None:
         pass
 
     def get_resolution(self):
