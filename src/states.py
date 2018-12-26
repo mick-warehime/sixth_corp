@@ -14,7 +14,7 @@ class State(Enum):
 
 class Attribute(Enum):
     HEALTH = 'health'
-    MAX_HP = 'maximum health'
+    MAX_HEALTH = 'maximum health'
 
     def __str__(self):
         return self.value
