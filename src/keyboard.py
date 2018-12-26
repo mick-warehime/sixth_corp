@@ -22,7 +22,7 @@ class Keyboard(EventListener):
         for pg_event in self.get_pygame_events():
             # handle window manager closing our window
             if self.is_quit_event(pg_event):
-                EventManager.post(Event(Event.QUIT))
+                EventManager.post(Event.QUIT)
             # handle key down events
             elif pg_event.type == pygame.KEYDOWN:
                 self.handle_keypress(pg_event.unicode)
