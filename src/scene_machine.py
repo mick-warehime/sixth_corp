@@ -3,7 +3,7 @@ from decision_scene_option import DecisionOption
 from controller import Controller
 from launch_controller import LaunchController
 from settings_controller import SettingsController
-from events import EventManager, EventListener, Event
+from events import EventListener, Event
 from pygame import Surface
 from world import World
 import constants
@@ -13,13 +13,13 @@ import pygame
 class SceneMachine(EventListener):
     """Handles transitions between scenes."""
 
-    def __init__(self, event_manager: EventManager) -> None:
-        super().__init__(event_manager)
+    def __init__(self, ) -> None:
+        super().__init__()
         self._world = World()
         self._screen: pygame.Surface = pygame.display.set_mode(
             constants.SCREEN_SIZE)
 
-        self._controller = LaunchController(self.event_manager, self._screen)
+        self._controller = LaunchController(self._screen)
         self._prev_controller = None
 
     def notify(self, event: Event) -> None:
@@ -31,7 +31,7 @@ class SceneMachine(EventListener):
     def _set_next_scene(self) -> None:
         self._remove_controller(self._controller)
         self._controller = self._build_scene(
-            self._world, self.event_manager, self._screen)
+            self._world, self._screen)
 
     def _remove_controller(self, controller: Controller) -> None:
         self._controller.unregister()
@@ -43,13 +43,11 @@ class SceneMachine(EventListener):
             self._controller = self._prev_controller
         else:
             self._prev_controller = self._controller
-            self._controller = SettingsController(self.event_manager,
-                                                  self._screen)
+            self._controller = SettingsController(self._screen)
 
     def _build_scene(
             self,
             world: World,
-            event_manager: EventManager,
             screen: Surface) -> DecisionSceneController:
         # Builds 3 options for keys 0,1 and 2 that just point to a new scene number.
         # If the option is selected it modifies the world object.
@@ -63,8 +61,9 @@ class SceneMachine(EventListener):
             options[scene_name] = DecisionOption(world.scene_count)
             world.scene_count += 1
 
-        main_text = 'scene {}: this is a very long description of an a scene ' \
-                    'and it includes a newline.\n' \
-                    'what a compelling decision i must make.'.format(world.current_scene)
+        main_text = (
+            'scene {}: this is a very long description of an a scene and it '
+            'includes a newline.\nwhat a compelling decision i must '
+            'make.'.format(world.current_scene))
 
-        return DecisionSceneController(event_manager, screen, world, main_text, options)
+        return DecisionSceneController(screen, world, main_text, options)

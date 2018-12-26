@@ -9,8 +9,8 @@ from pygame import Surface
 
 class Controller(EventListener):
 
-    def __init__(self, event_manager: EventManager, screen: Surface) -> None:
-        super(Controller, self).__init__(event_manager)
+    def __init__(self, screen: Surface) -> None:
+        super(Controller, self).__init__()
         self.screen = screen
         self.view: View = None
         self.model: Model = None
@@ -24,6 +24,6 @@ class Controller(EventListener):
         raise NotImplementedError('subclasses must implement handle_input()')
 
     def unregister(self) -> None:
-        self.event_manager.unregister(self.view)
-        self.event_manager.unregister(self.model)
-        self.event_manager.unregister(self)
+        EventManager.unregister(self.view)
+        EventManager.unregister(self.model)
+        EventManager.unregister(self)

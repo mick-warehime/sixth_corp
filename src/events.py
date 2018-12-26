@@ -1,7 +1,7 @@
 import logging
+from weakref import WeakSet
 from enum import Enum
 from typing import Tuple
-from weakref import WeakKeyDictionary
 
 
 class Event(Enum):
@@ -45,37 +45,37 @@ class InputEvent(object):
 
 
 class EventManager(object):
-    def __init__(self) -> None:
-        self.listeners: WeakKeyDictionary = WeakKeyDictionary()
+    listeners: WeakSet = WeakSet()
 
-    def register(self, l: 'EventListener') -> None:
-        self.listeners[l] = 1
+    @classmethod
+    def register(cls, l: 'EventListener') -> None:
+        cls.listeners.add(l)
         logging.debug('registered listener {0} {1}'.format(
-            len(self.listeners), l))
+            len(cls.listeners), l))
 
-    def unregister(self, l: 'EventListener') -> None:
-        if l in self.listeners.keys():
+    @classmethod
+    def unregister(cls, l: 'EventListener') -> None:
+        if l in cls.listeners:
             logging.debug('unregistered listener {0} {1}'.format(
-                len(self.listeners), l))
-            del self.listeners[l]
+                len(cls.listeners), l))
+            cls.listeners.remove(l)
 
-    def post(self, event: Event) -> None:
+    @classmethod
+    def post(cls, event: Event) -> None:
         if not event == Event.TICK:
             logging.debug('EVENT: {}'.format(str(event)))
 
-        # use a list to avoid generator changing size during the loop
-        for l in list(self.listeners.keys()):
+        for l in cls.listeners.copy():
             l.notify(event)
 
 
 class EventListener(object):
 
-    def __init__(self, event_manager: EventManager) -> None:
-        event_manager.register(self)
-        self.event_manager = event_manager
+    def __init__(self) -> None:
+        EventManager.register(self)
 
     def notify(self, event: Event) -> None:
         raise NotImplementedError('Subclesses must implement this method.')
 
     def unregister(self) -> None:
-        self.event_manager.unregister(self)
+        EventManager.unregister(self)
