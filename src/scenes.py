@@ -1,10 +1,9 @@
 """Implementation of Scene class."""
-from abstract_model import Model
-from events import Event
+from events import Event, EventListener
 from world import World
 
 
-class Scene(Model):
+class Scene(EventListener):
 
     def notify(self, event: Event) -> None:
         raise NotImplementedError
