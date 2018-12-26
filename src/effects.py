@@ -4,7 +4,7 @@ from world import World
 
 class ChangeSceneName(Effect):
 
-    def __init__(self, name: str)->None:
+    def __init__(self, name: str) -> None:
         self._name = name
 
     def execute(self, world: World) -> None:
