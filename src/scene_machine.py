@@ -3,7 +3,7 @@ from decision_scene_option import DecisionOption
 from controller import Controller
 from launch_controller import LaunchController
 from settings_controller import SettingsController
-from events import EventManager, EventListener, Event
+from events import EventListener, Event
 from pygame import Surface
 from world import World
 import constants
@@ -61,9 +61,9 @@ class SceneMachine(EventListener):
             options[scene_name] = DecisionOption(world.scene_count)
             world.scene_count += 1
 
-        main_text = 'scene {}: this is a very long description of an a scene ' \
-                    'and it includes a newline.\n' \
-                    'what a compelling decision i must make.'.format(
-            world.current_scene)
+        main_text = (
+            'scene {}: this is a very long description of an a scene and it '
+            'includes a newline.\nwhat a compelling decision i must '
+            'make.'.format(world.current_scene))
 
         return DecisionSceneController(screen, world, main_text, options)

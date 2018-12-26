@@ -10,7 +10,7 @@ class LaunchController(Controller):
 
     def __init__(self, screen: Surface) -> None:
         super(LaunchController, self).__init__(screen)
-        self.view = LaunchView( self.screen)
+        self.view = LaunchView(self.screen)
 
     def handle_input(self, input_event: InputEvent) -> None:
         if input_event.key == 's':

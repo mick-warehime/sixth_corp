@@ -5,7 +5,7 @@ from events import Event, EventListener, InputEvent
 import pygame
 
 
-class TestListener(EventListener):
+class BasicListener(EventListener):
 
     def __init__(self):
         super().__init__()
@@ -21,7 +21,7 @@ class KeyboardTest(TestCase):
         self.keyboard = Keyboard()
 
     def test_quit(self) -> None:
-        listener = TestListener()
+        listener = BasicListener()
         quit_event = [pygame.event.Event(pygame.QUIT, {'unicode': 'esc'})]
         self.keyboard.get_pygame_events = MagicMock(return_value=quit_event)
 
@@ -30,7 +30,7 @@ class KeyboardTest(TestCase):
         assert listener.events == [Event.QUIT]
 
     def test_unbound_key_posts_input_event(self) -> None:
-        listener = TestListener()
+        listener = BasicListener()
         key_val = 'a'
         events = [
             pygame.event.Event(pygame.KEYDOWN, {'unicode': key_val, 'key': 97})]
@@ -45,7 +45,7 @@ class KeyboardTest(TestCase):
         assert event.key == key_val
 
     def test_bound_key_posts_bound_event(self) -> None:
-        listener = TestListener()
+        listener = BasicListener()
         self.keyboard.get_binding = MagicMock(return_value=Event.SETTINGS)
         event = [
             pygame.event.Event(pygame.KEYDOWN, {'unicode': 'x', 'key': 97})]
@@ -56,7 +56,7 @@ class KeyboardTest(TestCase):
         assert listener.events == [Event.SETTINGS]
 
     def test_mouse_click_posts_mouse_event(self) -> None:
-        listener = TestListener()
+        listener = BasicListener()
         mouse = (460, 680)
         mouse_event = InputEvent(Event.MOUSE_CLICK, mouse=mouse)
         event = [pygame.event.Event(pygame.MOUSEBUTTONDOWN,

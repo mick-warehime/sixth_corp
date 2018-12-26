@@ -1,5 +1,4 @@
 import pygame
-from events import EventManager
 from pygame_view import PygameView
 
 

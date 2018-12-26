@@ -1,6 +1,5 @@
 from events import Event
 from events import EventListener
-from events import EventManager
 
 
 class Model(EventListener):

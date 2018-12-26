@@ -1,6 +1,5 @@
 from abstract_view import View
 from events import Event
-from events import EventManager
 from typing import List
 import pygame
 
