@@ -1,6 +1,6 @@
 from controller import Controller
 from decision_scene_controller import DecisionSceneController
-from decision_scene import DecisionOption
+from decision_scene import DecisionOption, DecisionScene
 from controller import Controller
 from launch_controller import LaunchController
 from settings_controller import SettingsController
@@ -63,5 +63,6 @@ class SceneMachine(EventListener):
             'scene {}: this is a very long description of an a scene and it '
             'includes a newline.\nwhat a compelling decision i must '
             'make.'.format(world.current_scene))
+        scene = DecisionScene(main_text, options)
 
-        return DecisionSceneController(screen, world, main_text, options)
+        return DecisionSceneController(screen, world, scene)

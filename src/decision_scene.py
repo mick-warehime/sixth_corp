@@ -21,9 +21,10 @@ class DecisionOption(Resolution):
 
 class DecisionScene(Scene):
 
-    def __init__(self, choices: Dict[str, DecisionOption]):
+    def __init__(self, prompt: str, choices: Dict[str, DecisionOption]):
         super().__init__()
-        self._choices = choices
+        self.prompt = prompt
+        self.choices = choices
 
     def is_resolved(self) -> bool:
         pass
