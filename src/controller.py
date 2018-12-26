@@ -1,9 +1,7 @@
-from abstract_model import Model
+import logging
+
 from abstract_view import View
-from events import Event
-from events import InputEvent
-from events import EventListener
-from events import EventManager
+from events import EventListener, Event
 from pygame import Surface
 
 
@@ -13,17 +11,16 @@ class Controller(EventListener):
         super(Controller, self).__init__()
         self.screen = screen
         self.view: View = None
-        self.model: Model = None
+        self._active = True
+        self.activate()
+
+    def activate(self) -> None:
+        logging.debug('Activating {}'.format(self))
+        self._active = True
+
+    def deactivate(self) -> None:
+        logging.debug('Deactivating {}'.format(self))
+        self._active = False
 
     def notify(self, event: Event) -> None:
-        # handle user inputs/ changes view/model
-        if isinstance(event, InputEvent):
-            self.handle_input(event)
-
-    def handle_input(self, input_event: InputEvent) -> None:
-        raise NotImplementedError('subclasses must implement handle_input()')
-
-    def unregister(self) -> None:
-        EventManager.unregister(self.view)
-        EventManager.unregister(self.model)
-        EventManager.unregister(self)
+        raise NotImplementedError

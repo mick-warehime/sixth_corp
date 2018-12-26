@@ -1,5 +1,4 @@
 from abstract_view import View
-from events import Event
 from typing import List
 import pygame
 
@@ -11,10 +10,6 @@ class PygameView(View):
         pygame.display.set_caption('6th Corp')
         self.smallfont = pygame.font.Font(None, 40)
         self.texts: List[str] = None
-
-    def notify(self, event: Event) -> None:
-        if event == Event.TICK:
-            self.render()
 
     def render(self) -> None:
         raise NotImplementedError("sub classes should implement this method")

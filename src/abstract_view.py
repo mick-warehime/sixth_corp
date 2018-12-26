@@ -1,6 +1,3 @@
-from events import EventListener
-
-
-class View(EventListener):
+class View(object):
     def render(self) -> None:
         raise NotImplementedError("Subclasses must implement render()")

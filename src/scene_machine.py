@@ -1,6 +1,6 @@
+from controller import Controller
 from decision_scene_controller import DecisionSceneController
 from decision_scene_option import DecisionOption
-from controller import Controller
 from launch_controller import LaunchController
 from settings_controller import SettingsController
 from events import EventListener, Event
@@ -20,7 +20,7 @@ class SceneMachine(EventListener):
             constants.SCREEN_SIZE)
 
         self._controller = LaunchController(self._screen)
-        self._prev_controller = None
+        self._prev_controller: Controller = None
 
     def notify(self, event: Event) -> None:
         if event == Event.SETTINGS:
@@ -29,21 +29,18 @@ class SceneMachine(EventListener):
             self._set_next_scene()
 
     def _set_next_scene(self) -> None:
-        self._remove_controller(self._controller)
         self._controller = self._build_scene(
             self._world, self._screen)
 
-    def _remove_controller(self, controller: Controller) -> None:
-        self._controller.unregister()
-        del controller
-
     def _toggle_settings(self) -> None:
-        if isinstance(self._controller, SettingsController):
-            self._remove_controller(self._controller)
-            self._controller = self._prev_controller
-        else:
-            self._prev_controller = self._controller
-            self._controller = SettingsController(self._screen)
+        if self._prev_controller is None:
+            self._prev_controller = SettingsController(self._screen)
+
+        self._prev_controller, self._controller = (
+            self._controller, self._prev_controller)
+
+        self._controller.activate()
+        self._prev_controller.deactivate()
 
     def _build_scene(
             self,
