@@ -1,7 +1,7 @@
 from controller import Controller
 from decision_scene import DecisionOption, DecisionScene
 from decision_scene_view import DecisionSceneView
-from events import Event
+from events import Event, NewSceneEvent
 from events import InputEvent
 from events import EventManager
 from pygame import Surface
@@ -27,7 +27,9 @@ class DecisionSceneController(Controller):
                 resolution = self.scene.get_resolution()
                 for effect in resolution.effects:
                     effect.execute(self.world)
-                EventManager.post(Event.NEW_SCENE)
+
+                EventManager.post(
+                    NewSceneEvent(resolution.next_scene(self.world)))
         elif isinstance(event, InputEvent):
             self._handle_input(event)
 

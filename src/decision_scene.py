@@ -16,7 +16,7 @@ class DecisionOption(Resolution):
         return self._effects
 
     def next_scene(self, world: World) -> Scene:
-        pass
+        return DecisionScene('TEST', {'a': DecisionOption('choice')})
 
 
 class DecisionScene(Scene):
