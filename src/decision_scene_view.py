@@ -10,7 +10,7 @@ class DecisionSceneView(PygameView):
     WIDTH = 50
 
     def __init__(self, screen: pygame.Surface,
-                 main_text: str, options: Dict[str, DecisionOption]) -> None:
+                 main_text: str, options: Dict[str, str]) -> None:
         super(DecisionSceneView, self).__init__(screen)
 
         self.name = main_text
@@ -22,11 +22,10 @@ class DecisionSceneView(PygameView):
         self.render_text()
 
     def create_option_text(self,
-                           options: Dict[str, DecisionOption]) -> List[str]:
+                           options: Dict[str, str]) -> List[str]:
         texts = []
-        for option_key in options:
-            option = options[option_key]
-            text = '{}: {}'.format(option_key, option.name)
+        for option_key, description in options.items():
+            text = '{}: {}'.format(option_key, description)
             texts.append(text)
         return texts
 

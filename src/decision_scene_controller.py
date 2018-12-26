@@ -15,7 +15,9 @@ class DecisionSceneController(Controller):
                  scene: DecisionScene) -> None:
         super(DecisionSceneController, self).__init__(screen)
         self.scene = scene
-        self.view = DecisionSceneView(self.screen, scene.prompt, scene.choices)
+        options = {key_val: choice.description
+                   for key_val, choice in scene.choices.items()}
+        self.view = DecisionSceneView(self.screen, scene.prompt, options)
         self.world = world
 
     def notify(self, event: Event) -> None:

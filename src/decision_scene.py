@@ -7,9 +7,9 @@ from world import World
 
 class DecisionOption(Resolution):
 
-    def __init__(self, name: str) -> None:
-        self._effects = (ChangeSceneName(name),)
-        self.name = name
+    def __init__(self, description: str) -> None:
+        self.description = description
+        self._effects = (ChangeSceneName(description),)
 
     @property
     def effects(self) -> Sequence[Effect]:
