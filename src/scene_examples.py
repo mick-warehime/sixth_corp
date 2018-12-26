@@ -24,8 +24,11 @@ def start_scene(world: World) -> DecisionScene:
 
 
 def second_scene(world: World) -> DecisionScene:
-    main_text = 'Player HP: {}. Scene count is now {}.'.format(
-        world.player.get_attribute(Attribute.HEALTH), world.scene_count)
+    main_text = (
+        'Player HP: {}. Player Max HP: {}. \nScene count is now {}.'.format(
+            world.player.get_attribute(Attribute.HEALTH),
+            world.player.get_attribute(Attribute.MAX_HEALTH),
+            world.scene_count))
 
     options = {
         '0': DecisionOption('Gain 1 HP',
