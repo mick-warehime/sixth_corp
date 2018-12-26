@@ -1,5 +1,5 @@
 from controller import Controller
-from decision_scene_option import DecisionOption
+from decision_scene import DecisionOption
 from decision_scene_view import DecisionSceneView
 from events import Event
 from events import InputEvent
