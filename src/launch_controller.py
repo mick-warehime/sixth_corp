@@ -15,9 +15,7 @@ class LaunchController(Controller):
     def notify(self, event: Event) -> None:
         if not self._active:
             return
-        super().notify(event)
-        self.view.render()
-
-    def handle_input(self, input_event: InputEvent) -> None:
-        if input_event.key == 's':
+        if event == Event.TICK:
+            self.view.render()
+        elif isinstance(event, InputEvent) and event.key == 's':
             EventManager.post(Event.NEW_SCENE)

@@ -1,5 +1,5 @@
 from controller import Controller
-from events import InputEvent, Event
+from events import Event
 from settings_view import SettingsView
 from pygame import Surface
 
@@ -10,11 +10,8 @@ class SettingsController(Controller):
         super(SettingsController, self).__init__(screen)
         self.view = SettingsView(self.screen)
 
-    def notify(self, event: Event):
+    def notify(self, event: Event) -> None:
         if not self._active:
             return
         if event == Event.TICK:
             self.view.render()
-
-    def handle_input(self, input_event: InputEvent) -> None:
-        pass

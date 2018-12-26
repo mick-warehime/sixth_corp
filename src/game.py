@@ -3,7 +3,6 @@ from enum import Enum
 from events import Event
 from events import EventListener
 from events import EventManager
-from controller import Controller
 from keyboard import Keyboard
 from scene_machine import SceneMachine
 import constants
