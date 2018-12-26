@@ -1,7 +1,9 @@
 import logging
 from weakref import WeakSet
 from enum import Enum
-from typing import Tuple
+from typing import Tuple, Union
+
+from scenes_base import Scene
 
 
 class Event(Enum):
@@ -30,6 +32,12 @@ class Event(Enum):
         return self.value
 
 
+class NewSceneEvent(object):
+
+    def __init__(self, scene: Scene) -> None:
+        self.scene = scene
+
+
 class InputEvent(object):
 
     def __init__(self, event: Event, key: str = '', pressed: bool = False,
@@ -54,7 +62,7 @@ class EventManager(object):
             len(cls.listeners), l))
 
     @classmethod
-    def post(cls, event: Event) -> None:
+    def post(cls, event: Union[Event, InputEvent, NewSceneEvent]) -> None:
         if not event == Event.TICK:
             logging.debug('EVENT: {}'.format(str(event)))
 
