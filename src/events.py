@@ -54,13 +54,6 @@ class EventManager(object):
             len(cls.listeners), l))
 
     @classmethod
-    def unregister(cls, l: 'EventListener') -> None:
-        if l in cls.listeners:
-            logging.debug('unregistered listener {0} {1}'.format(
-                len(cls.listeners), l))
-            cls.listeners.remove(l)
-
-    @classmethod
     def post(cls, event: Event) -> None:
         if not event == Event.TICK:
             logging.debug('EVENT: {}'.format(str(event)))
@@ -76,6 +69,3 @@ class EventListener(object):
 
     def notify(self, event: Event) -> None:
         raise NotImplementedError('Subclesses must implement this method.')
-
-    def unregister(self) -> None:
-        EventManager.unregister(self)
