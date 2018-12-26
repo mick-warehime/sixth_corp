@@ -1,7 +1,6 @@
 """Implementation of Scene class."""
 from typing import Sequence
 
-from events import Event, EventListener
 from world import World
 
 
