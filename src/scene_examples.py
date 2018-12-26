@@ -1,7 +1,7 @@
 """Simple decision scene examples."""
 from combat_scene import CombatScene
 from decision_scene import DecisionScene, DecisionOption
-from effects import IncrementSceneCount, IncrementPlayerAttribute
+from effects import IncrementSceneCount, IncrementPlayerAttribute, RestartWorld
 from states import Attribute
 from world import World
 
@@ -45,3 +45,10 @@ def second_scene(world: World) -> DecisionScene:
 
 def example_combat_scene(world: World) -> CombatScene:
     return CombatScene()
+
+
+def game_over(world: World) -> DecisionScene:
+    prompt = 'Game over. You lose.'
+    options = {'0': DecisionOption('Play again', RestartWorld(), start_scene)}
+
+    return DecisionScene(prompt, options)

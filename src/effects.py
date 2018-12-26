@@ -9,6 +9,12 @@ class IncrementSceneCount(Effect):
         world.scene_count += 1
 
 
+class RestartWorld(Effect):
+
+    def execute(self, world: World) -> None:
+        world.reset()
+
+
 class IncrementPlayerAttribute(Effect):
 
     def __init__(self, attribute: Attribute, amount: int) -> None:
