@@ -23,11 +23,14 @@ class DecisionSceneController(Controller):
             return
         if event == Event.TICK:
             self.view.render()
+            if self.scene.is_resolved():
+                resolution = self.scene.get_resolution()
+                for effect in resolution.effects:
+                    effect.execute(self.world)
+                EventManager.post(Event.NEW_SCENE)
         elif isinstance(event, InputEvent):
             self._handle_input(event)
 
     def _handle_input(self, input_event: InputEvent) -> None:
         if input_event.key in self.scene.choices:
-            for effect in self.scene.choices[input_event.key].effects:
-                effect.execute(self.world)
-            EventManager.post(Event.NEW_SCENE)
+            self.scene.make_choice(input_event.key)

@@ -25,9 +25,14 @@ class DecisionScene(Scene):
         super().__init__()
         self.prompt = prompt
         self.choices = choices
+        self._choice = None
 
     def is_resolved(self) -> bool:
-        pass
+        return self._choice is not None
+
+    def make_choice(self, choice: str):
+        assert choice in self.choices
+        self._choice = self.choices[choice]
 
     def get_resolution(self):
-        pass
+        return self._choice
