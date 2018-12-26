@@ -1,7 +1,9 @@
 from decision_scene_controller import DecisionSceneController
 from decision_scene import DecisionOption, DecisionScene
 from controller import Controller
+from effects import ChangeSceneName
 from launch_controller import LaunchController
+from scene_examples import start_scene
 from scenes_base import Scene
 from settings_controller import SettingsController
 from events import EventListener, Event, NewSceneEvent
@@ -19,7 +21,8 @@ class SceneMachine(EventListener):
         self._screen: pygame.Surface = pygame.display.set_mode(
             constants.SCREEN_SIZE)
 
-        self._controller = LaunchController(self._screen, self._start_scene())
+        self._controller = LaunchController(self._screen,
+                                            start_scene(self._world))
         self._prev_controller: Controller = None
 
     def notify(self, event: Event) -> None:
@@ -27,19 +30,6 @@ class SceneMachine(EventListener):
             self._toggle_settings()
         elif isinstance(event, NewSceneEvent):
             self._set_next_scene(event.scene)
-
-    def _start_scene(self) -> DecisionScene:
-        options = {}
-        for option_key in range(4):
-            scene_name = str(option_key)
-            options[scene_name] = DecisionOption(self._world.scene_count)
-            self._world.scene_count += 1
-
-        main_text = (
-            'scene {}: this is a very long description of an a scene and it '
-            'includes a newline.\nwhat a compelling decision i must '
-            'make.'.format(self._world.current_scene))
-        return DecisionScene(main_text, options)
 
     def _set_next_scene(self, scene: Scene) -> None:
         assert isinstance(scene, DecisionScene)

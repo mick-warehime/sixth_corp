@@ -1,22 +1,24 @@
-from typing import Dict, Sequence
+from typing import Dict, Sequence, Union
 
-from effects import ChangeSceneName
 from scenes_base import Scene, Resolution, Effect
 from world import World
 
 
 class DecisionOption(Resolution):
 
-    def __init__(self, description: str) -> None:
+    def __init__(self, description: str,
+                 effects: Union[Effect, Sequence[Effect]]) -> None:
         self.description = description
-        self._effects = (ChangeSceneName(description),)
+        if isinstance(effects, Effect):
+            effects = (effects,)
+        self._effects = tuple(effects)
 
     @property
     def effects(self) -> Sequence[Effect]:
         return self._effects
 
     def next_scene(self, world: World) -> Scene:
-        return DecisionScene('TEST', {'a': DecisionOption('choice')})
+        return DecisionScene('TEST', {'a': DecisionOption('choice', ())})
 
 
 class DecisionScene(Scene):
