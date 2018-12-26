@@ -19,7 +19,7 @@ def start_scene(world: World) -> DecisionScene:
     return DecisionScene(main_text, options)
 
 
-def second_scene(world: World):
+def second_scene(world: World) -> DecisionScene:
     main_text = 'Scene name is now {}. Scene count is now {}.'.format(
         world.current_scene, world.scene_count)
 

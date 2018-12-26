@@ -1,4 +1,4 @@
-"""Implementation of Scene class."""
+"""Basic interfaces for scenes, effects, and resolutions."""
 from typing import Sequence
 
 from world import World

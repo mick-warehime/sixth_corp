@@ -1,4 +1,3 @@
-from decision_scene import DecisionOption
 import pygame
 from pygame_view import PygameView
 from textwrap import wrap

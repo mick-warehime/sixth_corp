@@ -34,7 +34,7 @@ class Event(Enum):
 
 class NewSceneEvent(object):
 
-    def __init__(self, scene: Scene):
+    def __init__(self, scene: Scene) -> None:
         self.scene = scene
 
 

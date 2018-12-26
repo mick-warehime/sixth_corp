@@ -25,7 +25,7 @@ class DecisionOption(Resolution):
 
 class DecisionScene(Scene):
 
-    def __init__(self, prompt: str, choices: Dict[str, DecisionOption]):
+    def __init__(self, prompt: str, choices: Dict[str, DecisionOption]) -> None:
         super().__init__()
         self.prompt = prompt
         self.choices = choices
@@ -34,9 +34,9 @@ class DecisionScene(Scene):
     def is_resolved(self) -> bool:
         return self._choice is not None
 
-    def make_choice(self, choice: str):
+    def make_choice(self, choice: str) -> None:
         assert choice in self.choices
         self._choice = self.choices[choice]
 
-    def get_resolution(self):
+    def get_resolution(self) -> DecisionOption:
         return self._choice

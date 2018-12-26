@@ -1,11 +1,10 @@
 from controller import Controller
-from decision_scene import DecisionOption, DecisionScene
+from decision_scene import DecisionScene
 from decision_scene_view import DecisionSceneView
 from events import Event, NewSceneEvent
 from events import InputEvent
 from events import EventManager
 from pygame import Surface
-from typing import Dict
 from world import World
 
 
