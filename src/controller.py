@@ -5,7 +5,6 @@ from abstract_view import View
 from events import Event
 from events import InputEvent
 from events import EventListener
-from events import EventManager
 from pygame import Surface
 
 
@@ -29,6 +28,8 @@ class Controller(EventListener):
 
     def notify(self, event: Event) -> None:
         # handle user inputs/ changes view/model
+        if not self._active:
+            return
         if isinstance(event, InputEvent) and self._active:
             self.handle_input(event)
 

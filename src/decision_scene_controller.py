@@ -18,6 +18,13 @@ class DecisionSceneController(Controller):
         self.options = options
         self.world = world
 
+    def notify(self, event: Event) -> None:
+        if not self._active:
+            return
+        super().notify(event)
+        if event == Event.TICK:
+            self.view.render()
+
     def handle_input(self, input_event: InputEvent) -> None:
         if input_event.key in self.options:
             option = self.options[input_event.key]

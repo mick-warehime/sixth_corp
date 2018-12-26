@@ -12,6 +12,12 @@ class LaunchController(Controller):
         super(LaunchController, self).__init__(screen)
         self.view = LaunchView(self.screen)
 
+    def notify(self, event: Event) -> None:
+        if not self._active:
+            return
+        super().notify(event)
+        self.view.render()
+
     def handle_input(self, input_event: InputEvent) -> None:
         if input_event.key == 's':
             EventManager.post(Event.NEW_SCENE)
