@@ -1,6 +1,5 @@
 import logging
 
-from abstract_model import Model
 from abstract_view import View
 from events import Event
 from events import InputEvent
@@ -14,7 +13,6 @@ class Controller(EventListener):
         super(Controller, self).__init__()
         self.screen = screen
         self.view: View = None
-        self.model: Model = None
         self._active = True
         self.activate()
 
