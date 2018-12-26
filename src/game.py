@@ -23,8 +23,6 @@ class GameState(Enum):
 class Game(EventListener):
     """Stores sceneMachine and keyboard, handles framerate and quit event."""
     keyboard: Keyboard = None
-    controller: Controller = None
-    prev_controller: Controller = None
 
     def __init__(self) -> None:
         super(Game, self).__init__()
