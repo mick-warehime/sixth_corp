@@ -9,3 +9,9 @@ class ChangeSceneName(Effect):
 
     def execute(self, world: World) -> None:
         world.current_scene = self._name
+
+
+class IncrementSceneCount(Effect):
+
+    def execute(self, world: World) -> None:
+        world.scene_count += 1

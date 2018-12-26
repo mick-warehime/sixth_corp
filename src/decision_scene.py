@@ -1,4 +1,4 @@
-from typing import Dict, Sequence, Union
+from typing import Dict, Sequence, Union, Callable
 
 from scenes_base import Scene, Resolution, Effect
 from world import World
@@ -7,18 +7,20 @@ from world import World
 class DecisionOption(Resolution):
 
     def __init__(self, description: str,
-                 effects: Union[Effect, Sequence[Effect]]) -> None:
+                 effects: Union[Effect, Sequence[Effect]],
+                 next_scene_fun: Callable[[World], Scene]) -> None:
         self.description = description
         if isinstance(effects, Effect):
             effects = (effects,)
         self._effects = tuple(effects)
+        self._next_scene_fun = next_scene_fun
 
     @property
     def effects(self) -> Sequence[Effect]:
         return self._effects
 
     def next_scene(self, world: World) -> Scene:
-        return DecisionScene('TEST', {'a': DecisionOption('choice', ())})
+        return self._next_scene_fun(world)
 
 
 class DecisionScene(Scene):
