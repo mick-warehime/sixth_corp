@@ -1,6 +1,6 @@
 from action_base import Action
 from character_base import Character
-from character_state import State
+from states import Attribute
 
 
 class DamageAction(Action):
@@ -11,4 +11,4 @@ class DamageAction(Action):
         self._magnitude = magnitude
 
     def apply(self, character: Character) -> None:
-        character.update_state(State.HEALTH, -self._magnitude)
+        character.increment_attribute(Attribute.HEALTH, -self._magnitude)
