@@ -47,7 +47,7 @@ def second_scene(world: World) -> DecisionScene:
     return DecisionScene(main_text, options)
 
 
-def example_combat_scene(world: World, enemy=None) -> CombatScene:
+def example_combat_scene(world: World, enemy: Character = None) -> CombatScene:
     if enemy is None:
         enemy = Character(10)
     options = {

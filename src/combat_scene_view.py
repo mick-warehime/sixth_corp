@@ -8,7 +8,7 @@ from states import Attribute
 
 class CombatSceneView(DecisionSceneView):
     def __init__(self, screen: pygame.Surface, player: Character,
-                 enemy: Character, options: Dict[str, str]):
+                 enemy: Character, options: Dict[str, str]) -> None:
         self.player = player
         self.enemy = enemy
         super().__init__(screen, self._main_text, options)

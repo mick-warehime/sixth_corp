@@ -11,7 +11,7 @@ from world import World
 
 
 class SceneController(Controller, metaclass=ABCMeta):
-    def __init__(self, screen: Surface, world: World, scene: Scene):
+    def __init__(self, screen: Surface, world: World, scene: Scene)->None:
         super().__init__(screen)
         self.world = world
         self.scene = scene

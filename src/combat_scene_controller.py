@@ -1,6 +1,5 @@
 from combat_scene import CombatScene
 from combat_scene_view import CombatSceneView
-from decision_scene_view import DecisionSceneView
 from events import InputEvent
 from pygame import Surface
 
