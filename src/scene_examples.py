@@ -44,7 +44,7 @@ def second_scene(world: World) -> DecisionScene:
     return DecisionScene(main_text, options)
 
 
-def example_combat_scene(world: World):
+def example_combat_scene(world: World) -> CombatScene:
     return CombatScene()
 
 
