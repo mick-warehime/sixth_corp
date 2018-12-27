@@ -22,13 +22,10 @@ class CombatScene(Scene):
 
     def __init__(self) -> None:
         super().__init__()
-        self._enemy = Character(health=10)
-
-    def enemy(self) -> Character:
-        return self._enemy
+        self.enemy = Character(health=10)
 
     def is_resolved(self) -> bool:
-        return IsDead().check(self._enemy)
+        return IsDead().check(self.enemy)
 
     def get_resolution(self) -> Resolution:
         return CombatResolution()

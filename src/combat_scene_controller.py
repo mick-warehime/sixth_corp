@@ -25,7 +25,7 @@ class CombatSceneController(Controller):
         if not self._active:
             return
         if event == Event.TICK:
-            self.view.update(self.world.player, self.scene.enemy())
+            self.view.update(self.world.player, self.scene.enemy)
             if self.scene.is_resolved():
                 resolution = self.scene.get_resolution()
                 for effect in resolution.effects:
@@ -47,8 +47,7 @@ class CombatSceneController(Controller):
             action = DamageAction(5)
         else:
             return
-        enemy = self.scene.enemy()
-        action.apply(enemy)
+        action.apply(self.scene.enemy)
         self._handle_enemy_action()
 
     def _handle_enemy_action(self) -> None:
