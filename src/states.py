@@ -72,7 +72,7 @@ class Stateful(object):
 
         return int_fun
 
-    def _check_attribute_bounds(self, attribute: Attribute) -> None:
+    def _set_attribute_in_bounds(self, attribute: Attribute) -> None:
         if attribute in self._attribute_bounds:
             value = self._attributes[attribute]
             lower, upper = self._attribute_bounds[attribute]
@@ -84,8 +84,8 @@ class Stateful(object):
 
     def increment_attribute(self, attribute: Attribute, delta: int) -> None:
         self._attributes[attribute] += delta
-        self._check_attribute_bounds(attribute)
+        self._set_attribute_in_bounds(attribute)
 
     def set_attribute(self, attribute: Attribute, value: int) -> None:
         self._attributes[attribute] = value
-        self._check_attribute_bounds(attribute)
+        self._set_attribute_in_bounds(attribute)
