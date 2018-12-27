@@ -1,26 +1,11 @@
-from combat_scene import CombatSceneV2, CombatScene
+from combat_scene import CombatScene
 from combat_scene_model import CombatSceneModel
-from combat_scene_view import CombatSceneViewV2, CombatSceneView
+from combat_scene_view import CombatSceneView
 from controller import Controller
 from events import InputEvent, EventType, Event
 from pygame import Surface
 
-from scene_controller import SceneController
 from world import World
-
-
-class CombatSceneControllerV2(SceneController):
-
-    def __init__(self, screen: Surface, world: World,
-                 scene: CombatSceneV2) -> None:
-        super(CombatSceneControllerV2, self).__init__(screen, world, scene)
-        options = {k: v.description for k, v in scene.choices.items()}
-        self.view = CombatSceneViewV2(self.screen, world.player, scene.enemy,
-                                      options)
-
-    def _handle_input(self, input_event: InputEvent) -> None:
-        if input_event.key in self.scene.choices:
-            self.scene.make_choice(input_event.key)
 
 
 class CombatSceneController(Controller):

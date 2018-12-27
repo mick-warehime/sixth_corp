@@ -1,18 +1,9 @@
 from character_base import Character
 from conditions import IsDead
-from decision_scene import DecisionScene, DecisionOption
-from typing import Dict, Sequence
+from typing import Sequence
 
 from scenes_base import Resolution, Effect, Scene
 from world import World
-
-
-class CombatSceneV2(DecisionScene):
-
-    def __init__(self, enemy: Character,
-                 choices: Dict[str, DecisionOption]) -> None:
-        super().__init__('', choices)
-        self.enemy = enemy
 
 
 class CombatResolution(Resolution):
