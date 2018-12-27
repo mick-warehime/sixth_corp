@@ -1,4 +1,5 @@
 import abc
+from typing import Any, Set
 
 from states import Stateful, State, Attribute
 
@@ -11,12 +12,12 @@ class Condition(metaclass=abc.ABCMeta):
     def check(self, target: Stateful) -> bool:
         """Evaluate this on a HasState object to determine condition value."""
 
-    def __and__(self, other) -> '_And':
+    def __and__(self, other: Any) -> '_And':
         if not isinstance(other, Condition):
             return NotImplemented
         return _And(self, other)
 
-    def __or__(self, other) -> '_Or':
+    def __or__(self, other: Any) -> '_Or':
         if not isinstance(other, Condition):
             return NotImplemented
         return _Or(self, other)
@@ -29,12 +30,12 @@ class _And(Condition):
     """Conditional AND of one or more Conditions."""
 
     def __init__(self, *conditions: Condition) -> None:
-        all_conds = set()
+        all_conds: Set[Condition] = set()
         for cond in (c for c in conditions if isinstance(c, _And)):
             all_conds.update(cond._conditions)
 
         all_conds.update(conditions)
-        self._conditions = all_conds
+        self._conditions: Set[Condition] = all_conds
 
     def check(self, target: Stateful) -> bool:
         return all(c.check(target) for c in self._conditions)
@@ -49,7 +50,7 @@ class _Or(Condition):
             all_conds.update(cond._conditions)
 
         all_conds.update(conditions)
-        self._conditions = all_conds
+        self._conditions: Set[Condition] = all_conds
 
     def check(self, target: Stateful) -> bool:
         return any(c.check(target) for c in self._conditions)
@@ -60,7 +61,7 @@ class _Not(Condition):
     def __init__(self, condition: Condition) -> None:
         self._condition = condition
 
-    def check(self, target: Stateful):
+    def check(self, target: Stateful) -> bool:
         return not self._condition.check(target)
 
 
@@ -69,7 +70,7 @@ class HasState(Condition):
     def __init__(self, state: State) -> None:
         self._state = state
 
-    def check(self, target: Stateful):
+    def check(self, target: Stateful) -> bool:
         return target.has_state(self._state)
 
 

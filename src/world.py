@@ -4,5 +4,5 @@ class World(object):
         self.scene_count = 0
         self.player = Character(health=15)
 
-    def reset(self):
-        self.__init__()
+    def reset(self) -> None:
+        self.__init__()  # type: ignore
