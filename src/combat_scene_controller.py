@@ -26,14 +26,16 @@ class CombatSceneController(Controller):
             return
         if event == Event.TICK:
             self.view.update(self.world.player, self.scene.enemy())
+
+            if self.is_game_over():
+                EventManager.post(NewSceneEvent(game_over(self.world)))
+                return
+
             if self.scene.is_resolved():
                 resolution = self.scene.get_resolution()
                 for effect in resolution.effects:
                     effect.execute(self.world)
-
-                if IsDead().check(self.world.player):
-                    EventManager.post(NewSceneEvent(game_over(self.world)))
-                    return
+                print(IsDead().check(self.world.player))
 
                 EventManager.post(
                     NewSceneEvent(resolution.next_scene(self.world)))
@@ -54,3 +56,6 @@ class CombatSceneController(Controller):
     def _handle_enemy_action(self) -> None:
         action = DamageAction(1)
         action.apply(self.world.player)
+
+    def is_game_over(self) -> bool:
+        return IsDead().check(self.world.player)
