@@ -4,7 +4,7 @@ from states import Stateful, Attribute
 
 class Player(Stateful):
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.set_attribute(Attribute.MAX_HEALTH, 15)
         self.set_attribute(Attribute.HEALTH, 10)
