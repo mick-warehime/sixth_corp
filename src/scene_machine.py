@@ -1,5 +1,6 @@
-from combat_scene import CombatScene
-from combat_scene_controller import CombatSceneController
+from combat_scene import CombatSceneV2, CombatScene
+from combat_scene_controller import CombatSceneControllerV2, \
+    CombatSceneController
 from decision_scene_controller import DecisionSceneController
 from decision_scene import DecisionScene
 from controller import Controller
@@ -13,8 +14,8 @@ import constants
 import pygame
 
 SCENE_CONTROLLERS = {DecisionScene: DecisionSceneController,
-
-                     CombatScene: CombatSceneController}
+                     CombatScene: CombatSceneController,
+                     CombatSceneV2: CombatSceneControllerV2}
 
 
 class SceneMachine(EventListener):

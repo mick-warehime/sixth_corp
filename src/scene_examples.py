@@ -2,7 +2,7 @@
 from functools import partial
 
 from character_base import Character
-from combat_scene import CombatScene
+from combat_scene import CombatSceneV2, CombatScene
 from conditions import IsDead
 from decision_scene import DecisionScene, DecisionOption
 from effects import IncrementSceneCount, IncrementPlayerAttribute, RestartWorld, \
@@ -48,8 +48,12 @@ def second_scene(world: World) -> DecisionScene:
     return DecisionScene(main_text, options)
 
 
-def example_combat_scene(world: World,
-                         enemy: Character = None) -> DecisionScene:
+def example_combat_scene(world: World):
+    return CombatScene()
+
+
+def example_combat_scene_v2(world: World,
+                            enemy: Character = None) -> DecisionScene:
     if enemy is None:
         enemy = Character(10)
     if IsDead().check(enemy):
@@ -63,21 +67,21 @@ def _combat_scene_enemy_dead(world: World) -> DecisionScene:
                          {'0': DecisionOption('Continue.', (), start_scene)})
 
 
-def _combat_scene_live_enemy(enemy) -> CombatScene:
+def _combat_scene_live_enemy(enemy) -> CombatSceneV2:
     options = {
         '0': DecisionOption('Medium attack',
                             (IncrementAttribute(enemy, Attribute.HEALTH, -1),
                              IncrementPlayerAttribute(Attribute.HEALTH, -1)),
-                            partial(example_combat_scene, enemy=enemy)),
+                            partial(example_combat_scene_v2, enemy=enemy)),
         '1': DecisionOption('Strong attack',
                             (IncrementAttribute(enemy, Attribute.HEALTH, -3),
                              IncrementPlayerAttribute(Attribute.HEALTH, -1)),
-                            partial(example_combat_scene, enemy=enemy)),
+                            partial(example_combat_scene_v2, enemy=enemy)),
         '2': DecisionOption('Stand there',
                             (IncrementPlayerAttribute(Attribute.HEALTH, -1)),
-                            partial(example_combat_scene, enemy=enemy)),
+                            partial(example_combat_scene_v2, enemy=enemy)),
     }
-    return CombatScene(enemy, options)
+    return CombatSceneV2(enemy, options)
 
 
 def game_over(world: World) -> DecisionScene:
