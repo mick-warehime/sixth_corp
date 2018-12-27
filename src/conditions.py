@@ -5,7 +5,7 @@ from states import Stateful, State, Attribute
 
 
 class Condition(metaclass=abc.ABCMeta):
-    """Represents a boolean statement that can be tested on HasState objects.
+    """Represents a boolean statement that can be tested on Stateful objects.
     """
 
     @abc.abstractmethod
