@@ -63,12 +63,12 @@ class Stateful(object):
     def _parse_bound(self, bound: _BoundType) -> _BoundFun:
         if isinstance(bound, int):
             def int_fun(x: Stateful) -> int:
-                return bound
+                return bound  # type: ignore
         elif isinstance(bound, Attribute):
             def int_fun(x: Stateful) -> int:
-                return x.get_attribute(bound)
+                return x.get_attribute(bound)  # type: ignore
         else:
-            int_fun = bound
+            int_fun = bound  # type: ignore
 
         return int_fun
 
