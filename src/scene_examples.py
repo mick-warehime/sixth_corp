@@ -3,6 +3,7 @@ from functools import partial
 
 from character_base import Character
 from combat_scene import CombatScene
+from conditions import IsDead
 from decision_scene import DecisionScene, DecisionOption
 from effects import IncrementSceneCount, IncrementPlayerAttribute, RestartWorld, \
     IncrementAttribute
@@ -47,9 +48,22 @@ def second_scene(world: World) -> DecisionScene:
     return DecisionScene(main_text, options)
 
 
-def example_combat_scene(world: World, enemy: Character = None) -> CombatScene:
+def example_combat_scene(world: World,
+                         enemy: Character = None) -> DecisionScene:
     if enemy is None:
         enemy = Character(10)
+    if IsDead().check(enemy):
+        return _combat_scene_enemy_dead(world)
+    else:
+        return _combat_scene_live_enemy(enemy)
+
+
+def _combat_scene_enemy_dead(world: World) -> DecisionScene:
+    return DecisionScene('Enemy defeated!',
+                         {'0': DecisionOption('Continue.', (), start_scene)})
+
+
+def _combat_scene_live_enemy(enemy):
     options = {
         '0': DecisionOption('Medium attack',
                             (IncrementAttribute(enemy, Attribute.HEALTH, -1),
