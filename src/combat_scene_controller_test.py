@@ -21,21 +21,13 @@ class CombatSceneControllerTest(TestCase):
     def test_game_over(self, mock_pygame):
         ctl = create_combat_controller(enemy=Character(10))
 
-        self.assertFalse(ctl.is_game_over())
-
-        ctl.world.player = Character(0)
-
-        self.assertTrue(ctl.is_game_over())
+        self.assertFalse(ctl.model.is_game_over())
 
     @mock.patch('pygame_view.pygame')
     def test_kill_enemy(self, mock_pygame):
         ctl = create_combat_controller(enemy=Character(5))
-        self.assertFalse(ctl.scene.is_resolved())
+        self.assertFalse(ctl.model.scene.is_resolved())
 
         simulate_key_press('2')
 
-        self.assertTrue(ctl.scene.is_resolved())
-
-
-
-
+        self.assertTrue(ctl.model.scene.is_resolved())

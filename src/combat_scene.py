@@ -27,7 +27,7 @@ class CombatScene(Scene):
     def enemy(self) -> Character:
         return self._enemy
 
-    def set_enemy(self, enemy: Character):
+    def set_enemy(self, enemy: Character) -> None:
         self._enemy = enemy
 
     def is_resolved(self) -> bool:
