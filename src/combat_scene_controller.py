@@ -1,3 +1,4 @@
+from conditions import IsDead
 from controller import Controller
 from combat_scene import CombatScene
 from combat_scene_view import CombatSceneView
@@ -6,6 +7,8 @@ from events import Event, NewSceneEvent, EventType
 from events import InputEvent
 from events import EventManager
 from pygame import Surface
+
+from scene_examples import game_over
 from world import World
 
 
@@ -27,6 +30,10 @@ class CombatSceneController(Controller):
                 resolution = self.scene.get_resolution()
                 for effect in resolution.effects:
                     effect.execute(self.world)
+
+                if IsDead().check(self.world.player):
+                    EventManager.post(NewSceneEvent(game_over(self.world)))
+                    return
 
                 EventManager.post(
                     NewSceneEvent(resolution.next_scene(self.world)))

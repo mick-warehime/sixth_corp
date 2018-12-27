@@ -1,8 +1,9 @@
 import pygame
 from character_base import Character
-from character_state import State
 from pygame_view import PygameView
 from typing import List
+
+from states import Attribute
 
 
 class CombatSceneView(PygameView):
@@ -17,7 +18,8 @@ class CombatSceneView(PygameView):
         self.render_text()
 
     def update(self, player: Character, enemy: Character) -> None:
-        player_health = player.get_state(State.HEALTH)
-        enemy_health = enemy.get_state(State.HEALTH)
-        self.texts = self._text_fmt.format(player_health, enemy_health).split('\n')
+        player_health = player.get_attribute(Attribute.HEALTH)
+        enemy_health = enemy.get_attribute(Attribute.HEALTH)
+        self.texts = self._text_fmt.format(player_health, enemy_health).split(
+            '\n')
         self.render()

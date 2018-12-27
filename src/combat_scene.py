@@ -1,4 +1,5 @@
 from character_base import Character
+from conditions import IsDead
 from effects import Effect
 from scenes_base import Resolution
 from scenes_base import Scene
@@ -27,7 +28,7 @@ class CombatScene(Scene):
         return self._enemy
 
     def is_resolved(self) -> bool:
-        return not self._enemy.is_alive()
+        return IsDead().check(self._enemy)
 
     def get_resolution(self) -> Resolution:
         return CombatResolution()

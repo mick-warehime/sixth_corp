@@ -14,7 +14,7 @@ def start_scene(world: World) -> DecisionScene:
                                              IncrementSceneCount(),
                                              second_scene)
 
-    options['5'] = DecisionOption('COMBAT!', ChangeSceneName('COMBAT!'), example_combat_scene)
+    options['5'] = DecisionOption('COMBAT!', (), example_combat_scene)
 
     main_text = (
         'Start scene: this is a very long description of an a scene and it '

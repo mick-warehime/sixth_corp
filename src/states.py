@@ -22,7 +22,7 @@ class Attribute(Enum):
 
 
 _BoundFun = Callable[['Stateful'], int]
-_BoundType = Union[int, _BoundFun]
+_BoundType = Union[int, Attribute, _BoundFun]
 
 
 class Stateful(object):
@@ -60,14 +60,15 @@ class Stateful(object):
 
         self._attribute_bounds[attribute] = (lower, upper)
 
-    def _parse_bound(self,
-                     num_or_fun: _BoundType) -> _BoundFun:
-        if not isinstance(num_or_fun, int):
-            return num_or_fun
-        value = num_or_fun
-
-        def int_fun(x: Stateful) -> int:
-            return value
+    def _parse_bound(self, bound: _BoundType) -> _BoundFun:
+        if isinstance(bound, int):
+            def int_fun(x: Stateful) -> int:
+                return bound
+        elif isinstance(bound, Attribute):
+            def int_fun(x: Stateful) -> int:
+                return x.get_attribute(bound)
+        else:
+            int_fun = bound
 
         return int_fun
 

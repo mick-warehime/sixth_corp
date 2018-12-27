@@ -1,8 +1,9 @@
 from character_base import Character
-from character_state import State
 from damage_action import DamageAction
 from parameterized import parameterized
 from unittest import TestCase
+
+from states import Attribute
 
 
 class DamageActionTest(TestCase):
@@ -19,4 +20,5 @@ class DamageActionTest(TestCase):
 
         ten_damage.apply(char)
 
-        self.assertEqual(char.get_state(State.HEALTH), character_health - 10)
+        self.assertEqual(char.get_attribute(Attribute.HEALTH),
+                         character_health - 10)
