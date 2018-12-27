@@ -44,7 +44,9 @@ def second_scene(world: World) -> DecisionScene:
 
 
 def example_combat_scene(world: World) -> CombatScene:
-    return CombatScene()
+    scene = CombatScene()
+    world.enemy = scene.enemy
+    return scene
 
 
 def game_over(world: World) -> DecisionScene:

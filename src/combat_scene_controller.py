@@ -1,44 +1,19 @@
-from conditions import IsDead
-from controller import Controller
 from combat_scene import CombatScene
 from combat_scene_view import CombatSceneView
 from damage_action import DamageAction
-from events import Event, NewSceneEvent, EventType
 from events import InputEvent
-from events import EventManager
 from pygame import Surface
 
-from scene_examples import game_over
+from scene_controller import SceneController
 from world import World
 
 
-class CombatSceneController(Controller):
+class CombatSceneController(SceneController):
 
     def __init__(self, screen: Surface, world: World,
                  scene: CombatScene) -> None:
-        super(CombatSceneController, self).__init__(screen)
-        self.world = world
-        self.scene = scene
-        self.view = CombatSceneView(self.screen)
-
-    def notify(self, event: EventType) -> None:
-        if not self._active:
-            return
-        if event == Event.TICK:
-            self.view.update(self.world.player, self.scene.enemy)
-            if self.scene.is_resolved():
-                resolution = self.scene.get_resolution()
-                for effect in resolution.effects:
-                    effect.execute(self.world)
-
-                if IsDead().check(self.world.player):
-                    EventManager.post(NewSceneEvent(game_over(self.world)))
-                    return
-
-                EventManager.post(
-                    NewSceneEvent(resolution.next_scene(self.world)))
-        elif isinstance(event, InputEvent):
-            self._handle_input(event)
+        super(CombatSceneController, self).__init__(screen, world, scene)
+        self.view = CombatSceneView(self.screen, self.world.player, scene.enemy)
 
     def _handle_input(self, input_event: InputEvent) -> None:
         if input_event.key == '1':
