@@ -1,4 +1,5 @@
 """Simple decision scene examples."""
+
 from combat_scene import CombatScene
 from decision_scene import DecisionScene, DecisionOption
 from effects import IncrementSceneCount, IncrementPlayerAttribute, RestartWorld

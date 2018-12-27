@@ -1,9 +1,8 @@
 from character_base import Character
 from conditions import IsDead
-from effects import Effect
-from scenes_base import Resolution
-from scenes_base import Scene
 from typing import Sequence
+
+from scenes_base import Resolution, Effect, Scene
 from world import World
 
 
@@ -26,6 +25,9 @@ class CombatScene(Scene):
 
     def enemy(self) -> Character:
         return self._enemy
+
+    def set_enemy(self, enemy: Character) -> None:
+        self._enemy = enemy
 
     def is_resolved(self) -> bool:
         return IsDead().check(self._enemy)

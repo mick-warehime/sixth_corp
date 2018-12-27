@@ -12,7 +12,8 @@ from world import World
 import constants
 import pygame
 
-SCENE_CONTROLLERS = {DecisionScene: DecisionSceneController, CombatScene: CombatSceneController}
+SCENE_CONTROLLERS = {DecisionScene: DecisionSceneController,
+                     CombatScene: CombatSceneController}
 
 
 class SceneMachine(EventListener):

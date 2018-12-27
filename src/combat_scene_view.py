@@ -1,8 +1,8 @@
 import pygame
 from character_base import Character
-from pygame_view import PygameView
 from typing import List
 
+from pygame_view import PygameView
 from states import Attribute
 
 

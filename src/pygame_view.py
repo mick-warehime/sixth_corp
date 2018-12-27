@@ -1,11 +1,9 @@
-from abstract_view import View
 from typing import List
 import pygame
 
 
-class PygameView(View):
+class PygameView(object):
     def __init__(self, screen: pygame.Surface) -> None:
-        super(View, self).__init__()
         self.screen = screen
         pygame.display.set_caption('6th Corp')
         self.smallfont = pygame.font.Font(None, 40)

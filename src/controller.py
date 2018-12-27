@@ -1,8 +1,9 @@
 import logging
 
-from abstract_view import View
 from events import EventListener, EventType
 from pygame import Surface
+
+from pygame_view import PygameView
 
 
 class Controller(EventListener):
@@ -10,7 +11,7 @@ class Controller(EventListener):
     def __init__(self, screen: Surface) -> None:
         super(Controller, self).__init__()
         self.screen = screen
-        self.view: View = None
+        self.view: PygameView = None
         self._active = True
         self.activate()
 
