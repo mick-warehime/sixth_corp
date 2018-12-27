@@ -1,5 +1,5 @@
 import abc
-from typing import Any, Set
+from typing import Any
 
 from states import Stateful, State, Attribute
 
@@ -29,13 +29,8 @@ class Condition(metaclass=abc.ABCMeta):
 class _And(Condition):
     """Conditional AND of one or more Conditions."""
 
-    def __init__(self, *conditions: Condition) -> None:
-        all_conds: Set[Condition] = set()
-        for cond in (c for c in conditions if isinstance(c, _And)):
-            all_conds.update(cond._conditions)
-
-        all_conds.update(conditions)
-        self._conditions: Set[Condition] = all_conds
+    def __init__(self, first: Condition, second: Condition) -> None:
+        self._conditions = (first, second)
 
     def check(self, target: Stateful) -> bool:
         return all(c.check(target) for c in self._conditions)
@@ -44,13 +39,8 @@ class _And(Condition):
 class _Or(Condition):
     """Conditional OR of one or more Conditions."""
 
-    def __init__(self, *conditions: Condition) -> None:
-        all_conds = set()
-        for cond in (c for c in conditions if isinstance(c, _Or)):
-            all_conds.update(cond._conditions)
-
-        all_conds.update(conditions)
-        self._conditions: Set[Condition] = all_conds
+    def __init__(self, first: Condition, second: Condition) -> None:
+        self._conditions = (first, second)
 
     def check(self, target: Stateful) -> bool:
         return any(c.check(target) for c in self._conditions)
