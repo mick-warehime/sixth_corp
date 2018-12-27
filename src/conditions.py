@@ -10,7 +10,7 @@ class Condition(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def check(self, target: Stateful) -> bool:
-        """Evaluate this on a HasState object to determine condition value."""
+        """Evaluate this on a Stateful object to determine condition value."""
 
     def __and__(self, other: Any) -> '_And':
         if not isinstance(other, Condition):
