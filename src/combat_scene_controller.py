@@ -1,4 +1,5 @@
 from combat_scene import CombatScene
+from combat_scene_view import CombatSceneView
 from decision_scene_view import DecisionSceneView
 from events import InputEvent
 from pygame import Surface
@@ -13,7 +14,8 @@ class CombatSceneController(SceneController):
                  scene: CombatScene) -> None:
         super(CombatSceneController, self).__init__(screen, world, scene)
         options = {k: v.description for k, v in scene.choices.items()}
-        self.view = DecisionSceneView(self.screen, 'text', options)
+        self.view = CombatSceneView(self.screen, world.player, scene.enemy,
+                                    options)
 
     def _handle_input(self, input_event: InputEvent) -> None:
         if input_event.key in self.scene.choices:
