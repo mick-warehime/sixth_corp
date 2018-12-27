@@ -63,7 +63,7 @@ def _combat_scene_enemy_dead(world: World) -> DecisionScene:
                          {'0': DecisionOption('Continue.', (), start_scene)})
 
 
-def _combat_scene_live_enemy(enemy):
+def _combat_scene_live_enemy(enemy) -> CombatScene:
     options = {
         '0': DecisionOption('Medium attack',
                             (IncrementAttribute(enemy, Attribute.HEALTH, -1),
