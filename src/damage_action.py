@@ -11,4 +11,4 @@ class DamageAction(Action):
         self._magnitude = magnitude
 
     def apply(self, character: Character) -> None:
-        character.update_attribute(State.HEALTH, -self._magnitude)
+        character.update_state(State.HEALTH, -self._magnitude)

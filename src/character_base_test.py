@@ -8,10 +8,10 @@ class CharacterTest(TestCase):
     def test_character_has_attributes(self):
         health = 10
         char = Character(health)
-        self.assertTrue(char.has_attribute(State.HEALTH))
+        self.assertTrue(char.has_state(State.HEALTH))
 
     def test_kill_character(self):
         health = 10
         char = Character(health)
-        char.update_attribute(State.HEALTH, -health)
+        char.update_state(State.HEALTH, -health)
         self.assertFalse(char.is_alive())

@@ -19,4 +19,4 @@ class DamageActionTest(TestCase):
 
         ten_damage.apply(char)
 
-        self.assertEqual(char.get_attribute(State.HEALTH), character_health - 10)
+        self.assertEqual(char.get_state(State.HEALTH), character_health - 10)

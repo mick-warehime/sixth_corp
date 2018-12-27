@@ -17,7 +17,7 @@ class CombatSceneView(PygameView):
         self.render_text()
 
     def update(self, player: Character, enemy: Character) -> None:
-        player_health = player.get_attribute(State.HEALTH)
-        enemy_health = enemy.get_attribute(State.HEALTH)
+        player_health = player.get_state(State.HEALTH)
+        enemy_health = enemy.get_state(State.HEALTH)
         self.texts = self._text_fmt.format(player_health, enemy_health).split('\n')
         self.render()
