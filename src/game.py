@@ -38,8 +38,7 @@ class Game(EventListener):
             pygame.quit()
             sys.exit()
         elif event == Event.TICK:
-            # limit the redraw speed to 30 frames per second
-
+            # limits the redraw speed
             self.clock.tick(constants.FRAMES_PER_SECOND)
 
     def run(self) -> None:

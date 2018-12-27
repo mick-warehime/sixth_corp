@@ -1,4 +1,5 @@
 import pygame
+from constants import TEXTWIDTH
 from pygame_view import PygameView
 from textwrap import wrap
 from typing import Dict
@@ -10,12 +11,11 @@ def _format_text(description: str,
     lines = description.split('\n') + option_texts
     adjusted_lines: List[str] = []
     for line in lines:
-        adjusted_lines += wrap(line, DecisionSceneView.WIDTH)
+        adjusted_lines += wrap(line, TEXTWIDTH)
     return adjusted_lines
 
 
 class DecisionSceneView(PygameView):
-    WIDTH = 50
 
     def __init__(self, screen: pygame.Surface,
                  main_text: str, options: Dict[str, str]) -> None:

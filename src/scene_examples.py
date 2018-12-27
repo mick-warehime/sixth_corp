@@ -1,4 +1,5 @@
 """Simple decision scene examples."""
+from combat_scene import CombatScene
 from decision_scene import DecisionScene, DecisionOption
 from effects import ChangeSceneName, IncrementSceneCount
 from world import World
@@ -11,6 +12,8 @@ def start_scene(world: World) -> DecisionScene:
         options[scene_name] = DecisionOption(scene_name,
                                              ChangeSceneName(scene_name),
                                              second_scene)
+
+    options['5'] = DecisionOption('COMBAT!', ChangeSceneName('COMBAT!'), example_combat_scene)
 
     main_text = (
         'scene {}: this is a very long description of an a scene and it '
@@ -32,3 +35,7 @@ def second_scene(world: World) -> DecisionScene:
                             second_scene)
     }
     return DecisionScene(main_text, options)
+
+
+def example_combat_scene(world: World) -> CombatScene:
+    return CombatScene()
