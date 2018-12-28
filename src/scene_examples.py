@@ -20,7 +20,7 @@ def start_scene(world: World) -> DecisionScene:
     return DecisionScene(main_text, options)
 
 
-def swamp_scene(world: World):
+def swamp_scene(world: World) -> DecisionScene:
     main_text = ('You walk into the swamp. The foliage overhead blocks most of'
                  ' the sunlight. Flies and mosquitoes buzz near your ears. The '
                  'smell of sulfur pervades. Ahead you see the curving form of a'

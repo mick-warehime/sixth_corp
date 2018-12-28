@@ -56,6 +56,7 @@ def transition_to(
     return scene_fun
 
 
+# This is used as a decorator for a SceneConstructor.
 def from_transition(description: str,
-                    effects: Union[Effect, Sequence[Effect]] = ()):
+                    effects: Union[Effect, Sequence[Effect]] = ()) -> partial:
     return partial(transition_to, description=description, effects=effects)

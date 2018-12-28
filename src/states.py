@@ -39,7 +39,7 @@ class Stateful(object):
         self._states: defaultdict = defaultdict(lambda: False)
         self._attributes: defaultdict = defaultdict(lambda: 0)
         self._attribute_bounds: Dict[
-            Attribute, Tuple[_BoundFun, _BoundFun]] = {}
+            AttributeType, Tuple[_BoundFun, _BoundFun]] = {}
 
     def has_state(self, state: State) -> bool:
         """Whether object has a given state.

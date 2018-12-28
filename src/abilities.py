@@ -32,9 +32,10 @@ _difficulty_probs = {k: v for k, v in
                      zip(Difficulty, [0, 1 / 8, 1 / 4, 1 / 2, 3 / 4, 7 / 8, 1])}
 
 
-def skill_check(difficulty: Difficulty, success: SceneConstructor,
-                failure: SceneConstructor,
-                modifiers: Union[Ability, Sequence[Ability]] = ()):
+def skill_check(
+        difficulty: Difficulty, success: SceneConstructor,
+        failure: SceneConstructor,
+        modifiers: Union[Ability, Sequence[Ability]] = ()) -> SceneConstructor:
     """Returns a scene constructing function that implements a skill check.
 
     Args:
