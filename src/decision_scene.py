@@ -1,3 +1,4 @@
+from functools import partial
 from typing import Dict, Sequence, Union
 
 from scenes_base import Scene, Resolution, Effect, SceneConstructor
@@ -42,8 +43,8 @@ class DecisionScene(Scene):
         return self._choice
 
 
-def transition_scene(
-        description: str, next_scene_fun: SceneConstructor,
+def transition(
+        next_scene_fun: SceneConstructor, description: str,
         effects: Union[Effect, Sequence[Effect]] = ()) -> SceneConstructor:
     """Simplified API for a transition scene constructor."""
 
@@ -53,3 +54,8 @@ def transition_scene(
                                                   next_scene_fun)})
 
     return scene_fun
+
+
+def from_transition(description: str,
+                    effects: Union[Effect, Sequence[Effect]] = ()):
+    return partial(transition, description=description, effects=effects)

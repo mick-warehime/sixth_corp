@@ -1,7 +1,8 @@
 """Simple decision scene examples."""
 from abilities import skill_check, Difficulty
 from combat_scene import CombatScene
-from decision_scene import DecisionScene, DecisionOption, transition_scene
+from decision_scene import DecisionScene, DecisionOption, transition, \
+    from_transition
 from effects import IncrementSceneCount, IncrementPlayerAttribute, RestartWorld
 from states import Attribute, Ability
 from world import World
@@ -24,10 +25,11 @@ def swamp_scene(world: World):
                  ' the sunlight. Flies and mosquitoes buzz near your ears. The '
                  'smell of sulfur pervades. Ahead you see the curving form of a'
                  ' sleeping troll. On its neck hangs a golden amulet.')
-    steal_amulet = skill_check(Difficulty.MODERATE, transition_scene(
-        'You expertly steal the amulet without waking the troll. Back to'
-        ' beginning.', start_scene), transition_scene(
-        'The troll awakens. Prepare to fight!', example_combat_scene),
+    steal_amulet = skill_check(Difficulty.MODERATE, transition(start_scene,
+                                                               'You expertly steal the amulet without waking the troll. Back to'
+                                                               ' beginning.'),
+                               transition(example_combat_scene,
+                                          'The troll awakens. Prepare to fight!'),
                                Ability.STEALTH)
     options = {
         '1': DecisionOption('Continue walking.', IncrementSceneCount(),
@@ -38,6 +40,7 @@ def swamp_scene(world: World):
     return DecisionScene(main_text, options)
 
 
+@from_transition('This transition was defined using a decorator.')
 def second_scene(world: World) -> DecisionScene:
     main_text = (
         'Player HP: {}. Player Max HP: {}. \nScene count is now {}.'.format(
