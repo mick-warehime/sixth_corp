@@ -21,6 +21,14 @@ class Attribute(Enum):
         return self.value
 
 
+class Ability(Enum):
+    STEALTH = 'stealth'
+    SPEECH = 'speech'
+    MECHANICS = 'mechanics'
+
+
+AttributeType = Union[Attribute, Ability]
+
 _BoundFun = Callable[['Stateful'], int]
 _BoundType = Union[int, Attribute, _BoundFun]
 
@@ -42,14 +50,14 @@ class Stateful(object):
     def set_state(self, state: State, value: bool) -> None:
         self._states[state] = value
 
-    def get_attribute(self, attribute: Attribute) -> int:
+    def get_attribute(self, attribute: AttributeType) -> int:
         """Value associated with an Attribute.
 
         If not otherwise set, default value is 0."""
         return self._attributes[attribute]
 
     def set_attribute_bounds(
-            self, attribute: Attribute,
+            self, attribute: AttributeType,
             lower: _BoundType,
             upper: _BoundType) -> None:
         if isinstance(lower, int) and isinstance(upper, int):
@@ -72,7 +80,7 @@ class Stateful(object):
 
         return int_fun
 
-    def _set_attribute_in_bounds(self, attribute: Attribute) -> None:
+    def _set_attribute_in_bounds(self, attribute: AttributeType) -> None:
         if attribute in self._attribute_bounds:
             value = self._attributes[attribute]
             lower, upper = self._attribute_bounds[attribute]
@@ -82,10 +90,10 @@ class Stateful(object):
             value = min(u_val, value)
             self._attributes[attribute] = value
 
-    def increment_attribute(self, attribute: Attribute, delta: int) -> None:
+    def increment_attribute(self, attribute: AttributeType, delta: int) -> None:
         self._attributes[attribute] += delta
         self._set_attribute_in_bounds(attribute)
 
-    def set_attribute(self, attribute: Attribute, value: int) -> None:
+    def set_attribute(self, attribute: AttributeType, value: int) -> None:
         self._attributes[attribute] = value
         self._set_attribute_in_bounds(attribute)
