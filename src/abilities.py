@@ -9,13 +9,13 @@ from world import World
 
 
 class Difficulty(Enum):
-    TRIVIAL = -3
-    VERY_EASY = -2
-    EASY = -1
+    IMPOSSIBLE = -3
+    VERY_HARD = -2
+    HARD = -1
     MODERATE = 0
-    HARD = 1
-    VERY_HARD = 2
-    IMPOSSIBLE = 3
+    EASY = 1
+    VERY_EASY = 2
+    TRIVIAL = 3
 
     @property
     def success_prob(self) -> float:
@@ -29,7 +29,7 @@ class Difficulty(Enum):
 
 
 _difficulty_probs = {k: v for k, v in
-                     zip(Difficulty, [1, 7 / 8, 3 / 4, 1 / 2, 1 / 4, 1 / 8, 0])}
+                     zip(Difficulty, [0, 1 / 8, 1 / 4, 1 / 2, 3 / 4, 7 / 8, 1])}
 
 
 def skill_check(difficulty: Difficulty, success: SceneConstructor,
@@ -47,9 +47,7 @@ def skill_check(difficulty: Difficulty, success: SceneConstructor,
         modifiers = [modifiers]
 
     def scene_builder(world: World) -> Scene:
-        modifier = 0
-        for ability in modifiers:
-            modifier += world.player.get_attribute(ability)
+        modifier = sum(world.player.get_attribute(a) for a in modifiers)
         effective_difficulty = difficulty.adjust(modifier)
 
         if random.random() < effective_difficulty.success_prob:
