@@ -67,5 +67,5 @@ def example_combat_scene(world: World) -> CombatScene:
 
 def game_over(world: World) -> DecisionScene:
     prompt = 'Game over. You lose.'
-    options = {'0': DecisionOption('Play again.', RestartWorld(), start_scene)}
+    options = {'1': DecisionOption('Play again.', RestartWorld(), start_scene)}
     return DecisionScene(prompt, options)
