@@ -46,7 +46,7 @@ class DecisionScene(Scene):
 def transition_to(
         next_scene_fun: SceneConstructor, description: str,
         effects: Union[Effect, Sequence[Effect]] = ()) -> SceneConstructor:
-    """Simplified API for a transition scene constructor."""
+    """Adds a basic transition scene into another scene."""
 
     def scene_fun(world: World) -> DecisionScene:
         return DecisionScene(description,
