@@ -20,6 +20,7 @@ def start_scene(world: World) -> DecisionScene:
     return DecisionScene(main_text, options)
 
 
+@from_transition('This transition was defined using a decorator.')
 def swamp_scene(world: World) -> DecisionScene:
     main_text = ('You walk into the swamp. The foliage overhead blocks most of'
                  ' the sunlight. Flies and mosquitoes buzz near your ears. The '
@@ -41,7 +42,6 @@ def swamp_scene(world: World) -> DecisionScene:
     return DecisionScene(main_text, options)
 
 
-@from_transition('This transition was defined using a decorator.')
 def second_scene(world: World) -> DecisionScene:
     main_text = (
         'Player HP: {}. Player Max HP: {}. \nScene count is now {}.'.format(
