@@ -5,7 +5,12 @@ from typing import Union, Callable, Dict, Tuple
 
 
 class State(Enum):
-    """Label for basic state condition requiring no internal logic to check."""
+    """Label for basic state condition requiring no internal logic to check.
+
+     As a rule, we should define States whose absence is the default.. I.e.,
+     ON_FIRE is a good State because Characters are usually not on fire. But
+     IS_METALLIC is not good, since most Characters are assumed to be metallic.
+     """
     ON_FIRE = 'on fire'
     FROZEN = 'frozen'
 
