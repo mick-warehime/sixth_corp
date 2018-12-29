@@ -3,18 +3,16 @@ from combat_scene_model import CombatSceneModel
 from combat_scene_view import CombatSceneView
 from controller import Controller
 from events import InputEvent, EventType, Event
-from pygame import Surface
-
 from world import World
 
 
 class CombatSceneController(Controller):
 
-    def __init__(self, screen: Surface, world: World,
+    def __init__(self, world: World,
                  scene: CombatScene) -> None:
-        super(CombatSceneController, self).__init__(screen)
+        super(CombatSceneController, self).__init__()
         self.model = CombatSceneModel(world, scene)
-        self.view = CombatSceneView(self.screen)
+        self.view = CombatSceneView()
 
     def notify(self, event: EventType) -> None:
         if not self._active:

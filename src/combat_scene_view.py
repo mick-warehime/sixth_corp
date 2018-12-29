@@ -1,15 +1,13 @@
-import pygame
-from character_base import Character
 from typing import List
-
+from character_base import Character
 from pygame_view import PygameView
 from states import Attribute
 
 
 class CombatSceneView(PygameView):
 
-    def __init__(self, screen: pygame.Surface) -> None:
-        super(CombatSceneView, self).__init__(screen)
+    def __init__(self) -> None:
+        super(CombatSceneView, self).__init__()
         self._text_fmt = 'Combat Scene\n\nPlayer Life: {}' \
                          ', Enemy Life: {}\n\n1: Do 1 damage\n2: Do 5 damage'
         self.texts: List[str] = None

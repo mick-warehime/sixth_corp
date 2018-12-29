@@ -3,7 +3,6 @@ from combat_scene import CombatScene
 from combat_scene_controller import CombatSceneController
 from unittest import mock
 from unittest import TestCase
-
 from event_utils import simulate_key_press
 from world import World
 
@@ -11,9 +10,8 @@ from world import World
 def create_combat_controller(enemy):
     scene = CombatScene()
     scene.set_enemy(enemy)
-    mock_screen = mock.Mock()
     world = World()
-    return CombatSceneController(mock_screen, world, scene)
+    return CombatSceneController(world, scene)
 
 
 class CombatSceneControllerTest(TestCase):
