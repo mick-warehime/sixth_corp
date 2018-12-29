@@ -15,5 +15,3 @@ class Mod(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def attribute_modifiers(self) -> Dict[AttributeType, int]:
         """Attribute modifiers granted by this mod."""
-
-
