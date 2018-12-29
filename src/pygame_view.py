@@ -1,10 +1,15 @@
 from typing import List
+import constants
 import pygame
 
 
 class PygameView(object):
-    def __init__(self, screen: pygame.Surface) -> None:
-        self.screen = screen
+    screen: pygame.Surface = None
+
+    def __init__(self) -> None:
+        if self.screen is None:
+            self.initialize_screen()
+
         pygame.display.set_caption('6th Corp')
         self.smallfont = pygame.font.Font(None, 40)
         self.texts: List[str] = None
@@ -20,3 +25,6 @@ class PygameView(object):
             self.screen.blit(rasterized, (250, 250 + offset))
             offset += 50
         pygame.display.flip()
+
+    def initialize_screen(self) -> None:
+        self.screen = pygame.display.set_mode(constants.SCREEN_SIZE)

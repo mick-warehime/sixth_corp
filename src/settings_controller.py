@@ -1,14 +1,13 @@
 from controller import Controller
 from events import Event, EventType
 from settings_view import SettingsView
-from pygame import Surface
 
 
 class SettingsController(Controller):
 
-    def __init__(self, screen: Surface) -> None:
-        super(SettingsController, self).__init__(screen)
-        self.view = SettingsView(self.screen)
+    def __init__(self) -> None:
+        super(SettingsController, self).__init__()
+        self.view = SettingsView()
 
     def notify(self, event: EventType) -> None:
         if not self._active:

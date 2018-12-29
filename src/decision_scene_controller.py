@@ -4,23 +4,21 @@ from decision_scene import DecisionScene
 from decision_scene_view import DecisionSceneView
 from event_utils import post_scene_change
 from events import InputEvent, EventType, Event
-from pygame import Surface
-
 from scene_examples import game_over
 from world import World
 
 
 class DecisionSceneController(Controller):
 
-    def __init__(self, screen: Surface, world: World,
+    def __init__(self, world: World,
                  scene: DecisionScene) -> None:
-        super().__init__(screen)
+        super().__init__()
         self.world = world
         self.scene = scene
 
         options = {key_val: choice.description
                    for key_val, choice in scene.choices.items()}
-        self.view = DecisionSceneView(self.screen, scene.prompt, options)
+        self.view = DecisionSceneView(scene.prompt, options)
 
     def _handle_input(self, input_event: InputEvent) -> None:
         if input_event.key in self.scene.choices:

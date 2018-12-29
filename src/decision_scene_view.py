@@ -1,9 +1,7 @@
-import pygame
+from typing import Dict, Callable, List, Union
 from constants import TEXTWIDTH
 from pygame_view import PygameView
 from textwrap import wrap
-from typing import Dict, Callable, Union
-from typing import List
 
 _TextFun = Callable[[], str]
 _TextOrFun = Union[str, _TextFun]
@@ -30,9 +28,8 @@ def _parse_text_fun(main_text: _TextOrFun) -> _TextFun:
 
 class DecisionSceneView(PygameView):
 
-    def __init__(self, screen: pygame.Surface,
-                 main_text: _TextOrFun, options: Dict[str, str]) -> None:
-        super(DecisionSceneView, self).__init__(screen)
+    def __init__(self, main_text: _TextOrFun, options: Dict[str, str]) -> None:
+        super(DecisionSceneView, self).__init__()
 
         self._option_text = ['{}: {}'.format(k, v) for k, v in options.items()]
         self._main_text_fun = _parse_text_fun(main_text)
