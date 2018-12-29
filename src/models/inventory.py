@@ -3,6 +3,7 @@ import abc
 from typing import Iterable, Callable
 
 from models.mods_base import Mod
+from models.states import AttributeType, State
 
 
 class InventoryBase(metaclass=abc.ABCMeta):
@@ -29,6 +30,13 @@ class InventoryBase(metaclass=abc.ABCMeta):
     def mods(self, check: Callable[[Mod], bool]) -> Iterable[Mod]:
         """All mods satisfying a given boolean function."""
         return (m for m in self.all_mods() if check(m))
+
+    def grants_state(self, state: State) -> bool:
+        return bool(list(self.mods(lambda m: state in m.states_granted())))
+
+    def total_modifier(self, attribute: AttributeType) -> int:
+        mods = self.mods(lambda m: attribute in m.attribute_modifiers())
+        return sum(m.attribute_modifiers()[attribute] for m in mods)
 
 
 class BasicInventory(InventoryBase):
