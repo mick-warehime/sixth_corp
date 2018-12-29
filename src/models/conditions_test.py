@@ -1,9 +1,9 @@
 from models.conditions import HasState, IsDead
-from models.states import Stateful, State, Attribute
+from models.states import BasicStatus, State, Attribute
 
 
 def test_condition_and():
-    stateful = Stateful()
+    stateful = BasicStatus()
 
     cond = HasState(State.ON_FIRE) & IsDead()
     assert not cond.check(stateful)
@@ -14,7 +14,7 @@ def test_condition_and():
 
 
 def test_condition_or():
-    stateful = Stateful()
+    stateful = BasicStatus()
 
     cond = HasState(State.ON_FIRE) | IsDead()
     assert cond.check(stateful)
@@ -26,7 +26,7 @@ def test_condition_or():
 
 
 def test_condition_not():
-    stateful = Stateful()
+    stateful = BasicStatus()
     cond = HasState(State.ON_FIRE)
 
     assert ~cond.check(stateful)
@@ -36,7 +36,7 @@ def test_condition_not():
 
 
 def test_alive_to_dead():
-    stateful = Stateful()
+    stateful = BasicStatus()
 
     assert IsDead().check(stateful)
     stateful.set_attribute(Attribute.HEALTH, 3)

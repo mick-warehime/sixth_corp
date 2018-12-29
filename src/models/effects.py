@@ -1,5 +1,5 @@
 from scenes.scenes_base import Effect
-from models.states import Stateful, AttributeType
+from models.states import AttributeType, Stateful
 from models.world import World
 
 
