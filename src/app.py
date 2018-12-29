@@ -1,7 +1,7 @@
-from constants import LOG_LEVEL
-from constants import LOGGING_FILE
-from constants import VERSION
-from game import Game
+from data.constants import LOG_LEVEL
+from data.constants import LOGGING_FILE
+from data.constants import VERSION
+from controllers.game import Game
 import logging
 import os
 import sys
