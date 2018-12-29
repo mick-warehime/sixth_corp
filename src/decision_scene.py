@@ -1,6 +1,7 @@
-from typing import Dict, Sequence, Union, Callable
+from functools import partial
+from typing import Dict, Sequence, Union
 
-from scenes_base import Scene, Resolution, Effect
+from scenes_base import Scene, Resolution, Effect, SceneConstructor
 from world import World
 
 
@@ -8,7 +9,7 @@ class DecisionOption(Resolution):
 
     def __init__(self, description: str,
                  effects: Union[Effect, Sequence[Effect]],
-                 next_scene_fun: Callable[[World], Scene]) -> None:
+                 next_scene_fun: SceneConstructor) -> None:
         self.description = description
         if isinstance(effects, Effect):
             effects = (effects,)
@@ -40,3 +41,22 @@ class DecisionScene(Scene):
 
     def get_resolution(self) -> DecisionOption:
         return self._choice
+
+
+def transition_to(
+        next_scene_fun: SceneConstructor, description: str,
+        effects: Union[Effect, Sequence[Effect]] = ()) -> SceneConstructor:
+    """Adds a basic transition scene into another scene."""
+
+    def scene_fun(world: World) -> DecisionScene:
+        return DecisionScene(description,
+                             {'1': DecisionOption('Continue', effects,
+                                                  next_scene_fun)})
+
+    return scene_fun
+
+
+# This is used as a decorator for a SceneConstructor.
+def from_transition(description: str,
+                    effects: Union[Effect, Sequence[Effect]] = ()) -> partial:
+    return partial(transition_to, description=description, effects=effects)

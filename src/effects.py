@@ -1,5 +1,5 @@
 from scenes_base import Effect
-from states import Attribute, Stateful
+from states import Stateful, AttributeType
 from world import World
 
 
@@ -17,7 +17,7 @@ class RestartWorld(Effect):
 
 class IncrementAttribute(Effect):
 
-    def __init__(self, target: Stateful, attribute: Attribute,
+    def __init__(self, target: Stateful, attribute: AttributeType,
                  amount: int) -> None:
         self._target = target
         self._attribute = attribute
@@ -29,7 +29,7 @@ class IncrementAttribute(Effect):
 
 class IncrementPlayerAttribute(Effect):
 
-    def __init__(self, attribute: Attribute, amount: int) -> None:
+    def __init__(self, attribute: AttributeType, amount: int) -> None:
         self._attribute = attribute
         self._amount = amount
 

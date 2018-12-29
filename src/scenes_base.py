@@ -1,5 +1,5 @@
 """Basic interfaces for scenes, effects, and resolutions."""
-from typing import Sequence
+from typing import Sequence, Callable
 
 from world import World
 
@@ -30,3 +30,6 @@ class Resolution(object):
     @property
     def effects(self) -> Sequence[Effect]:
         raise NotImplementedError
+
+
+SceneConstructor = Callable[[World], Scene]
