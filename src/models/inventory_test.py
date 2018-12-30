@@ -1,5 +1,6 @@
 from models.inventory import BasicInventory
 from models.mod_examples import HullPlating, CamouflagePaint, HelmOfBeingOnFire
+from models.states import Attribute, State
 
 
 def test_basic_inventory_storage_sizes():
@@ -43,3 +44,21 @@ def test_basic_inventory_mods():
 
     mods = list(inventory.mods(lambda x: bool(x.attribute_modifiers())))
     assert len(mods) == 3
+
+
+def test_total_modifier():
+    inventory = BasicInventory()
+
+    assert inventory.total_modifier(Attribute.MAX_HEALTH) == 0
+    inventory.store(HullPlating(health_bonus=5))
+    assert inventory.total_modifier(Attribute.MAX_HEALTH) == 5
+    inventory.store(HullPlating(health_bonus=3))
+    assert inventory.total_modifier(Attribute.MAX_HEALTH) == 8
+
+
+def test_state_granted():
+    inventory = BasicInventory()
+
+    assert not inventory.grants_state(State.ON_FIRE)
+    inventory.store(HelmOfBeingOnFire())
+    assert inventory.grants_state(State.ON_FIRE)
