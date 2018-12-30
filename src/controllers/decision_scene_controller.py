@@ -34,6 +34,7 @@ class DecisionSceneController(Controller):
                 for effect in resolution.effects:
                     effect.execute(self.world)
 
+                self.deactivate()
                 if IsDead().check(self.world.player):
                     post_scene_change(game_over(self.world))
                     return

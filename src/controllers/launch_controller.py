@@ -21,4 +21,5 @@ class LaunchController(Controller):
         if event == Event.TICK:
             self.view.render()
         elif isinstance(event, InputEvent) and event.key == 's':
+            self.deactivate()
             post_scene_change(self._start_scene)

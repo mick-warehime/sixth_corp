@@ -1,4 +1,5 @@
 """Abstract implementation of states and conditions."""
+from abc import ABCMeta, abstractmethod
 from collections import defaultdict
 from enum import Enum
 from typing import Union, Callable, Dict, Tuple
@@ -38,7 +39,26 @@ _BoundFun = Callable[['Stateful'], int]
 _BoundType = Union[int, Attribute, _BoundFun]
 
 
-class Stateful(object):
+class Stateful(object, metaclass=ABCMeta):
+    @abstractmethod
+    def has_state(self, state: State) -> bool:
+        """Whether object has a given state.
+
+        If not otherwise set, default is False."""
+
+    @abstractmethod
+    def get_attribute(self, attribute: AttributeType) -> int:
+        """Value associated with an Attribute.
+
+        If not otherwise set, default value is 0."""
+
+    @abstractmethod
+    def increment_attribute(self, attribute: AttributeType, delta: int) -> None:
+        """Increment an attribute by a fixed amount."""
+
+
+class BasicStatus(Stateful):
+    """A Stateful object implemented using simple dictionaries."""
 
     def __init__(self) -> None:
         self._states: defaultdict = defaultdict(lambda: False)
@@ -85,20 +105,20 @@ class Stateful(object):
 
         return int_fun
 
-    def _set_attribute_in_bounds(self, attribute: AttributeType) -> None:
+    def value_in_bounds(self, value: int, attribute: AttributeType) -> int:
         if attribute in self._attribute_bounds:
-            value = self._attributes[attribute]
             lower, upper = self._attribute_bounds[attribute]
             l_val, u_val = lower(self), upper(self)
             assert l_val <= u_val
             value = max(l_val, value)
             value = min(u_val, value)
-            self._attributes[attribute] = value
+        return value
 
     def increment_attribute(self, attribute: AttributeType, delta: int) -> None:
-        self._attributes[attribute] += delta
-        self._set_attribute_in_bounds(attribute)
+        new_val = self._attributes[attribute] + delta
+        new_val = self.value_in_bounds(new_val, attribute)
+        self._attributes[attribute] = new_val
 
     def set_attribute(self, attribute: AttributeType, value: int) -> None:
+        value = self.value_in_bounds(value, attribute)
         self._attributes[attribute] = value
-        self._set_attribute_in_bounds(attribute)
