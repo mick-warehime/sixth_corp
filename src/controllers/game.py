@@ -21,13 +21,9 @@ def initialize_pygame(no_UI: bool = False) -> None:
         os.environ['SDL_VIDEODRIVER'] = 'dummy'
         os.environ['SDL_AUDIODRIVER'] = 'dummy'
 
-    try:
-        pygame.mixer.pre_init(44100, -16, 4, 2048)
-        pygame.init()
-        pygame.font.init()
-
-    except pygame.error:
-        initialize_pygame(True)
+    pygame.mixer.pre_init(44100, -16, 4, 2048)
+    pygame.init()
+    pygame.font.init()
 
 
 class Game(EventListener):
