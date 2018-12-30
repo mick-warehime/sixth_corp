@@ -2,7 +2,7 @@ from models.character_base import Character
 from unittest import TestCase
 
 from models.conditions import IsDead
-from models.mod_examples import HelmOfBeingOnFire
+from models.mod_examples import HelmOfBeingOnFire, HullPlating
 from models.states import Attribute, State
 
 
@@ -25,3 +25,12 @@ class CharacterTest(TestCase):
         assert not char.has_state(State.ON_FIRE)
         char.inventory.store(HelmOfBeingOnFire())
         assert char.has_state(State.ON_FIRE)
+
+    def test_mods_affect_max_attribute(self):
+        health = 10
+        char = Character(health)
+        max_health = char.get_attribute(Attribute.MAX_HEALTH)
+        bonus = 5
+        char.inventory.store(HullPlating(bonus))
+
+        assert char.get_attribute(Attribute.MAX_HEALTH) == max_health + bonus
