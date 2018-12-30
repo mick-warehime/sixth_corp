@@ -1,5 +1,6 @@
 from controllers.controller import Controller
-from events.events_base import EventManager, NewSceneEvent, EventType
+from events.event_utils import post_scene_change
+from events.events_base import EventType
 from events.events_base import Event
 from events.events_base import InputEvent
 from views.launch_view import LaunchView
@@ -20,4 +21,4 @@ class LaunchController(Controller):
         if event == Event.TICK:
             self.view.render()
         elif isinstance(event, InputEvent) and event.key == 's':
-            EventManager.post(NewSceneEvent(self._start_scene))
+            post_scene_change(self._start_scene)

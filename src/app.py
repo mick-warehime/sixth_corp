@@ -1,7 +1,7 @@
 from data.constants import LOG_LEVEL
 from data.constants import LOGGING_FILE
 from data.constants import VERSION
-from controllers.game import Game
+from controllers.game import Game, initialize_pygame
 import logging
 import os
 import sys
@@ -44,6 +44,7 @@ if __name__ == '__main__':
     initialize_logging()
     logging.info('Start Application')
 
+    initialize_pygame()
     g = Game()
     g.run()
     sys.exit()
