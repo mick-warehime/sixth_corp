@@ -37,6 +37,9 @@ class NewSceneEvent(object):
     def __init__(self, scene: Scene) -> None:
         self.scene = scene
 
+    def __str__(self):
+        return 'NewSceneEvent({})'.format(str(self.scene))
+
 
 class InputEvent(object):
 
