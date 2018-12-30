@@ -37,7 +37,7 @@ class NewSceneEvent(object):
     def __init__(self, scene: Scene) -> None:
         self.scene = scene
 
-    def __str__(self):
+    def __str__(self) -> str:
         return 'NewSceneEvent({})'.format(str(self.scene))
 
 

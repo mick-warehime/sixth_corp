@@ -42,7 +42,7 @@ class DecisionScene(Scene):
     def get_resolution(self) -> DecisionOption:
         return self._choice
 
-    def __str__(self):
+    def __str__(self) -> str:
         max_char = min(len(self.prompt), 40)
         return 'DecisionScene({}...)'.format(self.prompt[:max_char])
 
