@@ -15,8 +15,6 @@ class Event(Enum):
     MOUSE_CLICK = 'MOUSE_CLICK'
     KEYPRESS = 'KEYPRESS'
 
-    NEW_SCENE = 'NEW_SCENE'
-
     # bindable events
     SETTINGS = 'SETTINGS'
 

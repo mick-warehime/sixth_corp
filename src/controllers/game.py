@@ -1,3 +1,4 @@
+import os
 from enum import Enum
 
 from events.events_base import Event, EventType
@@ -15,9 +16,15 @@ class GameState(Enum):
     LOAD_SCREEN = 2
 
 
-# TODO(mick): add decision scene
-# TODO(mick): add combat scene
-# TODO(mick): create player state
+def initialize_pygame(no_UI: bool = False) -> None:
+    if no_UI:
+        os.environ['SDL_VIDEODRIVER'] = 'dummy'
+        os.environ['SDL_AUDIODRIVER'] = 'dummy'
+
+    pygame.mixer.pre_init(44100, -16, 4, 2048)
+    pygame.init()
+    pygame.font.init()
+
 
 class Game(EventListener):
     """Stores sceneMachine and keyboard, handles framerate and quit event."""
@@ -25,8 +32,6 @@ class Game(EventListener):
 
     def __init__(self) -> None:
         super(Game, self).__init__()
-        self._initialize_pygame()
-
         self.clock: pygame.Clock = pygame.time.Clock()
 
         self.keyboard = Keyboard()
@@ -44,8 +49,3 @@ class Game(EventListener):
     def run(self) -> None:
         while True:
             EventManager.post(Event.TICK)
-
-    def _initialize_pygame(self) -> None:
-        pygame.mixer.pre_init(44100, -16, 4, 2048)
-        pygame.init()
-        pygame.font.init()
