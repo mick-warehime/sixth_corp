@@ -34,3 +34,6 @@ class CombatScene(Scene):
 
     def get_resolution(self) -> Resolution:
         return CombatResolution()
+
+    def __str__(self) -> str:
+        return 'CombatScene(enemy = {})'.format(str(self.enemy()))

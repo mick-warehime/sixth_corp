@@ -12,11 +12,11 @@ class Controller(EventListener):
         self.activate()
 
     def activate(self) -> None:
-        logging.debug('Activating {}'.format(self))
+        logging.debug('Activating a {}'.format(self.__class__.__name__))
         self._active = True
 
     def deactivate(self) -> None:
-        logging.debug('Deactivating {}'.format(self))
+        logging.debug('Deactivating a {}'.format(self.__class__.__name__))
         self._active = False
 
     def notify(self, event: EventType) -> None:
