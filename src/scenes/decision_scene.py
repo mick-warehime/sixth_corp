@@ -2,7 +2,6 @@ from functools import partial
 from typing import Dict, Sequence, Union
 
 from scenes.scenes_base import Scene, Resolution, Effect, SceneConstructor
-from models.world import World
 
 
 class DecisionOption(Resolution):
@@ -20,8 +19,8 @@ class DecisionOption(Resolution):
     def effects(self) -> Sequence[Effect]:
         return self._effects
 
-    def next_scene(self, world: World) -> Scene:
-        return self._next_scene_fun(world)
+    def next_scene(self) -> Scene:
+        return self._next_scene_fun()
 
 
 class DecisionScene(Scene):
@@ -52,7 +51,7 @@ def transition_to(
         effects: Union[Effect, Sequence[Effect]] = ()) -> SceneConstructor:
     """Adds a basic transition scene into another scene."""
 
-    def scene_fun(world: World) -> DecisionScene:
+    def scene_fun() -> DecisionScene:
         return DecisionScene(description,
                              {'1': DecisionOption('Continue', effects,
                                                   next_scene_fun)})

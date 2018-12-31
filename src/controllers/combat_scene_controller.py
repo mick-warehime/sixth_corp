@@ -3,14 +3,13 @@ from models.combat_scene_model import CombatSceneModel
 from views.combat_scene_view import CombatSceneView
 from controllers.controller import Controller
 from events.events_base import InputEvent, EventType, Event
-from models.world import World
 
 
 class CombatSceneController(Controller):
 
-    def __init__(self, world: World, scene: CombatScene) -> None:
+    def __init__(self, scene: CombatScene) -> None:
         super(CombatSceneController, self).__init__()
-        self.model = CombatSceneModel(world, scene)
+        self.model = CombatSceneModel(scene)
         self.view = CombatSceneView()
 
     def notify(self, event: EventType) -> None:
