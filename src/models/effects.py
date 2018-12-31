@@ -24,16 +24,6 @@ class IncrementAttribute(Effect):
         self._target.increment_attribute(self._attribute, self._amount)
 
 
-class IncrementPlayerAttribute(Effect):
-
-    def __init__(self, attribute: AttributeType, amount: int) -> None:
-        self._attribute = attribute
-        self._amount = amount
-
-    def execute(self) -> None:
-        get_player().increment_attribute(self._attribute, self._amount)
-
-
 class AcquireMod(Effect):
 
     def __init__(self, mod: Mod) -> None:

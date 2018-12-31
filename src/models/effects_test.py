@@ -1,8 +1,7 @@
 import pytest
 
 from models.character_base import Character
-from models.effects import RestartGame, IncrementPlayerAttribute, \
-    IncrementAttribute, AcquireMod
+from models.effects import RestartGame, IncrementAttribute, AcquireMod
 from models.mod_examples import HelmOfBeingOnFire
 from models.player import get_player, reset_player
 from models.states import Attribute
@@ -27,7 +26,7 @@ def test_restart_game(player):
 def test_increment_player_attribute(player):
     health = player.get_attribute(Attribute.HEALTH)
     delta = -2
-    IncrementPlayerAttribute(Attribute.HEALTH, delta).execute()
+    IncrementAttribute(get_player(), Attribute.HEALTH, delta).execute()
     assert player.get_attribute(Attribute.HEALTH) == health + delta
 
 
