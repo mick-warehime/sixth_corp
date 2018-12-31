@@ -19,9 +19,11 @@ def teardown_function(function):
     _player.reset()
 
 
-def test_restart_world(player):
+def test_restart_game(player):
+    player.increment_attribute(Attribute.HEALTH, -1)
+    old_health = player.get_attribute(Attribute.HEALTH)
     RestartGame().execute()
-    assert player is not player.player
+    assert old_health is not player.get_attribute(Attribute.HEALTH)
 
 
 def test_increment_player_attribute(player):
