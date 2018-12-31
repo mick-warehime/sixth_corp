@@ -7,4 +7,5 @@ class SettingsView(PygameView):
         self.texts = ['Settings!', 'X: Return']
 
     def render(self) -> None:
+        super().render()
         self.render_text()
