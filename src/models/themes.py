@@ -1,7 +1,7 @@
 from models.theme_base import Theme
 
-BACKGROUND_IMAGE_LOADING = 'images/background_loading.png'
-BACKGROUND_IMAGE_CITY = 'images/background_city.png'
+BACKGROUND_IMAGE_LOADING = 'src/images/background_loading.png'
+BACKGROUND_IMAGE_CITY = 'src/images/background_city.png'
 
 
 class LoadingTheme(Theme):

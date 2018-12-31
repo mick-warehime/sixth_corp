@@ -1,4 +1,5 @@
 from models.theme_base import Theme
+from models.theme_factory import next_theme
 
 
 class World(object):
@@ -23,4 +24,7 @@ def reset_world() -> None:
 
 def get_theme() -> Theme:
     global _world
-    return _world.theme
+    world = get_world()
+    if world.theme is None:
+        world.theme = next_theme(None)
+    return world.theme

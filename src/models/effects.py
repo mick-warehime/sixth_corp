@@ -1,6 +1,6 @@
 from models.mods_base import Mod
 from models.player import get_player, reset_player
-from models.world import get_world, reset_world
+from models.world import reset_world
 from scenes.scenes_base import Effect
 from models.states import AttributeType, Stateful
 

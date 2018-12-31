@@ -13,6 +13,7 @@ class CombatSceneView(PygameView):
         self.texts: List[str] = None
 
     def render(self) -> None:
+        super().render()
         self.render_text()
 
     def update(self, player: Character, enemy: Character) -> None:
