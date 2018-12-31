@@ -1,8 +1,6 @@
 """Basic interfaces for scenes, effects, and resolutions."""
 from typing import Sequence, Callable
 
-from models.world import World
-
 
 class Scene(object):
     """Basic representation of a game scene."""
@@ -17,14 +15,14 @@ class Scene(object):
 class Effect(object):
     """Implements some action on the game world."""
 
-    def execute(self, world: World) -> None:
+    def execute(self) -> None:
         raise NotImplementedError
 
 
 class Resolution(object):
     """Determines the next scene."""
 
-    def next_scene(self, world: World) -> Scene:
+    def next_scene(self) -> Scene:
         raise NotImplementedError
 
     @property
@@ -32,4 +30,4 @@ class Resolution(object):
         raise NotImplementedError
 
 
-SceneConstructor = Callable[[World], Scene]
+SceneConstructor = Callable[[], Scene]

@@ -3,7 +3,6 @@ from models.combat_scene_model import CombatSceneModel
 from views.combat_scene_view import CombatSceneView
 from controllers.controller import Controller
 from events.events_base import InputEvent, EventType, Event
-from models.world import World
 
 
 class CombatSceneController(Controller):

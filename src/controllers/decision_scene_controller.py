@@ -12,31 +12,31 @@ class DecisionSceneController(Controller):
 
     def __init__(self, scene: DecisionScene) -> None:
         super().__init__()
-        self.world = World()
-        self.scene = scene
+        self._world = World()
+        self._scene = scene
 
         options = {key_val: choice.description
                    for key_val, choice in scene.choices.items()}
         self.view = DecisionSceneView(scene.prompt, options)
 
     def _handle_input(self, input_event: InputEvent) -> None:
-        if input_event.key in self.scene.choices:
-            self.scene.make_choice(input_event.key)
+        if input_event.key in self._scene.choices:
+            self._scene.make_choice(input_event.key)
 
     def notify(self, event: EventType) -> None:
         if not self._active:
             return
         if event == Event.TICK:
             self.view.render()
-            if self.scene.is_resolved():
-                resolution = self.scene.get_resolution()
+            if self._scene.is_resolved():
+                resolution = self._scene.get_resolution()
                 for effect in resolution.effects:
-                    effect.execute(self.world)
+                    effect.execute()
 
                 self.deactivate()
-                if IsDead().check(self.world.player):
-                    post_scene_change(game_over(self.world))
+                if IsDead().check(self._world.player):
+                    post_scene_change(game_over())
                     return
-                post_scene_change(resolution.next_scene(self.world))
+                post_scene_change(resolution.next_scene())
         elif isinstance(event, InputEvent):
             self._handle_input(event)

@@ -47,12 +47,13 @@ def skill_check(
     if isinstance(modifiers, Ability):
         modifiers = [modifiers]
 
-    def scene_builder(world: World) -> Scene:
+    def scene_builder() -> Scene:
+        world = World()
         modifier = sum(world.player.get_attribute(a) for a in modifiers)
         effective_difficulty = difficulty.adjust(modifier)
 
         if random.random() < effective_difficulty.success_prob:
-            return success(world)
-        return failure(world)
+            return success()
+        return failure()
 
     return scene_builder

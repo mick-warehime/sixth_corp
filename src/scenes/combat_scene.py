@@ -3,7 +3,6 @@ from models.conditions import IsDead
 from typing import Sequence
 
 from scenes.scenes_base import Resolution, Effect, Scene
-from models.world import World
 
 
 class CombatResolution(Resolution):
@@ -12,9 +11,9 @@ class CombatResolution(Resolution):
     def effects(self) -> Sequence[Effect]:
         return []
 
-    def next_scene(self, world: World) -> Scene:
+    def next_scene(self) -> Scene:
         from scenes.scene_examples import start_scene
-        return start_scene(world)
+        return start_scene()
 
 
 class CombatScene(Scene):

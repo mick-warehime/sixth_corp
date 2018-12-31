@@ -9,19 +9,19 @@ from models.states import Attribute, Ability
 from models.world import World
 
 
-def start_scene(world: World) -> DecisionScene:
+def start_scene() -> DecisionScene:
     options = {'1': DecisionOption('Go in the swamp.', (), swamp_scene),
                '2': DecisionOption('COMBAT!', (), example_combat_scene)}
 
     main_text = (
-        'You are walking down the path to the city. You pass by a decaying sign '
-        'pointing in the direction of an overgrown path. The sign says \n'
+        'You are walking down the path to the city. You pass by a decaying sign'
+        ' pointing in the direction of an overgrown path. The sign says \n'
         '"DANGER: Trolls in swamp".\n')
     return DecisionScene(main_text, options)
 
 
 @from_transition('This transition was defined using a decorator.')
-def swamp_scene(world: World) -> DecisionScene:
+def swamp_scene() -> DecisionScene:
     main_text = ('You walk into the swamp. The foliage overhead blocks most of'
                  ' the sunlight. Flies and mosquitoes buzz near your ears. The '
                  'smell of sulfur pervades. Ahead you see the curving form of a'
@@ -42,7 +42,8 @@ def swamp_scene(world: World) -> DecisionScene:
     return DecisionScene(main_text, options)
 
 
-def second_scene(world: World) -> DecisionScene:
+def second_scene() -> DecisionScene:
+    world = World()
     main_text = (
         'Player HP: {}. Player Max HP: {}.'.format(
             world.player.get_attribute(Attribute.HEALTH),
@@ -59,11 +60,11 @@ def second_scene(world: World) -> DecisionScene:
     return DecisionScene(main_text, options)
 
 
-def example_combat_scene(world: World) -> CombatScene:
+def example_combat_scene() -> CombatScene:
     return CombatScene()
 
 
-def game_over(world: World) -> DecisionScene:
+def game_over() -> DecisionScene:
     prompt = 'Game over. You lose.'
     options = {'1': DecisionOption('Play again.', RestartWorld(), start_scene)}
     return DecisionScene(prompt, options)
