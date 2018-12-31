@@ -25,11 +25,11 @@ class Player(object):
 
     instance = None
 
-    def __new__(cls):
+    def __new__(cls) -> Character:
         if not Player.instance:
             Player.reset_player()
         return Player.instance
 
     @classmethod
-    def reset_player(cls):
+    def reset_player(cls) -> None:
         Player.instance = Player.__Player(_INITIAL_HEALTH)
