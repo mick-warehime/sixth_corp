@@ -10,7 +10,6 @@ from scenes.scenes_base import Scene
 from controllers.settings_controller import SettingsController
 from models.world import World
 
-
 SCENE_CONTROLLERS = {DecisionScene: DecisionSceneController,
                      CombatScene: CombatSceneController}
 
@@ -35,7 +34,7 @@ class SceneMachine(EventListener):
         assert scene_type in SCENE_CONTROLLERS
 
         controller = SCENE_CONTROLLERS[scene_type]
-        self._controller = controller(self._world, scene)
+        self._controller = controller(scene)
 
     def _toggle_settings(self) -> None:
         if self._prev_controller is None:

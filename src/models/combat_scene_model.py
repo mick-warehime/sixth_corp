@@ -10,8 +10,8 @@ from models.world import World
 
 class CombatSceneModel(object):
 
-    def __init__(self, world: World, scene: CombatScene) -> None:
-        self.world = world
+    def __init__(self, scene: CombatScene) -> None:
+        self.world = World()
         self.scene = scene
 
     def update(self) -> None:

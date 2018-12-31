@@ -10,9 +10,9 @@ from models.world import World
 
 class DecisionSceneController(Controller):
 
-    def __init__(self, world: World, scene: DecisionScene) -> None:
+    def __init__(self, scene: DecisionScene) -> None:
         super().__init__()
-        self.world = world
+        self.world = World()
         self.scene = scene
 
         options = {key_val: choice.description

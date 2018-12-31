@@ -4,14 +4,12 @@ from controllers.combat_scene_controller import CombatSceneController
 from unittest import mock
 from unittest import TestCase
 from events.event_utils import simulate_key_press
-from models.world import World
 
 
 def create_combat_controller(enemy):
     scene = CombatScene()
     scene.set_enemy(enemy)
-    world = World()
-    return CombatSceneController(world, scene)
+    return CombatSceneController(scene)
 
 
 class CombatSceneControllerTest(TestCase):
