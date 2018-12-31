@@ -1,12 +1,12 @@
 """Simple decision scene examples."""
 from models.abilities import skill_check, Difficulty
 from models.mod_examples import AmuletOfSleepiness
+from models.player import get_player
 from scenes.combat_scene import CombatScene
 from scenes.decision_scene import DecisionScene, DecisionOption, transition_to, \
     from_transition
-from models.effects import IncrementPlayerAttribute, RestartWorld, AcquireMod
+from models.effects import IncrementPlayerAttribute, RestartGame, AcquireMod
 from models.states import Attribute, Ability
-from models.world import get_world
 
 
 def start_scene() -> DecisionScene:
@@ -43,11 +43,11 @@ def swamp_scene() -> DecisionScene:
 
 
 def second_scene() -> DecisionScene:
-    world = get_world()
+    player = get_player()
     main_text = (
         'Player HP: {}. Player Max HP: {}.'.format(
-            world.player.get_attribute(Attribute.HEALTH),
-            world.player.get_attribute(Attribute.MAX_HEALTH)))
+            player.get_attribute(Attribute.HEALTH),
+            player.get_attribute(Attribute.MAX_HEALTH)))
 
     options = {
         '0': DecisionOption('Gain 1 HP',
@@ -66,5 +66,5 @@ def example_combat_scene() -> CombatScene:
 
 def game_over() -> DecisionScene:
     prompt = 'Game over. You lose.'
-    options = {'1': DecisionOption('Play again.', RestartWorld(), start_scene)}
+    options = {'1': DecisionOption('Play again.', RestartGame(), start_scene)}
     return DecisionScene(prompt, options)

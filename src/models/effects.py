@@ -1,13 +1,15 @@
 from models.mods_base import Mod
+from models.player import get_player
 from models.world import get_world
 from scenes.scenes_base import Effect
 from models.states import AttributeType, Stateful
 
 
-class RestartWorld(Effect):
+class RestartGame(Effect):
 
     def execute(self) -> None:
         get_world().reset()
+        get_player().reset()
 
 
 class IncrementAttribute(Effect):
@@ -29,8 +31,7 @@ class IncrementPlayerAttribute(Effect):
         self._amount = amount
 
     def execute(self) -> None:
-        world = get_world()
-        world.player.increment_attribute(self._attribute, self._amount)
+        get_player().increment_attribute(self._attribute, self._amount)
 
 
 class AcquireMod(Effect):
@@ -39,5 +40,4 @@ class AcquireMod(Effect):
         self._mod = mod
 
     def execute(self) -> None:
-        world = get_world()
-        world.player.inventory.store(self._mod)
+        get_player().inventory.store(self._mod)

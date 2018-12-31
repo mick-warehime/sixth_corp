@@ -1,17 +1,16 @@
 from models.character_base import Character
+from models.player import get_player
 from scenes.combat_scene import CombatScene
 from models.conditions import IsDead
 from models.effects import IncrementPlayerAttribute, IncrementAttribute
 from events.event_utils import post_scene_change
 from scenes.scene_examples import game_over
 from models.states import Attribute
-from models.world import get_world
 
 
 class CombatSceneModel(object):
 
     def __init__(self, scene: CombatScene) -> None:
-        self._world = get_world()
         self.scene = scene
 
     def update(self) -> None:
@@ -25,7 +24,7 @@ class CombatSceneModel(object):
             post_scene_change(resolution.next_scene())
 
     def is_game_over(self) -> bool:
-        return IsDead().check(self._world.player)
+        return IsDead().check(get_player())
 
     def _handle_enemy_action(self) -> None:
         action = IncrementPlayerAttribute(Attribute.HEALTH, -1)
@@ -37,9 +36,6 @@ class CombatSceneModel(object):
         action.execute()
         if not IsDead().check(enemy):
             self._handle_enemy_action()
-
-    def player(self) -> Character:
-        return self._world.player
 
     def enemy(self) -> Character:
         return self.scene.enemy()
