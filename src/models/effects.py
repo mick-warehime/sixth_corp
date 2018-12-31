@@ -1,5 +1,5 @@
 from models.mods_base import Mod
-from models.player import get_player
+from models.player import get_player, reset_player
 from models.world import get_world
 from scenes.scenes_base import Effect
 from models.states import AttributeType, Stateful
@@ -9,7 +9,7 @@ class RestartGame(Effect):
 
     def execute(self) -> None:
         get_world().reset()
-        get_player().reset()
+        reset_player()
 
 
 class IncrementAttribute(Effect):

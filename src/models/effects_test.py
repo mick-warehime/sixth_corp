@@ -4,26 +4,24 @@ from models.character_base import Character
 from models.effects import RestartGame, IncrementPlayerAttribute, \
     IncrementAttribute, AcquireMod
 from models.mod_examples import HelmOfBeingOnFire
-from models.player import get_player
+from models.player import get_player, reset_player
 from models.states import Attribute
-
-_player = get_player()
 
 
 @pytest.fixture(scope='function')
 def player():
-    return _player
+    return get_player()
 
 
 def teardown_function(function):
-    _player.reset()
+    reset_player()
 
 
 def test_restart_game(player):
     player.increment_attribute(Attribute.HEALTH, -1)
     old_health = player.get_attribute(Attribute.HEALTH)
     RestartGame().execute()
-    assert old_health is not player.get_attribute(Attribute.HEALTH)
+    assert old_health is not get_player().get_attribute(Attribute.HEALTH)
 
 
 def test_increment_player_attribute(player):
