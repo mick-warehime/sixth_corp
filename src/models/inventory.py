@@ -1,6 +1,6 @@
 """Basic implementation of character inventory."""
 import abc
-from typing import Iterable, Callable
+from typing import Iterable, Callable, List
 
 from models.mods_base import Mod
 from models.states import AttributeType, State
@@ -45,8 +45,8 @@ class BasicInventory(InventoryBase):
     A mod can be stored more than once.
     """
 
-    def __init__(self):
-        self._mods = []
+    def __init__(self) -> None:
+        self._mods: List[Mod] = []
 
     def can_store(self, mod: Mod) -> bool:
         return True

@@ -7,7 +7,7 @@ from models.states import AttributeType, State, Attribute, Ability
 
 class HullPlating(Mod):
 
-    def __init__(self, health_bonus=5) -> None:
+    def __init__(self, health_bonus: int = 5) -> None:
         self._bonus = health_bonus
 
     def states_granted(self) -> Sequence[State]:
