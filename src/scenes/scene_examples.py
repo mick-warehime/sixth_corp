@@ -4,7 +4,8 @@ from models.mod_examples import AmuletOfSleepiness
 from scenes.combat_scene import CombatScene
 from scenes.decision_scene import DecisionScene, DecisionOption, transition_to, \
     from_transition
-from models.effects import IncrementPlayerAttribute, RestartWorld, AcquireMod
+from models.effects import IncrementAttribute, RestartWorld, AcquireMod
+from models.player import Player
 from models.states import Attribute, Ability
 from models.world import World
 
@@ -50,10 +51,10 @@ def second_scene(world: World) -> DecisionScene:
 
     options = {
         '0': DecisionOption('Gain 1 HP',
-                            IncrementPlayerAttribute(Attribute.HEALTH, 1),
+                            IncrementAttribute(Player(), Attribute.HEALTH, 1),
                             second_scene),
         '1': DecisionOption('Lose 1 HP',
-                            IncrementPlayerAttribute(Attribute.HEALTH, -1),
+                            IncrementAttribute(Player(), Attribute.HEALTH, -1),
                             second_scene)
     }
     return DecisionScene(main_text, options)

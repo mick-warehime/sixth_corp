@@ -1,7 +1,7 @@
 from models.character_base import Character
-from models.effects import RestartWorld, IncrementPlayerAttribute, \
-    IncrementAttribute, AcquireMod
+from models.effects import RestartWorld, IncrementAttribute, AcquireMod
 from models.mod_examples import HelmOfBeingOnFire
+from models.player import Player
 from models.states import Attribute
 from models.world import World
 
@@ -17,7 +17,7 @@ def test_increment_player_attribute():
     world = World()
     health = world.player.get_attribute(Attribute.HEALTH)
     delta = -2
-    IncrementPlayerAttribute(Attribute.HEALTH, delta).execute(world)
+    IncrementAttribute(Player(), Attribute.HEALTH, delta).execute(world)
     assert world.player.get_attribute(Attribute.HEALTH) == health + delta
 
 

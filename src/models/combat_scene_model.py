@@ -1,7 +1,8 @@
 from models.character_base import Character
+from models.player import Player
 from scenes.combat_scene import CombatScene
 from models.conditions import IsDead
-from models.effects import IncrementPlayerAttribute, IncrementAttribute
+from models.effects import IncrementAttribute
 from events.event_utils import post_scene_change
 from scenes.scene_examples import game_over
 from models.states import Attribute
@@ -20,7 +21,7 @@ class CombatSceneModel(object):
         elif self.scene.is_resolved():
             resolution = self.scene.get_resolution()
             for effect in resolution.effects:
-                effect.execute(self.world)
+                effect.execute()
 
             post_scene_change(resolution.next_scene(self.world))
 
@@ -28,13 +29,13 @@ class CombatSceneModel(object):
         return IsDead().check(self.world.player)
 
     def _handle_enemy_action(self) -> None:
-        action = IncrementPlayerAttribute(Attribute.HEALTH, -1)
-        action.execute(self.world)
+        action = IncrementAttribute(Player(), Attribute.HEALTH, -1)
+        action.execute()
 
     def damage_enemy(self, magnitude: int) -> None:
         enemy = self.scene.enemy()
         action = IncrementAttribute(enemy, Attribute.HEALTH, -magnitude)
-        action.execute(self.world)
+        action.execute()
         if not IsDead().check(enemy):
             self._handle_enemy_action()
 

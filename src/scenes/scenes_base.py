@@ -17,7 +17,7 @@ class Scene(object):
 class Effect(object):
     """Implements some action on the game world."""
 
-    def execute(self, world: World) -> None:
+    def execute(self) -> None:
         raise NotImplementedError
 
 
