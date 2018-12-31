@@ -7,4 +7,6 @@ class LaunchView(PygameView):
         self.texts = ['New Game!', 'X: Settings', 'S: Start Game']
 
     def render(self) -> None:
+        super().render()
+        self.render_background_image()
         self.render_text()
