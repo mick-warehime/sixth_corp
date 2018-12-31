@@ -2,9 +2,16 @@ from models.character_base import Character
 
 
 class World(object):
+    __instance__: 'World' = None
+    player: Character = None
 
-    def __init__(self) -> None:
-        self.player = Character(health=15)
+    def __new__(cls, *args, **kwargs):
+        if cls.__instance__ is None:
+            cls.__instance__ = object.__new__(cls)
+            cls.reset()
 
-    def reset(self) -> None:
-        self.__init__()  # type: ignore
+        return cls.__instance__
+
+    @classmethod
+    def reset(cls) -> None:
+        cls.player = Character(health=15)
