@@ -29,6 +29,15 @@ class CamouflagePaint(Mod):
         return {Ability.STEALTH: self._bonus}
 
 
+class AmuletOfSleepiness(Mod):
+
+    def states_granted(self) -> Sequence[State]:
+        return State.SLEEPY,
+
+    def attribute_modifiers(self) -> Dict[AttributeType, int]:
+        return {}
+
+
 class HelmOfBeingOnFire(Mod):
 
     def states_granted(self) -> Sequence[State]:

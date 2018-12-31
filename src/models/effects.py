@@ -1,12 +1,7 @@
+from models.mods_base import Mod
 from scenes.scenes_base import Effect
 from models.states import AttributeType, Stateful
 from models.world import World
-
-
-class IncrementSceneCount(Effect):
-
-    def execute(self, world: World) -> None:
-        world.scene_count += 1
 
 
 class RestartWorld(Effect):
@@ -35,3 +30,12 @@ class IncrementPlayerAttribute(Effect):
 
     def execute(self, world: World) -> None:
         world.player.increment_attribute(self._attribute, self._amount)
+
+
+class AcquireMod(Effect):
+
+    def __init__(self, mod: Mod) -> None:
+        self._mod = mod
+
+    def execute(self, world: World) -> None:
+        world.player.inventory.store(self._mod)
