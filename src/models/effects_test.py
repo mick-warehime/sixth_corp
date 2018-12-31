@@ -5,9 +5,9 @@ from models.effects import RestartWorld, IncrementPlayerAttribute, \
     IncrementAttribute, AcquireMod
 from models.mod_examples import HelmOfBeingOnFire
 from models.states import Attribute
-from models.world import World
+from models.world import get_world
 
-_world = World()
+_world = get_world()
 
 
 @pytest.fixture(scope='function')

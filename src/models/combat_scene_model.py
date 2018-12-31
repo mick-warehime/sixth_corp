@@ -5,13 +5,13 @@ from models.effects import IncrementPlayerAttribute, IncrementAttribute
 from events.event_utils import post_scene_change
 from scenes.scene_examples import game_over
 from models.states import Attribute
-from models.world import World
+from models.world import get_world
 
 
 class CombatSceneModel(object):
 
     def __init__(self, scene: CombatScene) -> None:
-        self._world = World()
+        self._world = get_world()
         self.scene = scene
 
     def update(self) -> None:

@@ -5,7 +5,7 @@ from typing import Sequence, Union
 
 from scenes.scenes_base import SceneConstructor, Scene
 from models.states import Ability
-from models.world import World
+from models.world import get_world
 
 
 class Difficulty(Enum):
@@ -48,7 +48,7 @@ def skill_check(
         modifiers = [modifiers]
 
     def scene_builder() -> Scene:
-        world = World()
+        world = get_world()
         modifier = sum(world.player.get_attribute(a) for a in modifiers)
         effective_difficulty = difficulty.adjust(modifier)
 

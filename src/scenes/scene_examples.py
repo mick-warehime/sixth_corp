@@ -6,7 +6,7 @@ from scenes.decision_scene import DecisionScene, DecisionOption, transition_to, 
     from_transition
 from models.effects import IncrementPlayerAttribute, RestartWorld, AcquireMod
 from models.states import Attribute, Ability
-from models.world import World
+from models.world import get_world
 
 
 def start_scene() -> DecisionScene:
@@ -43,7 +43,7 @@ def swamp_scene() -> DecisionScene:
 
 
 def second_scene() -> DecisionScene:
-    world = World()
+    world = get_world()
     main_text = (
         'Player HP: {}. Player Max HP: {}.'.format(
             world.player.get_attribute(Attribute.HEALTH),

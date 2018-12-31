@@ -15,3 +15,7 @@ class World(object):
     @classmethod
     def reset(cls) -> None:
         cls.player = Character(health=15)
+
+
+def get_world() -> World:
+    return World()
