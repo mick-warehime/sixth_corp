@@ -5,7 +5,7 @@ from models.player import get_player
 from scenes.combat_scene import CombatScene
 from scenes.decision_scene import DecisionScene, DecisionOption, transition_to, \
     from_transition
-from models.effects import IncrementPlayerAttribute, RestartGame, AcquireMod
+from models.effects import IncrementAttribute, RestartGame, AcquireMod
 from models.states import Attribute, Ability
 
 
@@ -51,10 +51,10 @@ def second_scene() -> DecisionScene:
 
     options = {
         '0': DecisionOption('Gain 1 HP',
-                            IncrementPlayerAttribute(Attribute.HEALTH, 1),
+                            IncrementAttribute(get_player(), Attribute.HEALTH, 1),
                             second_scene),
         '1': DecisionOption('Lose 1 HP',
-                            IncrementPlayerAttribute(Attribute.HEALTH, -1),
+                            IncrementAttribute(get_player(), Attribute.HEALTH, -1),
                             second_scene)
     }
     return DecisionScene(main_text, options)

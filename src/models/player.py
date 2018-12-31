@@ -9,9 +9,6 @@ class _Player(Character):
     def __init__(self):
         super().__init__(STARTING_HEALTH)
 
-    def reset(self):
-        self.__init__()
-
 
 _player = None
 
@@ -19,5 +16,10 @@ _player = None
 def get_player() -> _Player:
     global _player
     if _player is None:
-        _player = _Player()
+        reset_player()
     return _player
+
+
+def reset_player() -> None:
+    global _player
+    _player = _Player()
