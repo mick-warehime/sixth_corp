@@ -26,7 +26,7 @@ def test_restart_game(player):
 def test_increment_player_attribute(player):
     health = player.get_attribute(Attribute.HEALTH)
     delta = -2
-    IncrementAttribute(get_player(), Attribute.HEALTH, delta).execute()
+    IncrementAttribute(player, Attribute.HEALTH, delta).execute()
     assert player.get_attribute(Attribute.HEALTH) == health + delta
 
 
