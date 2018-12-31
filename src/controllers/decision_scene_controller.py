@@ -10,8 +10,7 @@ from models.world import World
 
 class DecisionSceneController(Controller):
 
-    def __init__(self, world: World,
-                 scene: DecisionScene) -> None:
+    def __init__(self, world: World, scene: DecisionScene) -> None:
         super().__init__()
         self.world = world
         self.scene = scene

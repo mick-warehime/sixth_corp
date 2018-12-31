@@ -1,16 +1,16 @@
 """Simple decision scene examples."""
 from models.abilities import skill_check, Difficulty
+from models.mod_examples import AmuletOfSleepiness
 from scenes.combat_scene import CombatScene
 from scenes.decision_scene import DecisionScene, DecisionOption, transition_to, \
     from_transition
-from models.effects import IncrementSceneCount, IncrementPlayerAttribute, RestartWorld
+from models.effects import IncrementPlayerAttribute, RestartWorld, AcquireMod
 from models.states import Attribute, Ability
 from models.world import World
 
 
 def start_scene(world: World) -> DecisionScene:
-    options = {'1': DecisionOption('Go in the swamp.',
-                                   IncrementSceneCount(), swamp_scene),
+    options = {'1': DecisionOption('Go in the swamp.', (), swamp_scene),
                '2': DecisionOption('COMBAT!', (), example_combat_scene)}
 
     main_text = (
@@ -29,13 +29,13 @@ def swamp_scene(world: World) -> DecisionScene:
     steal_amulet = skill_check(
         Difficulty.MODERATE,
         transition_to(start_scene, 'You expertly steal the amulet without '
-                                   'waking the troll. Back to beginning.'),
+                                   'waking the troll. Back to beginning.',
+                      AcquireMod(AmuletOfSleepiness())),
         transition_to(example_combat_scene,
                       'The troll awakens. Prepare to fight!'),
         Ability.STEALTH)
     options = {
-        '1': DecisionOption('Continue walking.', IncrementSceneCount(),
-                            second_scene),
+        '1': DecisionOption('Continue walking.', (), second_scene),
         '2': DecisionOption(
             'Attempt to steal the amulet. (SNEAK MODERATE)', (), steal_amulet),
         '3': DecisionOption('Attack the troll', (), example_combat_scene)}
@@ -44,19 +44,16 @@ def swamp_scene(world: World) -> DecisionScene:
 
 def second_scene(world: World) -> DecisionScene:
     main_text = (
-        'Player HP: {}. Player Max HP: {}. \nScene count is now {}.'.format(
+        'Player HP: {}. Player Max HP: {}.'.format(
             world.player.get_attribute(Attribute.HEALTH),
-            world.player.get_attribute(Attribute.MAX_HEALTH),
-            world.scene_count))
+            world.player.get_attribute(Attribute.MAX_HEALTH)))
 
     options = {
         '0': DecisionOption('Gain 1 HP',
-                            (IncrementSceneCount(),
-                             IncrementPlayerAttribute(Attribute.HEALTH, 1)),
+                            IncrementPlayerAttribute(Attribute.HEALTH, 1),
                             second_scene),
         '1': DecisionOption('Lose 1 HP',
-                            (IncrementSceneCount(),
-                             IncrementPlayerAttribute(Attribute.HEALTH, -1)),
+                            IncrementPlayerAttribute(Attribute.HEALTH, -1),
                             second_scene)
     }
     return DecisionScene(main_text, options)

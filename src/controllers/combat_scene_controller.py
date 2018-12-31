@@ -8,8 +8,7 @@ from models.world import World
 
 class CombatSceneController(Controller):
 
-    def __init__(self, world: World,
-                 scene: CombatScene) -> None:
+    def __init__(self, world: World, scene: CombatScene) -> None:
         super(CombatSceneController, self).__init__()
         self.model = CombatSceneModel(world, scene)
         self.view = CombatSceneView()
