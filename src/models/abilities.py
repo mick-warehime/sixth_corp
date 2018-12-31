@@ -3,9 +3,9 @@ import random
 from enum import Enum
 from typing import Sequence, Union
 
+from models.player import get_player
 from scenes.scenes_base import SceneConstructor, Scene
 from models.states import Ability
-from models.world import get_world
 
 
 class Difficulty(Enum):
@@ -48,8 +48,7 @@ def skill_check(
         modifiers = [modifiers]
 
     def scene_builder() -> Scene:
-        world = get_world()
-        modifier = sum(world.player.get_attribute(a) for a in modifiers)
+        modifier = sum(get_player().get_attribute(a) for a in modifiers)
         effective_difficulty = difficulty.adjust(modifier)
 
         if random.random() < effective_difficulty.success_prob:

@@ -1,3 +1,4 @@
+from models.player import get_player
 from scenes.combat_scene import CombatScene
 from models.combat_scene_model import CombatSceneModel
 from views.combat_scene_view import CombatSceneView
@@ -16,7 +17,7 @@ class CombatSceneController(Controller):
         if not self._active:
             return
         if event == Event.TICK:
-            self.view.update(self.model.player(), self.model.enemy())
+            self.view.update(get_player(), self.model.enemy())
             self.model.update()
         elif isinstance(event, InputEvent):
             self._handle_input(event)

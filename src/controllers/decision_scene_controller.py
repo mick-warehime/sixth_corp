@@ -1,5 +1,6 @@
 from models.conditions import IsDead
 from controllers.controller import Controller
+from models.player import get_player
 from scenes.decision_scene import DecisionScene
 from views.decision_scene_view import DecisionSceneView
 from events.event_utils import post_scene_change
@@ -34,7 +35,7 @@ class DecisionSceneController(Controller):
                     effect.execute()
 
                 self.deactivate()
-                if IsDead().check(self._world.player):
+                if IsDead().check(get_player()):
                     post_scene_change(game_over())
                     return
                 post_scene_change(resolution.next_scene())
