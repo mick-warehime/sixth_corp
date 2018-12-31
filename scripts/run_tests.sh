@@ -11,7 +11,5 @@ echo -n "mypy type annotation: "
 mypy -p src --ignore-missing-imports
 echo "done."
 
-#  run unit tests and coverage
-echo -n "unit tests:"
-export PYTHONPATH=${PYTHONPATH}:src
-pytest src
+script_full_path=$(dirname "$0")
+bash $script_full_path/run_tests_fast.sh

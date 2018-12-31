@@ -1,17 +1,4 @@
 class World(object):
-    __instance__: 'World' = None
 
-    def __new__(cls, *args, **kwargs):  # type: ignore
-        if cls.__instance__ is None:
-            cls.__instance__ = object.__new__(cls)
-            cls.reset()
-
-        return cls.__instance__
-
-    @classmethod
-    def reset(cls) -> None:
-        pass
-
-
-def get_world() -> World:
-    return World()
+    def __init__(self) -> None:
+        self._level = 0

@@ -9,7 +9,7 @@
 
     my_bool = function(Player())
 
-    To reset the player call Player().reset_player()
+    To reset the player call Player().reset()
 """
 from models.character_base import Character
 
@@ -23,13 +23,13 @@ class Player(object):
         def __init__(self, health: int) -> None:
             super().__init__(health)
 
-    instance = None
+    _instance = None
 
     def __new__(cls) -> Character:
-        if not Player.instance:
-            Player.reset_player()
-        return Player.instance
+        if not Player._instance:
+            Player.reset()
+        return Player._instance
 
     @classmethod
-    def reset_player(cls) -> None:
-        Player.instance = Player.__Player(_INITIAL_HEALTH)
+    def reset(cls) -> None:
+        Player._instance = Player.__Player(_INITIAL_HEALTH)

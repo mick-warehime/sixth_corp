@@ -26,7 +26,7 @@ class CombatSceneModel(object):
             post_scene_change(resolution.next_scene(self.world))
 
     def is_game_over(self) -> bool:
-        return IsDead().check(self.world.player)
+        return IsDead().check(Player())
 
     def _handle_enemy_action(self) -> None:
         action = IncrementAttribute(Player(), Attribute.HEALTH, -1)

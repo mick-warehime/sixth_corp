@@ -5,6 +5,9 @@ from models.player import Player
 
 class PlayerTest(TestCase):
 
+    def setUp(self):
+        Player.reset()
+
     def test_singleton(self):
         p1 = Player()
         p2 = Player()

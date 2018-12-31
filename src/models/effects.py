@@ -1,17 +1,14 @@
 from models.character_base import Character
 from models.mods_base import Mod
-from scenes.scenes_base import Effect
+from models.player import Player
 from models.states import AttributeType, Stateful
-from models.world import World
+from scenes.scenes_base import Effect
 
 
 class RestartWorld(Effect):
 
-    def __init__(self, world: World) -> None:
-        self._world = world
-
     def execute(self) -> None:
-        self._world.reset()
+        Player.reset()
 
 
 class IncrementAttribute(Effect):
