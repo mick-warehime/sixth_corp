@@ -1,7 +1,7 @@
 class World(object):
     __instance__: 'World' = None
 
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls, *args, **kwargs):  # type: ignore
         if cls.__instance__ is None:
             cls.__instance__ = object.__new__(cls)
             cls.reset()

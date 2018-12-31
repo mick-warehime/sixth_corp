@@ -1,23 +1,35 @@
-"""Implementation of the player class."""
+"""Singleton Player Class.
+
+    If you have a some function you would like to call
+    function(player: Player) -> bool
+
+    simply instantiate the singleton class
+
+    from player import Player
+
+    my_bool = function(Player())
+
+    To reset the player call Player().reset_player()
+"""
 from models.character_base import Character
 
-STARTING_HEALTH = 10
+_INITIAL_HEALTH = 10
 
 
-class _Player(Character):
+class Player(object):
 
-    def __init__(self):
-        super().__init__(STARTING_HEALTH)
+    # Actual player implementation
+    class __Player(Character):
+        def __init__(self, health: int) -> None:
+            super().__init__(health)
 
-    def reset(self):
-        self.__init__()
+    instance = None
 
+    def __new__(cls):
+        if not Player.instance:
+            Player.reset_player()
+        return Player.instance
 
-_player = None
-
-
-def get_player() -> _Player:
-    global _player
-    if _player is None:
-        _player = _Player()
-    return _player
+    @classmethod
+    def reset_player(cls):
+        Player.instance = Player.__Player(_INITIAL_HEALTH)

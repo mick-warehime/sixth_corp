@@ -1,5 +1,7 @@
 """Basic class for player and enemies."""
+from typing import List
 from models.inventory import BasicInventory
+from models.mods_base import Mod
 from models.states import Attribute, AttributeType, Stateful, BasicStatus, State
 
 
@@ -27,3 +29,9 @@ class Character(Stateful):
         modifier = self.inventory.total_modifier(attribute)
         value = self._base_status.get_attribute(attribute) + modifier
         return self._base_status.value_in_bounds(value, attribute)
+
+    def add_mod(self, mod: Mod) -> None:
+        self.inventory.store(mod)
+
+    def all_mods(self) -> List[Mod]:
+        return list(self.inventory.all_mods())

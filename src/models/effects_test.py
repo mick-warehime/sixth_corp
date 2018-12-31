@@ -1,48 +1,38 @@
-import pytest
-
 from models.character_base import Character
-from models.effects import RestartGame, IncrementPlayerAttribute, \
-    IncrementAttribute, AcquireMod
+from models.effects import RestartWorld, IncrementAttribute, AcquireMod
 from models.mod_examples import HelmOfBeingOnFire
-from models.player import get_player
+from models.player import Player
 from models.states import Attribute
-
-_player = get_player()
-
-
-@pytest.fixture(scope='function')
-def player():
-    return _player
+from models.world import World
 
 
-def teardown_function(function):
-    _player.reset()
+def test_restart_world():
+    world = World()
+    player = world.player
+    RestartWorld().execute(world)
+    assert player is not world.player
 
 
-def test_restart_game(player):
-    player.increment_attribute(Attribute.HEALTH, -1)
-    old_health = player.get_attribute(Attribute.HEALTH)
-    RestartGame().execute()
-    assert old_health is not player.get_attribute(Attribute.HEALTH)
-
-
-def test_increment_player_attribute(player):
-    health = player.get_attribute(Attribute.HEALTH)
+def test_increment_player_attribute():
+    world = World()
+    health = world.player.get_attribute(Attribute.HEALTH)
     delta = -2
-    IncrementPlayerAttribute(Attribute.HEALTH, delta).execute()
-    assert player.get_attribute(Attribute.HEALTH) == health + delta
+    IncrementAttribute(Player(), Attribute.HEALTH, delta).execute(world)
+    assert world.player.get_attribute(Attribute.HEALTH) == health + delta
 
 
 def test_increment_attribute():
+    world = World()
     health = 10
     char = Character(health=health)
     delta = -3
-    IncrementAttribute(char, Attribute.HEALTH, delta).execute()
+    IncrementAttribute(char, Attribute.HEALTH, delta).execute(world)
     assert char.get_attribute(Attribute.HEALTH) == health + delta
 
 
-def test_acquire_mod(player):
+def test_acquire_mod():
+    world = World()
     mod = HelmOfBeingOnFire()
-    assert mod not in player.inventory.all_mods()
-    AcquireMod(mod).execute()
-    assert mod in player.inventory.all_mods()
+    assert mod not in world.player.inventory.all_mods()
+    AcquireMod(mod).execute(world)
+    assert mod in world.player.inventory.all_mods()
