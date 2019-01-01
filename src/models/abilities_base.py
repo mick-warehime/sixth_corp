@@ -21,5 +21,3 @@ class Ability(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def describe_use(self, user: Character, target: Character) -> str:
         """Description of use for player."""
-
-
