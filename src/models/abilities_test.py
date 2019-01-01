@@ -1,40 +1,32 @@
-import random
-
 import pytest
 
-from models.abilities import Difficulty, skill_check
-
-# To ensure deterministic tests
-random.seed(0)
-
-
-@pytest.mark.parametrize("base,modifier,expected",
-                         [(Difficulty.MODERATE, -2, Difficulty.VERY_HARD),
-                          (Difficulty.IMPOSSIBLE, -1, Difficulty.IMPOSSIBLE),
-                          (Difficulty.IMPOSSIBLE, 2, Difficulty.HARD),
-                          (Difficulty.MODERATE, 100, Difficulty.TRIVIAL)])
-def test_difficulty_adjustments(base, modifier, expected):
-    assert base.adjust(modifier) == expected
+from models.ability_examples import Repair, FireLaser
+from models.character_base import Character
+from models.conditions import FullHealth
+from models.states import Attribute
 
 
-@pytest.mark.parametrize('difficulty', Difficulty)
-def test_skill_check_statistics(difficulty):
-    num_calls = 1000
-    call_counts = {'success': 0, 'failure': 0}
+@pytest.fixture()
+def character():
+    return Character(10)
 
-    def on_success():
-        call_counts['success'] += 1
-        return None
 
-    def on_failure():
-        call_counts['failure'] += 1
-        return None
+def test_repair_ability(character):
+    repair = Repair(3)
+    assert not repair.can_use(character, character)
+    character.increment_attribute(Attribute.HEALTH, -1)
+    assert repair.can_use(character, character)
+    repair.use(character, character)
+    assert FullHealth().check(character)
 
-    scene_fun = skill_check(difficulty, on_success, on_failure)
 
-    for _ in range(num_calls):
-        scene_fun()
+def test_fire_laser(character):
+    damage = 3
+    fire_laser = FireLaser(damage)
+    other_char = Character(5)
 
-    assert sum(call_counts.values()) == num_calls
-    error = call_counts['success'] / num_calls - difficulty.success_prob
-    assert abs(error) < 50 / num_calls
+    assert not fire_laser.can_use(character, character)
+    assert fire_laser.can_use(character, other_char)
+    fire_laser.use(character, other_char)
+    value = other_char.get_attribute
+    assert value(Attribute.HEALTH) == value(Attribute.MAX_HEALTH) - damage

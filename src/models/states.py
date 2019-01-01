@@ -28,13 +28,13 @@ class Attribute(Enum):
         return self.value
 
 
-class Ability(Enum):
+class Skill(Enum):
     STEALTH = 'stealth'
     SPEECH = 'speech'
     MECHANICS = 'mechanics'
 
 
-AttributeType = Union[Attribute, Ability]
+AttributeType = Union[Attribute, Skill]
 
 _BoundFun = Callable[['Stateful'], int]
 _BoundType = Union[int, Attribute, _BoundFun]

@@ -5,7 +5,7 @@ from typing import Sequence, Union
 
 from models.player import get_player
 from scenes.scenes_base import SceneConstructor, Scene
-from models.states import Ability
+from models.states import Skill
 
 
 class Difficulty(Enum):
@@ -35,7 +35,7 @@ _difficulty_probs = {k: v for k, v in
 def skill_check(
         difficulty: Difficulty, success: SceneConstructor,
         failure: SceneConstructor,
-        modifiers: Union[Ability, Sequence[Ability]] = ()) -> SceneConstructor:
+        modifiers: Union[Skill, Sequence[Skill]] = ()) -> SceneConstructor:
     """Returns a scene constructing function that implements a skill check.
 
     Args:
@@ -44,7 +44,7 @@ def skill_check(
         failure: Constructor to call if skill check fails.
         modifiers: Ability(ies) that modify the skill check.
     """
-    if isinstance(modifiers, Ability):
+    if isinstance(modifiers, Skill):
         modifiers = [modifiers]
 
     def scene_builder() -> Scene:
