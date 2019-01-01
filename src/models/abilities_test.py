@@ -1,6 +1,6 @@
 import pytest
 
-from models.ability_examples import Repair
+from models.ability_examples import Repair, FireLaser
 from models.character_base import Character
 from models.conditions import FullHealth
 from models.states import Attribute
@@ -18,3 +18,15 @@ def test_repair_ability(character):
     assert repair.can_use(character, character)
     repair.use(character, character)
     assert FullHealth().check(character)
+
+
+def test_fire_laser(character):
+    damage = 3
+    fire_laser = FireLaser(damage)
+    other_char = Character(5)
+
+    assert not fire_laser.can_use(character, character)
+    assert fire_laser.can_use(character, other_char)
+    fire_laser.use(character, other_char)
+    value = other_char.get_attribute
+    assert value(Attribute.HEALTH) == value(Attribute.MAX_HEALTH) - damage
