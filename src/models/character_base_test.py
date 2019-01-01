@@ -23,7 +23,7 @@ class CharacterTest(TestCase):
         char = Character(health=10)
 
         assert not char.has_state(State.ON_FIRE)
-        char.inventory.store(HelmOfBeingOnFire())
+        char.attempt_pickup(HelmOfBeingOnFire())
         assert char.has_state(State.ON_FIRE)
 
     def test_mods_affect_max_attribute(self):
@@ -31,6 +31,6 @@ class CharacterTest(TestCase):
         char = Character(health)
         max_health = char.get_attribute(Attribute.MAX_HEALTH)
         bonus = 5
-        char.inventory.store(HullPlating(bonus))
+        char.attempt_pickup(HullPlating(bonus))
 
         assert char.get_attribute(Attribute.MAX_HEALTH) == max_health + bonus

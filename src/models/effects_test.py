@@ -40,6 +40,6 @@ def test_increment_attribute():
 
 def test_acquire_mod(player):
     mod = HelmOfBeingOnFire()
-    assert mod not in player.inventory.all_mods()
+    assert mod not in player._inventory.all_mods()
     AcquireMod(mod).execute()
-    assert mod in player.inventory.all_mods()
+    assert mod in player._inventory.all_mods()
