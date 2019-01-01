@@ -11,7 +11,7 @@ class PygameView(object):
 
     def __init__(self) -> None:
         if self.screen is None:
-            self.initialize_screen()
+            self._initialize_screen()
 
         pygame.display.set_caption('6th Corp')
         self.smallfont = pygame.font.Font(None, 40)
@@ -32,7 +32,7 @@ class PygameView(object):
             offset += 50
         pygame.display.flip()
 
-    def initialize_screen(self) -> None:
+    def _initialize_screen(self) -> None:
         self.screen = pygame.display.set_mode(constants.SCREEN_SIZE)
 
     def render_background_image(self) -> None:
