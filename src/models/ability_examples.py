@@ -23,7 +23,7 @@ class Repair(Ability):
         return style.format(user, target, self._amount)
 
 
-class Laser(Ability):
+class FireLaser(Ability):
 
     def __init__(self, damage: int) -> None:
         assert damage > 0
