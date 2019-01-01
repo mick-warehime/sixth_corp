@@ -5,6 +5,7 @@ from textwrap import wrap
 
 _TextFun = Callable[[], str]
 _TextOrFun = Union[str, _TextFun]
+_DECISION_BACKGROUND = 'src/images/background_decisions.png'
 
 
 def _format_text(main_text: str,
@@ -29,7 +30,7 @@ def _parse_text_fun(main_text: _TextOrFun) -> _TextFun:
 class DecisionSceneView(PygameView):
 
     def __init__(self, main_text: _TextOrFun, options: Dict[str, str]) -> None:
-        super(DecisionSceneView, self).__init__()
+        super(DecisionSceneView, self).__init__(_DECISION_BACKGROUND)
 
         self._option_text = ['{}: {}'.format(k, v) for k, v in options.items()]
         self._main_text_fun = _parse_text_fun(main_text)
