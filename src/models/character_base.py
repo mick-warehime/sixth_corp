@@ -2,7 +2,6 @@
 import logging
 
 from models.inventory import BasicInventory, InventoryBase
-from models.mods_base import Mod
 from models.states import Attribute, AttributeType, Stateful, BasicStatus, State
 
 
@@ -19,7 +18,7 @@ class Character(Stateful):
         self._base_status = status
         self._inventory: InventoryBase = BasicInventory()
 
-    def attempt_pickup(self, mod: Mod) -> None:
+    def attempt_pickup(self, mod: 'Mod') -> None:
         if self._inventory.can_store(mod):
             logging.debug('{} picking up mod {}'.format(self, mod))
             self._inventory.store(mod)
