@@ -19,12 +19,14 @@ class Character(Stateful):
         self._inventory: InventoryBase = BasicInventory()
 
     def attempt_pickup(self, mod: 'Mod') -> None:
+        mod_type = mod.__class__.__name__
         if self._inventory.can_store(mod):
-            logging.debug('{} picking up mod {}'.format(self, mod))
+            logging.debug('{} picking up {}'.format(self, mod_type))
             self._inventory.store(mod)
         else:
             logging.debug(
-                '{} attempted to pickup {} but was unable.'.format(self, mod))
+                '{} attempted to pickup {} but was unable.'.format(self,
+                                                                   mod_type))
 
     def has_state(self, state: State) -> bool:
         return (self._base_status.has_state(state)
