@@ -5,7 +5,7 @@ from events.events_base import Event, EventType
 from events.events_base import EventListener
 from events.events_base import EventManager
 from inputs.keyboard import Keyboard
-from scenes.scene_machine import SceneMachine
+from controllers.scene_machine import SceneMachine
 from data import constants
 import pygame
 import sys
