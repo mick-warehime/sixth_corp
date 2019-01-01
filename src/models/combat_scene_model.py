@@ -1,3 +1,5 @@
+import logging
+
 from models.character_base import Character
 from models.player import get_player
 from scenes.combat_scene import CombatScene
@@ -20,7 +22,7 @@ class CombatSceneModel(object):
             resolution = self.scene.get_resolution()
             for effect in resolution.effects:
                 effect.execute()
-
+            logging.debug('Combat scene resolved. Enemy defeated.')
             post_scene_change(resolution.next_scene())
 
     def is_game_over(self) -> bool:
