@@ -1,3 +1,4 @@
+import logging
 from typing import Dict, List
 from data import constants
 from models.world import get_theme
@@ -42,5 +43,10 @@ class PygameView(object):
             background_image = BackgroundImage(bg_path)
         else:
             background_image = PygameView.background_image_cache[bg_path]
+
+        if bg_path != self.background_image_path:
+            logging.debug(
+                'Loading background for {}'.format(theme.__class__.__name__))
+            self.background_image_path = bg_path
 
         self.screen.blit(background_image.image, background_image.rect)

@@ -30,4 +30,4 @@ class AcquireMod(Effect):
         self._mod = mod
 
     def execute(self) -> None:
-        get_player().inventory.store(self._mod)
+        get_player().attempt_pickup(self._mod)

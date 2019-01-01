@@ -9,6 +9,9 @@ class _Player(Character):
     def __init__(self):
         super().__init__(STARTING_HEALTH)
 
+    def __str__(self):
+        return 'player'
+
 
 _player = None
 
