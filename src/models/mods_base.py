@@ -2,6 +2,7 @@
 import abc
 from typing import Sequence, Dict
 
+from models.abilities_base import Ability
 from models.states import State, AttributeType
 
 
@@ -15,3 +16,7 @@ class Mod(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def attribute_modifiers(self) -> Dict[AttributeType, int]:
         """Attribute modifiers granted by this mod."""
+
+    @abc.abstractmethod
+    def abilities_granted(self) -> Sequence[Ability]:
+        """Abilities granted by this mod."""

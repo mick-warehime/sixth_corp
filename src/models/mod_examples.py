@@ -1,6 +1,7 @@
 """Simple example mods."""
 from typing import Dict, Sequence
 
+from models.abilities_base import Ability
 from models.mods_base import Mod
 from models.states import AttributeType, State, Attribute, Skill
 
@@ -16,6 +17,9 @@ class HullPlating(Mod):
     def attribute_modifiers(self) -> Dict[AttributeType, int]:
         return {Attribute.MAX_HEALTH: self._bonus}
 
+    def abilities_granted(self) -> Sequence[Ability]:
+        return ()
+
 
 class CamouflagePaint(Mod):
 
@@ -28,6 +32,9 @@ class CamouflagePaint(Mod):
     def attribute_modifiers(self) -> Dict[AttributeType, int]:
         return {Skill.STEALTH: self._bonus}
 
+    def abilities_granted(self) -> Sequence[Ability]:
+        return ()
+
 
 class AmuletOfSleepiness(Mod):
 
@@ -37,6 +44,9 @@ class AmuletOfSleepiness(Mod):
     def attribute_modifiers(self) -> Dict[AttributeType, int]:
         return {}
 
+    def abilities_granted(self) -> Sequence[Ability]:
+        return ()
+
 
 class HelmOfBeingOnFire(Mod):
 
@@ -45,3 +55,6 @@ class HelmOfBeingOnFire(Mod):
 
     def attribute_modifiers(self) -> Dict[AttributeType, int]:
         return {}
+
+    def abilities_granted(self) -> Sequence[Ability]:
+        return ()
