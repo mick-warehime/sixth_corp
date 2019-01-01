@@ -2,7 +2,7 @@ import random
 
 import pytest
 
-from models.abilities import Difficulty, skill_check
+from models.skills import Difficulty, skill_check
 
 # To ensure deterministic tests
 random.seed(0)

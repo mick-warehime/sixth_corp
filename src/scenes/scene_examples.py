@@ -1,12 +1,12 @@
 """Simple decision scene examples."""
-from models.abilities import skill_check, Difficulty
+from models.skills import skill_check, Difficulty
 from models.mod_examples import AmuletOfSleepiness
 from models.player import get_player
 from scenes.combat_scene import CombatScene
 from scenes.decision_scene import DecisionScene, DecisionOption, transition_to, \
     from_transition
 from models.effects import IncrementAttribute, RestartGame, AcquireMod
-from models.states import Attribute, Ability
+from models.states import Attribute, Skill
 
 
 def start_scene() -> DecisionScene:
@@ -33,7 +33,7 @@ def swamp_scene() -> DecisionScene:
                       AcquireMod(AmuletOfSleepiness())),
         transition_to(example_combat_scene,
                       'The troll awakens. Prepare to fight!'),
-        Ability.STEALTH)
+        Skill.STEALTH)
     options = {
         '1': DecisionOption('Continue walking.', (), second_scene),
         '2': DecisionOption(

@@ -2,7 +2,7 @@
 from typing import Dict, Sequence
 
 from models.mods_base import Mod
-from models.states import AttributeType, State, Attribute, Ability
+from models.states import AttributeType, State, Attribute, Skill
 
 
 class HullPlating(Mod):
@@ -26,7 +26,7 @@ class CamouflagePaint(Mod):
         return ()
 
     def attribute_modifiers(self) -> Dict[AttributeType, int]:
-        return {Ability.STEALTH: self._bonus}
+        return {Skill.STEALTH: self._bonus}
 
 
 class AmuletOfSleepiness(Mod):
