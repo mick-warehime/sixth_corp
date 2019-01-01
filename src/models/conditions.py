@@ -68,3 +68,10 @@ class IsDead(Condition):
 
     def check(self, target: Stateful) -> bool:
         return not target.get_attribute(Attribute.HEALTH)
+
+
+class FullHealth(Condition):
+
+    def check(self, target: Stateful) -> bool:
+        value = target.get_attribute
+        return value(Attribute.HEALTH) == value(Attribute.MAX_HEALTH)
