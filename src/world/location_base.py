@@ -1,7 +1,7 @@
-"""Class that represents the theme (sights, sounds, flavors) of the world."""
+"""Class that represents the current location (sights, sounds, flavors)."""
 
 
-class Theme(object):
+class Location(object):
 
     def __init__(self, background_image_path: str) -> None:
         self._background_image_path = background_image_path

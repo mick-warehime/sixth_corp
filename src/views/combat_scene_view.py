@@ -1,6 +1,6 @@
 from typing import List
 from models.character_base import Character
-from models.world import get_theme
+from world.world import get_location
 from views.pygame_view import PygameView
 from models.states import Attribute
 
@@ -10,7 +10,7 @@ _COMBAT_BACKGROUND = 'src/images/background_combat.png'
 class CombatSceneView(PygameView):
 
     def __init__(self) -> None:
-        super(CombatSceneView, self).__init__(get_theme().background_image_path)
+        super(CombatSceneView, self).__init__(get_location().background_image_path)
         self._text_fmt = 'Combat Scene\n\nPlayer Life: {}' \
                          ', Enemy Life: {}\n\n1: Do 1 damage\n2: Do 5 damage'
         self.texts: List[str] = None

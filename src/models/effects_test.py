@@ -5,8 +5,8 @@ from models.effects import RestartGame, IncrementAttribute, AcquireMod, ChangeLo
 from models.mod_examples import HelmOfBeingOnFire
 from models.player import get_player, reset_player
 from models.states import Attribute
-from models.world import get_theme
-from models.themes import CityTheme, MarsTheme
+from world.world import get_location
+from world.locations import CityLocation, MarsLocation
 
 
 @pytest.fixture(scope='function')
@@ -48,10 +48,10 @@ def test_acquire_mod(player):
 
 
 def test_change_location(player):
-    location = get_theme()
-    assert isinstance(location, CityTheme)
+    location = get_location()
+    assert isinstance(location, CityLocation)
 
-    ChangeLocation(MarsTheme()).execute()
+    ChangeLocation(MarsLocation()).execute()
 
-    new_location = get_theme()
-    assert isinstance(new_location, MarsTheme)
+    new_location = get_location()
+    assert isinstance(new_location, MarsLocation)

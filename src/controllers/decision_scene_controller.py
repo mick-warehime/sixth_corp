@@ -6,7 +6,7 @@ from views.decision_scene_view import DecisionSceneView
 from events.event_utils import post_scene_change
 from events.events_base import InputEvent, EventType, Event
 from scenes.scene_examples import game_over
-from models.world import get_world
+from world.world import get_world
 
 
 class DecisionSceneController(Controller):

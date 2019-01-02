@@ -1,7 +1,7 @@
 from models.mods_base import Mod
 from models.player import get_player, reset_player
-from models.theme_base import Theme
-from models.world import get_world, reset_world
+from world.location_base import Location
+from world.world import set_location, reset_world
 from scenes.scenes_base import Effect
 from models.states import AttributeType, Stateful
 
@@ -36,9 +36,8 @@ class AcquireMod(Effect):
 
 class ChangeLocation(Effect):
 
-    def __init__(self, location: Theme) -> None:
+    def __init__(self, location: Location) -> None:
         self._location = location
 
     def execute(self) -> None:
-        world = get_world()
-        world.theme = self._location
+        set_location(self._location)

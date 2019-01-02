@@ -1,16 +1,16 @@
-from models.theme_base import Theme
+from world.location_base import Location
 
 BACKGROUND_IMAGE_LOADING = 'src/images/background_loading.png'
 BACKGROUND_IMAGE_CITY = 'src/images/background_city.png'
 
 
-class MarsTheme(Theme):
+class MarsLocation(Location):
 
     def __init__(self) -> None:
         super().__init__(BACKGROUND_IMAGE_LOADING)
 
 
-class CityTheme(Theme):
+class CityLocation(Location):
 
     def __init__(self) -> None:
         super().__init__(BACKGROUND_IMAGE_CITY)
