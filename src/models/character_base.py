@@ -50,7 +50,7 @@ class Character(Stateful):
             for potential_target in [self, target]:
                 if ability.can_use(self, potential_target):
                     move = Move(ability, self, potential_target)
-                    move.append(move)
+                    moves.append(move)
         return moves
 
 
@@ -62,3 +62,6 @@ class Move(object):
 
     def use(self) -> None:
         self.ability.use(self.user, self.target)
+
+    def describe(self) -> str:
+        return self.ability.describe_use(self.user, self.target)
