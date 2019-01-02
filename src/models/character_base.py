@@ -1,6 +1,6 @@
 """Basic class for player and enemies."""
 import logging
-from typing import Any, List
+from typing import List
 from models.inventory import BasicInventory, InventoryBase
 from models.states import Attribute, AttributeType, Stateful, BasicStatus, State
 

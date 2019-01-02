@@ -5,6 +5,8 @@ from views.combat_scene_view import CombatSceneView
 from controllers.controller import Controller
 from events.events_base import InputEvent, EventType, Event
 NUMERIC_KEYS = [str(i) for i in range(10)]
+
+
 class CombatSceneController(Controller):
 
     def __init__(self, scene: CombatScene) -> None:

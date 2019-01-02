@@ -17,7 +17,7 @@ class Repair(Ability):
 
     def describe_use(self, user: Character, target: Character) -> str:
         style = 'Repair {} damage.'
-        return style.format( self._amount)
+        return style.format(self._amount)
 
 
 class FireLaser(Ability):
