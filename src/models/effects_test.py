@@ -1,10 +1,12 @@
 import pytest
 
 from models.character_base import Character
-from models.effects import RestartGame, IncrementAttribute, AcquireMod
+from models.effects import RestartGame, IncrementAttribute, AcquireMod, ChangeLocation
 from models.mod_examples import HelmOfBeingOnFire
 from models.player import get_player, reset_player
 from models.states import Attribute
+from world.world import get_location
+from world.locations import CityLocation, MarsLocation
 
 
 @pytest.fixture(scope='function')
@@ -43,3 +45,13 @@ def test_acquire_mod(player):
     assert mod not in player._inventory.all_mods()
     AcquireMod(mod).execute()
     assert mod in player._inventory.all_mods()
+
+
+def test_change_location(player):
+    location = get_location()
+    assert isinstance(location, CityLocation)
+
+    ChangeLocation(MarsLocation()).execute()
+
+    new_location = get_location()
+    assert isinstance(new_location, MarsLocation)

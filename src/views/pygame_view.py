@@ -1,7 +1,5 @@
-import logging
 from typing import Dict, List
 from data import constants
-from models.world import get_theme
 from views.background_base import BackgroundImage
 import pygame
 
@@ -10,17 +8,29 @@ class PygameView(object):
     screen: pygame.Surface = None
     background_image_cache: Dict[str, BackgroundImage] = {}
 
-    def __init__(self) -> None:
+    def __init__(self, background_image_path: str) -> None:
         if self.screen is None:
             self._initialize_screen()
 
         pygame.display.set_caption('6th Corp')
         self.smallfont = pygame.font.Font(None, 40)
         self.texts: List[str] = None
-        self.background_image_path = None
+        self._background_image = self._load_background(background_image_path)
+
+    def _initialize_screen(self) -> None:
+        self.screen = pygame.display.set_mode(constants.SCREEN_SIZE)
+
+    def _load_background(self, image_path: str) -> BackgroundImage:
+        if image_path not in PygameView.background_image_cache:
+            background_image = BackgroundImage(image_path)
+            PygameView.background_image_cache[image_path] = background_image
+        else:
+            background_image = PygameView.background_image_cache[image_path]
+        return background_image
 
     def render(self) -> None:
         self.clear_screen()
+        self.render_background_image()
 
     def clear_screen(self) -> None:
         self.screen.fill((0, 0, 0))
@@ -33,20 +43,5 @@ class PygameView(object):
             offset += 50
         pygame.display.flip()
 
-    def _initialize_screen(self) -> None:
-        self.screen = pygame.display.set_mode(constants.SCREEN_SIZE)
-
     def render_background_image(self) -> None:
-        theme = get_theme()
-        bg_path = theme.background_image_path
-        if bg_path not in PygameView.background_image_cache:
-            background_image = BackgroundImage(bg_path)
-        else:
-            background_image = PygameView.background_image_cache[bg_path]
-
-        if bg_path != self.background_image_path:
-            logging.debug(
-                'Loading background for {}'.format(theme.__class__.__name__))
-            self.background_image_path = bg_path
-
-        self.screen.blit(background_image.image, background_image.rect)
+        self.screen.blit(self._background_image.image, self._background_image.rect)
