@@ -1,3 +1,5 @@
+from typing import Tuple
+
 from models.abilities_base import Ability
 from models.character_base import Character
 from models.conditions import FullHealth
@@ -5,6 +7,7 @@ from models.states import Attribute
 
 
 class Repair(Ability):
+
     def __init__(self, amount: int):
         assert amount > 0
         self._amount = amount
@@ -18,6 +21,10 @@ class Repair(Ability):
     def describe_use(self, user: Character, target: Character) -> str:
         style = 'Repair {} damage.'
         return style.format(self._amount)
+
+    @property
+    def attrs(self) -> Tuple:
+        return self._amount,
 
 
 class FireLaser(Ability):
@@ -35,3 +42,7 @@ class FireLaser(Ability):
     def describe_use(self, user: Character, target: Character) -> str:
         style = 'Fire a laser for {} damage!'
         return style.format(self._damage)
+
+    @property
+    def attrs(self) -> Tuple:
+        return self._damage,

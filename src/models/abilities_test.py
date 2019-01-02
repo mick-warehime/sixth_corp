@@ -30,3 +30,13 @@ def test_fire_laser(character):
     fire_laser.use(character, other_char)
     value = other_char.get_attribute
     assert value(Attribute.HEALTH) == value(Attribute.MAX_HEALTH) - damage
+
+
+def test_ability_order():
+    assert FireLaser(3) < Repair(1)
+    assert FireLaser(1) < FireLaser(2)
+
+
+def test_ability_eq():
+    assert FireLaser(1) == FireLaser(1)
+    assert FireLaser(1) != 31
