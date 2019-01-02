@@ -1,5 +1,7 @@
 """Basic class for player and enemies."""
 import logging
+from typing import Sequence
+
 from typing import List
 from models.inventory import BasicInventory, InventoryBase
 from models.states import Attribute, AttributeType, Stateful, BasicStatus, State
@@ -31,6 +33,9 @@ class Character(Stateful):
             logging.debug(
                 '{} attempted to pickup {} but was unable.'.format(self,
                                                                    mod_type))
+
+    def abilities(self) -> Sequence['Ability']:
+        return self._inventory.all_abilities()
 
     def has_state(self, state: State) -> bool:
         return (self._base_status.has_state(state)
