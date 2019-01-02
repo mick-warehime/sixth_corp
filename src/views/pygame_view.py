@@ -15,7 +15,18 @@ class PygameView(object):
         pygame.display.set_caption('6th Corp')
         self.smallfont = pygame.font.Font(None, 40)
         self.texts: List[str] = None
-        self._background_image = self.load_background(background_image_path)
+        self._background_image = self._load_background(background_image_path)
+
+    def _initialize_screen(self) -> None:
+        self.screen = pygame.display.set_mode(constants.SCREEN_SIZE)
+
+    def _load_background(self, image_path: str) -> BackgroundImage:
+        if image_path not in PygameView.background_image_cache:
+            background_image = BackgroundImage(image_path)
+            PygameView.background_image_cache[image_path] = background_image
+        else:
+            background_image = PygameView.background_image_cache[image_path]
+        return background_image
 
     def render(self) -> None:
         self.clear_screen()
@@ -32,16 +43,5 @@ class PygameView(object):
             offset += 50
         pygame.display.flip()
 
-    def _initialize_screen(self) -> None:
-        self.screen = pygame.display.set_mode(constants.SCREEN_SIZE)
-
     def render_background_image(self) -> None:
         self.screen.blit(self._background_image.image, self._background_image.rect)
-
-    def load_background(self, image_path: str) -> BackgroundImage:
-        if image_path not in PygameView.background_image_cache:
-            background_image = BackgroundImage(image_path)
-            PygameView.background_image_cache[image_path] = background_image
-        else:
-            background_image = PygameView.background_image_cache[image_path]
-        return background_image
