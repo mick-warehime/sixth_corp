@@ -21,6 +21,7 @@ def reset_world() -> None:
     global _world
     _world = World()
 
+
 def get_location() -> Location:
     return get_world().location
 

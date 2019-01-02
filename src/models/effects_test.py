@@ -6,7 +6,7 @@ from models.mod_examples import HelmOfBeingOnFire
 from models.player import get_player, reset_player
 from models.states import Attribute
 from world.world import get_location
-from world.locations import CityLocation, MarsLocation
+from world.locations import LoadingLocation, MarsLocation
 
 
 @pytest.fixture(scope='function')
@@ -49,7 +49,7 @@ def test_acquire_mod(player):
 
 def test_change_location(player):
     location = get_location()
-    assert isinstance(location, CityLocation)
+    assert isinstance(location, LoadingLocation)
 
     ChangeLocation(MarsLocation()).execute()
 
