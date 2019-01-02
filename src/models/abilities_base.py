@@ -26,19 +26,23 @@ class Ability(metaclass=abc.ABCMeta):
         """Description of use for player."""
 
     @property
-    @abc.abstractmethod
-    def attrs(self) -> Tuple:
-        """"""
+    def _attrs(self) -> Tuple:
+        """Pull out the fields of the concrete class, in alphabetical order.
+
+        This is used for checking (in)equalities below.
+        """
+        fields = sorted(set(dir(self)) - set(dir(Ability)))
+        return tuple(self.__getattribute__(f) for f in fields)
 
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False
 
-        return self.attrs == other.attrs
+        return self._attrs == other._attrs
 
     def __lt__(self, other):
         if not isinstance(other, Ability):
             return NotImplemented
         if not isinstance(other, self.__class__):
             return self.__class__.__name__ < other.__class__.__name__
-        return self.attrs < other.attrs
+        return self._attrs < other._attrs

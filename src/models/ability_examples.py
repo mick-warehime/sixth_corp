@@ -22,10 +22,6 @@ class Repair(Ability):
         style = 'Repair {} damage.'
         return style.format(self._amount)
 
-    @property
-    def attrs(self) -> Tuple:
-        return self._amount,
-
 
 class FireLaser(Ability):
 
@@ -42,7 +38,3 @@ class FireLaser(Ability):
     def describe_use(self, user: Character, target: Character) -> str:
         style = 'Fire a laser for {} damage!'
         return style.format(self._damage)
-
-    @property
-    def attrs(self) -> Tuple:
-        return self._damage,
