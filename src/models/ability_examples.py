@@ -13,14 +13,11 @@ class Repair(Ability):
         target.increment_attribute(Attribute.HEALTH, self._amount)
 
     def can_use(self, user: Character, target: Character) -> bool:
-        return not FullHealth().check(target)
+        return user == target and not FullHealth().check(target)
 
     def describe_use(self, user: Character, target: Character) -> str:
-        style = '{} repairs {} for {} damage.'
-        if user == target:
-            return style.format(user, 'itself', self._amount)
-
-        return style.format(user, target, self._amount)
+        style = 'Repair {} damage.'
+        return style.format( self._amount)
 
 
 class FireLaser(Ability):
@@ -36,5 +33,5 @@ class FireLaser(Ability):
         return user is not target
 
     def describe_use(self, user: Character, target: Character) -> str:
-        style = '{} fires a laser at {} for {} damage!'
-        return style.format(user, target, self._damage)
+        style = 'Fire a laser for {} damage!'
+        return style.format(self._damage)
