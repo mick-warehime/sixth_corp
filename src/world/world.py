@@ -1,10 +1,10 @@
 from world.location_base import Location
-from world.locations import CityLocation
+from world.locations import LoadingLocation
 
 
 class World(object):
     def __init__(self) -> None:
-        self.location: Location = CityLocation()
+        self.location: Location = LoadingLocation()
 
 
 _world = None

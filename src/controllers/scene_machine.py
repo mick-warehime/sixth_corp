@@ -4,8 +4,7 @@ from controllers.controller import Controller
 from scenes.decision_scene import DecisionScene
 from controllers.decision_scene_controller import DecisionSceneController
 from events.events_base import EventListener, Event, NewSceneEvent, EventType
-from controllers.launch_controller import LaunchController
-from scenes.scene_examples import start_scene
+from scenes.scene_examples import loading_scene
 from scenes.scenes_base import Scene
 from controllers.settings_controller import SettingsController
 
@@ -18,8 +17,9 @@ class SceneMachine(EventListener):
 
     def __init__(self, ) -> None:
         super().__init__()
-        self._controller = LaunchController(start_scene())
+        self._controller: Controller = None
         self._prev_controller: Controller = None
+        self._set_next_scene(loading_scene())
 
     def notify(self, event: EventType) -> None:
         if event == Event.SETTINGS:

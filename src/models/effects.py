@@ -1,9 +1,9 @@
 from models.mods_base import Mod
 from models.player import get_player, reset_player
+from models.states import AttributeType, Stateful
+from scenes.scenes_base import Effect
 from world.location_base import Location
 from world.world import set_location, reset_world
-from scenes.scenes_base import Effect
-from models.states import AttributeType, Stateful
 
 
 class RestartGame(Effect):
