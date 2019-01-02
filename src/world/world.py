@@ -1,10 +1,10 @@
 from world.location_base import Location
-from world.locations import CityLocation
+from world.locations import LoadingLocation
 
 
 class World(object):
     def __init__(self) -> None:
-        self.location: Location = CityLocation()
+        self.location: Location = LoadingLocation()
 
 
 _world = None
@@ -20,7 +20,6 @@ def get_world() -> World:
 def reset_world() -> None:
     global _world
     _world = World()
-
 
 def get_location() -> Location:
     return get_world().location
