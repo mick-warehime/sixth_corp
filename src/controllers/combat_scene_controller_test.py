@@ -25,6 +25,7 @@ class CombatSceneControllerTest(TestCase):
         ctl = create_combat_controller(enemy=Character(5))
         self.assertFalse(ctl.model.scene.is_resolved())
 
-        simulate_key_press('2')
+        simulate_key_press('0')
+        simulate_key_press('0')
 
         self.assertTrue(ctl.model.scene.is_resolved())
