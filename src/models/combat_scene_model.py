@@ -32,11 +32,10 @@ class CombatSceneModel(object):
         action = IncrementAttribute(get_player(), Attribute.HEALTH, -1)
         action.execute()
 
-    def damage_enemy(self, magnitude: int) -> None:
-        enemy = self.scene.enemy()
-        action = IncrementAttribute(enemy, Attribute.HEALTH, -magnitude)
-        action.execute()
-        if not IsDead().check(enemy):
+    def try_player_move(self, index: int) -> None:
+        moves = get_player().get_moves(self.scene.enemy())
+        if index < len(moves):
+            moves[index].use()
             self._handle_enemy_action()
 
     def enemy(self) -> Character:

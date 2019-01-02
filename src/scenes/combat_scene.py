@@ -1,4 +1,5 @@
 from models.character_base import Character
+from models.enemy_base import Enemy
 from models.conditions import IsDead
 from typing import Sequence
 
@@ -20,7 +21,7 @@ class CombatScene(Scene):
 
     def __init__(self) -> None:
         super().__init__()
-        self._enemy = Character(health=10)
+        self._enemy = Enemy(health=10)
 
     def enemy(self) -> Character:
         return self._enemy
