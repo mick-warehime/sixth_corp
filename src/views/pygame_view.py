@@ -1,4 +1,4 @@
-from typing import Dict, List, Iterable
+from typing import Dict, Iterable
 from data import constants
 from views.background_base import BackgroundImage
 import pygame
