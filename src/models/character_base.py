@@ -19,10 +19,6 @@ class Character(Stateful):
 
         self._base_status = status
         self._inventory: InventoryBase = BasicInventory()
-        self._abilities = self.initial_abilities()
-
-    def initial_abilities(self) -> List['Ability']:
-        return []
 
     def attempt_pickup(self, mod: 'Mod') -> None:
         mod_type = mod.__class__.__name__
@@ -51,7 +47,7 @@ class Character(Stateful):
 
     def get_moves(self, target: 'Character') -> List['Move']:
         moves = []
-        for ability in self._abilities:
+        for ability in self.abilities():
             for potential_target in [self, target]:
                 if ability.can_use(self, potential_target):
                     move = Move(ability, self, potential_target)
@@ -60,7 +56,8 @@ class Character(Stateful):
 
 
 class Move(object):
-    def __init__(self, ability: 'Ability', user: Character, target: Character) -> None:
+    def __init__(self, ability: 'Ability', user: Character,
+                 target: Character) -> None:
         self.ability = ability
         self.user = user
         self.target = target
