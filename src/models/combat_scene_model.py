@@ -47,7 +47,6 @@ class CombatSceneModel(object):
         else:
             logging.debug('Enemy has no valid moves, does nothing.')
 
-
     def enemy(self) -> Character:
         return self.scene.enemy()
 
