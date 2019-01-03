@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Iterable
 from data import constants
 from views.background_base import BackgroundImage
 import pygame
@@ -14,7 +14,6 @@ class PygameView(object):
 
         pygame.display.set_caption('6th Corp')
         self.smallfont = pygame.font.Font(None, 40)
-        self.texts: List[str] = None
         self._background_image = self._load_background(background_image_path)
 
     def _initialize_screen(self) -> None:
@@ -35,13 +34,14 @@ class PygameView(object):
     def clear_screen(self) -> None:
         self.screen.fill((0, 0, 0))
 
-    def render_text(self) -> None:
+    def render_text(self, texts: Iterable[str]) -> None:
         offset = 0
-        for text in self.texts:
+        for text in texts:
             rasterized = self.smallfont.render(text, True, (0, 255, 0))
             self.screen.blit(rasterized, (250, 250 + offset))
             offset += 50
         pygame.display.flip()
 
     def render_background_image(self) -> None:
-        self.screen.blit(self._background_image.image, self._background_image.rect)
+        self.screen.blit(self._background_image.image,
+                         self._background_image.rect)

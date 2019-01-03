@@ -16,7 +16,7 @@ class CombatSceneView(PygameView):
 
     def render(self) -> None:
         super().render()
-        self.render_text()
+        self.render_text(self.texts)
 
     def update(self, player: Character, enemy: Character) -> None:
         player_health = player.get_attribute(Attribute.HEALTH)
