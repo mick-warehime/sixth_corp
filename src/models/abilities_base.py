@@ -52,4 +52,4 @@ class Ability(metaclass=abc.ABCMeta):
         return self._attrs < other._attrs
 
     def __hash__(self):
-        return (self.__class__.__name__,) + self._attrs
+        return hash((self.__class__.__name__,) + self._attrs)
