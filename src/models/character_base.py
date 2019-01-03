@@ -1,5 +1,7 @@
 """Basic class for player and enemies."""
 import logging
+from typing import Sequence
+
 from typing import List
 from models.inventory import BasicInventory, InventoryBase
 from models.states import Attribute, AttributeType, Stateful, BasicStatus, State
@@ -17,10 +19,6 @@ class Character(Stateful):
 
         self._base_status = status
         self._inventory: InventoryBase = BasicInventory()
-        self._abilities = self.initial_abilities()
-
-    def initial_abilities(self) -> List['Ability']:
-        return []
 
     def attempt_pickup(self, mod: 'Mod') -> None:
         mod_type = mod.__class__.__name__
@@ -31,6 +29,9 @@ class Character(Stateful):
             logging.debug(
                 '{} attempted to pickup {} but was unable.'.format(self,
                                                                    mod_type))
+
+    def abilities(self) -> Sequence['Ability']:
+        return self._inventory.all_abilities()
 
     def has_state(self, state: State) -> bool:
         return (self._base_status.has_state(state)
@@ -46,7 +47,7 @@ class Character(Stateful):
 
     def get_moves(self, target: 'Character') -> List['Move']:
         moves = []
-        for ability in self._abilities:
+        for ability in self.abilities():
             for potential_target in [self, target]:
                 if ability.can_use(self, potential_target):
                     move = Move(ability, self, potential_target)
@@ -55,7 +56,8 @@ class Character(Stateful):
 
 
 class Move(object):
-    def __init__(self, ability: 'Ability', user: Character, target: Character) -> None:
+    def __init__(self, ability: 'Ability', user: Character,
+                 target: Character) -> None:
         self.ability = ability
         self.user = user
         self.target = target

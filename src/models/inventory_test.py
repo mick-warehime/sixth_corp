@@ -1,5 +1,8 @@
+from models.ability_examples import FireLaser, Repair
 from models.inventory import BasicInventory
-from models.mod_examples import HullPlating, CamouflagePaint, HelmOfBeingOnFire
+from models.mod_examples import HullPlating, CamouflagePaint, HelmOfBeingOnFire, \
+    BasicLaser
+from models.mods_base import GenericMod
 from models.states import Attribute, State
 
 
@@ -62,3 +65,15 @@ def test_state_granted():
     assert not inventory.grants_state(State.ON_FIRE)
     inventory.store(HelmOfBeingOnFire())
     assert inventory.grants_state(State.ON_FIRE)
+
+
+def test_inventory_all_abilities():
+    inventory = BasicInventory()
+
+    assert not inventory.all_abilities()
+
+    inventory.store(BasicLaser(1))
+    assert (FireLaser(1),) == tuple(inventory.all_abilities())
+
+    inventory.store(GenericMod(abilities_granted=Repair(1)))
+    assert tuple(inventory.all_abilities()) == (FireLaser(1), Repair(1))

@@ -1,8 +1,10 @@
+from models.ability_examples import FireLaser
 from models.character_base import Character
 from unittest import TestCase
 
 from models.conditions import IsDead
 from models.mod_examples import HelmOfBeingOnFire, HullPlating
+from models.mods_base import GenericMod
 from models.states import Attribute, State
 
 
@@ -34,3 +36,11 @@ class CharacterTest(TestCase):
         char.attempt_pickup(HullPlating(bonus))
 
         assert char.get_attribute(Attribute.MAX_HEALTH) == max_health + bonus
+
+    def test_mods_add_abilities(self):
+        char = Character(10)
+
+        assert not char.abilities()
+        ability = FireLaser(4)
+        char.attempt_pickup(GenericMod(abilities_granted=ability))
+        assert tuple(char.abilities()) == (ability,)

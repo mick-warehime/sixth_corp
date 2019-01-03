@@ -1,3 +1,5 @@
+from typing import Tuple
+
 from models.abilities_base import Ability
 from models.character_base import Character
 from models.conditions import FullHealth
@@ -5,6 +7,7 @@ from models.states import Attribute
 
 
 class Repair(Ability):
+
     def __init__(self, amount: int):
         assert amount > 0
         self._amount = amount

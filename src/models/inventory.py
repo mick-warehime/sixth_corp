@@ -1,6 +1,6 @@
 """Basic implementation of character inventory."""
 import abc
-from typing import Iterable, Callable
+from typing import Iterable, Callable, Sequence
 
 from models.states import AttributeType, State
 
@@ -36,6 +36,13 @@ class InventoryBase(metaclass=abc.ABCMeta):
     def total_modifier(self, attribute: AttributeType) -> int:
         mods = self.mods(lambda m: attribute in m.attribute_modifiers())
         return sum(m.attribute_modifiers()[attribute] for m in mods)
+
+    def all_abilities(self) -> Sequence['Ability']:
+        mods = self.mods(lambda m: bool(m.abilities_granted()))
+        abilities = []
+        for mod in mods:
+            abilities.extend(mod.abilities_granted())
+        return sorted(abilities)
 
 
 class BasicInventory(InventoryBase):
