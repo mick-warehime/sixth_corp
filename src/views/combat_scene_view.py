@@ -10,19 +10,25 @@ _COMBAT_BACKGROUND = 'src/images/background_combat.png'
 class CombatSceneView(PygameView):
 
     def __init__(self) -> None:
-        super(CombatSceneView, self).__init__(get_location().background_image_path)
-        self._header_fmt = 'Combat Scene\n\nPlayer Life: {}, Enemy Life: {}'
+        super(CombatSceneView, self).__init__(
+            get_location().background_image_path)
         self.texts: List[str] = None
 
     def render(self) -> None:
         super().render()
         self.render_text(self.texts)
 
+    def _scene_description(self, player: Character, enemy: Character):
+        texts = [
+            'You are fighting a dreaded {}.'.format(enemy.__class__.__name__),
+            'Your health: {}'.format(player.get_attribute(Attribute.HEALTH)),
+            'Enemy health: {}'.format(enemy.get_attribute(Attribute.HEALTH)),
+            ''
+        ]
+        return texts
+
     def update(self, player: Character, enemy: Character) -> None:
-        player_health = player.get_attribute(Attribute.HEALTH)
-        enemy_health = enemy.get_attribute(Attribute.HEALTH)
-        header = self._header_fmt.format(player_health, enemy_health).split(
-            '\n')
+        header = self._scene_description(player, enemy)
         moves = player.get_moves(enemy)
         options = []
         for i in range(len(moves)):
