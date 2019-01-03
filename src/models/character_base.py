@@ -66,4 +66,4 @@ class Move(object):
         self.ability.use(self.user, self.target)
 
     def describe(self) -> str:
-        return self.ability.describe_use(self.user, self.target)
+        return self.ability.description()
