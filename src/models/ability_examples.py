@@ -1,5 +1,3 @@
-from typing import Tuple
-
 from models.abilities_base import Ability
 from models.character_base import Character
 from models.conditions import FullHealth

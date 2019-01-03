@@ -74,5 +74,3 @@ class BasicLaser(Mod):
 
     def abilities_granted(self) -> Sequence[Ability]:
         return self._ability,
-
-
