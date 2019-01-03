@@ -46,14 +46,3 @@ class Character(Stateful):
         modifier = self._inventory.total_modifier(attribute)
         value = self._base_status.get_attribute(attribute) + modifier
         return self._base_status.value_in_bounds(value, attribute)
-
-    def get_moves(self, target: 'Character') -> List['Move']:
-        moves = []
-        for ability in self.abilities():
-            for potential_target in [self, target]:
-                if ability.can_use(self, potential_target):
-                    move = Move(ability, self, potential_target)
-                    moves.append(move)
-        return moves
-
-
