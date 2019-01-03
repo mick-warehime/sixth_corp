@@ -1,8 +1,10 @@
+from models.ability_examples import FireLaser
 from models.character_base import Character
 from models.enemy_base import Enemy
 from models.conditions import IsDead
 from typing import Sequence
 
+from models.mods_base import GenericMod
 from scenes.scenes_base import Resolution, Effect, Scene
 
 
@@ -22,6 +24,7 @@ class CombatScene(Scene):
     def __init__(self) -> None:
         super().__init__()
         self._enemy = Enemy(health=10)
+        self._enemy.attempt_pickup(GenericMod(abilities_granted=FireLaser(2)))
 
     def enemy(self) -> Character:
         return self._enemy

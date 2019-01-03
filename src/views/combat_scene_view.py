@@ -48,11 +48,10 @@ class CombatSceneView(PygameView):
 
         self.render()
 
-    @property
-    def targetting_enabled(self) -> bool:
+    def targets_shown(self) -> bool:
         return self._targetting_enabled
 
-    def enable_targetting(self, targets: Sequence[Character]) -> None:
+    def show_targets(self, targets: Sequence[Character]) -> None:
         assert not self._targetting_enabled
         logging.debug('Targetting enabled')
         self._targetting_enabled = True
@@ -60,7 +59,7 @@ class CombatSceneView(PygameView):
             '{} - {}'.format(i + 1, t.__class__.__name__)
             for i, t in enumerate(targets)]
 
-    def disable_targetting(self) -> None:
+    def hide_targets(self) -> None:
         assert self._targetting_enabled
         logging.debug('Targetting disabled')
         self._targetting_enabled = False
