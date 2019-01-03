@@ -1,18 +1,16 @@
 import logging
+import random
 from collections import Sequence
-from itertools import product
 from typing import Tuple, List
 
 from models.abilities_base import Ability
 from models.character_base import Character
-from models.combat_AI import valid_moves, Move, random_move
+from models.combat_AI import valid_moves
 from models.player import get_player
 from scenes.combat_scene import CombatScene
 from models.conditions import IsDead
-from models.effects import IncrementAttribute
 from events.event_utils import post_scene_change
 from scenes.scene_examples import game_over
-from models.states import Attribute
 
 
 class CombatSceneModel(object):
@@ -41,9 +39,14 @@ class CombatSceneModel(object):
         ability.use(self._player, target)
 
     def handle_enemy_action(self) -> None:
-        move = random_move(self.enemy(), (self.enemy(), self._player))
-        move.use()
-        logging.debug('Enemy move ({})'.format(move.describe()))
+        moves = valid_moves(self.enemy(), (self.enemy(), self._player))
+        if moves:
+            move = random.choice(moves)
+            logging.debug('Enemy move ({})'.format(move.describe()))
+            move.use()
+        else:
+            logging.debug('Enemy has no valid moves, does nothing.')
+
 
     def enemy(self) -> Character:
         return self.scene.enemy()
