@@ -22,10 +22,10 @@ class CombatSceneControllerTest(TestCase):
 
     @mock.patch('views.pygame_view.pygame')
     def test_kill_enemy(self, mock_pygame):
-        ctl = create_combat_controller(enemy=Character(5))
+        ctl = create_combat_controller(enemy=Character(2))
         self.assertFalse(ctl.model.scene.is_resolved())
 
-        simulate_key_press('0')
-        simulate_key_press('0')
+        simulate_key_press('1')
+        simulate_key_press('1')
 
         self.assertTrue(ctl.model.scene.is_resolved())
