@@ -2,9 +2,6 @@
 import logging
 from typing import Sequence
 
-from typing import List
-
-from models.combat_AI import Move
 from models.inventory import BasicInventory, InventoryBase
 from models.states import Attribute, AttributeType, Stateful, BasicStatus, State
 
