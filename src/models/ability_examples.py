@@ -17,8 +17,11 @@ class Repair(Ability):
         return user == target and not FullHealth().check(target)
 
     def describe_use(self, user: Character, target: Character) -> str:
-        style = 'Repair {} damage.'
-        return style.format(self._amount)
+        style = '{} repairs itself for {} damage.'
+        return style.format(str(user), self._amount)
+
+    def description(self) -> str:
+        return 'Repair {} damage.'.format(self._amount)
 
 
 class FireLaser(Ability):
@@ -34,5 +37,8 @@ class FireLaser(Ability):
         return user is not target
 
     def describe_use(self, user: Character, target: Character) -> str:
-        style = 'Fire a laser for {} damage!'
-        return style.format(self._damage)
+        style = '{} fires a laser at {} for {} damage!'
+        return style.format(user, target, self._damage)
+
+    def description(self) -> str:
+        return 'Fire laser! ({} damage)'.format(self._damage)

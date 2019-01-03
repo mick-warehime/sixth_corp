@@ -23,7 +23,11 @@ class Ability(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def describe_use(self, user: Character, target: Character) -> str:
-        """Description of use for player."""
+        """Description of the ability as it was last used."""
+
+    @abc.abstractmethod
+    def description(self) -> str:
+        """"Description of the ability."""
 
     @property
     def _attrs(self) -> Tuple:
