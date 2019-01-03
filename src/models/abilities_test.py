@@ -40,7 +40,3 @@ def test_ability_order():
 def test_ability_eq():
     assert FireLaser(1) == FireLaser(1)
     assert FireLaser(1) != 31
-
-
-def test_ability_hash():
-    assert FireLaser(1) in {FireLaser(1)}
