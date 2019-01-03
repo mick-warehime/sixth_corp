@@ -1,4 +1,5 @@
 from typing import List
+
 from models.character_base import Character
 from world.world import get_location
 from views.pygame_view import PygameView
@@ -18,7 +19,8 @@ class CombatSceneView(PygameView):
         super().render()
         self.render_text(self.texts)
 
-    def _scene_description(self, player: Character, enemy: Character):
+    def _scene_description(self, player: Character,
+                           enemy: Character) -> List[str]:
         texts = [
             'You are fighting a dreaded {}.'.format(enemy.__class__.__name__),
             'Your health: {}'.format(player.get_attribute(Attribute.HEALTH)),
@@ -27,11 +29,12 @@ class CombatSceneView(PygameView):
         ]
         return texts
 
+    def _combat_options(self, player: Character) -> List[str]:
+        return ['{} - {}'.format(i, a.description())
+                for i, a in enumerate(player.abilities())]
+
     def update(self, player: Character, enemy: Character) -> None:
         header = self._scene_description(player, enemy)
-        moves = player.get_moves(enemy)
-        options = []
-        for i in range(len(moves)):
-            options.append('{}: {}'.format(i, moves[i].describe()))
+        options = self._combat_options(player)
         self.texts = header + options
         self.render()
