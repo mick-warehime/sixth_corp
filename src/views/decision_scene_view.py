@@ -38,4 +38,4 @@ class DecisionSceneView(PygameView):
     def render(self) -> None:
         super().render()
         self.texts = _format_text(self._main_text_fun(), self._option_text)
-        self.render_text()
+        self.render_text(self.texts)

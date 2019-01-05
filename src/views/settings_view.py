@@ -10,4 +10,4 @@ class SettingsView(PygameView):
 
     def render(self) -> None:
         super().render()
-        self.render_text()
+        self.render_text(self.texts)
