@@ -30,12 +30,12 @@ def _parse_text_fun(main_text: _TextOrFun) -> _TextFun:
 class DecisionSceneView(PygameView):
 
     def __init__(self, main_text: _TextOrFun, options: Dict[str, str]) -> None:
-        super(DecisionSceneView, self).__init__(get_location().background_image_path)
+        super(DecisionSceneView, self).__init__(
+            get_location().background_image_path)
         self._option_text = ['{}: {}'.format(k, v) for k, v in options.items()]
         self._main_text_fun = _parse_text_fun(main_text)
-        self.texts = _format_text(self._main_text_fun(), self._option_text)
 
     def render(self) -> None:
         super().render()
-        self.texts = _format_text(self._main_text_fun(), self._option_text)
-        self.render_text(self.texts)
+        texts = _format_text(self._main_text_fun(), self._option_text)
+        self.render_text(texts)
