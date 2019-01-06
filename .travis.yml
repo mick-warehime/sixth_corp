@@ -6,4 +6,5 @@ install:
 script:
 
   - scripts/mypy.sh
+  - scripts/flake8.sh
   - scripts/run_tests.sh
