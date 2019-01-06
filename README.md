@@ -52,9 +52,14 @@ Copy the Unitests Only configuration to a new configuration and rename it. Then 
     * Program: /usr/local/bin/flake8
     * Arguments: -exclude src/app.py
     * Working Directory: $ProjectFileDir$
-* Run external tool (flake8) - static type checker
+* Run external tool (mypy) - static type checker
     * Program: /usr/local/bin/mypy
     * Arguments: -p src --ignore-missing-imports
+    * Working Directory: $ProjectFileDir$
+* Run external tool (isort) - sorts python import lines automatically
+    * pip install isort
+    * Program: isort
+    * Arguments: -rc -y
     * Working Directory: $ProjectFileDir$
         
 
