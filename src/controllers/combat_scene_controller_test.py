@@ -1,4 +1,4 @@
-from models.character_base import Character
+from characters.character_base import Character
 from scenes.combat_scene import CombatScene
 from controllers.combat_scene_controller import CombatSceneController
 from unittest import mock

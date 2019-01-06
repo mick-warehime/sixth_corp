@@ -2,8 +2,8 @@
 import logging
 from typing import Sequence
 
-from models.inventory import BasicInventory, InventoryBase
-from models.states import Attribute, AttributeType, Stateful, BasicStatus, State
+from characters.inventory import BasicInventory, InventoryBase
+from characters.states import Attribute, AttributeType, Stateful, BasicStatus, State
 
 
 class Character(Stateful):

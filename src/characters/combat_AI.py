@@ -1,9 +1,9 @@
 from itertools import product
 from typing import Sequence
 
-from models.abilities_base import Ability
-from models.character_base import Character
-from models.states import Stateful
+from characters.abilities_base import Ability
+from characters.character_base import Character
+from characters.states import Stateful
 
 
 class Move(object):

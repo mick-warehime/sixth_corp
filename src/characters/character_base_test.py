@@ -1,11 +1,11 @@
-from models.ability_examples import FireLaser
-from models.character_base import Character
+from characters.ability_examples import FireLaser
+from characters.character_base import Character
 from unittest import TestCase
 
-from models.conditions import IsDead
-from models.mod_examples import HelmOfBeingOnFire, HullPlating
-from models.mods_base import GenericMod
-from models.states import Attribute, State
+from characters.conditions import IsDead
+from characters.mod_examples import HelmOfBeingOnFire, HullPlating
+from characters.mods_base import GenericMod
+from characters.states import Attribute, State
 
 
 class CharacterTest(TestCase):

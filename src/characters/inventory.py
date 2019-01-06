@@ -2,7 +2,7 @@
 import abc
 from typing import Iterable, Callable, Sequence
 
-from models.states import AttributeType, State
+from characters.states import AttributeType, State
 
 
 class InventoryBase(metaclass=abc.ABCMeta):

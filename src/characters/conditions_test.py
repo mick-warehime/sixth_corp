@@ -1,5 +1,5 @@
-from models.conditions import HasState, IsDead
-from models.states import BasicStatus, State, Attribute
+from characters.conditions import HasState, IsDead
+from characters.states import BasicStatus, State, Attribute
 
 
 def test_condition_and():

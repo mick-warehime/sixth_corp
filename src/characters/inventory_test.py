@@ -1,9 +1,9 @@
-from models.ability_examples import FireLaser, Repair
-from models.inventory import BasicInventory
-from models.mod_examples import HullPlating, CamouflagePaint, HelmOfBeingOnFire, \
+from characters.ability_examples import FireLaser, Repair
+from characters.inventory import BasicInventory
+from characters.mod_examples import HullPlating, CamouflagePaint, HelmOfBeingOnFire, \
     BasicLaser
-from models.mods_base import GenericMod
-from models.states import Attribute, State
+from characters.mods_base import GenericMod
+from characters.states import Attribute, State
 
 
 def test_basic_inventory_storage_sizes():

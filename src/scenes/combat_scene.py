@@ -1,10 +1,10 @@
-from models.ability_examples import FireLaser
-from models.character_base import Character
-from models.enemy_base import Enemy
-from models.conditions import IsDead
+from characters.ability_examples import FireLaser
+from characters.character_base import Character
+from characters.enemy_base import Enemy
+from characters.conditions import IsDead
 from typing import Sequence
 
-from models.mods_base import GenericMod
+from characters.mods_base import GenericMod
 from scenes.scenes_base import Resolution, Effect, Scene
 
 

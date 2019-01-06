@@ -1,9 +1,9 @@
 import pytest
 
-from models.ability_examples import Repair, FireLaser
-from models.character_base import Character
-from models.conditions import FullHealth
-from models.states import Attribute
+from characters.ability_examples import Repair, FireLaser
+from characters.character_base import Character
+from characters.conditions import FullHealth
+from characters.states import Attribute
 
 
 @pytest.fixture()

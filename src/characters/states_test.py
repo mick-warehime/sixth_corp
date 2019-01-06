@@ -1,6 +1,6 @@
 """Tests for states.py"""
 
-from models.states import Attribute, State, BasicStatus
+from characters.states import Attribute, State, BasicStatus
 
 
 def test_str_methods():

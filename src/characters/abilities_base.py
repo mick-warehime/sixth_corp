@@ -3,7 +3,7 @@ import abc
 import logging
 from typing import Tuple
 
-from models.states import Stateful
+from characters.states import Stateful
 
 
 class Ability(metaclass=abc.ABCMeta):
