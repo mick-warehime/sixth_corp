@@ -1,6 +1,6 @@
-from models.player import get_player
+from characters.player import get_player
 from scenes.combat_scene import CombatScene
-from models.combat_scene_model import CombatSceneModel, CombatTargeting
+from controllers.combat_scene_model import CombatSceneModel, CombatTargeting
 from views.combat_scene_view import CombatSceneView
 from controllers.controller import Controller
 from events.events_base import InputEvent, EventType, Event

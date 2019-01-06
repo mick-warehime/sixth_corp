@@ -1,10 +1,10 @@
 """Simple example mods."""
 from typing import Dict, Sequence
 
-from models.abilities_base import Ability
-from models.ability_examples import FireLaser
-from models.mods_base import Mod
-from models.states import AttributeType, State, Attribute, Skill
+from characters.abilities_base import Ability
+from characters.ability_examples import FireLaser
+from characters.mods_base import Mod
+from characters.states import AttributeType, State, Attribute, Skill
 
 
 class HullPlating(Mod):

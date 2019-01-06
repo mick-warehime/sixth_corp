@@ -2,8 +2,8 @@
 import abc
 from typing import Sequence, Dict, Union
 
-from models.abilities_base import Ability
-from models.states import State, AttributeType
+from characters.abilities_base import Ability
+from characters.states import State, AttributeType
 
 
 class Mod(metaclass=abc.ABCMeta):

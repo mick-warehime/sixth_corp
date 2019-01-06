@@ -3,9 +3,9 @@ import random
 from enum import Enum
 from typing import Sequence, Union
 
-from models.player import get_player
+from characters.player import get_player
 from scenes.scenes_base import SceneConstructor, Scene
-from models.states import Skill
+from characters.states import Skill
 
 
 class Difficulty(Enum):

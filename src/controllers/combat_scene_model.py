@@ -3,12 +3,12 @@ import random
 from collections import Sequence
 from typing import Tuple, List
 
-from models.abilities_base import Ability
-from models.character_base import Character
-from models.combat_AI import valid_moves
-from models.player import get_player
+from characters.abilities_base import Ability
+from characters.character_base import Character
+from characters.combat_AI import valid_moves
+from characters.player import get_player
 from scenes.combat_scene import CombatScene
-from models.conditions import IsDead
+from characters.conditions import IsDead
 from events.event_utils import post_scene_change
 from scenes.scene_examples import game_over
 

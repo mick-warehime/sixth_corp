@@ -1,10 +1,10 @@
 import pytest
 
-from models.character_base import Character
-from models.effects import RestartGame, IncrementAttribute, AcquireMod, ChangeLocation
-from models.mod_examples import HelmOfBeingOnFire
-from models.player import get_player, reset_player
-from models.states import Attribute
+from characters.character_base import Character
+from characters.effects import RestartGame, IncrementAttribute, AcquireMod, ChangeLocation
+from characters.mod_examples import HelmOfBeingOnFire
+from characters.player import get_player, reset_player
+from characters.states import Attribute
 from world.world import get_location
 from world.locations import LoadingLocation, MarsLocation
 
