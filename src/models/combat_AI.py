@@ -2,6 +2,7 @@ from itertools import product
 from typing import Sequence
 
 from models.abilities_base import Ability
+from models.character_base import Character
 from models.states import Stateful
 
 
@@ -19,7 +20,7 @@ class Move(object):
         return self.ability.describe_use(self._user, self.target)
 
 
-def valid_moves(user: Stateful,
+def valid_moves(user: Character,
                 targets: Sequence[Stateful]) -> Sequence[Move]:
     return [Move(a, user, t) for a, t in product(user.abilities(), targets)
             if a.can_use(user, t)]

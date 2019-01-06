@@ -56,7 +56,7 @@ class CombatSceneView(PygameView):
         logging.debug('Targetting enabled')
         self._targetting_enabled = True
         self._target_descriptions = [
-            '{} - {}'.format(i + 1, t.__class__.__name__)
+            '{} - {}'.format(i + 1, t.description())
             for i, t in enumerate(targets)]
 
     def hide_targets(self) -> None:

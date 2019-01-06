@@ -34,15 +34,12 @@ class CombatSceneModel(object):
 
     def apply_player_ability(self, ability: Ability,
                              target: Character) -> None:
-        logging.debug('Applying player ability ({})'.format(
-            ability.describe_use(self._player, target)))
         ability.use(self._player, target)
 
     def handle_enemy_action(self) -> None:
         moves = valid_moves(self.enemy(), (self.enemy(), self._player))
         if moves:
             move = random.choice(moves)
-            logging.debug('Enemy move ({})'.format(move.describe()))
             move.use()
         else:
             logging.debug('Enemy has no valid moves, does nothing.')

@@ -10,7 +10,7 @@ STARTING_HEALTH = 10
 class _Player(Character):
 
     def __init__(self):
-        super().__init__(STARTING_HEALTH)
+        super().__init__(STARTING_HEALTH, 'player')
 
         # We can think of this as the inherent mod of the chassis/ player type.
         # They can be assigned to an immutable "chassis" slot.
