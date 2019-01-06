@@ -1,7 +1,7 @@
 """Character abilities."""
 import abc
 import logging
-from typing import Tuple, Any
+from typing import Any, Tuple
 
 from characters.states import Stateful
 
