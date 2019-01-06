@@ -2,9 +2,9 @@ from characters.player import get_player
 from controllers.combat_scene_model import CombatSceneModel, CombatTargeting
 from controllers.controller import Controller
 from events.events_base import Event, EventType, InputEvent
-
-from views.combat_scene_view import CombatSceneView
 from scenes.combat_scene import CombatScene
+from views.combat_scene_view import CombatSceneView
+
 
 class CombatSceneController(Controller):
 
