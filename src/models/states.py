@@ -57,6 +57,10 @@ class Stateful(object, metaclass=ABCMeta):
     def increment_attribute(self, attribute: AttributeType, delta: int) -> None:
         """Increment an attribute by a fixed amount."""
 
+    @abstractmethod
+    def description(self) -> str:
+        """Basic description of the object for logging and display purposes."""
+
 
 class BasicStatus(Stateful):
     """A Stateful object implemented using simple dictionaries."""
@@ -123,3 +127,6 @@ class BasicStatus(Stateful):
     def set_attribute(self, attribute: AttributeType, value: int) -> None:
         value = self.value_in_bounds(value, attribute)
         self._attributes[attribute] = value
+
+    def description(self) -> str:
+        return 'BasicStatus'
