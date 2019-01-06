@@ -1,7 +1,6 @@
 import logging
 
 from events.events_base import EventListener, EventType
-from views.pygame_view import PygameView
 
 
 class Controller(EventListener):

@@ -1,6 +1,6 @@
 """Basic implementation of character inventory."""
 import abc
-from typing import Callable, Iterable, Sequence, List
+from typing import Callable, Iterable, List, Sequence
 
 from characters.abilities_base import Ability
 from characters.mods_base import Mod
