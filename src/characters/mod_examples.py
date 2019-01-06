@@ -9,7 +9,7 @@ from characters.states import Attribute, AttributeType, Skill, State
 
 class HullPlating(Mod):
 
-    def __init__(self, health_bonus=5) -> None:
+    def __init__(self, health_bonus: int = 5) -> None:
         self._bonus = health_bonus
 
     def states_granted(self) -> Sequence[State]:
@@ -63,7 +63,7 @@ class HelmOfBeingOnFire(Mod):
 
 class BasicLaser(Mod):
 
-    def __init__(self, damage=2) -> None:
+    def __init__(self, damage: int = 2) -> None:
         self._ability = FireLaser(damage)
 
     def states_granted(self) -> Sequence[State]:

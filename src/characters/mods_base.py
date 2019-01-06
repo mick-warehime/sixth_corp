@@ -24,9 +24,10 @@ class Mod(metaclass=abc.ABCMeta):
 
 class GenericMod(Mod):
 
-    def __init__(self, states_granted: Union[State, Sequence[State]] = (),
-                 attribute_modifiers: Dict[AttributeType, int] = None,
-                 abilities_granted: Union[Ability, Sequence[Ability]] = ()):
+    def __init__(
+            self, states_granted: Union[State, Sequence[State]] = (),
+            attribute_modifiers: Dict[AttributeType, int] = None,
+            abilities_granted: Union[Ability, Sequence[Ability]] = ()) -> None:
         if isinstance(states_granted, State):
             states_granted = states_granted,
         if attribute_modifiers is None:

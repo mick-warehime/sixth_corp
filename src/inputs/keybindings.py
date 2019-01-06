@@ -12,7 +12,7 @@ class Keybindings(object):
     key_field = 'key'
 
     def __init__(self) -> None:
-        self.bindings: Dict[str, Event] = dict()
+        self.bindings: Dict[str, EventType] = dict()
 
     def load(self) -> None:
         bindings: Dict[str, Event] = dict()
