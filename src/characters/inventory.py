@@ -1,7 +1,8 @@
 """Basic implementation of character inventory."""
 import abc
-from typing import Callable, Iterable, Sequence
+from typing import Callable, Iterable, Sequence, List
 
+from characters.abilities_base import Ability
 from characters.mods_base import Mod
 from characters.states import AttributeType, State
 
@@ -38,9 +39,9 @@ class InventoryBase(metaclass=abc.ABCMeta):
         mods = self.mods(lambda m: attribute in m.attribute_modifiers())
         return sum(m.attribute_modifiers()[attribute] for m in mods)
 
-    def all_abilities(self) -> Sequence['Ability']:
+    def all_abilities(self) -> Sequence[Ability]:
         mods = self.mods(lambda m: bool(m.abilities_granted()))
-        abilities = []
+        abilities: List[Ability] = []
         for mod in mods:
             abilities.extend(mod.abilities_granted())
         return sorted(abilities)
@@ -52,8 +53,8 @@ class BasicInventory(InventoryBase):
     A mod can be stored more than once.
     """
 
-    def __init__(self):
-        self._mods = []
+    def __init__(self) -> None:
+        self._mods: List[Mod] = []
 
     def can_store(self, mod: Mod) -> bool:
         return True

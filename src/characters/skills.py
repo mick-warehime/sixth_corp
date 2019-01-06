@@ -48,7 +48,8 @@ def skill_check(
         modifiers = [modifiers]
 
     def scene_builder() -> Scene:
-        modifier = sum(get_player().get_attribute(a) for a in modifiers)
+        modifier = sum(
+            get_player().get_attribute(a) for a in modifiers)  # type: ignore
         effective_difficulty = difficulty.adjust(modifier)
 
         if random.random() < effective_difficulty.success_prob:

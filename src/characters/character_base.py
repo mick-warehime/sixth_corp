@@ -2,7 +2,9 @@
 import logging
 from typing import Sequence
 
+from characters.abilities_base import Ability
 from characters.inventory import BasicInventory, InventoryBase
+from characters.mods_base import Mod
 from characters.states import (Attribute, AttributeType, BasicStatus, State,
                                Stateful)
 
@@ -10,7 +12,7 @@ from characters.states import (Attribute, AttributeType, BasicStatus, State,
 class Character(Stateful):
     """Stateful object with states and attributes affected by mods."""
 
-    def __init__(self, health: int, name=None) -> None:
+    def __init__(self, health: int, name: str = None) -> None:
         super().__init__()
         status = BasicStatus()
         status.set_attribute(Attribute.MAX_HEALTH, health)
@@ -21,7 +23,7 @@ class Character(Stateful):
         self._base_status = status
         self._inventory: InventoryBase = BasicInventory()
 
-    def attempt_pickup(self, mod: 'Mod') -> None:
+    def attempt_pickup(self, mod: Mod) -> None:
         mod_type = mod.__class__.__name__
         if self._inventory.can_store(mod):
             logging.debug('{} picking up {}'.format(self, mod_type))
@@ -31,7 +33,7 @@ class Character(Stateful):
                 '{} attempted to pickup {} but was unable.'.format(self,
                                                                    mod_type))
 
-    def abilities(self) -> Sequence['Ability']:
+    def abilities(self) -> Sequence[Ability]:
         return self._inventory.all_abilities()
 
     def has_state(self, state: State) -> bool:

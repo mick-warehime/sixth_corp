@@ -12,7 +12,7 @@ class Keybindings(object):
     key_field = 'key'
 
     def __init__(self) -> None:
-        self.bindings: Dict[str, EventType] = dict()
+        self.bindings: Dict[str, Event] = dict()
 
     def load(self) -> None:
         bindings: Dict[str, Event] = dict()
@@ -37,7 +37,7 @@ class Keybindings(object):
                 writer.writerow(
                     {self.binding_field: binding, self.key_field: key})
 
-    def update_binding(self, key: str, event: EventType) -> None:
+    def update_binding(self, key: str, event: Event) -> None:
         self.bindings[key] = event
 
         self.save()

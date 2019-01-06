@@ -8,7 +8,7 @@ STARTING_HEALTH = 10
 
 class _Player(Character):
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(STARTING_HEALTH, 'player')
 
         # We can think of this as the inherent mod of the chassis/ player type.
@@ -17,7 +17,7 @@ class _Player(Character):
             abilities_granted=(FireLaser(2), FireLaser(4), Repair(5)))
         self.attempt_pickup(base_abilities)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return 'player'
 
 
