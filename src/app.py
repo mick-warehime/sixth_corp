@@ -1,10 +1,9 @@
-from data.constants import LOG_LEVEL
-from data.constants import LOGGING_FILE
-from data.constants import VERSION
-from controllers.game import Game, initialize_pygame
 import logging
 import os
 import sys
+
+from controllers.game import Game, initialize_pygame
+from data.constants import LOG_LEVEL, LOGGING_FILE, VERSION
 
 
 def clear_log(log_file: str) -> None:

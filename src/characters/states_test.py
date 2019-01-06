@@ -1,6 +1,6 @@
 """Tests for states.py"""
 
-from characters.states import Attribute, State, BasicStatus
+from characters.states import Attribute, BasicStatus, State
 
 
 def test_str_methods():

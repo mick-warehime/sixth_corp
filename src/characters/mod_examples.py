@@ -4,7 +4,7 @@ from typing import Dict, Sequence
 from characters.abilities_base import Ability
 from characters.ability_examples import FireLaser
 from characters.mods_base import Mod
-from characters.states import AttributeType, State, Attribute, Skill
+from characters.states import Attribute, AttributeType, Skill, State
 
 
 class HullPlating(Mod):

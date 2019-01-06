@@ -3,7 +3,8 @@ import logging
 from typing import Sequence
 
 from characters.inventory import BasicInventory, InventoryBase
-from characters.states import Attribute, AttributeType, Stateful, BasicStatus, State
+from characters.states import (Attribute, AttributeType, BasicStatus, State,
+                               Stateful)
 
 
 class Character(Stateful):

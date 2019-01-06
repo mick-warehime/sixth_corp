@@ -1,7 +1,9 @@
 from typing import Dict, Iterable
+
+import pygame
+
 from data import constants
 from views.background_base import BackgroundImage
-import pygame
 
 
 class PygameView(object):

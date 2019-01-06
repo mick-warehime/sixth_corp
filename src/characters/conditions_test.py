@@ -1,5 +1,5 @@
 from characters.conditions import HasState, IsDead
-from characters.states import BasicStatus, State, Attribute
+from characters.states import Attribute, BasicStatus, State
 
 
 def test_condition_and():

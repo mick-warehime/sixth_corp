@@ -1,9 +1,9 @@
+from typing import List, Tuple
+
 import pygame
-from events.events_base import Event, EventType
-from events.events_base import InputEvent
-from events.events_base import EventListener
-from events.events_base import EventManager
-from typing import Tuple, List
+
+from events.events_base import (Event, EventListener, EventManager, EventType,
+                                InputEvent)
 from inputs.keybindings import Keybindings
 
 

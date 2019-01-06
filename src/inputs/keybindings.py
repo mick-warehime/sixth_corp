@@ -1,8 +1,9 @@
-from events.events_base import Event, EventType
-from typing import Dict
 import csv
 import logging
+from typing import Dict
+
 from data.constants import PREFERENCES_FILE
+from events.events_base import Event, EventType
 
 
 class Keybindings(object):

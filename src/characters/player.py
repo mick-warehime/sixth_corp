@@ -1,7 +1,6 @@
 """Implementation of the player class."""
-from characters.character_base import Character
 from characters.ability_examples import FireLaser, Repair
-
+from characters.character_base import Character
 from characters.mods_base import GenericMod
 
 STARTING_HEALTH = 10

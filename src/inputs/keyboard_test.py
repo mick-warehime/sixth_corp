@@ -1,8 +1,10 @@
-from unittest.mock import MagicMock
 from unittest import TestCase
-from inputs.keyboard import Keyboard
-from events.events_base import Event, EventListener, InputEvent, EventType
+from unittest.mock import MagicMock
+
 import pygame
+
+from events.events_base import Event, EventListener, EventType, InputEvent
+from inputs.keyboard import Keyboard
 
 
 class BasicListener(EventListener):

@@ -1,7 +1,7 @@
 import abc
 from typing import Any
 
-from characters.states import State, Attribute, Stateful
+from characters.states import Attribute, State, Stateful
 
 
 class Condition(metaclass=abc.ABCMeta):

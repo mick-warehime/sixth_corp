@@ -3,7 +3,7 @@ from characters.player import get_player, reset_player
 from characters.states import AttributeType, Stateful
 from scenes.scenes_base import Effect
 from world.location_base import Location
-from world.world import set_location, reset_world
+from world.world import reset_world, set_location
 
 
 class RestartGame(Effect):
