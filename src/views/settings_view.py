@@ -1,7 +1,7 @@
 from views.pygame_view import PygameView
 
 _SETTINGS_BACKGROUND = 'src/images/background_settings.png'
-_SETTINGS_TEXT = ('Settings!', 'X: Return')
+_SETTINGS_OPTIONS = ('Settings!', 'X: Return')
 
 
 class SettingsView(PygameView):
@@ -10,4 +10,4 @@ class SettingsView(PygameView):
 
     def render(self) -> None:
         super().render()
-        self.render_text(_SETTINGS_TEXT)
+        self.render_text(_SETTINGS_OPTIONS)
