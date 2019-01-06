@@ -49,7 +49,7 @@ class Keyboard(EventListener):
     def mouse_pos(self) -> Tuple[int, int]:
         return pygame.mouse.get_pos()
 
-    def get_binding(self, key: str) -> Event:
+    def get_binding(self, key: str) -> EventType:
         return self.bindings.get_binding(key)
 
     def post_bound_event(self, key: str) -> None:

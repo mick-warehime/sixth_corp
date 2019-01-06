@@ -5,7 +5,7 @@ from characters.states import Attribute, Stateful
 
 class Repair(Ability):
 
-    def __init__(self, amount: int):
+    def __init__(self, amount: int) -> None:
         assert amount > 0
         self._amount = amount
 

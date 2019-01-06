@@ -29,7 +29,7 @@ class DecisionScene(Scene):
         super().__init__()
         self.prompt = prompt
         self.choices = choices
-        self._choice = None
+        self._choice: DecisionOption = None
 
     def is_resolved(self) -> bool:
         return self._choice is not None

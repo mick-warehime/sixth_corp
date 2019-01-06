@@ -17,7 +17,7 @@ class CombatSceneView(PygameView):
             get_location().background_image_path)
         self.texts: List[str] = None
         self._targetting_enabled = False
-        self._target_descriptions = []
+        self._target_descriptions: List[str] = []
 
     def render(self) -> None:
         super().render()

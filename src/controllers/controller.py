@@ -8,7 +8,6 @@ class Controller(EventListener):
 
     def __init__(self) -> None:
         super(Controller, self).__init__()
-        self.view: PygameView = None
         self._active = True
         self.activate()
 

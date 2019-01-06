@@ -14,7 +14,7 @@ class CombatSceneController(Controller):
         player = get_player()
         targets = (player, self.model.enemy())
         self._targeting = CombatTargeting(player, targets)
-        self.view = CombatSceneView()
+        self.view: CombatSceneView = CombatSceneView()
 
     def notify(self, event: EventType) -> None:
         if not self._active:
@@ -44,10 +44,12 @@ class CombatSceneController(Controller):
             self.view.hide_targets()
             return
 
-    def _target_selected(self, input_event, num_targets):
+    def _target_selected(self, input_event: InputEvent,
+                         num_targets: int) -> bool:
         targeting_keys = [str(k + 1) for k in range(num_targets)]
         return self.view.targets_shown() and input_event.key in targeting_keys
 
-    def _ability_selected(self, input_event, num_abilities):
+    def _ability_selected(self, input_event: InputEvent,
+                          num_abilities: int) -> bool:
         ability_keys = [str(k + 1) for k in range(num_abilities)]
         return not self.view.targets_shown() and input_event.key in ability_keys
