@@ -14,7 +14,8 @@ class _Player(Character):
 
         # We can think of this as the inherent mod of the chassis/ player type.
         # They can be assigned to an immutable "chassis" slot.
-        base_abilities = GenericMod(abilities_granted=(FireLaser(4), Repair(5)))
+        base_abilities = GenericMod(
+            abilities_granted=(FireLaser(2), FireLaser(4), Repair(5)))
         self.attempt_pickup(base_abilities)
 
     def __str__(self):

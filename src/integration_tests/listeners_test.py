@@ -19,6 +19,11 @@ decision_scene = DecisionScene('dummy prompt', {})
 combat_scene = CombatScene()
 
 
+def setup_module():
+    for e in EventManager.listeners.copy():
+        EventManager.listeners.remove(e)
+
+
 def test_initializing_game_adds_listeners():
     assert len(EventManager.listeners) == 0
     game = Game()  # noqa: F841

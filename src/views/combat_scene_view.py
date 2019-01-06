@@ -1,4 +1,7 @@
-from typing import List
+import logging
+from typing import List, Sequence
+
+from models.abilities_base import Ability
 from models.character_base import Character
 from world.world import get_location
 from views.pygame_view import PygameView
@@ -10,22 +13,53 @@ _COMBAT_BACKGROUND = 'src/images/background_combat.png'
 class CombatSceneView(PygameView):
 
     def __init__(self) -> None:
-        super(CombatSceneView, self).__init__(get_location().background_image_path)
-        self._header_fmt = 'Combat Scene\n\nPlayer Life: {}, Enemy Life: {}'
+        super(CombatSceneView, self).__init__(
+            get_location().background_image_path)
         self.texts: List[str] = None
+        self._targetting_enabled = False
+        self._target_descriptions = []
 
     def render(self) -> None:
         super().render()
         self.render_text(self.texts)
 
-    def update(self, player: Character, enemy: Character) -> None:
-        player_health = player.get_attribute(Attribute.HEALTH)
-        enemy_health = enemy.get_attribute(Attribute.HEALTH)
-        header = self._header_fmt.format(player_health, enemy_health).split(
-            '\n')
-        moves = player.get_moves(enemy)
-        options = []
-        for i in range(len(moves)):
-            options.append('{}: {}'.format(i, moves[i].describe()))
+    def _scene_description(self, player: Character,
+                           enemy: Character) -> List[str]:
+        texts = [
+            'You are fighting a dreaded {}.'.format(enemy.__class__.__name__),
+            'Your health: {}'.format(player.get_attribute(Attribute.HEALTH)),
+            'Enemy health: {}'.format(enemy.get_attribute(Attribute.HEALTH)),
+            ''
+        ]
+        return texts
+
+    def _combat_options(self,
+                        allowed_abilities: Sequence[Ability]) -> List[str]:
+        return ['{} - {}'.format(i + 1, a.description())
+                for i, a in enumerate(allowed_abilities)]
+
+    def update(self, player: Character, enemy: Character,
+               allowed_abilities: Sequence[Ability]) -> None:
+        header = self._scene_description(player, enemy)
+        options = self._combat_options(allowed_abilities)
         self.texts = header + options
+        if self._targetting_enabled:
+            self.texts.extend(['', 'Targets:'] + self._target_descriptions)
+
         self.render()
+
+    def targets_shown(self) -> bool:
+        return self._targetting_enabled
+
+    def show_targets(self, targets: Sequence[Character]) -> None:
+        assert not self._targetting_enabled
+        logging.debug('Targetting enabled')
+        self._targetting_enabled = True
+        self._target_descriptions = [
+            '{} - {}'.format(i + 1, t.__class__.__name__)
+            for i, t in enumerate(targets)]
+
+    def hide_targets(self) -> None:
+        assert self._targetting_enabled
+        logging.debug('Targetting disabled')
+        self._targetting_enabled = False
