@@ -1,12 +1,12 @@
-from scenes.combat_scene import CombatScene
 from controllers.combat_scene_controller import CombatSceneController
 from controllers.controller import Controller
-from scenes.decision_scene import DecisionScene
 from controllers.decision_scene_controller import DecisionSceneController
-from events.events_base import EventListener, Event, NewSceneEvent, EventType
+from controllers.settings_controller import SettingsController
+from events.events_base import Event, EventListener, EventType, NewSceneEvent
+from scenes.combat_scene import CombatScene
+from scenes.decision_scene import DecisionScene
 from scenes.scene_examples import loading_scene
 from scenes.scenes_base import Scene
-from controllers.settings_controller import SettingsController
 
 SCENE_CONTROLLERS = {DecisionScene: DecisionSceneController,
                      CombatScene: CombatSceneController}

@@ -1,9 +1,10 @@
-from unittest import TestCase
-from inputs.keybindings import Keybindings
+import csv
 import tempfile
 from typing import Dict
+from unittest import TestCase
+
 from events.events_base import Event
-import csv
+from inputs.keybindings import Keybindings
 
 
 class KeybindingsTest(TestCase):

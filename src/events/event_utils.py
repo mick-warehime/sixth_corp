@@ -1,7 +1,4 @@
-from events.events_base import Event
-from events.events_base import EventManager
-from events.events_base import InputEvent
-from events.events_base import NewSceneEvent
+from events.events_base import Event, EventManager, InputEvent, NewSceneEvent
 from scenes.scenes_base import Scene
 
 

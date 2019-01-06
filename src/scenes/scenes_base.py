@@ -1,5 +1,5 @@
 """Basic interfaces for scenes, effects, and resolutions."""
-from typing import Sequence, Callable
+from typing import Callable, Sequence
 
 
 class Scene(object):

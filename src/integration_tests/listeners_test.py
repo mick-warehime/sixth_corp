@@ -4,7 +4,7 @@ import pytest
 
 from controllers.combat_scene_controller import CombatSceneController
 from controllers.decision_scene_controller import DecisionSceneController
-from controllers.game import initialize_pygame, Game
+from controllers.game import Game, initialize_pygame
 from events import event_utils
 from events.events_base import EventManager
 from scenes.combat_scene import CombatScene

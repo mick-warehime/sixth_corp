@@ -1,7 +1,6 @@
 from characters.abilities_base import Ability
-from characters.states import Stateful
 from characters.conditions import FullHealth
-from characters.states import Attribute
+from characters.states import Attribute, Stateful
 
 
 class Repair(Ability):

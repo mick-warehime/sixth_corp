@@ -1,6 +1,7 @@
+import logging
+
 from pygame import image
 from pygame.sprite import Sprite
-import logging
 
 
 class BackgroundImage(Sprite):

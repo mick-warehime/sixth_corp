@@ -1,12 +1,13 @@
 import pytest
 
 from characters.character_base import Character
-from characters.effects import RestartGame, IncrementAttribute, AcquireMod, ChangeLocation
+from characters.effects import (AcquireMod, ChangeLocation, IncrementAttribute,
+                                RestartGame)
 from characters.mod_examples import HelmOfBeingOnFire
 from characters.player import get_player, reset_player
 from characters.states import Attribute
-from world.world import get_location
 from world.locations import LoadingLocation, MarsLocation
+from world.world import get_location
 
 
 @pytest.fixture(scope='function')

@@ -1,6 +1,6 @@
 """Basic implementation of character inventory."""
 import abc
-from typing import Iterable, Callable, Sequence
+from typing import Callable, Iterable, Sequence
 
 from characters.states import AttributeType, State
 

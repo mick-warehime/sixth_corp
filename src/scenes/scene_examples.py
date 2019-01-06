@@ -1,12 +1,13 @@
 """Simple decision scene examples."""
-from characters.skills import skill_check, Difficulty
-from characters.effects import IncrementAttribute, RestartGame, AcquireMod, ChangeLocation
+from characters.effects import (AcquireMod, ChangeLocation, IncrementAttribute,
+                                RestartGame)
 from characters.mod_examples import AmuletOfSleepiness
 from characters.player import get_player
+from characters.skills import Difficulty, skill_check
 from characters.states import Attribute, Skill
 from scenes.combat_scene import CombatScene
-from scenes.decision_scene import DecisionScene, DecisionOption, transition_to, \
-    from_transition
+from scenes.decision_scene import (DecisionOption, DecisionScene,
+                                   from_transition, transition_to)
 from world.locations import CityLocation
 
 
