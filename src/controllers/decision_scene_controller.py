@@ -1,11 +1,11 @@
 from characters.conditions import IsDead
-from controllers.controller import Controller
 from characters.player import get_player
-from scenes.decision_scene import DecisionScene
-from views.decision_scene_view import DecisionSceneView
+from controllers.controller import Controller
 from events.event_utils import post_scene_change
-from events.events_base import InputEvent, EventType, Event
+from events.events_base import Event, EventType, InputEvent
+from scenes.decision_scene import DecisionScene
 from scenes.scene_examples import game_over
+from views.decision_scene_view import DecisionSceneView
 from world.world import get_world
 
 

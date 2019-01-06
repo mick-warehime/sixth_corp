@@ -2,7 +2,7 @@
 from abc import ABCMeta, abstractmethod
 from collections import defaultdict
 from enum import Enum
-from typing import Union, Callable, Dict, Tuple
+from typing import Callable, Dict, Tuple, Union
 
 
 class State(Enum):

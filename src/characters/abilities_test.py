@@ -1,6 +1,6 @@
 import pytest
 
-from characters.ability_examples import Repair, FireLaser
+from characters.ability_examples import FireLaser, Repair
 from characters.character_base import Character
 from characters.conditions import FullHealth
 from characters.states import Attribute

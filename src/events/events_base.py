@@ -1,7 +1,7 @@
 import logging
-from weakref import WeakSet
 from enum import Enum
 from typing import Tuple, Union
+from weakref import WeakSet
 
 from scenes.scenes_base import Scene
 

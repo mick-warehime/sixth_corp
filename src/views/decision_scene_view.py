@@ -1,8 +1,9 @@
-from typing import Dict, Callable, List, Union
-from data.constants import TEXTWIDTH
-from world.world import get_location
-from views.pygame_view import PygameView
 from textwrap import wrap
+from typing import Callable, Dict, List, Union
+
+from data.constants import TEXTWIDTH
+from views.pygame_view import PygameView
+from world.world import get_location
 
 _TextFun = Callable[[], str]
 _TextOrFun = Union[str, _TextFun]

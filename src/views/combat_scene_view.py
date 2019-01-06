@@ -3,9 +3,9 @@ from typing import List, Sequence
 
 from characters.abilities_base import Ability
 from characters.character_base import Character
-from world.world import get_location
-from views.pygame_view import PygameView
 from characters.states import Attribute
+from views.pygame_view import PygameView
+from world.world import get_location
 
 _COMBAT_BACKGROUND = 'src/images/background_combat.png'
 

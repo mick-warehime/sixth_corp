@@ -1,15 +1,15 @@
 import logging
 import random
 from collections import Sequence
-from typing import Tuple, List
+from typing import List, Tuple
 
 from characters.abilities_base import Ability
 from characters.character_base import Character
 from characters.combat_AI import valid_moves
-from characters.player import get_player
-from scenes.combat_scene import CombatScene
 from characters.conditions import IsDead
+from characters.player import get_player
 from events.event_utils import post_scene_change
+from scenes.combat_scene import CombatScene
 from scenes.scene_examples import game_over
 
 

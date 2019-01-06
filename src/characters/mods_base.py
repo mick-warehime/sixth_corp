@@ -1,9 +1,9 @@
 """Base implementation of mods and inventory."""
 import abc
-from typing import Sequence, Dict, Union
+from typing import Dict, Sequence, Union
 
 from characters.abilities_base import Ability
-from characters.states import State, AttributeType
+from characters.states import AttributeType, State
 
 
 class Mod(metaclass=abc.ABCMeta):

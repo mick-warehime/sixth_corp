@@ -1,7 +1,7 @@
 from characters.ability_examples import FireLaser, Repair
 from characters.inventory import BasicInventory
-from characters.mod_examples import HullPlating, CamouflagePaint, HelmOfBeingOnFire, \
-    BasicLaser
+from characters.mod_examples import (BasicLaser, CamouflagePaint,
+                                     HelmOfBeingOnFire, HullPlating)
 from characters.mods_base import GenericMod
 from characters.states import Attribute, State
 

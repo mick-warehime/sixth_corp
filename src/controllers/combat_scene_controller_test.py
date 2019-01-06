@@ -1,9 +1,9 @@
+from unittest import TestCase, mock
+
 from characters.character_base import Character
-from scenes.combat_scene import CombatScene
 from controllers.combat_scene_controller import CombatSceneController
-from unittest import mock
-from unittest import TestCase
 from events.event_utils import simulate_key_press
+from scenes.combat_scene import CombatScene
 
 
 def create_combat_controller(enemy):

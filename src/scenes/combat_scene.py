@@ -1,11 +1,11 @@
-from characters.ability_examples import FireLaser
-from characters.character_base import Character
-from characters.enemy_base import Enemy
-from characters.conditions import IsDead
 from typing import Sequence
 
+from characters.ability_examples import FireLaser
+from characters.character_base import Character
+from characters.conditions import IsDead
+from characters.enemy_base import Enemy
 from characters.mods_base import GenericMod
-from scenes.scenes_base import Resolution, Effect, Scene
+from scenes.scenes_base import Effect, Resolution, Scene
 
 
 class CombatResolution(Resolution):
