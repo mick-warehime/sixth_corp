@@ -3,9 +3,8 @@ from unittest import TestCase
 from characters.ability_examples import FireLaser
 from characters.enemy_base import Character
 from characters.mods_base import GenericMod
-from characters.combat_AI import Move
-from combat.combat_manager import CombatManager
-from combat.combat_manager import CombatError
+from characters.states import Attribute
+from combat.combat_manager import CombatError, CombatManager
 
 
 class Combatant(Character):
@@ -17,8 +16,8 @@ class Combatant(Character):
         self.attempt_pickup(base_abilities)
 
 
-def create_combat_group(group_size):
-    return [Combatant(health=10, abilities=(FireLaser(5))) for _ in range(group_size)]
+def create_combat_group(group_size, health=10, damage=2):
+    return [Combatant(health=health, abilities=(FireLaser(damage))) for _ in range(group_size)]
 
 
 class CombatManagerTest(TestCase):
@@ -55,32 +54,36 @@ class CombatManagerTest(TestCase):
             for move in defender_moveset:
                 self.assertIsInstance(move.ability, FireLaser)
 
-    def test_no_moves_set_raises(self):
-        attacker = create_combat_group(1)
-        two_defenders = create_combat_group(2)
-        manager = CombatManager(attackers=attacker, defenders=two_defenders)
-
-        with self.assertRaises(CombatError):
-            manager.step()
-
-    def test_attack_unset_raises(self):
-        attacker = create_combat_group(1)
-        two_defenders = create_combat_group(2)
-        manager = CombatManager(attackers=attacker, defenders=two_defenders)
-
-        attack_moves = manager.attackers_moves()
-        manager.set_attack(attack_moves[0])
-
-        with self.assertRaises(CombatError):
-            manager.step()
-
-    def test_defense_unset_raises(self):
-        attacker = create_combat_group(1)
-        two_defenders = create_combat_group(2)
+    def test_step_applies_moves(self):
+        health = 10
+        damage = 2
+        ndefenders = 2
+        attacker = create_combat_group(1, health=health, damage=damage)
+        two_defenders = create_combat_group(ndefenders, health=health, damage=damage)
         manager = CombatManager(attackers=attacker, defenders=two_defenders)
 
         defense_moves = manager.defenders_moves()
-        manager.set_defense(defense_moves[0])
+        attack_moves = manager.attackers_moves()
+        manager.step(attack_moves[0], defense_moves[0])
 
-        with self.assertRaises(CombatError):
-            manager.step()
+        # both defenders attack
+        attacker_health = attacker[0].get_attribute(Attribute.HEALTH)
+        self.assertEqual(attacker_health, health - ndefenders * damage)
+
+        # attacker only hits one defender
+        first_defender_health = attack_moves[0][0].target.get_attribute(Attribute.HEALTH)
+        second_defender_health = attack_moves[1][0].target.get_attribute(Attribute.HEALTH)
+        self.assertEqual(first_defender_health, health - damage)
+        self.assertEqual(second_defender_health, health)
+
+    def test_combat_result_indicates_combat_finished(self):
+        health = 10
+        damage = 2
+        ndefenders = 2
+        attacker = create_combat_group(1, health=health, damage=damage)
+        two_defenders = create_combat_group(ndefenders, health=health, damage=damage)
+        manager = CombatManager(attackers=attacker, defenders=two_defenders)
+
+        defense_moves = manager.defenders_moves()
+        attack_moves = manager.attackers_moves()
+        manager.step(attack_moves[0], defense_moves[0])

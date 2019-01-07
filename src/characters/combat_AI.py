@@ -1,3 +1,4 @@
+import logging
 from itertools import product
 from typing import Sequence
 
@@ -14,6 +15,7 @@ class Move(object):
         self.target = target
 
     def use(self) -> None:
+        logging.debug('MOVE: {}'.format(self.describe()))
         self.ability.use(self._user, self.target)
 
     def describe(self) -> str:
