@@ -22,5 +22,8 @@ class Move(object):
 
 def valid_moves(user: Character,
                 targets: Sequence[Stateful]) -> Sequence[Move]:
-    return [Move(a, user, t) for a, t in product(user.abilities(), targets)
-            if a.can_use(user, t)]
+    return [m for m in all_moves(user, targets) if m.ability.can_use(user, m.target)]
+
+
+def all_moves(user: Character, targets: Sequence[Stateful]) -> Sequence[Move]:
+    return [Move(a, user, t) for a, t in product(user.abilities(), targets)]
