@@ -1,4 +1,3 @@
-from collections import namedtuple
 from itertools import product
 from typing import Any, Sequence, Tuple
 
