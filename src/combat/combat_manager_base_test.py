@@ -1,23 +1,9 @@
 from unittest import TestCase
 
 from characters.ability_examples import FireLaser
-from characters.enemy_base import Character
-from characters.mods_base import GenericMod
 from characters.states import Attribute
 from combat.combat_manager_base import CombatManager
-
-
-class Combatant(Character):
-
-    def __init__(self, health, abilities) -> None:
-        super().__init__(health=health, name='combatant')
-
-        base_abilities = GenericMod(abilities_granted=abilities)
-        self.attempt_pickup(base_abilities)
-
-
-def create_combat_group(group_size, health=10, damage=2):
-    return [Combatant(health=health, abilities=(FireLaser(damage))) for _ in range(group_size)]
+from combat.combat_test_utils import create_combat_group
 
 
 class CombatManagerTest(TestCase):
@@ -98,3 +84,20 @@ class CombatManagerTest(TestCase):
         self.assertTrue(manager.is_done())
         self.assertTrue(manager.defenders_lose())
         self.assertFalse(manager.attackers_lose())
+
+    def test_history_recorded(self):
+
+        health = 10
+        damage = 2
+        ndefenders = 2
+        attacker = create_combat_group(1, health=health, damage=damage)
+        two_defenders = create_combat_group(ndefenders, health=health, damage=damage)
+        manager = CombatManager(attackers=attacker, defenders=two_defenders)
+
+        defense_moves = manager.defenders_moves()
+        attack_moves = manager.attackers_moves()
+        for i in range(3):
+            manager.take_turn(attack_moves[0], defense_moves[0])
+
+        self.assertTrue(manager.attackers_lose())
+        self.assertEqual(len(manager.history), 3)

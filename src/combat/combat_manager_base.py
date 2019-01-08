@@ -1,15 +1,19 @@
 import logging
+from itertools import product
 from typing import Sequence, Set, Tuple
 
 from characters.character_base import Character
-from characters.conditions import IsDead
 from characters.combat_AI import Move, all_moves
-from itertools import product
+from characters.conditions import IsDead
 
 GroupMove = Sequence[Move]
 GroupMoveSet = Set[GroupMove]
 CombatGroup = Sequence[Character]
-CombatHistory = Tuple[GroupMove, GroupMove]
+CombatHistory = Tuple[GroupMove, GroupMove, bool, bool]
+
+
+def _describe_moves(moves: GroupMove) -> Sequence[str]:
+    return [m.describe() for m in moves]
 
 
 class CombatManager(object):
@@ -17,9 +21,9 @@ class CombatManager(object):
     def __init__(self, attackers: CombatGroup, defenders: CombatGroup) -> None:
         self._attackers = attackers
         self._defenders = defenders
-        self._history: Sequence[CombatHistory] = []
         self._attackers_moves: GroupMoveSet = None
         self._defenders_moves: GroupMoveSet = None
+        self.history: Sequence[CombatHistory] = []
 
     def attackers_moves(self) -> GroupMove:
         if self._attackers_moves is None:
@@ -38,10 +42,16 @@ class CombatManager(object):
         for defense_move in defense_moves:
             defense_move.use()
 
-        attack_descr = [m.describe() for m in attack_moves]
-        defense_descr = [m.describe() for m in defense_moves]
+        attack_descr = _describe_moves(attack_moves)
+        defense_descr = _describe_moves(defense_moves)
         logging.debug('ATTACK: {}'.format(attack_descr))
         logging.debug('DEFENSE: {}'.format(defense_descr))
+
+        self.history.append(
+            (attack_descr,
+             defense_descr,
+             self.attackers_lose(),
+             self.defenders_lose()))
 
     def is_done(self) -> bool:
         return self.attackers_lose() or self.defenders_lose()
