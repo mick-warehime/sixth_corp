@@ -10,15 +10,6 @@ RewardFunc = Any
 CombatState = Sequence[int]
 GroupCombatState = Sequence[CombatState]
 CombatResult = Tuple[GroupCombatState, int, bool]
-CombatHistory = namedtuple('CombatHistory', ['state', 'attack', 'defense', 'result'])
-
-HISTORY_FMT = '\n\nCOMBAT Turn {}:\n' \
-              'state: {}\n' \
-              'attack: {}\n' \
-              'defense: {}\n' \
-              'result state: {}\n' \
-              'reward: {}\n' \
-              'is over?: {}\n'
 
 
 # TODO(mick): map character health to a smaller set of possible states (low, med, high)?
