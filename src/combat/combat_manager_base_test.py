@@ -4,7 +4,7 @@ from characters.ability_examples import FireLaser
 from characters.enemy_base import Character
 from characters.mods_base import GenericMod
 from characters.states import Attribute
-from combat.combat_manager import CombatError, CombatManager
+from combat.combat_manager_base import CombatManager
 
 
 class Combatant(Character):
@@ -64,7 +64,7 @@ class CombatManagerTest(TestCase):
 
         defense_moves = manager.defenders_moves()
         attack_moves = manager.attackers_moves()
-        manager.step(attack_moves[0], defense_moves[0])
+        manager.take_turn(attack_moves[0], defense_moves[0])
 
         # both defenders attack
         attacker_health = attacker[0].get_attribute(Attribute.HEALTH)
@@ -86,4 +86,15 @@ class CombatManagerTest(TestCase):
 
         defense_moves = manager.defenders_moves()
         attack_moves = manager.attackers_moves()
-        manager.step(attack_moves[0], defense_moves[0])
+        manager.take_turn(attack_moves[0], defense_moves[0])
+
+    def test_combat_finished(self):
+        damage = 2
+        ndefenders = 2
+        attacker = create_combat_group(1, health=10, damage=damage)
+        two_defenders = create_combat_group(ndefenders, health=0, damage=damage)
+        manager = CombatManager(attackers=attacker, defenders=two_defenders)
+
+        self.assertTrue(manager.is_done())
+        self.assertTrue(manager.defenders_lose())
+        self.assertFalse(manager.attackers_lose())

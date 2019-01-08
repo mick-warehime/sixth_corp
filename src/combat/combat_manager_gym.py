@@ -1,50 +1,63 @@
 import logging
-from itertools import product
 from collections import namedtuple
+from itertools import product
 from typing import Any, Sequence, Set, Tuple
 
 from characters.character_base import Character
 from characters.combat_AI import Move, all_moves
-
-
-class CombatError(Exception):
-    pass
-
-
-class CombatState(object):
-    pass
-
+from characters.states import Attribute
 
 RewardFunc = Any
 GroupMove = Sequence[Move]
-MoveSet = Set[GroupMove]
+GroupMoveSet = Set[GroupMove]
+CombatState = Sequence[int]
+GroupCombatState = Sequence[CombatState]
 CombatGroup = Sequence[Character]
-CombatResult = Tuple[CombatState, int, bool]
+CombatResult = Tuple[GroupCombatState, int, bool]
 CombatHistory = namedtuple('CombatHistory', ['state', 'attack', 'defense', 'result'])
 
-HISTORY_FMT = '\n\nCOMBAT Turn {}:\nstate: {}\nattack: {}\ndefense: {}\nresult state: {}\nreward: {}\nis over?: {}\n'
+HISTORY_FMT = '\n\nCOMBAT Turn {}:\n' \
+              'state: {}\n' \
+              'attack: {}\n' \
+              'defense: {}\n' \
+              'result state: {}\n' \
+              'reward: {}\n' \
+              'is over?: {}\n'
 
 
 def _default_reward_func(prev: CombatState, current: CombatState) -> int:
     return 0
 
 
-class CombatManager(object):
+# TODO(mick): map character health to a smaller set of possible states (low, med, high)?
+class CombatGym(object):
 
     def __init__(self, attackers: CombatGroup, defenders: CombatGroup,
                  reward_func: RewardFunc = _default_reward_func) -> None:
         self._attackers = attackers
         self._defenders = defenders
         self._history: Sequence[CombatHistory] = []
-        self._attackers_moves: MoveSet = None
-        self._defenders_moves: MoveSet = None
+        self._attackers_moves: GroupMoveSet = None
+        self._defenders_moves: GroupMoveSet = None
         self._previous_state: CombatState = None
         self._reward_func: RewardFunc = reward_func
+        self._relevant_attributes = [Attribute.HEALTH]
+        self._initial_state = self._current_state()
+        self._states = self._state_space()
 
-    def _current_state(self) -> CombatState:
-        pass
+    def _current_state(self) -> GroupCombatState:
+        'Current value of the relevant attributes of each attacker/defender'
+        group_state = []
+        for group in [self._attackers, self._defenders]:
+            for member in group:
+                combat_state = []
+                for attribute in self._relevant_attributes:
+                    state = int(member.get_attribute(attribute))
+                    combat_state.append(state)
+                group_state.append(combat_state)
+        return group_state
 
-    def state_space(self) -> Sequence[CombatState]:
+    def _state_space(self) -> Sequence[GroupCombatState]:
         pass
 
     def attackers_moves(self) -> GroupMove:
@@ -85,7 +98,7 @@ class CombatManager(object):
     def _is_done(self) -> bool:
         return False
 
-    def _enumerate_moveset(self, attackers: CombatGroup, defenders: CombatGroup) -> MoveSet:
+    def _enumerate_moveset(self, attackers: CombatGroup, defenders: CombatGroup) -> GroupMoveSet:
         'All possible combinations of attack moves targeting all possible defenders'
         moveset = []
         for attacker in attackers:
@@ -98,7 +111,13 @@ class CombatManager(object):
         defense_descr = [m.describe() for m in record.defense]
         turn = len(self._history)
 
-        history_description = HISTORY_FMT.format(turn, record.state, attack_descr, defense_descr, record.result[0],
-                                                 record.result[1], record.result[2])
-        print(history_description)
+        history_description = HISTORY_FMT.format(
+            turn,
+            record.state,
+            attack_descr,
+            defense_descr,
+            record.result[0],
+            record.result[1],
+            record.result[2])
+        # print(history_description)
         logging.debug(history_description)
