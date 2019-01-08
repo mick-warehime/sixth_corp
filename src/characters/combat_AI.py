@@ -1,3 +1,4 @@
+import logging
 from itertools import product
 from typing import Sequence
 
@@ -14,6 +15,7 @@ class Move(object):
         self.target = target
 
     def use(self) -> None:
+        logging.debug('MOVE: {}'.format(self.describe()))
         self.ability.use(self._user, self.target)
 
     def describe(self) -> str:
@@ -22,5 +24,8 @@ class Move(object):
 
 def valid_moves(user: Character,
                 targets: Sequence[Stateful]) -> Sequence[Move]:
-    return [Move(a, user, t) for a, t in product(user.abilities(), targets)
-            if a.can_use(user, t)]
+    return [m for m in all_moves(user, targets) if m.ability.can_use(user, m.target)]
+
+
+def all_moves(user: Character, targets: Sequence[Stateful]) -> Sequence[Move]:
+    return [Move(a, user, t) for a, t in product(user.abilities(), targets)]
