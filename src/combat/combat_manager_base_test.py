@@ -1,6 +1,7 @@
 from unittest import TestCase
 
-from characters.ability_examples import FireLaser
+from characters.ability_examples import FireLaser, Repair
+from characters.mods_base import GenericMod
 from characters.states import Attribute
 from combat.combat_manager_base import CombatManager
 from combat.combat_test_utils import create_combat_group
@@ -8,9 +9,9 @@ from combat.combat_test_utils import create_combat_group
 
 class CombatManagerTest(TestCase):
 
-    def test_enumerates_moves(self):
-        attacker = create_combat_group(1)
-        two_defenders = create_combat_group(2)
+    def test_enumerates_attacks(self):
+        attacker = create_combat_group(1, base_name='attacker ')
+        two_defenders = create_combat_group(2, base_name='defender ')
         manager = CombatManager(attackers=attacker, defenders=two_defenders)
 
         attack_moves = manager.attackers_moves()
@@ -39,6 +40,40 @@ class CombatManagerTest(TestCase):
         for defender_moveset in defense_moves:
             for move in defender_moveset:
                 self.assertIsInstance(move.ability, FireLaser)
+
+    def test_enumerates_attack_and_defense(self):
+        attacker = create_combat_group(1, base_name='attacker')
+        defender = create_combat_group(1, base_name='defender')
+        defender[0].attempt_pickup(GenericMod(abilities_granted=(Repair(5))))
+        defender[0].increment_attribute(Attribute.HEALTH, -5)
+        manager = CombatManager(attackers=attacker, defenders=defender)
+
+        attack_moves = manager.attackers_moves()
+
+        # one possible attacks (one per enemy)
+        self.assertEqual(len(attack_moves), 1)
+
+        # only one attacker (each possible move is a single move)
+        self.assertEqual(len(attack_moves[0]), 1)
+
+        # each attack move is just the laser ability
+        for attacker_moveset in attack_moves:
+            for move in attacker_moveset:
+                self.assertIsInstance(move.ability, FireLaser)
+
+        defense_moves = manager.defenders_moves()
+
+        # two moves - defender can attack target, or heal self
+        self.assertEqual(len(defense_moves), 2)
+
+        # defender can attack, or defender can heal
+        self.assertEqual(len(defense_moves[0]), 1)
+        self.assertEqual(len(defense_moves[1]), 1)
+
+        # each defense move is just the laser ability
+        for expected_move, defender_moveset in zip([FireLaser, Repair], defense_moves):
+            for move in defender_moveset:
+                self.assertIsInstance(move.ability, expected_move)
 
     def test_step_applies_moves(self):
         health = 10

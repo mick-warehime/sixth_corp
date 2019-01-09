@@ -72,5 +72,11 @@ class CombatManager(object):
         'All possible combinations of attack moves targeting all possible defenders'
         moveset = []
         for attacker in attackers:
-            moveset.append(valid_moves(attacker, defenders))
+            attacks = valid_moves(attacker, defenders)
+            # TODO - buffs can only target self not team. if we replace '[attacker]' with
+            # 'attackers' here then we end up with friendly fire. potentially need to add
+            # skill type = {attack, utility, defend, etc} and target accordingly. we could
+            # also add the notion of 'side/team' to the character so can use does the right thing
+            buffs = valid_moves(attacker, [attacker])
+            moveset.append(attacks + buffs)
         return list(product(*moveset))
