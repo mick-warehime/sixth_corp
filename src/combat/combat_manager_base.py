@@ -3,7 +3,7 @@ from itertools import product
 from typing import Sequence, Set, Tuple
 
 from characters.character_base import Character
-from characters.combat_AI import Move, all_moves
+from characters.combat_AI import Move, valid_moves
 from characters.conditions import IsDead
 
 GroupMove = Sequence[Move]
@@ -72,5 +72,8 @@ class CombatManager(object):
         'All possible combinations of attack moves targeting all possible defenders'
         moveset = []
         for attacker in attackers:
-            moveset.append(all_moves(attacker, defenders))
+            moveset.append(valid_moves(attacker, defenders) + valid_moves(attacker, attackers))
         return list(product(*moveset))
+
+# TODO - make tests pass
+# TODO - figure out why can't heal on first combat

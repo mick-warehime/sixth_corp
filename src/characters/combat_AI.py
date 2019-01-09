@@ -21,10 +21,13 @@ class Move(object):
     def describe(self) -> str:
         return self.ability.describe_use(self._user, self.target)
 
+    def can_use(self) -> bool:
+        return self.ability.can_use(self._user, self.target)
+
 
 def valid_moves(user: Character,
                 targets: Sequence[Stateful]) -> Sequence[Move]:
-    return [m for m in all_moves(user, targets) if m.ability.can_use(user, m.target)]
+    return [m for m in all_moves(user, targets) if m.can_use()]
 
 
 def all_moves(user: Character, targets: Sequence[Stateful]) -> Sequence[Move]:
