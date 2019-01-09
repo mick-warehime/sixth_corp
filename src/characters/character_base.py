@@ -1,6 +1,6 @@
 """Basic class for player and enemies."""
 import logging
-from typing import Sequence
+from typing import Sequence, Tuple
 
 from characters.abilities_base import Ability
 from characters.inventory import BasicInventory, InventoryBase
@@ -16,6 +16,11 @@ class Position(object):
         self.y = y
         self.w = w
         self.h = h
+
+    def center(self) -> Tuple[int, int]:
+        cx = int(self.x + self.w / 2)
+        cy = int(self.y + self.h / 2)
+        return (cx, cy)
 
 
 class Character(Stateful):

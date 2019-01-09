@@ -20,7 +20,7 @@ class CombatSceneController(Controller):
         self._targeting = CombatTargeting(player, targets)
 
         self._characters = [player, self.model.enemy()]
-        self._selected_character: Character = None
+        self.selected_character: Character = None
 
         self.view: CombatSceneView = CombatSceneView()
         self.update()
@@ -59,16 +59,18 @@ class CombatSceneController(Controller):
         for char in self._characters:
             pos = char.position
             if point_collides_rect(x, y, pos.x, pos.y, pos.w, pos.h):
-                self._selected_character = char
+                if self.selected_character == char:
+                    continue
+                self.selected_character = char
                 logging.debug('MOUSE: Selected: {}'.format(char))
                 return
 
         logging.debug('MOUSE: Clicked nothing.')
         # if no character was clicked clear field
-        if self._selected_character is not None:
-            logging.debug('MOUSE: Deselected: {}'.format(self._selected_character))
+        if self.selected_character is not None:
+            logging.debug('MOUSE: Deselected: {}'.format(self.selected_character))
 
-        self._selected_character = None
+        self.selected_character = None
 
     def _target_selected(self, input_event: InputEvent,
                          num_targets: int) -> bool:
@@ -82,5 +84,5 @@ class CombatSceneController(Controller):
 
     def update(self) -> None:
         self.view.update(get_player(), self.model.enemy(),
-                         self._targeting.abilities_available(), self._selected_character)
+                         self._targeting.abilities_available(), self.selected_character)
         self.model.update()
