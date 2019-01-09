@@ -1,4 +1,4 @@
-from typing import Iterable, Tuple
+from typing import Iterable
 
 import pygame
 from pygame import Surface
@@ -39,19 +39,19 @@ class PygameView(object):
     def update_display(self) -> None:
         pygame.display.flip()
 
-    def render_background(self, image_path):
-        self.render_image(image_path, 0, 0, inverted=False)
+    def render_background(self, image_path: str) -> None:
+        self.render_image(image_path, 0, 0)
 
-    def render_image(self, image_path: str, x: int, y: int, w: int = 0, h: int = 0, inverted=True) -> None:
+    def render_image(self, image_path: str, x: int, y: int, w: int = 0, h: int = 0) -> None:
         image = load_image(image_path)
         rect = image.get_rect()
         rect.x = x
         rect.y = y
-
-        if inverted:
-            rect.y = constants.SCREEN_SIZE[1] - y
-
         if w > 0 and h > 0:
             image = pygame.transform.scale(image, (w, h))
         self.screen.blit(image, rect)
+        self.update_display()
+
+    def draw_rect(self, x: int, y: int, w: int, h: int) -> None:
+        pygame.draw.rect(self.screen, [250, 0, 0], pygame.rect.Rect(x, y, w, h), 2)
         self.update_display()

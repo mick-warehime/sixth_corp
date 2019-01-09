@@ -1,7 +1,11 @@
+import logging
+
+from characters.character_base import Character
 from characters.player import get_player
 from controllers.combat_scene_model import CombatSceneModel, CombatTargeting
 from controllers.controller import Controller
-from events.events_base import EventType, InputEvent, Event
+from controllers.pygame_collisions import point_collides_rect
+from events.events_base import Event, EventType, InputEvent
 from scenes.combat_scene import CombatScene
 from views.combat_scene_view import CombatSceneView
 
@@ -14,6 +18,10 @@ class CombatSceneController(Controller):
         player = get_player()
         targets = (player, self.model.enemy())
         self._targeting = CombatTargeting(player, targets)
+
+        self._characters = [player, self.model.enemy()]
+        self._selected_character: Character = None
+
         self.view: CombatSceneView = CombatSceneView()
         self.update()
 
@@ -46,8 +54,21 @@ class CombatSceneController(Controller):
             return
 
     def _handle_mouse(self, input_event: InputEvent) -> None:
-        pass
+        x = input_event.mouse[0]
+        y = input_event.mouse[1]
+        for char in self._characters:
+            pos = char.position
+            if point_collides_rect(x, y, pos.x, pos.y, pos.w, pos.h):
+                self._selected_character = char
+                logging.debug('MOUSE: Selected: {}'.format(char))
+                return
 
+        logging.debug('MOUSE: Clicked nothing.')
+        # if no character was clicked clear field
+        if self._selected_character is not None:
+            logging.debug('MOUSE: Deselected: {}'.format(self._selected_character))
+
+        self._selected_character = None
 
     def _target_selected(self, input_event: InputEvent,
                          num_targets: int) -> bool:
@@ -61,5 +82,5 @@ class CombatSceneController(Controller):
 
     def update(self) -> None:
         self.view.update(get_player(), self.model.enemy(),
-                         self._targeting.abilities_available())
+                         self._targeting.abilities_available(), self._selected_character)
         self.model.update()

@@ -10,7 +10,6 @@ from world.world import get_location
 _COMBAT_BACKGROUND = 'src/images/background_combat.png'
 
 
-
 class CombatSceneView(PygameView):
 
     def __init__(self) -> None:
@@ -20,11 +19,14 @@ class CombatSceneView(PygameView):
         self._targetting_enabled = False
         self._target_descriptions: List[str] = []
 
-    def render_view(self, player: Character, enemy: Character) -> None:
+    def render_view(self, player: Character, enemy: Character, selected: Character) -> None:
         super().render()
         self.render_text(self.texts)
         self.render_character(player)
         self.render_character(enemy)
+        if selected is not None:
+            pos = selected.position
+            self.draw_rect(pos.x, pos.y, pos.w, pos.h)
 
     def render_character(self, character: Character) -> None:
         pos = character.position
@@ -46,14 +48,14 @@ class CombatSceneView(PygameView):
                 for i, a in enumerate(allowed_abilities)]
 
     def update(self, player: Character, enemy: Character,
-               allowed_abilities: Sequence[Ability]) -> None:
+               allowed_abilities: Sequence[Ability], selected: Character) -> None:
         header = self._scene_description(player, enemy)
         options = self._combat_options(allowed_abilities)
         self.texts = header + options
         if self._targetting_enabled:
             self.texts.extend(['', 'Targets:'] + self._target_descriptions)
 
-        self.render_view(player, enemy)
+        self.render_view(player, enemy, selected)
 
     def targets_shown(self) -> bool:
         return self._targetting_enabled

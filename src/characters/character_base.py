@@ -11,7 +11,7 @@ from characters.states import (Attribute, AttributeType, BasicStatus, State,
 
 class Position(object):
 
-    def __init__(self, x=0, y=0, w=0, h=0) -> None:
+    def __init__(self, x: int =0, y: int =0, w: int =0, h: int =0) -> None:
         self.x = x
         self.y = y
         self.w = w
@@ -21,7 +21,7 @@ class Position(object):
 class Character(Stateful):
     """Stateful object with states and attributes affected by mods."""
 
-    def __init__(self, health: int, image_path: str, name: str = None) -> None:
+    def __init__(self, health: int, image_path: str = None, name: str = None) -> None:
         super().__init__()
         status = BasicStatus()
         status.set_attribute(Attribute.MAX_HEALTH, health)

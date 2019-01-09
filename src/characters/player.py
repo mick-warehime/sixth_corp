@@ -7,6 +7,7 @@ STARTING_HEALTH = 10
 
 _PLAYER_IMAGE = 'src/images/walle.png'
 
+
 class _Player(Character):
 
     def __init__(self) -> None:
@@ -17,7 +18,7 @@ class _Player(Character):
         base_abilities = GenericMod(
             abilities_granted=(FireLaser(2), FireLaser(4), Repair(5)))
         self.attempt_pickup(base_abilities)
-        self.set_position(200, 700, 150, 150)
+        self.set_position(200, 200, 150, 150)
 
     def __str__(self) -> str:
         return 'player'
