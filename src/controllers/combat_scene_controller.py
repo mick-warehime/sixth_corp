@@ -1,7 +1,7 @@
 from characters.player import get_player
 from controllers.combat_scene_model import CombatSceneModel, CombatTargeting
 from controllers.controller import Controller
-from events.events_base import EventType, InputEvent
+from events.events_base import EventType, InputEvent, Event
 from scenes.combat_scene import CombatScene
 from views.combat_scene_view import CombatSceneView
 
@@ -25,6 +25,9 @@ class CombatSceneController(Controller):
             self.update()
 
     def _handle_input(self, input_event: InputEvent) -> None:
+        if input_event.event == Event.MOUSE_CLICK:
+            self._handle_mouse(input_event)
+            return
 
         abilities = self._targeting.abilities_available()
         if self._ability_selected(input_event, len(abilities)):
@@ -41,6 +44,10 @@ class CombatSceneController(Controller):
             self.model.handle_enemy_action()
             self.view.hide_targets()
             return
+
+    def _handle_mouse(self, input_event: InputEvent) -> None:
+        pass
+
 
     def _target_selected(self, input_event: InputEvent,
                          num_targets: int) -> bool:

@@ -8,8 +8,7 @@ from views.pygame_view import PygameView
 from world.world import get_location
 
 _COMBAT_BACKGROUND = 'src/images/background_combat.png'
-_PLAYER_IMAGE = 'src/images/walle.png'
-_ENEMY_IMAGE = 'src/images/drone.png'
+
 
 
 class CombatSceneView(PygameView):
@@ -21,11 +20,15 @@ class CombatSceneView(PygameView):
         self._targetting_enabled = False
         self._target_descriptions: List[str] = []
 
-    def render(self) -> None:
+    def render_view(self, player: Character, enemy: Character) -> None:
         super().render()
         self.render_text(self.texts)
-        self.render_image(_PLAYER_IMAGE, 200, 700, (150, 150))
-        self.render_image(_ENEMY_IMAGE, 800, 800, (200, 150))
+        self.render_character(player)
+        self.render_character(enemy)
+
+    def render_character(self, character: Character) -> None:
+        pos = character.position
+        self.render_image(character.image_path, pos.x, pos.y, pos.w, pos.h)
 
     def _scene_description(self, player: Character,
                            enemy: Character) -> List[str]:
@@ -50,7 +53,7 @@ class CombatSceneView(PygameView):
         if self._targetting_enabled:
             self.texts.extend(['', 'Targets:'] + self._target_descriptions)
 
-        self.render()
+        self.render_view(player, enemy)
 
     def targets_shown(self) -> bool:
         return self._targetting_enabled

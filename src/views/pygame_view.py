@@ -42,15 +42,16 @@ class PygameView(object):
     def render_background(self, image_path):
         self.render_image(image_path, 0, 0, inverted=False)
 
-    def render_image(self, image_path: str, x: int, y: int,
-                     width_height: Tuple[int, int] = None, inverted=True) -> None:
+    def render_image(self, image_path: str, x: int, y: int, w: int = 0, h: int = 0, inverted=True) -> None:
         image = load_image(image_path)
         rect = image.get_rect()
         rect.x = x
         rect.y = y
+
         if inverted:
             rect.y = constants.SCREEN_SIZE[1] - y
-        if width_height is not None:
-            image = pygame.transform.scale(image, width_height)
+
+        if w > 0 and h > 0:
+            image = pygame.transform.scale(image, (w, h))
         self.screen.blit(image, rect)
         self.update_display()

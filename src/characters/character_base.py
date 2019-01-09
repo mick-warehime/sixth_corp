@@ -9,10 +9,19 @@ from characters.states import (Attribute, AttributeType, BasicStatus, State,
                                Stateful)
 
 
+class Position(object):
+
+    def __init__(self, x=0, y=0, w=0, h=0) -> None:
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+
+
 class Character(Stateful):
     """Stateful object with states and attributes affected by mods."""
 
-    def __init__(self, health: int, name: str = None) -> None:
+    def __init__(self, health: int, image_path: str, name: str = None) -> None:
         super().__init__()
         status = BasicStatus()
         status.set_attribute(Attribute.MAX_HEALTH, health)
@@ -22,6 +31,8 @@ class Character(Stateful):
 
         self._base_status = status
         self._inventory: InventoryBase = BasicInventory()
+        self.image_path = image_path
+        self.position = Position()
 
     def attempt_pickup(self, mod: Mod) -> None:
         mod_type = mod.__class__.__name__
@@ -50,3 +61,6 @@ class Character(Stateful):
 
     def description(self) -> str:
         return self._name
+
+    def set_position(self, x: int, y: int, w: int, h: int) -> None:
+        self.position = Position(x, y, w, h)
