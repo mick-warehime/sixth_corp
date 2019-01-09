@@ -13,4 +13,5 @@ class Combatant(Character):
 
 
 def create_combat_group(group_size, health=10, damage=2):
-    return [Combatant(health=health, abilities=(FireLaser(damage)), name=str(i)) for i in range(group_size)]
+    return [Combatant(health=health, abilities=(FireLaser(damage)), name=str(i))
+            for i in range(group_size)]

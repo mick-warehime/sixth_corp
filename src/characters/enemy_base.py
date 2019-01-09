@@ -1,6 +1,6 @@
-from characters.mods_base import GenericMod
 from characters.ability_examples import FireLaser
 from characters.character_base import Character
+from characters.mods_base import GenericMod
 
 _ENEMY_IMAGE = 'src/images/drone.png'
 

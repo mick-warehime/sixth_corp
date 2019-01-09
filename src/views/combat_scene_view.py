@@ -1,8 +1,7 @@
-import logging
 from typing import List, Sequence
 
-from characters.combat_AI import Move
 from characters.character_base import Character
+from characters.combat_AI import Move
 from characters.states import Attribute
 from views.pygame_view import PygameView
 from world.world import get_location
@@ -52,4 +51,3 @@ class CombatSceneView(PygameView):
         options = self._combat_options(moves)
         self.texts = header + options
         self.render_view(player, enemy, selected)
-

@@ -1,15 +1,13 @@
 import logging
 import random
-
 from typing import Sequence
 
-from characters.combat_AI import Move
-from combat.combat_manager_base import CombatManager
 from characters.abilities_base import Ability
 from characters.character_base import Character
-from characters.combat_AI import valid_moves
+from characters.combat_AI import Move, valid_moves
 from characters.conditions import IsDead
 from characters.player import get_player
+from combat.combat_manager_base import CombatManager
 from events.event_utils import post_scene_change
 from scenes.combat_scene import CombatScene
 from scenes.scene_examples import game_over

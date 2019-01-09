@@ -1,6 +1,5 @@
 from unittest import TestCase, mock
 
-from characters.character_base import Character
 from characters.enemy_base import Enemy
 from controllers.combat_scene_controller import CombatSceneController
 from events.event_utils import simulate_key_press, simulate_mouse_click
@@ -20,6 +19,7 @@ def create_enemy(health):
 def select_enemy(enemy):
     cx, cy = enemy.position.center()
     simulate_mouse_click(cx, cy)
+
 
 class CombatSceneControllerTest(TestCase):
 
