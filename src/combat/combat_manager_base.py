@@ -72,8 +72,5 @@ class CombatManager(object):
         'All possible combinations of attack moves targeting all possible defenders'
         moveset = []
         for attacker in attackers:
-            moveset.append(valid_moves(attacker, defenders) + valid_moves(attacker, attackers))
+            moveset.append(valid_moves(attacker, defenders))
         return list(product(*moveset))
-
-# TODO - make tests pass
-# TODO - figure out why can't heal on first combat

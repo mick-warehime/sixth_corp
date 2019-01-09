@@ -43,9 +43,6 @@ class CombatSceneView(PygameView):
         return texts
 
     def _combat_options(self, moves: Sequence[Move]) -> List[str]:
-        for m in moves:
-            print(m.ability.description())
-
         return ['{} - {}'.format(i + 1, m.ability.description())
                 for i, m in enumerate(moves)]
 

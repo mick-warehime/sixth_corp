@@ -17,10 +17,6 @@ class Ability(metaclass=abc.ABCMeta):
         """Whether the ability can be used."""
 
     def use(self, user: Stateful, target: Stateful) -> None:
-        if not self.can_use(user, target):
-            print(user)
-            print(target)
-            self.can_use(user, target)
         assert self.can_use(user, target)
         logging.debug('ABILITY: {}'.format(self.describe_use(user, target)))
         self._use(user, target)

@@ -52,10 +52,8 @@ class CombatSceneModel(object):
     def player_moves(self, target: Character) -> Sequence[Move]:
         if target is None:
             return []
-        group_moves = self.combat_manager.attackers_moves()
-        # ASSUMING ONLY ONE PLAYER
-        moves = [m[0] for m in group_moves]
-        return [m for m in moves if m.can_use() and m.target == target]
+
+        return valid_moves(self._player, (target, ))
 
     def select_player_move(self, move: Move) -> None:
         enemy_move = self.enemy_action()
