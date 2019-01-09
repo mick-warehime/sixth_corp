@@ -69,3 +69,6 @@ class Character(Stateful):
 
     def set_position(self, x: int, y: int, w: int, h: int) -> None:
         self.position = Position(x, y, w, h)
+
+    def __repr__(self) -> str:
+        return self._name
