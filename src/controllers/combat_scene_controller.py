@@ -1,7 +1,7 @@
 from characters.player import get_player
 from controllers.combat_scene_model import CombatSceneModel, CombatTargeting
 from controllers.controller import Controller
-from events.events_base import Event, EventType, InputEvent
+from events.events_base import EventType, InputEvent
 from scenes.combat_scene import CombatScene
 from views.combat_scene_view import CombatSceneView
 
@@ -15,16 +15,14 @@ class CombatSceneController(Controller):
         targets = (player, self.model.enemy())
         self._targeting = CombatTargeting(player, targets)
         self.view: CombatSceneView = CombatSceneView()
+        self.update()
 
     def notify(self, event: EventType) -> None:
         if not self._active:
             return
-        if event == Event.TICK:
-            self.view.update(get_player(), self.model.enemy(),
-                             self._targeting.abilities_available())
-            self.model.update()
-        elif isinstance(event, InputEvent):
+        if isinstance(event, InputEvent):
             self._handle_input(event)
+            self.update()
 
     def _handle_input(self, input_event: InputEvent) -> None:
 
@@ -53,3 +51,8 @@ class CombatSceneController(Controller):
                           num_abilities: int) -> bool:
         ability_keys = [str(k + 1) for k in range(num_abilities)]
         return not self.view.targets_shown() and input_event.key in ability_keys
+
+    def update(self) -> None:
+        self.view.update(get_player(), self.model.enemy(),
+                         self._targeting.abilities_available())
+        self.model.update()

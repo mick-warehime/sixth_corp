@@ -19,6 +19,7 @@ class DecisionSceneController(Controller):
         options = {key_val: choice.description
                    for key_val, choice in scene.choices.items()}
         self.view = DecisionSceneView(scene.prompt, options)
+        self.view.render()
 
     def _handle_input(self, input_event: InputEvent) -> None:
         if input_event.key in self._scene.choices:
@@ -28,16 +29,19 @@ class DecisionSceneController(Controller):
         if not self._active:
             return
         if event == Event.TICK:
-            self.view.render()
-            if self._scene.is_resolved():
-                resolution = self._scene.get_resolution()
-                for effect in resolution.effects:
-                    effect.execute()
-
-                self.deactivate()
-                if IsDead().check(get_player()):
-                    post_scene_change(game_over())
-                    return
-                post_scene_change(resolution.next_scene())
+            self.check_resolution()
         elif isinstance(event, InputEvent):
             self._handle_input(event)
+            self.view.render()
+
+    def check_resolution(self) -> None:
+        if self._scene.is_resolved():
+            resolution = self._scene.get_resolution()
+            for effect in resolution.effects:
+                effect.execute()
+
+            self.deactivate()
+            if IsDead().check(get_player()):
+                post_scene_change(game_over())
+                return
+            post_scene_change(resolution.next_scene())

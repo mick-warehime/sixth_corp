@@ -1,14 +1,14 @@
-from typing import Dict, Iterable
+from typing import Iterable
 
 import pygame
+from pygame import Surface
 
 from data import constants
-from views.background_base import BackgroundImage
+from views.pygame_images import load_image
 
 
 class PygameView(object):
-    screen: pygame.Surface = None
-    background_image_cache: Dict[str, BackgroundImage] = {}
+    screen: Surface = None
 
     def __init__(self, background_image_path: str) -> None:
         if self.screen is None:
@@ -16,22 +16,15 @@ class PygameView(object):
 
         pygame.display.set_caption('6th Corp')
         self.smallfont = pygame.font.Font(None, 40)
-        self._background_image = self._load_background(background_image_path)
+        self._background_path = background_image_path
 
     def _initialize_screen(self) -> None:
         self.screen = pygame.display.set_mode(constants.SCREEN_SIZE)
 
-    def _load_background(self, image_path: str) -> BackgroundImage:
-        if image_path not in PygameView.background_image_cache:
-            background_image = BackgroundImage(image_path)
-            PygameView.background_image_cache[image_path] = background_image
-        else:
-            background_image = PygameView.background_image_cache[image_path]
-        return background_image
-
     def render(self) -> None:
         self.clear_screen()
-        self.render_background_image()
+        self.render_image(self._background_path, 0, 0)
+        self.update_display()
 
     def clear_screen(self) -> None:
         self.screen.fill((0, 0, 0))
@@ -42,8 +35,15 @@ class PygameView(object):
             rasterized = self.smallfont.render(text, True, (0, 255, 0))
             self.screen.blit(rasterized, (250, 250 + offset))
             offset += 50
+        self.update_display()
+
+    def update_display(self) -> None:
         pygame.display.flip()
 
-    def render_background_image(self) -> None:
-        self.screen.blit(self._background_image.image,
-                         self._background_image.rect)
+    def render_image(self, image_path: str, top: int, left: int) -> None:
+        image = load_image(image_path)
+        rect = image.get_rect()
+        rect.top = top
+        rect.left = left
+        self.screen.blit(image, rect)
+        self.update_display()
