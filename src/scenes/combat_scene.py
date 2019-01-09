@@ -23,7 +23,7 @@ class CombatScene(Scene):
 
     def __init__(self) -> None:
         super().__init__()
-        self._enemy: Character = Enemy(health=10, name='troll')
+        self._enemy: Character = Enemy(health=10, name='drone')
         self._enemy.attempt_pickup(GenericMod(abilities_granted=FireLaser(2)))
 
     def enemy(self) -> Character:

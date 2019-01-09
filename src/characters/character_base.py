@@ -1,6 +1,6 @@
 """Basic class for player and enemies."""
 import logging
-from typing import Sequence
+from typing import Sequence, Tuple
 
 from characters.abilities_base import Ability
 from characters.inventory import BasicInventory, InventoryBase
@@ -9,10 +9,24 @@ from characters.states import (Attribute, AttributeType, BasicStatus, State,
                                Stateful)
 
 
+class Position(object):
+
+    def __init__(self, x: int =0, y: int =0, w: int =0, h: int =0) -> None:
+        self.x = x
+        self.y = y
+        self.w = w
+        self.h = h
+
+    def center(self) -> Tuple[int, int]:
+        cx = int(self.x + self.w / 2)
+        cy = int(self.y + self.h / 2)
+        return (cx, cy)
+
+
 class Character(Stateful):
     """Stateful object with states and attributes affected by mods."""
 
-    def __init__(self, health: int, name: str = None) -> None:
+    def __init__(self, health: int, image_path: str = None, name: str = None) -> None:
         super().__init__()
         status = BasicStatus()
         status.set_attribute(Attribute.MAX_HEALTH, health)
@@ -22,6 +36,8 @@ class Character(Stateful):
 
         self._base_status = status
         self._inventory: InventoryBase = BasicInventory()
+        self.image_path = image_path
+        self.position = Position()
 
     def attempt_pickup(self, mod: Mod) -> None:
         mod_type = mod.__class__.__name__
@@ -50,3 +66,6 @@ class Character(Stateful):
 
     def description(self) -> str:
         return self._name
+
+    def set_position(self, x: int, y: int, w: int, h: int) -> None:
+        self.position = Position(x, y, w, h)
