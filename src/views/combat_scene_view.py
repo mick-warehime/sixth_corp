@@ -9,6 +9,7 @@ from world.world import get_location
 
 _COMBAT_BACKGROUND = 'src/images/background_combat.png'
 _PLAYER_IMAGE = 'src/images/walle.png'
+_ENEMY_IMAGE = 'src/images/drone.png'
 
 
 class CombatSceneView(PygameView):
@@ -19,12 +20,12 @@ class CombatSceneView(PygameView):
         self.texts: List[str] = None
         self._targetting_enabled = False
         self._target_descriptions: List[str] = []
-        self._player_path = _PLAYER_IMAGE
 
     def render(self) -> None:
         super().render()
         self.render_text(self.texts)
-        self.render_image(self._player_path, 0, 0)
+        self.render_image(_PLAYER_IMAGE, 200, 700, (150, 150))
+        self.render_image(_ENEMY_IMAGE, 800, 800, (200, 150))
 
     def _scene_description(self, player: Character,
                            enemy: Character) -> List[str]:
