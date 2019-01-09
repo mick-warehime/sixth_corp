@@ -1,13 +1,13 @@
 import logging
 import random
-from collections import Sequence
-from typing import List, Tuple
+from typing import Sequence
 
 from characters.abilities_base import Ability
 from characters.character_base import Character
-from characters.combat_AI import valid_moves
+from characters.combat_AI import Move, valid_moves
 from characters.conditions import IsDead
 from characters.player import get_player
+from combat.combat_manager_base import CombatManager
 from events.event_utils import post_scene_change
 from scenes.combat_scene import CombatScene
 from scenes.scene_examples import game_over
@@ -18,6 +18,7 @@ class CombatSceneModel(object):
     def __init__(self, scene: CombatScene) -> None:
         self.scene = scene
         self._player = get_player()
+        self.combat_manager = CombatManager([get_player()], [scene.enemy()])
 
     def update(self) -> None:
         if self.is_game_over():
@@ -36,40 +37,22 @@ class CombatSceneModel(object):
                              target: Character) -> None:
         ability.use(self._player, target)
 
-    def handle_enemy_action(self) -> None:
+    def enemy_action(self) -> Move:
         moves = valid_moves(self.enemy(), (self.enemy(), self._player))
-        if moves:
-            move = random.choice(moves)
-            move.use()
-        else:
-            logging.debug('Enemy has no valid moves, does nothing.')
+        if len(moves) < 1:
+            raise NotImplementedError('Enemy should always have moves')
+
+        return random.choice(moves)
 
     def enemy(self) -> Character:
         return self.scene.enemy()
 
+    def player_moves(self, target: Character) -> Sequence[Move]:
+        if target is None:
+            return []
 
-class CombatTargeting(object):
-    """Handles targeting of abilities between characters in combat."""
+        return valid_moves(self._player, (target, ))
 
-    def __init__(self, user: Character, targets: Sequence) -> None:
-        self._user = user
-        self._all_targets = targets
-        self._selected_ability: Ability = None
-
-    def valid_targets(self) -> Tuple[Character, ...]:
-        if self._selected_ability is None:
-            return ()
-        return tuple(t for t in self._all_targets
-                     if self._selected_ability.can_use(self._user, t))
-
-    def select_ability(self, ability: Ability) -> None:
-        logging.debug('Selected ability ({})'.format(ability.description()))
-        self._selected_ability = ability
-
-    @property
-    def selected_ability(self) -> Ability:
-        return self._selected_ability
-
-    def abilities_available(self) -> List[Ability]:
-        moves = valid_moves(self._user, self._all_targets)
-        return sorted({m.ability for m in moves})
+    def select_player_move(self, move: Move) -> None:
+        enemy_move = self.enemy_action()
+        self.combat_manager.take_turn([move], [enemy_move])

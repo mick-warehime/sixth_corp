@@ -1,6 +1,5 @@
 from unittest import TestCase, mock
 
-from characters.character_base import Character
 from characters.enemy_base import Enemy
 from controllers.combat_scene_controller import CombatSceneController
 from events.event_utils import simulate_key_press, simulate_mouse_click
@@ -13,13 +12,22 @@ def create_combat_controller(enemy):
     return CombatSceneController(scene)
 
 
+def create_enemy(health):
+    return Enemy(health=health, name='test dummy')
+
+
+def select_enemy(enemy):
+    cx, cy = enemy.position.center()
+    simulate_mouse_click(cx, cy)
+
+
 class CombatSceneControllerTest(TestCase):
 
     @mock.patch('views.pygame_view.pygame')
     @mock.patch('views.pygame_images.load_image')
     @mock.patch('controllers.combat_scene_controller.CombatSceneController.update')
     def test_game_over(self, mock_update, mock_loader, mock_pygame):
-        ctl = create_combat_controller(enemy=Character(10))
+        ctl = create_combat_controller(enemy=create_enemy(10))
 
         self.assertFalse(ctl.model.is_game_over())
 
@@ -27,10 +35,11 @@ class CombatSceneControllerTest(TestCase):
     @mock.patch('views.pygame_images.load_image')
     @mock.patch('controllers.combat_scene_controller.CombatSceneController.update')
     def test_kill_enemy(self, mock_update, mock_loader, mock_pygame):
-        ctl = create_combat_controller(enemy=Character(2))
+        enemy = create_enemy(2)
+        ctl = create_combat_controller(enemy)
         self.assertFalse(ctl.model.scene.is_resolved())
 
-        simulate_key_press('1')
+        select_enemy(enemy)
         simulate_key_press('1')
 
         self.assertTrue(ctl.model.scene.is_resolved())
@@ -39,12 +48,11 @@ class CombatSceneControllerTest(TestCase):
     @mock.patch('views.pygame_images.load_image')
     @mock.patch('controllers.combat_scene_controller.CombatSceneController.update')
     def test_selected_enemy(self, mock_update, mock_loader, mock_pygame):
-        enemy = Enemy(2, name='test dummy')
+        enemy = create_enemy(2)
         ctl = create_combat_controller(enemy)
         self.assertIsNone(ctl.selected_character)
 
-        cx, cy = enemy.position.center()
-        simulate_mouse_click(cx, cy)
+        select_enemy(enemy)
 
         self.assertIsNotNone(ctl.selected_character)
         self.assertEqual(ctl.selected_character, enemy)
@@ -60,13 +68,12 @@ class CombatSceneControllerTest(TestCase):
         ctl = create_combat_controller(enemy)
         self.assertIsNone(ctl.selected_character)
 
-        cx, cy = enemy.position.center()
-        simulate_mouse_click(cx, cy)
+        select_enemy(enemy)
 
         self.assertIsNotNone(ctl.selected_character)
         self.assertEqual(ctl.selected_character, enemy)
 
-        simulate_mouse_click(cx, cy)
+        select_enemy(enemy)
         self.assertIsNone(ctl.selected_character)
 
     @mock.patch('views.pygame_view.pygame')
