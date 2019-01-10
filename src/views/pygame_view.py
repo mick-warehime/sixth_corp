@@ -13,7 +13,6 @@ class PygameView(object):
     def __init__(self, background_image_path: str) -> None:
         if self.screen is None:
             self._initialize_screen()
-
         self._smallfont = pygame.font.Font(None, 40)
         self._background_path = background_image_path
 
@@ -36,9 +35,6 @@ class PygameView(object):
             self.screen.blit(rasterized, (250, 250 + offset))
             offset += 50
         self.update_display()
-
-    def _initialize_screen(self) -> None:
-        self.screen = pygame.display.set_mode(constants.SCREEN_SIZE)
 
     def update_display(self) -> None:
         pygame.display.flip()
