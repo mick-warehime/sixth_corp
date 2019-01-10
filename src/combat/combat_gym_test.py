@@ -92,8 +92,8 @@ class CombatGymTest(TestCase):
         manager = CombatGym(attackers=attacker, defenders=two_defenders)
 
         # First round of attacks gets player to 1 life
-        defense_moves = manager.defenders_moves()
-        attack_moves = manager.attackers_moves()
+        defense_moves = manager.defenders_moves
+        attack_moves = manager.attackers_moves
         (state, reward, done) = manager.step(attack_moves[0], defense_moves[0])
 
         self.assertEqual(state, ((1,), (1,)))
@@ -102,7 +102,7 @@ class CombatGymTest(TestCase):
 
         # Enemy wins (positive reward for AI)
         (state, reward, done) = manager.step(attack_moves[0], defense_moves[0])
-        self.assertEqual(state, ((1,), (1,)))
+        self.assertEqual(state, ((0,), (1,)))
         self.assertEqual(reward, CombatGym.REWARD_MAX)
         self.assertTrue(done)
 
@@ -114,8 +114,8 @@ class CombatGymTest(TestCase):
         manager = CombatGym(attackers=attacker, defenders=two_defenders)
 
         # First round of attacks gets player to 1 life
-        defense_moves = manager.defenders_moves()
-        attack_moves = manager.attackers_moves()
+        defense_moves = manager.defenders_moves
+        attack_moves = manager.attackers_moves
         (state, reward, done) = manager.step(attack_moves[0], defense_moves[0])
 
         self.assertEqual(state, ((1,), (1,)))
@@ -124,6 +124,6 @@ class CombatGymTest(TestCase):
 
         # Enemy wins (positive reward for AI)
         (state, reward, done) = manager.step(attack_moves[0], defense_moves[0])
-        self.assertEqual(state, ((1,), (1,)))
+        self.assertEqual(state, ((1,), (0,)))
         self.assertEqual(reward, -CombatGym.REWARD_MAX)
         self.assertTrue(done)
