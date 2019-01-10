@@ -1,3 +1,4 @@
+import math
 from itertools import product
 from typing import Any, Sequence, Tuple
 
@@ -13,6 +14,8 @@ CombatResult = Tuple[GroupCombatState, int, bool]
 
 # TODO(mick): map character health to a smaller set of possible states (low, med, high)?
 class CombatGym(CombatManager):
+    """Manages combat simulation with a OpenAI Gym like interface. gym.openai.com"""
+
     ATTRIBUTE_STEP = 10
     ATTRIBUTE_MAX = 50
     REWARD_MAX = 10
@@ -54,7 +57,7 @@ class CombatGym(CombatManager):
         return tuple(group_state)
 
     def state_space(self) -> Sequence[GroupCombatState]:
-        """State = (Health_state, attr_0, ..., attr_1"""
+        """State = (Health_attr, attr_0, ..., attr_n, state_0, ... state_m)"""
         n_attrs = len(self._character_attributes)
         n_states = len(self._character_states)
 
@@ -76,11 +79,11 @@ class CombatGym(CombatManager):
 
     def _clamped_attr_value(self, char: Character, attr: Attribute) -> int:
         """Limits the possible values of attributes to 0, 1, 2, ... MAX/STEP"""
+
+        # TODO - consider allowing negative/more attribute states
         val = char.get_attribute(attr)
-        for i in range(self.max_attribute() + 1):
-            if val < i * CombatGym.ATTRIBUTE_STEP:
-                break
-        return i
+        step = math.ceil(val / CombatGym.ATTRIBUTE_STEP)
+        return min(step, self.max_attribute())
 
     def step(self, attack_moves: GroupMove, defense_moves: GroupMove) -> CombatResult:
         'Apply the attackers move followed by the defenders moves.'
@@ -91,9 +94,9 @@ class CombatGym(CombatManager):
     def _result(self) -> CombatResult:
         reward = self._reward()
         done = self.is_done()
-        return (self.current_state(), reward, done)
+        return self.current_state(), reward, done
 
-    def _reward(self):
+    def _reward(self) -> int:
         if self.attackers_lose():
             return CombatGym.REWARD_MAX
         elif self.defenders_lose():

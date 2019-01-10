@@ -14,7 +14,7 @@ class CombatManagerTest(TestCase):
         two_defenders = create_combat_group(2, base_name='defender ')
         manager = CombatManager(attackers=attacker, defenders=two_defenders)
 
-        attack_moves = manager.attackers_moves()
+        attack_moves = manager.attackers_moves
 
         # two possible attacks (one per enemy)
         self.assertEqual(len(attack_moves), 2)
@@ -28,7 +28,7 @@ class CombatManagerTest(TestCase):
             for move in attacker_moveset:
                 self.assertIsInstance(move.ability, FireLaser)
 
-        defense_moves = manager.defenders_moves()
+        defense_moves = manager.defenders_moves
 
         # one combo - each defender can only attack one target
         self.assertEqual(len(defense_moves), 1)
@@ -48,7 +48,7 @@ class CombatManagerTest(TestCase):
         defender[0].increment_attribute(Attribute.HEALTH, -5)
         manager = CombatManager(attackers=attacker, defenders=defender)
 
-        attack_moves = manager.attackers_moves()
+        attack_moves = manager.attackers_moves
 
         # one possible attacks (one per enemy)
         self.assertEqual(len(attack_moves), 1)
@@ -61,7 +61,7 @@ class CombatManagerTest(TestCase):
             for move in attacker_moveset:
                 self.assertIsInstance(move.ability, FireLaser)
 
-        defense_moves = manager.defenders_moves()
+        defense_moves = manager.defenders_moves
 
         # two moves - defender can attack target, or heal self
         self.assertEqual(len(defense_moves), 2)
@@ -83,8 +83,8 @@ class CombatManagerTest(TestCase):
         two_defenders = create_combat_group(ndefenders, health=health, damage=damage)
         manager = CombatManager(attackers=attacker, defenders=two_defenders)
 
-        defense_moves = manager.defenders_moves()
-        attack_moves = manager.attackers_moves()
+        defense_moves = manager.defenders_moves
+        attack_moves = manager.attackers_moves
         manager.take_turn(attack_moves[0], defense_moves[0])
 
         # both defenders attack
@@ -105,8 +105,8 @@ class CombatManagerTest(TestCase):
         two_defenders = create_combat_group(ndefenders, health=health, damage=damage)
         manager = CombatManager(attackers=attacker, defenders=two_defenders)
 
-        defense_moves = manager.defenders_moves()
-        attack_moves = manager.attackers_moves()
+        defense_moves = manager.defenders_moves
+        attack_moves = manager.attackers_moves
         manager.take_turn(attack_moves[0], defense_moves[0])
 
     def test_combat_finished(self):
@@ -129,8 +129,8 @@ class CombatManagerTest(TestCase):
         two_defenders = create_combat_group(ndefenders, health=health, damage=damage)
         manager = CombatManager(attackers=attacker, defenders=two_defenders)
 
-        defense_moves = manager.defenders_moves()
-        attack_moves = manager.attackers_moves()
+        defense_moves = manager.defenders_moves
+        attack_moves = manager.attackers_moves
         for i in range(3):
             manager.take_turn(attack_moves[0], defense_moves[0])
 
