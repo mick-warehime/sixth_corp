@@ -55,11 +55,13 @@ class CombatSceneController(Controller):
         logging.debug('MOUSE: Clicked nothing.')
         # if no character was clicked clear field
         if self.selected_character is not None:
-            logging.debug('MOUSE: Deselected: {}'.format(self.selected_character))
+            logging.debug(
+                'MOUSE: Deselected: {}'.format(self.selected_character))
 
         self.selected_character = None
 
     def update(self) -> None:
         moves = self.model.player_moves(self.selected_character)
-        self.view.update(get_player(), self.model.enemy(), moves, self.selected_character)
+        self.view.update(get_player(), self.model.enemy(), moves,
+                         self.selected_character)
         self.model.update()

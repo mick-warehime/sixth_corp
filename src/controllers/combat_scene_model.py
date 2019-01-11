@@ -2,7 +2,6 @@ import logging
 import random
 from typing import Sequence
 
-from characters.abilities_base import Ability
 from characters.character_base import Character
 from characters.combat_AI import Move, valid_moves
 from characters.conditions import IsDead
@@ -33,10 +32,6 @@ class CombatSceneModel(object):
     def is_game_over(self) -> bool:
         return IsDead().check(self._player)
 
-    def apply_player_ability(self, ability: Ability,
-                             target: Character) -> None:
-        ability.use(self._player, target)
-
     def enemy_action(self) -> Move:
         moves = valid_moves(self.enemy(), (self.enemy(), self._player))
         if len(moves) < 1:
@@ -51,7 +46,7 @@ class CombatSceneModel(object):
         if target is None:
             return []
 
-        return valid_moves(self._player, (target, ))
+        return valid_moves(self._player, (target,))
 
     def select_player_move(self, move: Move) -> None:
         enemy_move = self.enemy_action()
