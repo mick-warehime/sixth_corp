@@ -18,7 +18,8 @@ class CombatSceneView(PygameView):
         self._targetting_enabled = False
         self._target_descriptions: List[str] = []
 
-    def render_view(self, player: Character, enemy: Character, selected: Character) -> None:
+    def render_view(self, player: Character, enemy: Character,
+                    selected: Character) -> None:
         super().render()
         self.render_text(self.texts)
         self.render_character(player)
