@@ -15,7 +15,7 @@ class Slots(Enum):
     STORAGE = 'storage'
 
 
-_TEMP_DEFAULT_SLOT = Slots.HEAD
+TEMP_DEFAULT_SLOT = Slots.HEAD
 
 
 class Chassis(InventoryBase):
@@ -34,21 +34,22 @@ class Chassis(InventoryBase):
 
     def can_store(self, mod: Mod) -> bool:
         # For now we assume every mod goes on the HEAD slot
-        slot = _TEMP_DEFAULT_SLOT
+        slot = TEMP_DEFAULT_SLOT
         if len(self._slots[slot]) >= self._slot_capacities[slot]:
             return False
         return mod not in self._slots[slot]
 
     def _store(self, mod: Mod) -> None:
-        slot = _TEMP_DEFAULT_SLOT
+        slot = TEMP_DEFAULT_SLOT
         self._slots[slot].append(mod)
 
     def remove(self, mod: Mod) -> None:
-        slot = _TEMP_DEFAULT_SLOT
+        slot = TEMP_DEFAULT_SLOT
         if mod in self._slots[slot]:
             self._slots[slot].remove(mod)
 
     def all_mods(self) -> Iterable[Mod]:
         # noinspection PyTypeChecker
         return reduce(set.union,  # type: ignore
-                      (set(slot) for slot in self._slots))  # type: ignore
+                      (set(slot) for slot in
+                       self._slots.values()))  # type: ignore

@@ -1,38 +1,61 @@
+from functools import partial
+
+import pytest
+
 from characters.ability_examples import FireLaser, Repair
+from characters.chassis import Chassis, Slots, TEMP_DEFAULT_SLOT
 from characters.inventory import BasicInventory
 from characters.mod_examples import (BasicLaser, CamouflagePaint,
                                      HelmOfBeingOnFire, HullPlating)
 from characters.mods_base import GenericMod
 from characters.states import Attribute, State
 
+factories = (BasicInventory, partial(Chassis, {TEMP_DEFAULT_SLOT: 4}))
 
-def test_basic_inventory_storage_sizes():
-    mod = HullPlating()
 
-    inventory = BasicInventory()
+@pytest.mark.parametrize('make_inventory', factories)
+def test_inventory_storage_sizes(make_inventory):
+    inventory = make_inventory()
 
-    assert inventory.can_store(mod)
+    assert inventory.can_store(HullPlating())
     assert len(list(inventory.all_mods())) == 0
-    inventory.store(mod)
+    inventory.store(HullPlating())
     assert len(list(inventory.all_mods())) == 1
-    inventory.store(mod)
+    inventory.store(HullPlating())
     assert len(list(inventory.all_mods())) == 2
 
 
-def test_basic_inventory_removal():
+def test_chassis_cannot_store_same_mod_twice():
+    chassis = Chassis({TEMP_DEFAULT_SLOT: 2})
     mod = HullPlating()
 
-    inventory = BasicInventory()
+    chassis.store(mod)
+    assert not chassis.can_store(mod)
 
-    inventory.store(mod)
+
+def test_chassis_cannot_store_when_full():
+    chassis = Chassis({TEMP_DEFAULT_SLOT: 2})
+
+    chassis.store(HullPlating())
+    chassis.store(HullPlating())
+    assert not chassis.can_store(HullPlating())
+
+
+@pytest.mark.parametrize('make_inventory', factories)
+def test_basic_inventory_removal(make_inventory):
+    mod = HullPlating()
+
+    inventory = make_inventory()
+
     inventory.store(mod)
     inventory.remove(mod)
 
-    assert len(list(inventory.all_mods())) == 1
+    assert len(list(inventory.all_mods())) == 0
 
 
-def test_basic_inventory_mods():
-    inventory = BasicInventory()
+@pytest.mark.parametrize('make_inventory', factories)
+def test_basic_inventory_mods(make_inventory):
+    inventory = make_inventory()
 
     inventory.store(HullPlating())
     inventory.store(HullPlating())
