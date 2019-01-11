@@ -3,8 +3,8 @@ from itertools import product
 from typing import Sequence, Set, Tuple
 
 from characters.character_base import Character
-from characters.combat_AI import Move, valid_moves
 from characters.conditions import IsDead
+from combat.combat_AI import Move, valid_moves
 
 GroupMove = Sequence[Move]
 GroupMoveSet = Set[GroupMove]
