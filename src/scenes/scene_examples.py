@@ -38,12 +38,12 @@ def swamp_scene() -> DecisionScene:
                  'the curving form of a rogue drone. It is currently in '
                  'hibernation mode.')
     deactivate = skill_check(
-        Difficulty.MODERATE,
+        Difficulty.VERY_EASY,
         transition_to(start_scene,
                       'You expertly sneak up on the drone and deactivate it.'
-                      ' You upload its credit keys into your storage. Back to '
-                      'beginning.',
-                      AcquireMod(AmuletOfSleepiness())),
+                      ' You upload its credit 3 keys into your storage.'
+                      ' Back to beginning.',
+                      IncrementAttribute(get_player(), Attribute.CREDITS, 3)),
         transition_to(example_combat_scene,
                       'The drone awakens. Prepare to fight!'),
         Skill.STEALTH)

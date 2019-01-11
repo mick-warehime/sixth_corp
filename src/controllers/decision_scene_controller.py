@@ -1,3 +1,5 @@
+import logging
+
 from characters.conditions import IsDead
 from characters.player import get_player
 from controllers.controller import Controller
@@ -38,6 +40,8 @@ class DecisionSceneController(Controller):
         if self._scene.is_resolved():
             resolution = self._scene.get_resolution()
             for effect in resolution.effects:
+                logging.debug('Applying effect of type {}'.format(
+                    effect.__class__.__name__))
                 effect.execute()
 
             self.deactivate()
