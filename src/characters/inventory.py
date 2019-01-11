@@ -14,11 +14,19 @@ class InventoryBase(metaclass=abc.ABCMeta):
         """Whether a mod can be stored."""
 
     @abc.abstractmethod
+    def _store(self, mod: Mod) -> None:
+        """Internal implementation of mod storage.
+        """
+
     def store(self, mod: Mod) -> None:
         """Store a mod.
 
-        can_store should be called first.
+        This method fails if can_store is False.
         """
+        if not self.can_store(mod):
+            raise ValueError('Mod of type {} cannot be stored.'.format(
+                mod.__class__.__name__))
+        self._store(mod)
 
     @abc.abstractmethod
     def remove(self, mod: Mod) -> None:
@@ -59,7 +67,7 @@ class BasicInventory(InventoryBase):
     def can_store(self, mod: Mod) -> bool:
         return True
 
-    def store(self, mod: Mod) -> None:
+    def _store(self, mod: Mod) -> None:
         self._mods.append(mod)
 
     def remove(self, mod: Mod) -> None:
