@@ -2,7 +2,6 @@ import logging
 import random
 from typing import Sequence
 
-from characters.abilities_base import Ability
 from characters.character_base import Character
 from characters.combat_AI import Move, valid_moves
 from characters.conditions import IsDead
