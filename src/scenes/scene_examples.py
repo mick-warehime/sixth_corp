@@ -1,7 +1,5 @@
 """Simple decision scene examples."""
-from characters.effects import (AcquireMod, ChangeLocation, IncrementAttribute,
-                                RestartGame)
-from characters.mod_examples import AmuletOfSleepiness
+from characters.effects import ChangeLocation, IncrementAttribute, RestartGame
 from characters.player import get_player
 from characters.skills import Difficulty, skill_check
 from characters.states import Attribute, Skill
