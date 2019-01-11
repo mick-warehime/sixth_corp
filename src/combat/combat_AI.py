@@ -14,7 +14,7 @@ class Move(object):
         self._user = user
         self.target = target
 
-    def use(self) -> None:
+    def execture(self) -> None:
         logging.debug('MOVE: {}'.format(self.describe()))
         self.ability.use(self._user, self.target)
 
