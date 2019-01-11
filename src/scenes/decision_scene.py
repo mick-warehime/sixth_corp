@@ -6,9 +6,8 @@ from scenes.scenes_base import Effect, Resolution, Scene, SceneConstructor
 
 class DecisionOption(Resolution):
 
-    def __init__(self, description: str,
-                 effects: Union[Effect, Sequence[Effect]],
-                 next_scene_fun: SceneConstructor) -> None:
+    def __init__(self, description: str, next_scene_fun: SceneConstructor,
+                 effects: Union[Effect, Sequence[Effect]] = ()) -> None:
         self.description = description
         if isinstance(effects, Effect):
             effects = (effects,)
@@ -53,8 +52,8 @@ def transition_to(
 
     def scene_fun() -> DecisionScene:
         return DecisionScene(description,
-                             {'1': DecisionOption('Continue', effects,
-                                                  next_scene_fun)})
+                             {'1': DecisionOption('Continue', next_scene_fun,
+                                                  effects)})
 
     return scene_fun
 

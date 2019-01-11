@@ -13,15 +13,15 @@ from world.locations import CityLocation
 
 def loading_scene() -> DecisionScene:
     options = {
-        's': DecisionOption('Start Game', (ChangeLocation(CityLocation())),
-                            swamp_scene),
-        'x': DecisionOption('Settings', (), example_combat_scene)}
+        's': DecisionOption('Start Game', swamp_scene,
+                            ChangeLocation(CityLocation())),
+        'x': DecisionOption('Settings', example_combat_scene)}
     return DecisionScene('6TH Corp', options)
 
 
 def start_scene() -> DecisionScene:
-    options = {'1': DecisionOption('Go in the swamp.', (), swamp_scene),
-               '2': DecisionOption('COMBAT!', (), example_combat_scene)}
+    options = {'1': DecisionOption('Go in the swamp.', swamp_scene),
+               '2': DecisionOption('COMBAT!', example_combat_scene)}
 
     main_text = (
         'You are walking down the path to the city. You pass by a decaying sign'
@@ -48,11 +48,10 @@ def swamp_scene() -> DecisionScene:
                       'The drone awakens. Prepare to fight!'),
         Skill.STEALTH)
     options = {
-        '1': DecisionOption('Continue walking.', (), second_scene),
-        '2': DecisionOption(
-            'Attempt to deactivate the drone. (SNEAK MODERATE)', (),
-            deactivate),
-        '3': DecisionOption('Attack the drone', (), example_combat_scene)}
+        '1': DecisionOption('Continue walking.', second_scene),
+        '2': DecisionOption('Attempt to deactivate the drone. (SNEAK MODERATE)',
+                            deactivate),
+        '3': DecisionOption('Attack the drone', example_combat_scene)}
     return DecisionScene(main_text, options)
 
 
@@ -64,14 +63,12 @@ def second_scene() -> DecisionScene:
             player.get_attribute(Attribute.MAX_HEALTH)))
 
     options = {
-        '0': DecisionOption('Gain 1 HP',
+        '0': DecisionOption('Gain 1 HP', second_scene,
                             IncrementAttribute(get_player(), Attribute.HEALTH,
-                                               1),
-                            second_scene),
-        '1': DecisionOption('Lose 1 HP',
+                                               1)),
+        '1': DecisionOption('Lose 1 HP', second_scene,
                             IncrementAttribute(get_player(), Attribute.HEALTH,
-                                               -1),
-                            second_scene)
+                                               -1))
     }
     return DecisionScene(main_text, options)
 
@@ -82,5 +79,5 @@ def example_combat_scene() -> CombatScene:
 
 def game_over() -> DecisionScene:
     prompt = 'Game over. You lose.'
-    options = {'1': DecisionOption('Play again.', RestartGame(), loading_scene)}
+    options = {'1': DecisionOption('Play again.', loading_scene, RestartGame())}
     return DecisionScene(prompt, options)
