@@ -50,8 +50,6 @@ def test_chassis_base_mod_included():
     assert len(list(chassis.all_mods())) == 1
 
 
-
-
 @pytest.mark.parametrize('make_inventory', factories)
 def test_basic_inventory_removal(make_inventory):
     mod = HullPlating()
