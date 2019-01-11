@@ -23,6 +23,7 @@ class State(Enum):
 class Attribute(Enum):
     HEALTH = 'health'
     MAX_HEALTH = 'maximum health'
+    CREDITS = 'credits'
 
     def __str__(self) -> str:
         return self.value
