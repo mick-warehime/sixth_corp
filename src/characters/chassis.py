@@ -20,17 +20,20 @@ TEMP_DEFAULT_SLOT = Slots.HEAD
 
 class Chassis(InventoryBase):
 
-    def __init__(self, slot_capacities: Dict[Slots, int]) -> None:
+    def __init__(self, slot_capacities: Dict[Slots, int],
+                 base_mod: Mod = None) -> None:
         """
 
         Args:
             slot_capacities: How much each slot can hold. If a slot is
                 unspecified it is assumed to have zero capacity.
+            base_mod: Fixed mod that is granted by the chassis.
         """
         self._slot_capacities: Dict[Slots, int] = slot_capacities.copy()
         self._slot_capacities.update({slot: 0 for slot in Slots
                                       if slot not in slot_capacities})
         self._slots: Dict[Slots, List[Mod]] = {slot: [] for slot in Slots}
+        self._base_mod = base_mod
 
     def can_store(self, mod: Mod) -> bool:
         # For now we assume every mod goes on the HEAD slot
@@ -50,6 +53,9 @@ class Chassis(InventoryBase):
 
     def all_mods(self) -> Iterable[Mod]:
         # noinspection PyTypeChecker
-        return reduce(set.union,  # type: ignore
+        mods = reduce(set.union,  # type: ignore
                       (set(slot) for slot in
                        self._slots.values()))  # type: ignore
+        if self._base_mod is not None:
+            mods.add(self._base_mod)
+        return mods

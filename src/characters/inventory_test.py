@@ -41,6 +41,17 @@ def test_chassis_cannot_store_when_full():
     assert not chassis.can_store(HullPlating())
 
 
+def test_chassis_base_mod_included():
+    base_mod = GenericMod(states_granted=State.ON_FIRE,
+                          attribute_modifiers={Attribute.CREDITS: 3},
+                          abilities_granted=FireLaser(3))
+    chassis = Chassis({}, base_mod=base_mod)
+
+    assert len(list(chassis.all_mods())) == 1
+
+
+
+
 @pytest.mark.parametrize('make_inventory', factories)
 def test_basic_inventory_removal(make_inventory):
     mod = HullPlating()
