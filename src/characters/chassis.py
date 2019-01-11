@@ -1,7 +1,7 @@
 """Implementation of the Chassis"""
 from enum import Enum
 from functools import reduce
-from typing import Iterable, Dict, List
+from typing import Dict, Iterable, List
 
 from characters.inventory import InventoryBase
 from characters.mods_base import Mod

@@ -3,7 +3,7 @@ from functools import partial
 import pytest
 
 from characters.ability_examples import FireLaser, Repair
-from characters.chassis import Chassis, Slots, TEMP_DEFAULT_SLOT
+from characters.chassis import TEMP_DEFAULT_SLOT, Chassis
 from characters.inventory import BasicInventory
 from characters.mod_examples import (BasicLaser, CamouflagePaint,
                                      HelmOfBeingOnFire, HullPlating)
