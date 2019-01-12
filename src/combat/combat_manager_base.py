@@ -4,7 +4,7 @@ from typing import Sequence, Set, Tuple
 
 from characters.character_base import Character
 from characters.conditions import IsDead
-from combat.combat_AI import Move, valid_moves
+from combat.moves_base import Move, valid_moves
 
 GroupMove = Sequence[Move]
 GroupMoveSet = Set[GroupMove]
@@ -29,7 +29,7 @@ class CombatManager(object):
     def take_turn(self, attack_moves: GroupMove, defense_moves: GroupMove) -> None:
         for move in attack_moves + defense_moves:
             assert move.can_use(), move.describe()
-            move.execture()
+            move.execute()
 
         attack_descr = _describe_moves(attack_moves)
         defense_descr = _describe_moves(defense_moves)
