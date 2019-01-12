@@ -1,5 +1,5 @@
-from characters.enemy_base import Enemy
-from characters.enemy_examples import DroneBuilder
+from characters.enemies.drone import DroneBuilder
+from characters.enemies.enemy_base import Enemy
 from characters.states import Attribute
 
 

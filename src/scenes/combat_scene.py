@@ -3,7 +3,7 @@ from typing import Sequence
 from characters.ability_examples import FireLaser
 from characters.character_base import Character
 from characters.conditions import IsDead
-from characters.enemy_examples import DroneBuilder
+from characters.enemies.drone import DroneBuilder
 from characters.mods_base import GenericMod
 from scenes.scenes_base import Effect, Resolution, Scene
 
