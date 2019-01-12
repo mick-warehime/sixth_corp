@@ -4,7 +4,7 @@ from typing import Sequence, Set, Tuple
 
 from characters.character_base import Character
 from characters.conditions import IsDead
-from combat.combat_AI import Move, valid_moves
+from combat.moves_base import Move, valid_moves
 
 GroupMove = Sequence[Move]
 GroupMoveSet = Set[GroupMove]

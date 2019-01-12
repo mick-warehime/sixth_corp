@@ -2,7 +2,7 @@ from typing import List, Sequence
 
 from characters.character_base import Character
 from characters.states import Attribute
-from combat.combat_AI import Move
+from combat.moves_base import Move
 from views.pygame_view import PygameView
 from world.world import get_location
 

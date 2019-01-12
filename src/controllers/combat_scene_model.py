@@ -5,7 +5,7 @@ from typing import Sequence
 from characters.character_base import Character
 from characters.conditions import IsDead
 from characters.player import get_player
-from combat.combat_AI import Move, valid_moves
+from combat.moves_base import Move, valid_moves
 from combat.combat_manager_base import CombatManager
 from events.event_utils import post_scene_change
 from scenes.combat_scene import CombatScene
