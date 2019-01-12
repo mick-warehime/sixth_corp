@@ -1,4 +1,5 @@
 """Data class and examples for enemies."""
+from enum import Enum
 from typing import NamedTuple
 
 from characters.chassis_examples import ChassisTypes
@@ -19,3 +20,14 @@ _HARMLESS = CharacterData('harmless enemy',  # type: ignore
 _USLESS = CharacterData('useless enemy', ChassisTypes.USELESS)
 _HUMAN_PLAYER = CharacterData('Player 1', ChassisTypes.WALLE,
                               'src/images/walle.png', AIType.Human)
+
+
+class CharacterTypes(Enum):
+    HUMAN_PLAYER = _HUMAN_PLAYER
+    DRONE = _DRONE
+    HARMLESS = _HARMLESS
+    USELESS = _USLESS
+
+    @property
+    def data(self) -> CharacterData:
+        return self.value
