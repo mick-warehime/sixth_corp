@@ -7,4 +7,5 @@ from combat.moves_base import Move
 class RandomAI(AI):
 
     def select_move(self) -> Move:
-        return choice(self._moves)
+        moves = [m for m in self._all_moves if m.can_use()]
+        return choice(moves)

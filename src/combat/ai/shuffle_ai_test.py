@@ -18,7 +18,8 @@ def mock_shuffle_moves():
 class ShuffleAITest(TestCase):
 
     def test_all_moves_get_used(self):
-        ai = ShuffleAI(MOVES)
+        ai = ShuffleAI(user=None)
+        ai.moves = MOVES
         ai.shuffle = mock_shuffle_moves
         for move in MOVES:
             actual_move = ai.select_move()
@@ -27,7 +28,8 @@ class ShuffleAITest(TestCase):
     def test_moves_get_used_correct_number_of_times(self):
         n_shuffles = 3
         n_moves = len(MOVES)
-        ai = ShuffleAI(MOVES, shuffle_size=n_shuffles)
+        ai = ShuffleAI(user=None, shuffle_size=n_shuffles)
+        ai.moves = MOVES
         move_count = defaultdict(int)
         for _ in range(n_moves * n_shuffles):
             move = ai.select_move()
