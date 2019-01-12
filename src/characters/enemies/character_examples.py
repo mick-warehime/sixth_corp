@@ -19,4 +19,3 @@ HARMLESS = CharacterData('harmless enemy',  # type: ignore
 USLESS = CharacterData('useless enemy', ChassisTypes.USELESS)  # type: ignore
 HUMAN_PLAYER = CharacterData('Player 1', ChassisTypes.WALLE,
                              'src/images/walle.png', AIType.Human)
-
