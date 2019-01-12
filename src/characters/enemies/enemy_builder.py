@@ -13,11 +13,8 @@ class EnemyBuilder(CharacterBuilder):
     def base_class(self) -> Any:
         return Enemy
 
-    def ai_type(self) -> AIType:
-        return self._ai_type
-
     def build(self) -> Enemy:
         enemy = cast(Enemy, super().build())
-        enemy.ai = build_ai(enemy, self.ai_type())
+        enemy.ai = build_ai(enemy, self._ai_type)
         enemy.set_position(800, 300, 200, 150)
         return enemy

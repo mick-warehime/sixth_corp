@@ -9,6 +9,7 @@ from combat.ai.shuffle_ai import ShuffleAI
 class AIType(Enum):
     Random = 'Random'
     Shuffle = 'Shuffle'
+    Human = 'Human'
 
 
 def build_ai(character: Character, ai_type: AIType) -> AI:
