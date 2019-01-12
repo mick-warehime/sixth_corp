@@ -6,8 +6,6 @@ from combat.moves_base import Move
 from views.pygame_view import PygameView
 from world.world import get_location
 
-_COMBAT_BACKGROUND = 'src/images/background_combat.png'
-
 
 class CombatSceneView(PygameView):
 

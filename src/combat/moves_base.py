@@ -14,7 +14,7 @@ class Move(object):
         self._user = user
         self.target = target
 
-    def execture(self) -> None:
+    def execute(self) -> None:
         logging.debug('MOVE: {}'.format(self.describe()))
         self.ability.use(self._user, self.target)
 
@@ -23,6 +23,12 @@ class Move(object):
 
     def can_use(self) -> bool:
         return self.ability.can_use(self._user, self.target)
+
+    def __repr__(self) -> str:
+        return 'MOVE: {}'.format(self.describe())
+
+    def __str__(self) -> str:
+        return self.__repr__()
 
 
 def valid_moves(user: Character,

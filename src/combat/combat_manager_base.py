@@ -29,7 +29,7 @@ class CombatManager(object):
     def take_turn(self, attack_moves: GroupMove, defense_moves: GroupMove) -> None:
         for move in attack_moves + defense_moves:
             assert move.can_use(), move.describe()
-            move.execture()
+            move.execute()
 
         attack_descr = _describe_moves(attack_moves)
         defense_descr = _describe_moves(defense_moves)
