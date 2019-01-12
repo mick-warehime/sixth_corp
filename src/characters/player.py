@@ -2,13 +2,14 @@
 from typing import Dict, Sequence
 
 from characters.ability_examples import FireLaser, Repair
+from characters.character_base import Character
 from characters.character_builder import CharacterBuilder
 from characters.chassis import Chassis
 from characters.mods_base import GenericMod, Mod
 from characters.states import Attribute
 
 
-class _Player(CharacterBuilder):
+class _PlayerBuilder(CharacterBuilder):
     def initial_mods(self) -> Sequence[Mod]:
         return [GenericMod(abilities_granted=[FireLaser(2), FireLaser(4), Repair(5)])]
 
@@ -21,7 +22,7 @@ class _Player(CharacterBuilder):
     def max_health(self) -> int:
         return 10
 
-    def image_path(self) -> int:
+    def image_path(self) -> str:
         return 'src/images/walle.png'
 
     def character_name(self) -> str:
@@ -31,7 +32,7 @@ class _Player(CharacterBuilder):
 _player = None
 
 
-def get_player() -> _Player:
+def get_player() -> Character:
     global _player
     if _player is None:
         reset_player()
@@ -40,4 +41,4 @@ def get_player() -> _Player:
 
 def reset_player() -> None:
     global _player
-    _player = _Player().build()
+    _player = _PlayerBuilder().build()

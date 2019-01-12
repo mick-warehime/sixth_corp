@@ -1,9 +1,10 @@
-from typing import Dict, Sequence
 from abc import abstractmethod
-from characters.mods_base import Mod
-from characters.chassis import Chassis
-from characters.states import Attribute
+from typing import Dict, Sequence
+
 from characters.character_base import Character
+from characters.chassis import Chassis
+from characters.mods_base import Mod
+from characters.states import Attribute
 
 
 class CharacterBuilder(object):
@@ -26,7 +27,7 @@ class CharacterBuilder(object):
         return 0
 
     @abstractmethod
-    def image_path(self) -> int:
+    def image_path(self) -> str:
         return ''
 
     @abstractmethod
@@ -34,7 +35,10 @@ class CharacterBuilder(object):
         return ''
 
     def build(self) -> Character:
-        char = Character(health=self.max_health(), image_path=self.image_path(), name=self.character_name())
+        char = Character(
+            health=self.max_health(),
+            image_path=self.image_path(),
+            name=self.character_name())
         for mod in self.initial_mods():
             char.attempt_pickup(mod)
 
