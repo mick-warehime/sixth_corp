@@ -67,3 +67,12 @@ class CombatManager(object):
             buffs = valid_moves(attacker, [attacker])
             moveset.append(attacks + buffs)
         return list(product(*moveset))
+
+    def winners(self) -> CombatGroup:
+        if self.defenders_lose():
+            return self._attackers
+        elif self.attackers_lose():
+            return self._defenders
+
+        assert False, 'Dont call winners if game is not done'
+        return []

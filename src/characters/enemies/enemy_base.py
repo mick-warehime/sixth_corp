@@ -11,3 +11,6 @@ class Enemy(Character):
 
     def select_move(self) -> Move:
         return self.ai.select_move()
+
+    def set_targets(self, targets: [Character]):
+        self.ai.set_targets(targets)

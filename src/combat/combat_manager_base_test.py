@@ -136,3 +136,25 @@ class CombatManagerTest(TestCase):
 
         self.assertTrue(manager.attackers_lose())
         self.assertEqual(len(manager.history), 3)
+
+    def test_attackers_win(self):
+        attacker = create_combat_group(1, health=1, damage=1)
+        defender = create_combat_group(1, health=0, damage=1)
+        manager = CombatManager(attackers=attacker, defenders=defender)
+
+        self.assertEqual(manager.winners(), attacker)
+
+    def test_defenders_win(self):
+        attacker = create_combat_group(1, health=0, damage=1)
+        defender = create_combat_group(1, health=1, damage=1)
+        manager = CombatManager(attackers=attacker, defenders=defender)
+
+        self.assertEqual(manager.winners(), defender)
+
+    def test_calling_winners_prematurely_raises(self):
+        attacker = create_combat_group(1, health=1, damage=1)
+        defender = create_combat_group(1, health=1, damage=1)
+        manager = CombatManager(attackers=attacker, defenders=defender)
+
+        with self.assertRaises(AssertionError):
+            manager.winners()
