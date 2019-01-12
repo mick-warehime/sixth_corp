@@ -1,8 +1,10 @@
 from unittest import TestCase, mock
 
-from characters.enemy_base import Enemy
+from characters.effects import IncrementAttribute
+from characters.enemy_test_util import create_enemy
+from characters.states import Attribute
 from controllers.combat_scene_controller import CombatSceneController
-from events.event_utils import simulate_key_press, simulate_mouse_click
+from events.event_utils import simulate_mouse_click
 from scenes.combat_scene import CombatScene
 
 
@@ -10,10 +12,6 @@ def create_combat_controller(enemy):
     scene = CombatScene()
     scene.set_enemy(enemy)
     return CombatSceneController(scene)
-
-
-def create_enemy(health):
-    return Enemy(health=health, name='test dummy')
 
 
 def select_enemy(enemy):
@@ -35,12 +33,12 @@ class CombatSceneControllerTest(TestCase):
     @mock.patch('views.pygame_images.load_image')
     @mock.patch('controllers.combat_scene_controller.CombatSceneController.update')
     def test_kill_enemy(self, mock_update, mock_loader, mock_pygame):
-        enemy = create_enemy(2)
+        health = 2
+        enemy = create_enemy(health)
         ctl = create_combat_controller(enemy)
         self.assertFalse(ctl.model.scene.is_resolved())
 
-        select_enemy(enemy)
-        simulate_key_press('1')
+        IncrementAttribute(enemy, Attribute.HEALTH, -health).execute()
 
         self.assertTrue(ctl.model.scene.is_resolved())
 
@@ -64,7 +62,7 @@ class CombatSceneControllerTest(TestCase):
     @mock.patch('views.pygame_images.load_image')
     @mock.patch('controllers.combat_scene_controller.CombatSceneController.update')
     def test_reclick_unselects(self, mock_update, mock_loader, mock_pygame):
-        enemy = Enemy(2, name='test dummy')
+        enemy = create_enemy(2)
         ctl = create_combat_controller(enemy)
         self.assertIsNone(ctl.selected_character)
 
@@ -80,7 +78,7 @@ class CombatSceneControllerTest(TestCase):
     @mock.patch('views.pygame_images.load_image')
     @mock.patch('controllers.combat_scene_controller.CombatSceneController.update')
     def test_click_nothing_selects_nothing(self, mock_update, mock_loader, mock_pygame):
-        enemy = Enemy(2, name='test dummy')
+        enemy = create_enemy(2)
         ctl = create_combat_controller(enemy)
         self.assertIsNone(ctl.selected_character)
 
