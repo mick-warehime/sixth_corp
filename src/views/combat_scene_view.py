@@ -32,7 +32,6 @@ class CombatSceneView(PygameView):
         pos = character.position
         self.render_image(character.image_path, pos.x, pos.y, pos.w, pos.h)
 
-
     def _combat_options(self, moves: Sequence[Move]) -> List[str]:
         return ['{} - {}'.format(i + 1, m.ability.description())
                 for i, m in enumerate(moves)]
@@ -49,7 +48,7 @@ class CombatSceneView(PygameView):
         max_health = char.get_attribute(Attribute.MAX_HEALTH)
         health_bar = '{} / {}'.format(health, max_health)
         rasterized = self._smallfont.render(health_bar, True, (0, 255, 0))
-        x = int(pos.x+pos.w/4.0)
+        x = int(pos.x + pos.w / 4.0)
         y = pos.y - 40
-        self.screen.blit(rasterized, (x,y))
+        self.screen.blit(rasterized, (x, y))
         self.update_display()
