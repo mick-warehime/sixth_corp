@@ -6,7 +6,7 @@ from combat.moves_base import Move, all_moves
 
 
 class AI(object):
-    """Helper class for selecting enemy moves during combat."""
+    """AI for selecting enemy moves during combat."""
 
     def __init__(self, user: Character) -> None:
         self._user = user
