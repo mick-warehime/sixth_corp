@@ -25,8 +25,9 @@ class CombatSceneView(PygameView):
         if selected is not None:
             pos = selected.position
             self.draw_rect(pos.x, pos.y, pos.w, pos.h)
-        self.render_health(player)
-        self.render_health(enemy)
+        for char in [player, enemy]:
+            self.render_health(char)
+            self.render_name(char)
 
     def render_character(self, character: Character) -> None:
         pos = character.position
@@ -50,5 +51,13 @@ class CombatSceneView(PygameView):
         rasterized = self._smallfont.render(health_bar, True, (0, 255, 0))
         x = int(pos.x + pos.w / 4.0)
         y = pos.y - 40
+        self.screen.blit(rasterized, (x, y))
+        self.update_display()
+
+    def render_name(self, char: Character) -> None:
+        pos = char.position
+        rasterized = self._smallfont.render(char._name, True, (0, 255, 0))
+        x = int(pos.x + pos.w / 4.0)
+        y = pos.y + 40 + pos.h
         self.screen.blit(rasterized, (x, y))
         self.update_display()
