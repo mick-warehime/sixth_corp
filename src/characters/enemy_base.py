@@ -2,8 +2,6 @@ from characters.character_base import Character
 from combat.ai.ai_base import AI
 from combat.moves_base import Move
 
-_ENEMY_IMAGE = 'src/images/drone.png'
-
 
 class Enemy(Character):
 
