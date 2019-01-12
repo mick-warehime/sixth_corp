@@ -1,6 +1,6 @@
 from abc import abstractmethod
+from typing import Any, cast
 
-from characters.character_base import Character
 from characters.character_builder import CharacterBuilder
 from characters.enemy_base import Enemy
 from combat.ai.ai_factory import AIType, build_ai
@@ -8,7 +8,7 @@ from combat.ai.ai_factory import AIType, build_ai
 
 class EnemyBuilder(CharacterBuilder):
 
-    def base_class(self) -> Character:
+    def base_class(self) -> Any:
         return Enemy
 
     @abstractmethod
@@ -16,7 +16,7 @@ class EnemyBuilder(CharacterBuilder):
         pass
 
     def build(self) -> Enemy:
-        enemy = super().build()
+        enemy = cast(Enemy, super().build())
         enemy.ai = build_ai(enemy, self.ai_type())
         enemy.set_position(800, 100, 200, 150)
         return enemy
