@@ -1,8 +1,9 @@
 from unittest import TestCase
+
 from characters.enemies.drone import DroneBuilder
 from characters.enemies.harmless import HarmlessBuilder
 from characters.enemies.useless import UselessBuilder
-from simulation.simulation_manager import SimulationManager, SimluationError
+from simulation.simulation_manager import SimluationError, SimulationManager
 
 
 class TestSimulationManager(TestCase):
