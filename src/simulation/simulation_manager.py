@@ -8,16 +8,14 @@ class SimluationError(Exception):
 
 
 class SimulationManager(object):
-
-    def __init__(self) -> None:
-        pass
+    """Utility class for simulating AI based combat"""
 
     def simulate(
             self,
             attacker_builder: EnemyBuilder,
             defender_builder: EnemyBuilder,
             n_runs: int = 1) -> float:
-        
+        """Runs {n_runs} combat simulations and reports attackers win frequency."""
         attacker_wins = 0
         for i in range(n_runs):
             attacker = attacker_builder.build()
