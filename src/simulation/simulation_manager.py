@@ -16,6 +16,7 @@ class SimulationManager(object):
             defender_builder: EnemyBuilder,
             n_runs: int = 1) -> float:
         """Runs {n_runs} combat simulations and reports attackers win frequency."""
+
         attacker_wins = 0
         for i in range(n_runs):
             attacker = attacker_builder.build()
@@ -30,6 +31,7 @@ class SimulationManager(object):
 
     def _simulate_combat(self, attacker: Enemy, defender: Enemy) -> bool:
         """Simulates combat between two enemies and returns True if the attacker wins."""
+
         max_turns = 1000
         manager = CombatManager([attacker], [defender])
         for i in range(max_turns):
@@ -39,9 +41,9 @@ class SimulationManager(object):
             if manager.is_done():
                 break
 
-        if not manager.is_done():
-            raise SimluationError(
-                'Combat between {} and {} too more than {} turns'.format(
-                    attacker.description(), defender.description(), max_turns))
+        if manager.is_done():
+            return manager.winners() == [attacker]
 
-        return manager.winners() == [attacker]
+        raise SimluationError(
+            'Combat between {} and {} took more than {} turns'.format(
+                attacker.description(), defender.description(), max_turns))
