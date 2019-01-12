@@ -52,7 +52,7 @@ class CharacterBuilder(object):
             char.increment_attribute(attr, val)
 
         # TODO(mick) - move positions to combat view
-        char.set_position(200, 200, 150, 150)
+        char.set_position(200, 500, 150, 150)
 
         # TODO(dvirk) - set chassis for character
 

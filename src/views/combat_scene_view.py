@@ -25,20 +25,13 @@ class CombatSceneView(PygameView):
         if selected is not None:
             pos = selected.position
             self.draw_rect(pos.x, pos.y, pos.w, pos.h)
+        for char in [player, enemy]:
+            self.render_health(char)
+            self.render_name(char)
 
     def render_character(self, character: Character) -> None:
         pos = character.position
         self.render_image(character.image_path, pos.x, pos.y, pos.w, pos.h)
-
-    def _scene_description(self, player: Character,
-                           enemy: Character) -> List[str]:
-        texts = [
-            'You are fighting a dreaded {}.'.format(enemy.__class__.__name__),
-            'Your health: {}'.format(player.get_attribute(Attribute.HEALTH)),
-            'Enemy health: {}'.format(enemy.get_attribute(Attribute.HEALTH)),
-            ''
-        ]
-        return texts
 
     def _combat_options(self, moves: Sequence[Move]) -> List[str]:
         return ['{} - {}'.format(i + 1, m.ability.description())
@@ -46,7 +39,25 @@ class CombatSceneView(PygameView):
 
     def update(self, player: Character, enemy: Character,
                moves: Sequence[Move], selected: Character) -> None:
-        header = self._scene_description(player, enemy)
         options = self._combat_options(moves)
-        self.texts = header + options
+        self.texts = options
         self.render_view(player, enemy, selected)
+
+    def render_health(self, char: Character) -> None:
+        pos = char.position
+        health = char.get_attribute(Attribute.HEALTH)
+        max_health = char.get_attribute(Attribute.MAX_HEALTH)
+        health_bar = '{} / {}'.format(health, max_health)
+        rasterized = self._smallfont.render(health_bar, True, (0, 255, 0))
+        x = int(pos.x + pos.w / 4.0)
+        y = pos.y - 40
+        self.screen.blit(rasterized, (x, y))
+        self.update_display()
+
+    def render_name(self, char: Character) -> None:
+        pos = char.position
+        rasterized = self._smallfont.render(char.description(), True, (0, 255, 0))
+        x = int(pos.x + pos.w / 4.0)
+        y = pos.y + 40 + pos.h
+        self.screen.blit(rasterized, (x, y))
+        self.update_display()
