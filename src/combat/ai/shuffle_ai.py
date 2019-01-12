@@ -1,5 +1,5 @@
 from random import shuffle
-from typing import List, Sequence
+from typing import Iterator, List
 
 from characters.character_base import Character
 from combat.ai.ai_base import AI
@@ -7,20 +7,29 @@ from combat.moves_base import Move
 
 
 class ShuffleAI(AI):
-    """Play all n moves {shuffle_size} times in random order and reshuffles."""
+    """Tries to play all n moves times in random order and reshuffles."""
 
-    def __init__(self, user: Character, shuffle_size=1) -> None:
+    def __init__(self, user: Character) -> None:
         super().__init__(user)
         self._shuffled_moves: List[Move] = []
-        self._shuffle_size = shuffle_size
+        self._last_attemped_play: List[int] = []
+        self._move_iterator: Iterator[Move] = None
+
+    def move_iterator(self) -> Iterator[Move]:
+        count = 0
+        while True:
+            shuffle(self.moves)
+            used_a_move = False
+            for move in self.moves:
+                if move.can_use():
+                    used_a_move = True
+                    count += 1
+                    yield move
+
+            if not used_a_move:
+                assert False, 'AI Has no valid moves'
 
     def select_move(self) -> Move:
-        if len(self._shuffled_moves) == 0:
-            self._shuffled_moves = self.shuffle()
-
-        return self._shuffled_moves.pop(0)
-
-    def shuffle(self) -> Sequence[Move]:
-        moves = self.moves * self._shuffle_size
-        shuffle(moves)
-        return moves
+        if self._move_iterator is None:
+            self._move_iterator = self.move_iterator()
+        return next(self._move_iterator)

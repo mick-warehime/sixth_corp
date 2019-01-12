@@ -42,3 +42,41 @@ class FireLaser(Ability):
 
     def description(self) -> str:
         return 'Fire laser! ({} damage)'.format(self._damage)
+
+
+class Harmless(Ability):
+
+    def __init__(self, harmless_value: int) -> None:
+        self.value = harmless_value
+
+    def _use(self, user: Stateful, target: Stateful) -> None:
+        pass
+
+    def can_use(self, user: Stateful, target: Stateful) -> bool:
+        return True
+
+    def describe_use(self, user: Stateful, target: Stateful) -> str:
+        style = '{} from {} does nothing to {}'
+        return style.format(self.description(), user.description(), target.description())
+
+    def description(self) -> str:
+        return 'Harmless ability {}'.format(self.value)
+
+
+class Useless(Ability):
+
+    def __init__(self, useless_value: int) -> None:
+        self.value = useless_value
+
+    def _use(self, user: Stateful, target: Stateful) -> None:
+        pass
+
+    def can_use(self, user: Stateful, target: Stateful) -> bool:
+        return False
+
+    def describe_use(self, user: Stateful, target: Stateful) -> str:
+        style = '{} cant use this useless ability against {}'
+        return style.format(user.description(), target.description())
+
+    def description(self) -> str:
+        return 'Useless ability {}'.format(self.value)
