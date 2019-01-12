@@ -2,7 +2,7 @@ from typing import Dict, Sequence
 
 from characters.ability_examples import FireLaser
 from characters.chassis import Chassis
-from characters.enemy_builder import EnemyBuilder
+from characters.enemies.enemy_builder import EnemyBuilder
 from characters.mods_base import GenericMod, Mod
 from characters.states import Attribute
 from combat.ai.ai_factory import AIType

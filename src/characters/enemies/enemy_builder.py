@@ -2,7 +2,7 @@ from abc import abstractmethod
 from typing import Any, cast
 
 from characters.character_builder import CharacterBuilder
-from characters.enemy_base import Enemy
+from characters.enemies.enemy_base import Enemy
 from combat.ai.ai_factory import AIType, build_ai
 
 
