@@ -1,33 +1,38 @@
 """Implementation of the player class."""
+from typing import Dict, Sequence
+
 from characters.ability_examples import FireLaser, Repair
 from characters.character_base import Character
-from characters.mods_base import GenericMod
+from characters.character_builder import CharacterBuilder
+from characters.chassis import Chassis
+from characters.mods_base import GenericMod, Mod
+from characters.states import Attribute
 
-STARTING_HEALTH = 10
 
-_PLAYER_IMAGE = 'src/images/walle.png'
+class _PlayerBuilder(CharacterBuilder):
+    def initial_mods(self) -> Sequence[Mod]:
+        return [GenericMod(abilities_granted=[FireLaser(2), FireLaser(4), Repair(5)])]
 
+    def chassis(self) -> Chassis:
+        pass
 
-class _Player(Character):
+    def additional_attributes(self) -> Dict[Attribute, int]:
+        return {}
 
-    def __init__(self) -> None:
-        super().__init__(STARTING_HEALTH, image_path=_PLAYER_IMAGE, name='player')
+    def max_health(self) -> int:
+        return 10
 
-        # We can think of this as the inherent mod of the chassis/ player type.
-        # They can be assigned to an immutable "chassis" slot.
-        base_abilities = GenericMod(
-            abilities_granted=(FireLaser(2), FireLaser(4), Repair(5)))
-        self.attempt_pickup(base_abilities)
-        self.set_position(200, 200, 150, 150)
+    def image_path(self) -> str:
+        return 'src/images/walle.png'
 
-    def __str__(self) -> str:
-        return 'player'
+    def character_name(self) -> str:
+        return 'Player 1'
 
 
 _player = None
 
 
-def get_player() -> _Player:
+def get_player() -> Character:
     global _player
     if _player is None:
         reset_player()
@@ -36,4 +41,4 @@ def get_player() -> _Player:
 
 def reset_player() -> None:
     global _player
-    _player = _Player()
+    _player = _PlayerBuilder().build()
