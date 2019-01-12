@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Dict, NamedTuple, Tuple, Optional
+from typing import Dict, NamedTuple, Optional, Tuple
 
 from characters.abilities_base import Ability
 from characters.ability_examples import FireLaser, Repair
@@ -32,9 +32,9 @@ ChassisData = NamedTuple(
 # This sets default values.
 # I realize that {} is mutable, but I don't want to have to install the package
 # frozendict just for this.
-ChassisData.__new__.__defaults__ = ((), {}, ())
+ChassisData.__new__.__defaults__ = ((), {}, ())  # type: ignore
 
-_WALLE = ChassisData(
+_WALLE = ChassisData(  # type: ignore
     slot_capacities={Slots.HEAD: 1, Slots.CHEST: 1, Slots.ARMS: 2,
                      Slots.STORAGE: 1},
     attributes_modifiers={Attribute.MAX_HEALTH: 10, Skill.STEALTH: 1,
