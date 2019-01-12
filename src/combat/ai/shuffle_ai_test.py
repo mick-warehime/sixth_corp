@@ -1,7 +1,8 @@
-from unittest import TestCase, mock
-from combat.ai.shuffle_ai import ShuffleAI
-from characters.ability_examples import Repair, FireLaser
 from collections import defaultdict
+from unittest import TestCase
+
+from characters.ability_examples import FireLaser, Repair
+from combat.ai.shuffle_ai import ShuffleAI
 
 REPAIR1 = Repair(1)
 REPAIR2 = Repair(2)

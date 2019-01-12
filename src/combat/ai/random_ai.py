@@ -1,4 +1,5 @@
 from random import choice
+
 from combat.ai.ai_base import AI
 from combat.moves_base import Move
 

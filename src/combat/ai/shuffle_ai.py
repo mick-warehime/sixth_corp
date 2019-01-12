@@ -1,5 +1,6 @@
-from typing import List, Sequence
 from random import shuffle
+from typing import List, Sequence
+
 from combat.ai.ai_base import AI
 from combat.moves_base import Move
 

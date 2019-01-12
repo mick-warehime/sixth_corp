@@ -1,5 +1,6 @@
-from typing import Sequence, Any
 from abc import abstractmethod
+from typing import Sequence
+
 from combat.moves_base import Move
 
 
