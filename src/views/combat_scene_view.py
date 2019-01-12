@@ -56,7 +56,7 @@ class CombatSceneView(PygameView):
 
     def render_name(self, char: Character) -> None:
         pos = char.position
-        rasterized = self._smallfont.render(char._name, True, (0, 255, 0))
+        rasterized = self._smallfont.render(char.description(), True, (0, 255, 0))
         x = int(pos.x + pos.w / 4.0)
         y = pos.y + 40 + pos.h
         self.screen.blit(rasterized, (x, y))
