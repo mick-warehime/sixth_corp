@@ -3,12 +3,12 @@ from itertools import product
 from typing import Sequence
 
 from characters.abilities_base import Ability
-from characters.states import Stateful
+from characters.character_base import Character
 
 
 class Move(object):
-    def __init__(self, ability: Ability, user: Stateful,
-                 target: Stateful) -> None:
+    def __init__(self, ability: Ability, user: Character,
+                 target: Character) -> None:
         self.ability = ability
         self._user = user
         self.target = target
@@ -30,10 +30,10 @@ class Move(object):
         return self.__repr__()
 
 
-def valid_moves(user: Stateful,
-                targets: Sequence[Stateful]) -> Sequence[Move]:
+def valid_moves(user: Character,
+                targets: Sequence[Character]) -> Sequence[Move]:
     return [m for m in all_moves(user, targets) if m.can_use()]
 
 
-def all_moves(user: Stateful, targets: Sequence[Stateful]) -> Sequence[Move]:
+def all_moves(user: Character, targets: Sequence[Character]) -> Sequence[Move]:
     return [Move(a, user, t) for a, t in product(user.abilities(), targets)]

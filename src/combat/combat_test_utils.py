@@ -1,12 +1,13 @@
 from characters.character_base import Character
 from characters.character_factory import CharacterFactory
+from characters.character_impl import CharacterImpl
 from characters.mod_examples import FireLaser
 from characters.mods_base import GenericMod
 from characters.states import Attribute
 
 
 def get_combatant(health, abilities, name) -> Character:
-    char = Character(health, image_path='', name=name)
+    char = CharacterImpl(health, image_path='', name=name)
     mod = GenericMod(abilities_granted=abilities)
     char.attempt_pickup(mod)
     return char
