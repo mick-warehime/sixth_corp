@@ -3,11 +3,11 @@ from enum import Enum
 from typing import Any, Dict, Sequence
 
 from characters.character_base import Character
+from characters.character_examples import (DRONE, HARMLESS, HUMAN_PLAYER,
+                                           USLESS, CharacterData)
 from characters.chassis import Chassis
-from characters.character_examples import CharacterData, DRONE, \
-    HARMLESS, USLESS, HUMAN_PLAYER
 from characters.enemy_base import Enemy
-from characters.mods_base import Mod, GenericMod
+from characters.mods_base import GenericMod, Mod
 from characters.states import Attribute
 from combat.ai.ai_factory import build_ai
 

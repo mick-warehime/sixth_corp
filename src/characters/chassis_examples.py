@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Dict, NamedTuple, Optional, Tuple
 
 from characters.abilities_base import Ability
-from characters.ability_examples import FireLaser, Repair, Harmless, Useless
+from characters.ability_examples import FireLaser, Harmless, Repair, Useless
 from characters.chassis import Chassis, Slots
 from characters.mods_base import GenericMod
 from characters.states import Attribute, AttributeType, Skill, State
