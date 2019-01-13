@@ -1,6 +1,6 @@
 from typing import Union
 
-from characters.character_examples import CharacterTypes, CharacterData
+from characters.character_examples import CharacterData, CharacterTypes
 from characters.character_impl import CharacterImpl
 from characters.character_position import Position
 from characters.mods_base import GenericMod

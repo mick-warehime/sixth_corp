@@ -1,5 +1,5 @@
 from characters.character_base import Character
-from characters.character_examples import CharacterTypes, CharacterData
+from characters.character_examples import CharacterData
 from characters.character_factory import build_character
 from combat.combat_manager_base import CombatManager
 
