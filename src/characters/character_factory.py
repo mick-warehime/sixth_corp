@@ -14,7 +14,7 @@ def build_character(
     else:
         data = character
 
-    chassis = build_chassis(data.chassis_type)
+    chassis = build_chassis(data.chassis_data)
     char = CharacterImpl(chassis, image_path=data.image_path,
                          name=data.name)
 
