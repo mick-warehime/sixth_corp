@@ -65,6 +65,3 @@ class Character(Stateful):
     @abstractmethod
     def set_targets(self, targets: List['Character']) -> None:
         pass
-
-    def __repr__(self) -> str:
-        return self._name
