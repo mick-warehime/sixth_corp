@@ -15,14 +15,13 @@ from combat.moves_base import Move
 class CharacterImpl(Character):
     """Stateful object with states and attributes affected by mods."""
 
-    def __init__(self, health: int, image_path: str = None, name: str = None) -> None:
+    def __init__(self, health: int, image_path: str = None, name: str = 'unnamed Character') -> None:
         super().__init__()
         status = BasicStatus()
         status.set_attribute(Attribute.MAX_HEALTH, health)
         status.set_attribute(Attribute.HEALTH, health)
         status.set_attribute_bounds(Attribute.HEALTH, 0, Attribute.MAX_HEALTH)
-        self._name = name if name is not None else 'unnamed Character'
-
+        self._name = nameg
         self._base_status = status
         self._inventory: InventoryBase = BasicInventory()
         self._image_path = image_path
