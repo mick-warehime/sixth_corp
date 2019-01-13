@@ -37,7 +37,7 @@ class Skill(Enum):
 
 AttributeType = Union[Attribute, Skill]
 
-_BoundFun = Callable[['Stateful'], int]
+_BoundFun = Callable[[], int]
 _BoundType = Union[int, Attribute, _BoundFun]
 
 
@@ -101,11 +101,11 @@ class BasicStatus(Stateful):
 
     def _parse_bound(self, bound: _BoundType) -> _BoundFun:
         if isinstance(bound, int):
-            def int_fun(x: Stateful) -> int:
+            def int_fun() -> int:
                 return bound  # type: ignore
         elif isinstance(bound, Attribute):
-            def int_fun(x: Stateful) -> int:
-                return x.get_attribute(bound)  # type: ignore
+            def int_fun() -> int:
+                return self.get_attribute(bound)  # type: ignore
         else:
             int_fun = bound  # type: ignore
 
@@ -114,7 +114,7 @@ class BasicStatus(Stateful):
     def value_in_bounds(self, value: int, attribute: AttributeType) -> int:
         if attribute in self._attribute_bounds:
             lower, upper = self._attribute_bounds[attribute]
-            l_val, u_val = lower(self), upper(self)
+            l_val, u_val = lower(), upper()
             assert l_val <= u_val
             value = max(l_val, value)
             value = min(u_val, value)

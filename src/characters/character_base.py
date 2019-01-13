@@ -1,11 +1,10 @@
 """Basic class for player and enemies."""
 from abc import abstractmethod
-from typing import List, Sequence
+from typing import List
 
-from characters.abilities_base import Ability
 from characters.character_position import Position
 from characters.mods_base import Mod
-from characters.states import AttributeType, State, Stateful
+from characters.states import Stateful
 
 
 class Character(Stateful):
@@ -36,26 +35,6 @@ class Character(Stateful):
 
     @abstractmethod
     def attempt_pickup(self, mod: Mod) -> None:
-        pass
-
-    @abstractmethod
-    def abilities(self) -> Sequence[Ability]:
-        pass
-
-    @abstractmethod
-    def has_state(self, state: State) -> bool:
-        pass
-
-    @abstractmethod
-    def increment_attribute(self, attribute: AttributeType, delta: int) -> None:
-        pass
-
-    @abstractmethod
-    def get_attribute(self, attribute: AttributeType) -> int:
-        pass
-
-    @abstractmethod
-    def description(self) -> str:
         pass
 
     @abstractmethod

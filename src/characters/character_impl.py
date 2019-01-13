@@ -1,11 +1,14 @@
 """Basic class for player and enemies."""
 import logging
+from functools import partial
 from typing import List, Sequence
 
 from characters.abilities_base import Ability
 from characters.character_base import Character
 from characters.character_position import Position
-from characters.inventory import BasicInventory, InventoryBase
+from characters.chassis import Chassis
+from characters.chassis_examples import ChassisTypes
+from characters.inventory import InventoryBase
 from characters.mods_base import Mod
 from characters.states import Attribute, AttributeType, BasicStatus, State
 from combat.ai.ai_base import AI
@@ -15,19 +18,22 @@ from combat.moves_base import Move
 class CharacterImpl(Character):
     """Stateful object with states and attributes affected by mods."""
 
-    def __init__(self, health: int, image_path: str = None,
+    def __init__(self, chassis: Chassis = None, image_path: str = None,
                  name: str = 'unnamed Character') -> None:
         super().__init__()
-        status = BasicStatus()
-        status.set_attribute(Attribute.MAX_HEALTH, health)
-        status.set_attribute(Attribute.HEALTH, health)
-        status.set_attribute_bounds(Attribute.HEALTH, 0, Attribute.MAX_HEALTH)
+        chassis = ChassisTypes.WALLE.build() if chassis is None else chassis
         self._name = name
-        self._base_status = status
-        self._inventory: InventoryBase = BasicInventory()
+        self._inventory: InventoryBase = chassis
+        self._base_status = BasicStatus()
         self._image_path = image_path
         self._position: Position = None
         self._ai: AI = None
+
+        self._base_status.set_attribute_bounds(
+            Attribute.HEALTH, 0,
+            partial(self.get_attribute, Attribute.MAX_HEALTH))
+        self.increment_attribute(Attribute.HEALTH,
+                                 self.get_attribute(Attribute.MAX_HEALTH))
 
     @property
     def image_path(self) -> str:
