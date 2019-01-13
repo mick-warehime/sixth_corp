@@ -15,7 +15,8 @@ from combat.moves_base import Move
 class CharacterImpl(Character):
     """Stateful object with states and attributes affected by mods."""
 
-    def __init__(self, health: int, image_path: str = None, name: str = 'unnamed Character') -> None:
+    def __init__(self, health: int, image_path: str = None,
+                 name: str = 'unnamed Character') -> None:
         super().__init__()
         status = BasicStatus()
         status.set_attribute(Attribute.MAX_HEALTH, health)
