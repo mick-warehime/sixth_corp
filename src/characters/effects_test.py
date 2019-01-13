@@ -34,8 +34,8 @@ def test_increment_player_attribute(player):
 
 
 def test_increment_attribute():
-    health = 10
-    char = CharacterImpl(health=health)
+    char = CharacterImpl()
+    health = char.get_attribute(Attribute.HEALTH)
     delta = -3
     IncrementAttribute(char, Attribute.HEALTH, delta).execute()
     assert char.get_attribute(Attribute.HEALTH) == health + delta
