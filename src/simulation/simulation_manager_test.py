@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from characters.character_factory import CharacterFactory
-from simulation.simulation_manager import SimluationError, SimulationManager
+from simulation.simulation_manager import SimulationError, SimulationManager
 
 
 class TestSimulationManager(TestCase):
@@ -21,7 +21,7 @@ class TestSimulationManager(TestCase):
 
     def test_useless_enemies_never_finish_raises(self):
         manager = SimulationManager()
-        with self.assertRaises(SimluationError):
+        with self.assertRaises(SimulationError):
             manager.simulate(CharacterFactory.HARMLESS,
                              CharacterFactory.HARMLESS, n_runs=100)
 
