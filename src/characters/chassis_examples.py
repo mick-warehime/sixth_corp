@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Dict, NamedTuple, Optional, Tuple
 
 from characters.abilities_base import Ability
-from characters.ability_examples import FireLaser, Repair
+from characters.ability_examples import FireLaser, Harmless, Repair, Useless
 from characters.chassis import Chassis, Slots
 from characters.mods_base import GenericMod
 from characters.states import Attribute, AttributeType, Skill, State
@@ -11,6 +11,8 @@ from characters.states import Attribute, AttributeType, Skill, State
 class ChassisTypes(Enum):
     WALLE = 'WallE'
     DRONE = 'drone'
+    HARMLESS = 'HARMLESS'
+    USELESS = 'USELESS'
 
     def build(self) -> Chassis:
         data = _chassis_type_to_data[self]
@@ -32,7 +34,7 @@ ChassisData = NamedTuple(
 # This sets default values.
 # I realize that {} is mutable, but I don't want to have to install the package
 # frozendict just for this.
-ChassisData.__new__.__defaults__ = ((), {}, ())  # type: ignore
+ChassisData.__new__.__defaults__ = ({}, (), {}, ())  # type: ignore
 
 _WALLE = ChassisData(  # type: ignore
     slot_capacities={Slots.HEAD: 1, Slots.CHEST: 1, Slots.ARMS: 2,
@@ -48,5 +50,18 @@ _DRONE = ChassisData(
     abilities_granted=(FireLaser(2),)
 )
 
-_chassis_type_to_data = {ChassisTypes.WALLE: _WALLE,
-                         ChassisTypes.DRONE: _DRONE}
+_HARMLESS = ChassisData(  # type:ignore
+    attributes_modifiers={Attribute.MAX_HEALTH: 1},
+    abilities_granted=(Harmless(1), Harmless(2), Useless(1), Useless(2))
+)
+
+_USELESS = ChassisData(  # type:ignore
+    attributes_modifiers={Attribute.MAX_HEALTH: 1},
+    abilities_granted=(Useless(1), Useless(2))
+)
+
+_chassis_type_to_data: Dict[ChassisTypes, ChassisData] = {
+    ChassisTypes.WALLE: _WALLE,
+    ChassisTypes.DRONE: _DRONE,
+    ChassisTypes.HARMLESS: _HARMLESS,
+    ChassisTypes.USELESS: _USELESS}

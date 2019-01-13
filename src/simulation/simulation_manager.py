@@ -1,5 +1,5 @@
-from characters.enemies.enemy_base import Enemy
-from characters.enemies.enemy_builder import EnemyBuilder
+from characters.character_factory import CharacterFactory
+from characters.enemy_base import Enemy
 from combat.combat_manager_base import CombatManager
 
 
@@ -12,8 +12,8 @@ class SimulationManager(object):
 
     def simulate(
             self,
-            attacker_builder: EnemyBuilder,
-            defender_builder: EnemyBuilder,
+            attacker_builder: CharacterFactory,
+            defender_builder: CharacterFactory,
             n_runs: int = 1) -> float:
         """Runs {n_runs} combat simulations and reports attackers win frequency."""
 
@@ -21,9 +21,10 @@ class SimulationManager(object):
         for i in range(n_runs):
             attacker = attacker_builder.build()
             defender = defender_builder.build()
-            attacker.set_targets([defender])
-            defender.set_targets([attacker])
-            attacker_won = self._simulate_combat(attacker, defender)
+            attacker.set_targets([defender])  # type: ignore
+            defender.set_targets([attacker])  # type: ignore
+            attacker_won = self._simulate_combat(attacker,  # type: ignore
+                                                 defender)
             if attacker_won:
                 attacker_wins += 1
 
