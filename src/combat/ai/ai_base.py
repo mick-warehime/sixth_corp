@@ -2,7 +2,8 @@ from abc import abstractmethod
 from typing import Sequence
 
 from characters.character_base import Character
-from combat.moves_base import Move, all_moves
+from combat.moves_base import Move
+from combat.moves_factory import all_moves
 
 
 class AI(object):
