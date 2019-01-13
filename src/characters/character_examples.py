@@ -2,12 +2,12 @@
 from enum import Enum
 from typing import NamedTuple
 
-from characters.chassis_examples import ChassisTypes
+from characters.chassis_examples import ChassisData, ChassisTypes
 from combat.ai.ai_factory import AIType
 
 CharacterData = NamedTuple(
     'EnemyData', [('name', str),
-                  ('chassis_type', ChassisTypes),
+                  ('chassis_data', ChassisData),
                   ('image_path', str),
                   ('ai_type', AIType)])
 
@@ -15,11 +15,12 @@ CharacterData = NamedTuple(
 CharacterData.__new__.__defaults__ = (  # type: ignore
     'src/images/drone.png', AIType.Random)
 
-_DRONE = CharacterData('drone', ChassisTypes.DRONE)  # type: ignore
+_DRONE = CharacterData('drone', ChassisTypes.DRONE.data)  # type: ignore
 _HARMLESS = CharacterData('harmless enemy',  # type: ignore
-                          ChassisTypes.HARMLESS)
-_USELESS = CharacterData('useless enemy', ChassisTypes.USELESS)  # type: ignore
-_HUMAN_PLAYER = CharacterData('Player 1', ChassisTypes.WALLE,
+                          ChassisTypes.HARMLESS.data)
+_USELESS = CharacterData('useless enemy',  # type: ignore
+                         ChassisTypes.USELESS.data)
+_HUMAN_PLAYER = CharacterData('Player 1', ChassisTypes.WALLE.data,
                               'src/images/walle.png', AIType.Human)
 
 
