@@ -11,7 +11,8 @@ CharacterData = NamedTuple(
                   ('ai_type', AIType)])
 
 # Sets default values.
-CharacterData.__new__.__defaults__ = ('src/images/drone.png', AIType.Random)
+CharacterData.__new__.__defaults__ = (  # type: ignore
+    'src/images/drone.png', AIType.Random)
 
 DRONE = CharacterData('drone', ChassisTypes.DRONE)  # type: ignore
 HARMLESS = CharacterData('harmless enemy',  # type: ignore

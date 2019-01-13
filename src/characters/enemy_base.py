@@ -1,3 +1,5 @@
+from typing import List
+
 from characters.character_base import Character
 from combat.ai.ai_base import AI
 from combat.moves_base import Move
@@ -12,5 +14,5 @@ class Enemy(Character):
     def select_move(self) -> Move:
         return self.ai.select_move()
 
-    def set_targets(self, targets: [Character]):
+    def set_targets(self, targets: List[Character]) -> None:
         self.ai.set_targets(targets)

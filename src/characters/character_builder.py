@@ -22,10 +22,10 @@ class CharacterFactory(Enum):
         # We will need to refactor this. We should probably merge Character and
         # Enemy.
         if self == CharacterFactory.HUMAN_PLAYER:
-            character_cls = Character
+            character_cls = Character  # type: ignore
             pos = 200, 500, 150, 150
         else:
-            character_cls = Enemy
+            character_cls = Enemy  # type : ignore
             pos = 800, 300, 200, 150
 
         # This is an intermediate fix as in future these things will be handled
@@ -42,7 +42,7 @@ class CharacterFactory(Enum):
 
         # TODO(mick) - move positions to combat view
         char.set_position(*pos)
-        char.ai = build_ai(char, data.ai_type)
+        char.ai = build_ai(char, data.ai_type)  # type: ignore
 
         # TODO(dvirk) - set chassis for character
 
