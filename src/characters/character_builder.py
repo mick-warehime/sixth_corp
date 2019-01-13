@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Dict
+from typing import Any, Dict
 
 from characters.character_base import Character
 from characters.character_examples import (DRONE, HARMLESS, HUMAN_PLAYER,
@@ -21,11 +21,11 @@ class CharacterFactory(Enum):
 
         # We will need to refactor this. We should probably merge Character and
         # Enemy.
+        character_cls: Any = Character
         if self == CharacterFactory.HUMAN_PLAYER:
-            character_cls = Character  # type: ignore
             pos = 200, 500, 150, 150
         else:
-            character_cls = Enemy  # type : ignore
+            character_cls = Enemy
             pos = 800, 300, 200, 150
 
         # This is an intermediate fix as in future these things will be handled
