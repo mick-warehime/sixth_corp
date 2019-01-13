@@ -1,15 +1,15 @@
 from unittest import TestCase
 
 from characters.ability_examples import Harmless
-from characters.character_factory import CharacterFactory
+from characters.character_examples import CharacterTypes
 from combat.ai.shuffle_ai import ShuffleAI
 
 
 class ShuffleAITest(TestCase):
 
     def test_shuffle_ai_only_provides_usable_moves(self):
-        user = CharacterFactory.HARMLESS.build()
-        target = CharacterFactory.HARMLESS.build()
+        user = CharacterTypes.HARMLESS.build()
+        target = CharacterTypes.HARMLESS.build()
         ai = ShuffleAI(user=user)
         ai.set_targets([target])
 
@@ -18,8 +18,8 @@ class ShuffleAITest(TestCase):
             self.assertIsInstance(move.ability, Harmless)
 
     def test_shuffle_ai_moves_dont_repeat(self):
-        user = CharacterFactory.HARMLESS.build()
-        target = CharacterFactory.HARMLESS.build()
+        user = CharacterTypes.HARMLESS.build()
+        target = CharacterTypes.HARMLESS.build()
         ai = ShuffleAI(user=user)
         ai.set_targets([target])
 
@@ -40,8 +40,8 @@ class ShuffleAITest(TestCase):
             self.assertLess(move_repeat_count, 3)
 
     def test_no_valid_moves_raises(self):
-        user = CharacterFactory.USELESS.build()
-        target = CharacterFactory.USELESS.build()
+        user = CharacterTypes.USELESS.build()
+        target = CharacterTypes.USELESS.build()
         ai = ShuffleAI(user=user)
         ai.set_targets([target])
 

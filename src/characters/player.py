@@ -1,6 +1,6 @@
 """Singleton container allowing global access to player."""
 from characters.character_base import Character
-from characters.character_factory import CharacterFactory
+from characters.character_examples import CharacterTypes
 
 _player = None
 
@@ -14,4 +14,4 @@ def get_player() -> Character:
 
 def reset_player() -> None:
     global _player
-    _player = CharacterFactory.HUMAN_PLAYER.build()
+    _player = CharacterTypes.HUMAN_PLAYER.build()

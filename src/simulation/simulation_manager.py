@@ -1,5 +1,5 @@
 from characters.character_base import Character
-from characters.character_factory import CharacterFactory
+from characters.character_examples import CharacterTypes
 from combat.combat_manager_base import CombatManager
 
 
@@ -12,8 +12,8 @@ class SimulationManager(object):
 
     def simulate(
             self,
-            attacker_builder: CharacterFactory,
-            defender_builder: CharacterFactory,
+            attacker_builder: CharacterTypes,
+            defender_builder: CharacterTypes,
             n_runs: int = 1) -> float:
         """Runs {n_runs} combat simulations and reports attackers win frequency."""
 
