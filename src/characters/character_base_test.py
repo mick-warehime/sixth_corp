@@ -2,7 +2,6 @@ from unittest import TestCase
 
 from characters.ability_examples import FireLaser
 from characters.character_impl import CharacterImpl
-from characters.chassis_examples import ChassisTypes
 from characters.conditions import IsDead
 from characters.mod_examples import HelmOfBeingOnFire, HullPlating
 from characters.mods_base import GenericMod

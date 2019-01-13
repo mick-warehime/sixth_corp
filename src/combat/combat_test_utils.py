@@ -2,7 +2,7 @@ from characters.character_base import Character
 from characters.character_examples import CharacterTypes
 from characters.character_factory import build_character
 from characters.character_impl import CharacterImpl
-from characters.chassis import Chassis, TEMP_DEFAULT_SLOT
+from characters.chassis import TEMP_DEFAULT_SLOT, Chassis
 from characters.mod_examples import FireLaser
 from characters.mods_base import GenericMod
 from characters.states import Attribute
