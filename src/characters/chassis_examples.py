@@ -3,26 +3,8 @@ from typing import Dict, NamedTuple, Optional, Tuple
 
 from characters.abilities_base import Ability
 from characters.ability_examples import FireLaser, Harmless, Repair, Useless
-from characters.chassis import Chassis, Slots
-from characters.mods_base import GenericMod
+from characters.chassis import Slots
 from characters.states import Attribute, AttributeType, Skill, State
-
-
-class ChassisTypes(Enum):
-    WALLE = 'WallE'
-    DRONE = 'drone'
-    HARMLESS = 'HARMLESS'
-    USELESS = 'USELESS'
-
-    def build(self) -> Chassis:
-        data = _chassis_type_to_data[self]
-        base_mod = GenericMod(data.states_granted, data.attributes_modifiers,
-                              data.abilities_granted)
-        return Chassis(data.slot_capacities, base_mod)
-
-    def __str__(self) -> str:
-        return '{} chassis'.format(self.value)
-
 
 ChassisData = NamedTuple(
     'ChassisData',
@@ -59,6 +41,21 @@ _USELESS = ChassisData(  # type:ignore
     attributes_modifiers={Attribute.MAX_HEALTH: 1},
     abilities_granted=(Useless(1), Useless(2))
 )
+
+
+class ChassisTypes(Enum):
+    WALLE = 'WallE'
+    DRONE = 'drone'
+    HARMLESS = 'HARMLESS'
+    USELESS = 'USELESS'
+
+    @property
+    def data(self) -> ChassisData:
+        return _chassis_type_to_data[self]
+
+    def __str__(self) -> str:
+        return '{} chassis'.format(self.value)
+
 
 _chassis_type_to_data: Dict[ChassisTypes, ChassisData] = {
     ChassisTypes.WALLE: _WALLE,

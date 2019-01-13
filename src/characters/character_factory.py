@@ -3,6 +3,7 @@ from typing import Union
 from characters.character_examples import CharacterData, CharacterTypes
 from characters.character_impl import CharacterImpl
 from characters.character_position import Position
+from characters.chassis_factory import build_chassis
 from combat.ai.ai_factory import AIType, build_ai
 
 
@@ -13,7 +14,7 @@ def build_character(
     else:
         data = character
 
-    chassis = data.chassis_type.build()
+    chassis = build_chassis(data.chassis_type)
     char = CharacterImpl(chassis, image_path=data.image_path,
                          name=data.name)
 

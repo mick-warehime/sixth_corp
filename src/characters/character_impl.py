@@ -8,6 +8,7 @@ from characters.character_base import Character
 from characters.character_position import Position
 from characters.chassis import Chassis
 from characters.chassis_examples import ChassisTypes
+from characters.chassis_factory import build_chassis
 from characters.inventory import InventoryBase
 from characters.mods_base import Mod
 from characters.states import Attribute, AttributeType, BasicStatus, State
@@ -21,7 +22,7 @@ class CharacterImpl(Character):
     def __init__(self, chassis: Chassis = None, image_path: str = None,
                  name: str = 'unnamed Character') -> None:
         super().__init__()
-        chassis = ChassisTypes.WALLE.build() if chassis is None else chassis
+        chassis = build_chassis(ChassisTypes.WALLE) if chassis is None else chassis
         self._name = name
         self._inventory: InventoryBase = chassis
         self._base_status = BasicStatus()
