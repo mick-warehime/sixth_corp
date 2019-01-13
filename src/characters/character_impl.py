@@ -26,7 +26,7 @@ class CharacterImpl(Character):
         self._base_status = status
         self._inventory: InventoryBase = BasicInventory()
         self._image_path = image_path
-        self._position = Position()
+        self._position: Position = None
         self._ai: AI = None
 
     @property
@@ -42,7 +42,7 @@ class CharacterImpl(Character):
         self._ai = ai
 
     @property
-    def position(self) -> str:
+    def position(self) -> Position:
         return self._position
 
     @position.setter
