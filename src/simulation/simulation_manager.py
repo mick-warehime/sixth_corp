@@ -1,5 +1,6 @@
 from characters.character_base import Character
-from characters.character_factory import CharacterFactory
+from characters.character_examples import CharacterData
+from characters.character_factory import build_character
 from combat.combat_manager_base import CombatManager
 
 
@@ -12,15 +13,15 @@ class SimulationManager(object):
 
     def simulate(
             self,
-            attacker_builder: CharacterFactory,
-            defender_builder: CharacterFactory,
+            attacker_data: CharacterData,
+            defender_data: CharacterData,
             n_runs: int = 1) -> float:
         """Runs {n_runs} combat simulations and reports attackers win frequency."""
 
         attacker_wins = 0
         for i in range(n_runs):
-            attacker = attacker_builder.build()
-            defender = defender_builder.build()
+            attacker = build_character(attacker_data)
+            defender = build_character(defender_data)
             attacker.set_targets([defender])  # type: ignore
             defender.set_targets([attacker])  # type: ignore
             attacker_won = self._simulate_combat(attacker,  # type: ignore
@@ -30,7 +31,8 @@ class SimulationManager(object):
 
         return attacker_wins * 1.0 / n_runs
 
-    def _simulate_combat(self, attacker: Character, defender: Character) -> bool:
+    def _simulate_combat(self, attacker: Character,
+                         defender: Character) -> bool:
         """Simulates combat between two enemies and returns True if the attacker wins."""
 
         max_turns = 1000
