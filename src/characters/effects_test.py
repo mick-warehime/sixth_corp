@@ -1,6 +1,6 @@
 import pytest
 
-from characters.character_base import Character
+from characters.character_impl import CharacterImpl
 from characters.effects import (AcquireMod, ChangeLocation, IncrementAttribute,
                                 RestartGame)
 from characters.mod_examples import HelmOfBeingOnFire
@@ -35,7 +35,7 @@ def test_increment_player_attribute(player):
 
 def test_increment_attribute():
     health = 10
-    char = Character(health=health)
+    char = CharacterImpl(health=health)
     delta = -3
     IncrementAttribute(char, Attribute.HEALTH, delta).execute()
     assert char.get_attribute(Attribute.HEALTH) == health + delta

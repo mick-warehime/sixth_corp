@@ -1,14 +1,14 @@
 import pytest
 
 from characters.ability_examples import FireLaser, Repair
-from characters.character_base import Character
+from characters.character_impl import CharacterImpl
 from characters.conditions import FullHealth
 from characters.states import Attribute
 
 
 @pytest.fixture()
 def character():
-    return Character(10)
+    return CharacterImpl(10)
 
 
 def test_repair_ability(character):
@@ -23,7 +23,7 @@ def test_repair_ability(character):
 def test_fire_laser(character):
     damage = 3
     fire_laser = FireLaser(damage)
-    other_char = Character(5)
+    other_char = CharacterImpl(5)
 
     assert not fire_laser.can_use(character, character)
     assert fire_laser.can_use(character, other_char)
