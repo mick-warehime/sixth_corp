@@ -6,7 +6,8 @@ from characters.character_base import Character
 from characters.conditions import IsDead
 from characters.player import get_player
 from combat.combat_manager_base import CombatManager
-from combat.moves_base import Move, valid_moves
+from combat.moves_base import Move
+from combat.moves_factory import valid_moves
 from events.event_utils import post_scene_change
 from scenes.combat_scene import CombatScene
 from scenes.scene_examples import game_over
