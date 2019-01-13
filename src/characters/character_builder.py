@@ -4,9 +4,9 @@ from typing import Any, Dict, Sequence
 
 from characters.character_base import Character
 from characters.chassis import Chassis
-from characters.enemies.character_examples import CharacterData, DRONE, \
+from characters.character_examples import CharacterData, DRONE, \
     HARMLESS, USLESS, HUMAN_PLAYER
-from characters.enemies.enemy_base import Enemy
+from characters.enemy_base import Enemy
 from characters.mods_base import Mod, GenericMod
 from characters.states import Attribute
 from combat.ai.ai_factory import build_ai

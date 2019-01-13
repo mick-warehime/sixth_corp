@@ -1,7 +1,7 @@
 from unittest import TestCase, mock
 
 from characters.effects import IncrementAttribute
-from characters.enemies.enemy_test_util import create_enemy
+from combat.combat_test_utils import create_enemy
 from characters.states import Attribute
 from controllers.combat_scene_controller import CombatSceneController
 from events.event_utils import simulate_mouse_click
