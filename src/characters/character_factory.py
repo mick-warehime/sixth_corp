@@ -1,4 +1,6 @@
-from characters.character_examples import CharacterTypes
+from typing import Union
+
+from characters.character_examples import CharacterTypes, CharacterData
 from characters.character_impl import CharacterImpl
 from characters.character_position import Position
 from characters.mods_base import GenericMod
@@ -6,7 +8,8 @@ from characters.states import Attribute
 from combat.ai.ai_factory import AIType, build_ai
 
 
-def build_character(character) -> CharacterImpl:
+def build_character(
+        character: Union[CharacterTypes, CharacterData]) -> CharacterImpl:
     if isinstance(character, CharacterTypes):
         data = character.data
     else:

@@ -2,6 +2,7 @@ from unittest import TestCase
 
 from characters.ability_examples import Harmless
 from characters.character_examples import CharacterTypes
+from characters.character_factory import build_character
 from combat.ai.shuffle_ai import ShuffleAI
 
 
@@ -40,8 +41,8 @@ class ShuffleAITest(TestCase):
             self.assertLess(move_repeat_count, 3)
 
     def test_no_valid_moves_raises(self):
-        user = CharacterTypes.USELESS.build()
-        target = CharacterTypes.USELESS.build()
+        user = build_character(CharacterTypes.USELESS)
+        target = build_character(CharacterTypes.USELESS)
         ai = ShuffleAI(user=user)
         ai.set_targets([target])
 
