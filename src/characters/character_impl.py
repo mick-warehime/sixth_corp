@@ -21,7 +21,7 @@ class CharacterImpl(Character):
         status.set_attribute(Attribute.MAX_HEALTH, health)
         status.set_attribute(Attribute.HEALTH, health)
         status.set_attribute_bounds(Attribute.HEALTH, 0, Attribute.MAX_HEALTH)
-        self._name = nameg
+        self._name = name
         self._base_status = status
         self._inventory: InventoryBase = BasicInventory()
         self._image_path = image_path
