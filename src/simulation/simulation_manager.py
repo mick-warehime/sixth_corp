@@ -1,9 +1,9 @@
+from characters.character_base import Character
 from characters.character_factory import CharacterFactory
-from characters.enemy_base import Enemy
 from combat.combat_manager_base import CombatManager
 
 
-class SimluationError(Exception):
+class SimulationError(Exception):
     pass
 
 
@@ -30,7 +30,7 @@ class SimulationManager(object):
 
         return attacker_wins * 1.0 / n_runs
 
-    def _simulate_combat(self, attacker: Enemy, defender: Enemy) -> bool:
+    def _simulate_combat(self, attacker: Character, defender: Character) -> bool:
         """Simulates combat between two enemies and returns True if the attacker wins."""
 
         max_turns = 1000
@@ -45,6 +45,6 @@ class SimulationManager(object):
         if manager.is_done():
             return manager.winners() == [attacker]
 
-        raise SimluationError(
+        raise SimulationError(
             'Combat between {} and {} took more than {} turns'.format(
                 attacker.description(), defender.description(), max_turns))

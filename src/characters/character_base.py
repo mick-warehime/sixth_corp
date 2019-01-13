@@ -1,12 +1,14 @@
 """Basic class for player and enemies."""
 import logging
-from typing import Sequence, Tuple
+from typing import List, Sequence, Tuple
 
 from characters.abilities_base import Ability
 from characters.inventory import BasicInventory, InventoryBase
 from characters.mods_base import Mod
 from characters.states import (Attribute, AttributeType, BasicStatus, State,
                                Stateful)
+from combat.ai.ai_base import AI
+from combat.moves_base import Move
 
 
 class Position(object):
@@ -38,6 +40,7 @@ class Character(Stateful):
         self._inventory: InventoryBase = BasicInventory()
         self.image_path = image_path
         self.position = Position()
+        self.ai: AI = None
 
     def attempt_pickup(self, mod: Mod) -> None:
         mod_type = mod.__class__.__name__
@@ -69,6 +72,12 @@ class Character(Stateful):
 
     def set_position(self, x: int, y: int, w: int, h: int) -> None:
         self.position = Position(x, y, w, h)
+
+    def select_move(self) -> Move:
+        return self.ai.select_move()
+
+    def set_targets(self, targets: List['Character']) -> None:
+        self.ai.set_targets(targets)
 
     def __repr__(self) -> str:
         return self._name
