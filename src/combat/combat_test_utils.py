@@ -1,5 +1,5 @@
 from characters.character_base import Character
-from characters.character_builder import CharacterFactory
+from characters.character_factory import CharacterFactory
 from characters.enemy_base import Enemy
 from characters.mod_examples import FireLaser
 from characters.mods_base import GenericMod

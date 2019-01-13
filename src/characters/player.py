@@ -1,6 +1,6 @@
 """Singleton container allowing global access to player."""
 from characters.character_base import Character
-from characters.character_builder import CharacterFactory
+from characters.character_factory import CharacterFactory
 
 _player = None
 

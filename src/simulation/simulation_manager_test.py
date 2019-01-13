@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from characters.character_builder import CharacterFactory
+from characters.character_factory import CharacterFactory
 from simulation.simulation_manager import SimluationError, SimulationManager
 
 

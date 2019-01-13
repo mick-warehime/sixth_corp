@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from parameterized import parameterized
 
-from characters.character_builder import CharacterFactory
+from characters.character_factory import CharacterFactory
 from combat.ai.ai_factory import AIType, build_ai
 
 AI_TYPES = [[AIType.Random], [AIType.Shuffle]]

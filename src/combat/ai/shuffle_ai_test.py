@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from characters.ability_examples import Harmless
-from characters.character_builder import CharacterFactory
+from characters.character_factory import CharacterFactory
 from combat.ai.shuffle_ai import ShuffleAI
 
 

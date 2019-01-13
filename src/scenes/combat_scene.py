@@ -2,7 +2,7 @@ from typing import Sequence
 
 from characters.ability_examples import FireLaser
 from characters.character_base import Character
-from characters.character_builder import CharacterFactory
+from characters.character_factory import CharacterFactory
 from characters.conditions import IsDead
 from characters.mods_base import GenericMod
 from scenes.scenes_base import Effect, Resolution, Scene
