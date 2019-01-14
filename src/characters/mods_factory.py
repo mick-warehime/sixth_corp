@@ -9,6 +9,8 @@ ModData = NamedTuple(
                 ('attribute_modifiers', Dict[AttributeType, int]),
                 ('abilities_granted', Tuple[Ability, ...])])
 
+ModData.__new__.__defaults__ = ((), {}, ())  # type: ignore
+
 
 def build_mod(mod_data: ModData) -> GenericMod:
     return GenericMod(mod_data.states_granted, mod_data.attribute_modifiers,

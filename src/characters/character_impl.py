@@ -24,7 +24,7 @@ class CharacterImpl(Character):
         super().__init__()
         chassis = build_chassis(ChassisTypes.WALLE) if chassis is None else chassis
         self._name = name
-        self._inventory: InventoryBase = chassis
+        self.inventory: InventoryBase = chassis
         self._base_status = BasicStatus()
         self._image_path = image_path
         self._position: Position = None
@@ -58,26 +58,26 @@ class CharacterImpl(Character):
 
     def attempt_pickup(self, mod: Mod) -> None:
         mod_type = mod.__class__.__name__
-        if self._inventory.can_store(mod):
+        if self.inventory.can_store(mod):
             logging.debug('{} picking up {}'.format(self, mod_type))
-            self._inventory.store(mod)
+            self.inventory.store(mod)
         else:
             logging.debug(
                 '{} attempted to pickup {} but was unable.'.format(self,
                                                                    mod_type))
 
     def abilities(self) -> Sequence[Ability]:
-        return self._inventory.all_abilities()
+        return self.inventory.all_abilities()
 
     def has_state(self, state: State) -> bool:
         return (self._base_status.has_state(state)
-                or self._inventory.grants_state(state))
+                or self.inventory.grants_state(state))
 
     def increment_attribute(self, attribute: AttributeType, delta: int) -> None:
         self._base_status.increment_attribute(attribute, delta)
 
     def get_attribute(self, attribute: AttributeType) -> int:
-        modifier = self._inventory.total_modifier(attribute)
+        modifier = self.inventory.total_modifier(attribute)
         value = self._base_status.get_attribute(attribute) + modifier
         return self._base_status.value_in_bounds(value, attribute)
 
