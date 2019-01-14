@@ -1,8 +1,8 @@
-from typing import NamedTuple, Tuple, Dict
+from typing import Dict, NamedTuple, Tuple
 
 from characters.abilities_base import Ability
 from characters.mods_base import GenericMod
-from characters.states import State, AttributeType
+from characters.states import AttributeType, State
 
 ModData = NamedTuple(
     'ModData', [('states_granted', Tuple[State, ...]),

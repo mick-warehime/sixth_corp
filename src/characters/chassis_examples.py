@@ -23,9 +23,9 @@ _WALLE = ChassisData(  # type: ignore
                      Slots.STORAGE: 1},
     attributes_modifiers={Attribute.MAX_HEALTH: 10, Skill.STEALTH: 1,
                           Skill.MECHANICS: 1},
-    abilities_granted=( Repair(5)))
+    abilities_granted=(Repair(5)))
 
-_DRONE = ChassisData(
+_DRONE = ChassisData(  # type: ignore
     slot_capacities={Slots.HEAD: 1, Slots.STORAGE: 1},
     states_granted=(State.ON_FIRE,),
     attributes_modifiers={Attribute.MAX_HEALTH: 5},

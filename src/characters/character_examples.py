@@ -24,8 +24,8 @@ _HARMLESS = CharacterData('harmless enemy',  # type: ignore
 _USELESS = CharacterData('useless enemy',  # type: ignore
                          ChassisTypes.USELESS.data)
 
-small_laser = ModData(abilities_granted=FireLaser(2))
-big_laser = ModData(abilities_granted=FireLaser(4))
+small_laser = ModData(abilities_granted=(FireLaser(2),))  # type: ignore
+big_laser = ModData(abilities_granted=(FireLaser(4),))  # type: ignore
 _HUMAN_PLAYER = CharacterData('Player 1', ChassisTypes.WALLE.data,
                               (small_laser, big_laser),
                               'src/images/walle.png', AIType.Human)
