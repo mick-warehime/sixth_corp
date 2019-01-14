@@ -1,12 +1,11 @@
 from itertools import product
 from typing import Sequence, Set, Tuple
 
-from events.events_base import EventManager
-from events.events_base import MoveExecutedEvent
 from characters.character_base import Character
 from characters.conditions import IsDead
 from combat.moves_base import Move
 from combat.moves_factory import valid_moves
+from events.events_base import EventManager, MoveExecutedEvent
 
 GroupMove = Sequence[Move]
 GroupMoveSet = Set[GroupMove]

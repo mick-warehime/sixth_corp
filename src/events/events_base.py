@@ -3,9 +3,9 @@ from enum import Enum
 from typing import Tuple, Union
 from weakref import WeakSet
 
-from scenes.scenes_base import Scene
-from characters.abilities_base import Ability
 from combat.moves_base import Move
+from scenes.scenes_base import Scene
+
 
 class Event(Enum):
     NONE = 'NONE'
@@ -56,6 +56,7 @@ class InputEvent(object):
 
 class MoveExecutedEvent(object):
     """This event is triggered when any character executes a move."""
+
     def __init__(self, move: Move, attacker: bool) -> None:
         self.attacker = attacker
         self.move = move
