@@ -1,6 +1,5 @@
 """Character abilities."""
 import abc
-import logging
 from typing import Any, Tuple
 
 from characters.states import Stateful
@@ -18,7 +17,6 @@ class Ability(metaclass=abc.ABCMeta):
 
     def use(self, user: Stateful, target: Stateful) -> None:
         assert self.can_use(user, target)
-        logging.debug('ABILITY: {}'.format(self.describe_use(user, target)))
         self._use(user, target)
 
     @abc.abstractmethod

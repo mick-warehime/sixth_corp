@@ -1,4 +1,3 @@
-import logging
 from itertools import product
 from typing import Sequence
 
@@ -15,7 +14,6 @@ class MoveImpl(object):
         self.target = target
 
     def execute(self) -> None:
-        logging.debug('MOVE: {}'.format(self.describe()))
         self.ability.use(self._user, self.target)
 
     def describe(self) -> str:

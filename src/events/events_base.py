@@ -3,6 +3,7 @@ from enum import Enum
 from typing import Tuple, Union
 from weakref import WeakSet
 
+from combat.moves_base import Move
 from scenes.scenes_base import Scene
 
 
@@ -53,7 +54,19 @@ class InputEvent(object):
             self.event, self.key, self.mouse, self.pressed)
 
 
-EventType = Union[Event, InputEvent, NewSceneEvent]
+class MoveExecutedEvent(object):
+    """This event is triggered when any character executes a move."""
+
+    def __init__(self, move: Move, attacker: bool) -> None:
+        self.attacker = attacker
+        self.move = move
+
+    def __str__(self) -> str:
+        team_str = 'ATTACK MOVE' if self.attacker else 'DEFEND MOVE'
+        return '%s - %s' % (team_str, self.move.describe())
+
+
+EventType = Union[Event, InputEvent, NewSceneEvent, MoveExecutedEvent]
 
 
 class EventManager(object):
