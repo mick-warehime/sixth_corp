@@ -5,9 +5,11 @@ from characters.player import get_player
 from controllers.combat_scene_model import CombatSceneModel
 from controllers.controller import Controller
 from controllers.pygame_collisions import point_collides_rect
-from events.events_base import Event, EventType, InputEvent
+from events.events_base import Event, EventType, InputEvent, MoveExecutedEvent
 from scenes.combat_scene import CombatScene
 from views.combat_scene_view import CombatSceneView
+
+NUMBER_KEYS = [str(i) for i in range(9)]
 
 
 class CombatSceneController(Controller):
@@ -29,9 +31,15 @@ class CombatSceneController(Controller):
             self._handle_input(event)
             self.update()
 
+        if isinstance(event, MoveExecutedEvent):
+            self._handle_move_executed(event)
+
     def _handle_input(self, input_event: InputEvent) -> None:
         if input_event.event == Event.MOUSE_CLICK:
             self._handle_mouse(input_event)
+            return
+
+        if input_event.key not in NUMBER_KEYS:
             return
 
         input_key = int(input_event.key)
@@ -65,3 +73,8 @@ class CombatSceneController(Controller):
         self.view.update(get_player(), self.model.enemy(), moves,
                          self.selected_character)
         self.model.update()
+
+    def _handle_move_executed(self, event: MoveExecutedEvent) -> None:
+        if event.attacker:
+            self.selected_character = None
+            self.update()

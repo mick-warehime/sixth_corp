@@ -1,7 +1,8 @@
-import logging
 from itertools import product
 from typing import Sequence, Set, Tuple
 
+from events.events_base import EventManager
+from events.events_base import MoveExecutedEvent
 from characters.character_base import Character
 from characters.conditions import IsDead
 from combat.moves_base import Move
@@ -28,20 +29,23 @@ class CombatManager(object):
         self.history: Sequence[CombatHistory] = []
 
     def take_turn(self, attack_moves: GroupMove, defense_moves: GroupMove) -> None:
-        for move in attack_moves + defense_moves:
-            assert move.can_use(), move.describe()
-            move.execute()
+        self._execute_moves(attack_moves, attacker=True)
+        self._execute_moves(defense_moves, attacker=False)
 
         attack_descr = _describe_moves(attack_moves)
         defense_descr = _describe_moves(defense_moves)
-        logging.debug('ATTACK: {}'.format(attack_descr))
-        logging.debug('DEFENSE: {}'.format(defense_descr))
 
         self.history.append(
             (attack_descr,
              defense_descr,
              self.attackers_lose(),
              self.defenders_lose()))
+
+    def _execute_moves(self, moves: GroupMove, attacker: bool) -> None:
+        for move in moves:
+            assert move.can_use(), move.describe()
+            EventManager.post(MoveExecutedEvent(move, attacker=attacker))
+            move.execute()
 
     def is_done(self) -> bool:
         return self.attackers_lose() or self.defenders_lose()
