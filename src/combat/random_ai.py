@@ -1,10 +1,10 @@
 from random import choice
 
-from combat.ai.ai_base import AI
+from combat.ai_impl import AIImpl
 from combat.moves_base import Move
 
 
-class RandomAI(AI):
+class RandomAI(AIImpl):
 
     def select_move(self) -> Move:
         moves = [m for m in self.moves if m.can_use()]

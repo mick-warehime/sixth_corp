@@ -5,7 +5,7 @@ from typing import NamedTuple, Tuple
 from characters.ability_examples import FireLaser
 from characters.chassis_examples import ChassisData, ChassisTypes
 from characters.mods_factory import ModData
-from combat.ai.ai_factory import AIType
+from combat.ai_factory import AIType
 
 CharacterData = NamedTuple(
     'EnemyData', [('name', str),

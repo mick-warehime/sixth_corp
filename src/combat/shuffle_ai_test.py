@@ -3,7 +3,7 @@ from unittest import TestCase
 from characters.ability_examples import Harmless
 from characters.character_examples import CharacterTypes
 from characters.character_factory import build_character
-from combat.ai.shuffle_ai import ShuffleAI
+from combat.shuffle_ai import ShuffleAI
 
 
 class ShuffleAITest(TestCase):

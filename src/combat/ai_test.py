@@ -4,7 +4,7 @@ from parameterized import parameterized
 
 from characters.character_examples import CharacterTypes
 from characters.character_factory import build_character
-from combat.ai.ai_factory import AIType, build_ai
+from combat.ai_factory import AIType, build_ai
 
 AI_TYPES = [[AIType.Random], [AIType.Shuffle]]
 

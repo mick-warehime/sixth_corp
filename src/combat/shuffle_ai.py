@@ -2,11 +2,11 @@ from random import shuffle
 from typing import Iterator, List
 
 from characters.character_base import Character
-from combat.ai.ai_base import AI
+from combat.ai_impl import AIImpl
 from combat.moves_base import Move
 
 
-class ShuffleAI(AI):
+class ShuffleAI(AIImpl):
     """Tries to play all n moves times in random order and reshuffles."""
 
     def __init__(self, user: Character) -> None:
