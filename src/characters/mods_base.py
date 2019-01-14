@@ -36,7 +36,7 @@ class GenericMod(Mod):
             abilities_granted = abilities_granted,
 
         self._states = states_granted
-        self._attr_mods = attribute_modifiers
+        self._attr_mods = attribute_modifiers.copy()
         self._abilities = abilities_granted
 
     def states_granted(self) -> Sequence[State]:
