@@ -2,11 +2,12 @@ from abc import abstractmethod
 from typing import Sequence
 
 from characters.character_base import Character
+from combat.ai_base import AI
 from combat.moves_base import Move
 from combat.moves_factory import all_moves
 
 
-class AI(object):
+class AIImpl(AI):
     """AI for selecting enemy moves during combat."""
 
     def __init__(self, user: Character) -> None:

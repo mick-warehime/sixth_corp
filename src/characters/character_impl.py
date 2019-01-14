@@ -12,7 +12,7 @@ from characters.chassis_factory import build_chassis
 from characters.inventory import InventoryBase
 from characters.mods_base import Mod
 from characters.states import Attribute, AttributeType, BasicStatus, State
-from combat.ai.ai_base import AI
+from combat.ai_base import AI
 from combat.moves_base import Move
 
 

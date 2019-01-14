@@ -1,9 +1,9 @@
 from enum import Enum
 
 from characters.character_base import Character
-from combat.ai.ai_base import AI
-from combat.ai.random_ai import RandomAI
-from combat.ai.shuffle_ai import ShuffleAI
+from combat.ai_base import AI
+from combat.random_ai import RandomAI
+from combat.shuffle_ai import ShuffleAI
 
 
 class AIType(Enum):
