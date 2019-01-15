@@ -22,7 +22,8 @@ class CharacterImpl(Character):
     def __init__(self, chassis: Chassis = None, image_path: str = None,
                  name: str = 'unnamed Character') -> None:
         super().__init__()
-        chassis = build_chassis(ChassisTypes.WALLE) if chassis is None else chassis
+        if chassis is None:
+            chassis = build_chassis(ChassisTypes.WALLE)
         self._name = name
         self.inventory: InventoryBase = chassis
         self._base_status = BasicStatus()
@@ -33,8 +34,6 @@ class CharacterImpl(Character):
         self._base_status.set_attribute_bounds(
             Attribute.HEALTH, 0,
             partial(self.get_attribute, Attribute.MAX_HEALTH))
-        self.increment_attribute(Attribute.HEALTH,
-                                 self.get_attribute(Attribute.MAX_HEALTH))
 
     @property
     def image_path(self) -> str:

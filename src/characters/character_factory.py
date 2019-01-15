@@ -5,6 +5,7 @@ from characters.character_impl import CharacterImpl
 from characters.character_position import Position
 from characters.chassis_factory import build_chassis
 from characters.mods_factory import build_mod
+from characters.states import Attribute
 from combat.ai_factory import AIType, build_ai
 
 
@@ -22,6 +23,9 @@ def build_character(
         mod = build_mod(mod_data)
         assert char.inventory.can_store(mod), 'Mod cannot be picked up.'
         char.attempt_pickup(mod)
+
+    health = char.get_attribute(Attribute.MAX_HEALTH)
+    char.increment_attribute(Attribute.HEALTH, health)
 
     # TODO(#112) - move positions to combat view
     if data.ai_type == AIType.Human:
