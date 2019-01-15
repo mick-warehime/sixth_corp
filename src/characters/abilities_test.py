@@ -1,6 +1,8 @@
 import pytest
 
 from characters.ability_examples import FireLaser, Repair
+from characters.character_examples import CharacterData
+from characters.character_factory import build_character
 from characters.character_impl import CharacterImpl
 from characters.chassis_examples import ChassisTypes
 from characters.chassis_factory import build_chassis
@@ -10,7 +12,7 @@ from characters.states import Attribute
 
 @pytest.fixture()
 def character():
-    return CharacterImpl(build_chassis(ChassisTypes.WALLE))
+    return build_character(CharacterData('', ChassisTypes.WALLE))
 
 
 def test_repair_ability(character):
@@ -25,7 +27,7 @@ def test_repair_ability(character):
 def test_fire_laser(character):
     damage = 3
     fire_laser = FireLaser(damage)
-    other_char = CharacterImpl(build_chassis(ChassisTypes.DRONE))
+    other_char = build_character(CharacterData('', ChassisTypes.WALLE))
 
     assert not fire_laser.can_use(character, character)
     assert fire_laser.can_use(character, other_char)
