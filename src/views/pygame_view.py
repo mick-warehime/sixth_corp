@@ -7,10 +7,13 @@ from characters.player import get_player
 from characters.states import Attribute
 from data import constants
 from views.pygame_images import load_image
+from world.world import get_location
 
 DARK_GRAY = [50, 50, 50]
 RED = [255, 0, 0]
 GREEN = [0, 255, 0]
+BLUE = [0, 0, 255]
+WHITE = [255, 255, 255]
 
 
 class PygameView(object):
@@ -92,3 +95,9 @@ class PygameView(object):
         x_health = int(width / 2 - 300)
         y_health = int(height / 2 - 5)
         self.render_font(health_text, 21, x_health, y_health, RED)
+
+        # draw scene number
+        scene_text = 'Scene: {}'.format(get_location().scene)
+        x_scene = int(width / 2 + 100)
+        y_scene = int(height / 2 - 5)
+        self.render_font(scene_text, 22, x_scene, y_scene, WHITE)
