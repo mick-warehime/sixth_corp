@@ -15,7 +15,7 @@ def get_combatant(health, abilities, name, ai_type=AIType.Human) -> Character:
     mod_data = ModData(attribute_modifiers={Attribute.MAX_HEALTH: health},
                        abilities_granted=abilities)
     chassis_data = ChassisData({TEMP_DEFAULT_SLOT: 10})
-    char_data = CharacterData(name, chassis_data, (mod_data,), '', ai_type)
+    char_data = CharacterData(chassis_data, name, (mod_data,), '', ai_type)
 
     return build_character(char_data)
 
