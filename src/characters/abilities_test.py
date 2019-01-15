@@ -3,9 +3,7 @@ import pytest
 from characters.ability_examples import FireLaser, Repair
 from characters.character_examples import CharacterData
 from characters.character_factory import build_character
-from characters.character_impl import CharacterImpl
 from characters.chassis_examples import ChassisTypes
-from characters.chassis_factory import build_chassis
 from characters.conditions import FullHealth
 from characters.states import Attribute
 

@@ -2,7 +2,6 @@ import pytest
 
 from characters.character_examples import CharacterTypes
 from characters.character_factory import build_character
-from characters.character_impl import CharacterImpl
 from characters.effects import (AcquireMod, ChangeLocation, IncrementAttribute,
                                 RestartGame)
 from characters.mod_examples import HelmOfBeingOnFire

@@ -1,11 +1,9 @@
 from characters.character_base import Character
-from characters.character_examples import CharacterTypes, CharacterData
+from characters.character_examples import CharacterData, CharacterTypes
 from characters.character_factory import build_character
-from characters.character_impl import CharacterImpl
-from characters.chassis import TEMP_DEFAULT_SLOT, Chassis
+from characters.chassis import TEMP_DEFAULT_SLOT
 from characters.chassis_examples import ChassisData
 from characters.mod_examples import FireLaser
-from characters.mods_base import GenericMod
 from characters.mods_factory import ModData
 from characters.states import Attribute
 from combat.ai_factory import AIType
