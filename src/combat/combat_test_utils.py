@@ -1,20 +1,21 @@
 from characters.character_base import Character
-from characters.character_examples import CharacterTypes
+from characters.character_examples import CharacterData, CharacterTypes
 from characters.character_factory import build_character
-from characters.character_impl import CharacterImpl
-from characters.chassis import TEMP_DEFAULT_SLOT, Chassis
+from characters.chassis import TEMP_DEFAULT_SLOT
+from characters.chassis_examples import ChassisData
 from characters.mod_examples import FireLaser
-from characters.mods_base import GenericMod
+from characters.mods_factory import ModData
 from characters.states import Attribute
+from combat.ai_factory import AIType
 
 
-def get_combatant(health, abilities, name) -> Character:
-    mod = GenericMod(attribute_modifiers={Attribute.MAX_HEALTH: health},
-                     abilities_granted=abilities)
-    chassis = Chassis({TEMP_DEFAULT_SLOT: 10}, mod)
-    char = CharacterImpl(chassis, image_path='', name=name)
+def get_combatant(health, abilities, name, ai_type=AIType.Human) -> Character:
+    mod_data = ModData(attribute_modifiers={Attribute.MAX_HEALTH: health},
+                       abilities_granted=abilities)
+    chassis_data = ChassisData({TEMP_DEFAULT_SLOT: 10})
+    char_data = CharacterData(chassis_data, name, (mod_data,), '', ai_type)
 
-    return char
+    return build_character(char_data)
 
 
 def create_combat_group(group_size, health=10, damage=2, base_name='combatant'):
