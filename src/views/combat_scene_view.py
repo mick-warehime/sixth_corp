@@ -3,7 +3,7 @@ from typing import List, Sequence
 from characters.character_base import Character
 from characters.states import Attribute
 from combat.moves_base import Move
-from views.pygame_view import PygameView
+from views.pygame_view import GREEN, PygameView
 from world.world import get_location
 
 
@@ -48,16 +48,14 @@ class CombatSceneView(PygameView):
         health = char.get_attribute(Attribute.HEALTH)
         max_health = char.get_attribute(Attribute.MAX_HEALTH)
         health_bar = '{} / {}'.format(health, max_health)
-        rasterized = self._smallfont.render(health_bar, True, (0, 255, 0))
         x = int(pos.x + pos.w / 4.0)
         y = pos.y - 40
-        self.screen.blit(rasterized, (x, y))
+        self.render_font(health_bar, 30, x, y, GREEN)
         self.update_display()
 
     def render_name(self, char: Character) -> None:
         pos = char.position
-        rasterized = self._smallfont.render(char.description(), True, (0, 255, 0))
         x = int(pos.x + pos.w / 4.0)
         y = pos.y + 40 + pos.h
-        self.screen.blit(rasterized, (x, y))
+        self.render_font(char.description(), 30, x, y, GREEN)
         self.update_display()
