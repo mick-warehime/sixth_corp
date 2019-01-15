@@ -12,7 +12,7 @@ from world.locations import CityLocation
 def loading_scene() -> DecisionScene:
     options = {
         's': DecisionOption('Start Game', swamp_scene,
-                            [RestartGame(), ChangeLocation(CityLocation())]),
+                            [ChangeLocation(CityLocation())]),
         'x': DecisionOption('Settings', example_combat_scene)}
     return DecisionScene('6TH Corp', options)
 
