@@ -1,17 +1,18 @@
 """Simple decision scene examples."""
-from characters.effects import IncrementAttribute, RestartGame
+from characters.effects import ChangeLocation, IncrementAttribute, RestartGame
 from characters.player import get_player
 from characters.skills import Difficulty, skill_check
 from characters.states import Attribute, Skill
 from scenes.combat_scene import CombatScene
 from scenes.decision_scene import (DecisionOption, DecisionScene,
                                    from_transition, transition_to)
+from world.locations import CityLocation
 
 
 def loading_scene() -> DecisionScene:
     options = {
         's': DecisionOption('Start Game', swamp_scene,
-                            RestartGame()),
+                            [RestartGame(), ChangeLocation(CityLocation())]),
         'x': DecisionOption('Settings', example_combat_scene)}
     return DecisionScene('6TH Corp', options)
 
