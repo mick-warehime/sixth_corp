@@ -21,7 +21,7 @@ def select_enemy(enemy):
 
 class CombatSceneControllerTest(TestCase):
 
-    @mock.patch('views.pygame_view.pygame')
+    @mock.patch('views.pygame_screen.pygame')
     @mock.patch('views.pygame_images.load_image')
     @mock.patch('controllers.combat_scene_controller.CombatSceneController.update')
     def test_game_over(self, mock_update, mock_loader, mock_pygame):
@@ -29,7 +29,7 @@ class CombatSceneControllerTest(TestCase):
 
         self.assertFalse(ctl.model.is_game_over())
 
-    @mock.patch('views.pygame_view.pygame')
+    @mock.patch('views.pygame_screen.pygame')
     @mock.patch('views.pygame_images.load_image')
     @mock.patch('controllers.combat_scene_controller.CombatSceneController.update')
     def test_kill_enemy(self, mock_update, mock_loader, mock_pygame):
@@ -42,7 +42,7 @@ class CombatSceneControllerTest(TestCase):
 
         self.assertTrue(ctl.model.scene.is_resolved())
 
-    @mock.patch('views.pygame_view.pygame')
+    @mock.patch('views.pygame_screen.pygame')
     @mock.patch('views.pygame_images.load_image')
     @mock.patch('controllers.combat_scene_controller.CombatSceneController.update')
     def test_selected_enemy(self, mock_update, mock_loader, mock_pygame):
@@ -58,7 +58,7 @@ class CombatSceneControllerTest(TestCase):
         simulate_mouse_click(-1000, -1000)
         self.assertIsNone(ctl.selected_character)
 
-    @mock.patch('views.pygame_view.pygame')
+    @mock.patch('views.pygame_screen.pygame')
     @mock.patch('views.pygame_images.load_image')
     @mock.patch('controllers.combat_scene_controller.CombatSceneController.update')
     def test_enemy_unselected_after_move(self, mock_update, mock_loader, mock_pygame):
@@ -74,7 +74,7 @@ class CombatSceneControllerTest(TestCase):
         simulate_key_press('1')
         self.assertIsNone(ctl.selected_character)
 
-    @mock.patch('views.pygame_view.pygame')
+    @mock.patch('views.pygame_screen.pygame')
     @mock.patch('views.pygame_images.load_image')
     @mock.patch('controllers.combat_scene_controller.CombatSceneController.update')
     def test_reclick_unselects(self, mock_update, mock_loader, mock_pygame):
@@ -90,7 +90,7 @@ class CombatSceneControllerTest(TestCase):
         select_enemy(enemy)
         self.assertIsNone(ctl.selected_character)
 
-    @mock.patch('views.pygame_view.pygame')
+    @mock.patch('views.pygame_screen.pygame')
     @mock.patch('views.pygame_images.load_image')
     @mock.patch('controllers.combat_scene_controller.CombatSceneController.update')
     def test_click_nothing_selects_nothing(self, mock_update, mock_loader, mock_pygame):

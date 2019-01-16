@@ -24,7 +24,7 @@ class SceneMachine(EventListener):
     def notify(self, event: EventType) -> None:
         if event == Event.SETTINGS:
             self._toggle_settings()
-        elif isinstance(event, NewSceneEvent):
+        if isinstance(event, NewSceneEvent):
             self._set_next_scene(event.scene)
 
     def _set_next_scene(self, scene: Scene) -> None:
