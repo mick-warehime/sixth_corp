@@ -26,6 +26,8 @@ class CombatScene(Scene):
         super().__init__()
         self._enemy: Character = build_character(CharacterTypes.DRONE)
         self._enemy.attempt_pickup(GenericMod(abilities_granted=FireLaser(2)))
+        self.selected: Character = None
+        self.current_moves: Sequence[str] = None
 
     def enemy(self) -> Character:
         return self._enemy

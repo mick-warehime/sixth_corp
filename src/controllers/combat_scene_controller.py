@@ -44,7 +44,7 @@ class CombatSceneController(Controller):
 
         input_key = int(input_event.key)
         moves = self.model.player_moves(self.selected_character)
-        if input_key <= len(moves) and input_key > 0:
+        if len(moves) >= input_key > 0:
             selected_move = moves[input_key - 1]
             self.model.select_player_move(selected_move)
 
@@ -69,7 +69,8 @@ class CombatSceneController(Controller):
         self.selected_character = None
 
     def update(self) -> None:
-        # moves = self.model.player_moves(self.selected_character)
+        self.model.player_moves(self.selected_character)
+
         # , moves,
         # self.selected_character
         self.view.update()

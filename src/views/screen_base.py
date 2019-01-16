@@ -22,7 +22,7 @@ class Screen(object):
         pass
 
     @abstractmethod
-    def render_rect(self, x: int, y: int, w: int, h: int, color: Color) -> None:
+    def render_rect(self, x: int, y: int, w: int, h: int, color: Color, width: int) -> None:
         """Draws a rectangle onto the current screen."""
         pass
 

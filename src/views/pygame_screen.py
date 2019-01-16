@@ -33,18 +33,18 @@ class PygameScreen(Screen):
     def render_texts(
             self,
             texts: List[str],
-            size: int,
+            font_size: int,
             x: int,
             y: int,
             color: Color,
             spacing: int = 50) -> None:
         for text in texts:
             y += spacing
-            self.render_text(text, size, x, y, color)
+            self.render_text(text, font_size, x, y, color)
         self._update()
 
-    def render_text(self, text: str, size: int, x: int, y: int, color: Color) -> None:
-        font = self._font(size)
+    def render_text(self, text: str, font_size: int, x: int, y: int, color: Color) -> None:
+        font = self._font(font_size)
         rasterized = font.render(text, True, color)
         self._screen.blit(rasterized, (x, y))
         self._update()

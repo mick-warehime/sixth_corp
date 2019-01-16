@@ -40,4 +40,4 @@ class DecisionArtist(SceneArtist):
         main_text_fun = _parse_text_fun(main_text)
 
         texts = _format_text(main_text_fun(), option_text)
-        screen.render_texts(texts, size=40, x=250, y=250, color=GREEN, spacing=50)
+        screen.render_texts(texts, font_size=40, x=250, y=250, color=GREEN, spacing=50)
