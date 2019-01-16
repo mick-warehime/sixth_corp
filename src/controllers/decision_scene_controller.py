@@ -7,7 +7,7 @@ from events.event_utils import post_scene_change
 from events.events_base import Event, EventType, InputEvent
 from scenes.decision_scene import DecisionScene
 from scenes.scene_examples import game_over
-from views.decision_scene_view import DecisionSceneView
+from views.view_factory import SceneViewType, build_scene_view
 from world.world import get_world
 
 
@@ -17,11 +17,8 @@ class DecisionSceneController(Controller):
         super().__init__()
         self._world = get_world()
         self._scene = scene
-
-        options = {key_val: choice.description
-                   for key_val, choice in scene.choices.items()}
-        self.view = DecisionSceneView(scene.prompt, options)
-        self.view.render()
+        self.view = build_scene_view(SceneViewType.Decision, scene)
+        self.view.update()
 
     def _handle_input(self, input_event: InputEvent) -> None:
         if input_event.key in self._scene.choices:
@@ -34,7 +31,7 @@ class DecisionSceneController(Controller):
             self.check_resolution()
         elif isinstance(event, InputEvent):
             self._handle_input(event)
-            self.view.render()
+            self.view.update()
 
     def check_resolution(self) -> None:
         if self._scene.is_resolved():

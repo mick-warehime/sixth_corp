@@ -44,10 +44,12 @@ class CombatSceneModel(object):
         return self.scene.enemy()
 
     def player_moves(self, target: Character) -> Sequence[Move]:
-        if target is None:
-            return []
-
-        return valid_moves(self._player, (target,))
+        moves: Sequence[Move] = []
+        if target is not None:
+            moves = valid_moves(self._player, (target,))
+        self.scene.current_moves = moves
+        self.scene.selected = target
+        return moves
 
     def select_player_move(self, move: Move) -> None:
         enemy_move = self.enemy_action()

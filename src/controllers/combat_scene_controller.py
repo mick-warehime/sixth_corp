@@ -7,7 +7,7 @@ from controllers.controller import Controller
 from controllers.pygame_collisions import point_collides_rect
 from events.events_base import Event, EventType, InputEvent, MoveExecutedEvent
 from scenes.combat_scene import CombatScene
-from views.combat_scene_view import CombatSceneView
+from views.view_factory import SceneViewType, build_scene_view
 
 NUMBER_KEYS = [str(i) for i in range(9)]
 
@@ -21,7 +21,7 @@ class CombatSceneController(Controller):
         self._characters = [get_player(), self.model.enemy()]
         self.selected_character: Character = None
 
-        self.view: CombatSceneView = CombatSceneView()
+        self.view = build_scene_view(SceneViewType.Combat, scene)
         self.update()
 
     def notify(self, event: EventType) -> None:
@@ -44,7 +44,7 @@ class CombatSceneController(Controller):
 
         input_key = int(input_event.key)
         moves = self.model.player_moves(self.selected_character)
-        if input_key <= len(moves) and input_key > 0:
+        if len(moves) >= input_key > 0:
             selected_move = moves[input_key - 1]
             self.model.select_player_move(selected_move)
 
@@ -69,9 +69,11 @@ class CombatSceneController(Controller):
         self.selected_character = None
 
     def update(self) -> None:
-        moves = self.model.player_moves(self.selected_character)
-        self.view.update(get_player(), self.model.enemy(), moves,
-                         self.selected_character)
+        self.model.player_moves(self.selected_character)
+
+        # , moves,
+        # self.selected_character
+        self.view.update()
         self.model.update()
 
     def _handle_move_executed(self, event: MoveExecutedEvent) -> None:
