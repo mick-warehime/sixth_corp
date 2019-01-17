@@ -3,7 +3,7 @@ from characters.player import get_player
 from characters.states import Attribute
 from data.colors import GREEN, RED
 from scenes.combat_scene import CombatScene
-from views.scene_artist_base import SceneArtist
+from views.artists.scene_artist_base import SceneArtist
 from views.screen_base import Screen
 
 

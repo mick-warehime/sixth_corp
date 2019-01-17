@@ -1,7 +1,7 @@
 from typing import List
 
 from scenes.scenes_base import Scene
-from views.scene_artist_base import SceneArtist
+from views.artists.scene_artist_base import SceneArtist
 from views.screen_factory import get_screen
 from views.view_base import View
 

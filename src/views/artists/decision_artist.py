@@ -4,7 +4,7 @@ from typing import Callable, List, Union
 from data.colors import GREEN
 from data.constants import TEXTWIDTH
 from scenes.decision_scene import DecisionScene
-from views.scene_artist_base import SceneArtist
+from views.artists.scene_artist_base import SceneArtist
 from views.screen_base import Screen
 
 _TextFun = Callable[[], str]
