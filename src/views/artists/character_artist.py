@@ -14,7 +14,7 @@ class CharacterArtist(SceneArtist):
         enemy = scene.enemy()
         for char in [player, enemy]:
             self._render_character(char, screen)
-            self._render_selected(enemy, screen, scene)
+            self._render_selected(char, screen, scene)
 
     def _render_character(self, character: Character, screen: Screen) -> None:
         self._render_image(character, screen)
