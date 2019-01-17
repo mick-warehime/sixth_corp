@@ -1,4 +1,3 @@
-import logging
 from typing import Dict, List
 
 import pygame
@@ -29,7 +28,6 @@ class PygameScreen(Screen):
         self._screen = pygame.display.set_mode(constants.SCREEN_SIZE)
 
     def update(self) -> None:
-        logging.debug('redrawing')
         pygame.display.flip()
 
     def render_texts(

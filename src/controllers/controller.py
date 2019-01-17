@@ -1,5 +1,3 @@
-import logging
-
 from events.events_base import (ControllerActivatedEvent, EventListener,
                                 EventManager, EventType)
 
@@ -12,13 +10,11 @@ class Controller(EventListener):
 
     def activate(self) -> None:
         status = 'Activating a {}'.format(self.__class__.__name__)
-        logging.debug(status)
         self._active = True
         EventManager.post(ControllerActivatedEvent(status))
 
     def deactivate(self) -> None:
         status = 'Deactivating a {}'.format(self.__class__.__name__)
-        logging.debug(status)
         self._active = False
         EventManager.post(ControllerActivatedEvent(status))
 

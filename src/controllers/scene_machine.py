@@ -15,9 +15,9 @@ SCENE_CONTROLLERS = {DecisionScene: DecisionSceneController,
 class SceneMachine(EventListener):
     """Handles transitions between scenes."""
 
-    def __init__(self) -> None:
+    def __init__(self, ) -> None:
         super().__init__()
-        self.controller: Controller = None
+        self._controller: Controller = None
         self._prev_controller: Controller = None
         self._set_next_scene(loading_scene())
 
@@ -32,14 +32,14 @@ class SceneMachine(EventListener):
         assert scene_type in SCENE_CONTROLLERS
 
         controller = SCENE_CONTROLLERS[scene_type]
-        self.controller = controller(scene)
+        self._controller = controller(scene)
 
     def _toggle_settings(self) -> None:
         if self._prev_controller is None:
             self._prev_controller = SettingsController()
 
-        self._prev_controller, self.controller = (
-            self.controller, self._prev_controller)
+        self._prev_controller, self._controller = (
+            self._controller, self._prev_controller)
 
-        self.controller.activate()
+        self._controller.activate()
         self._prev_controller.deactivate()
