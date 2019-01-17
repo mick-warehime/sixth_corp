@@ -1,6 +1,6 @@
 from abc import abstractmethod
-
 from typing import Any
+
 from views.screen_base import Screen
 
 
