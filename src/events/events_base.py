@@ -66,7 +66,17 @@ class MoveExecutedEvent(object):
         return '%s - %s' % (team_str, self.move.describe())
 
 
-EventType = Union[Event, InputEvent, NewSceneEvent, MoveExecutedEvent]
+class ControllerActivatedEvent(object):
+    """This event is triggered when a controller is activated or deactivated."""
+
+    def __init__(self, acivation_status: str) -> None:
+        self.status = acivation_status
+
+    def __str__(self) -> str:
+        return '{}'.format(self.status)
+
+
+EventType = Union[Event, InputEvent, NewSceneEvent, MoveExecutedEvent, ControllerActivatedEvent]
 
 
 class EventManager(object):

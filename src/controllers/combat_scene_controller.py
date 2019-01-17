@@ -5,7 +5,8 @@ from characters.player import get_player
 from controllers.combat_scene_model import CombatSceneModel
 from controllers.controller import Controller
 from controllers.pygame_collisions import point_collides_rect
-from events.events_base import Event, EventType, InputEvent, MoveExecutedEvent
+from events.events_base import (ControllerActivatedEvent, Event, EventType,
+                                InputEvent, MoveExecutedEvent)
 from scenes.combat_scene import CombatScene
 from views.view_factory import SceneViewType, build_scene_view
 
@@ -30,9 +31,10 @@ class CombatSceneController(Controller):
         if isinstance(event, InputEvent):
             self._handle_input(event)
             self.update()
-
-        if isinstance(event, MoveExecutedEvent):
+        elif isinstance(event, MoveExecutedEvent):
             self._handle_move_executed(event)
+        elif isinstance(event, ControllerActivatedEvent):
+            self.update()
 
     def _handle_input(self, input_event: InputEvent) -> None:
         if input_event.event == Event.MOUSE_CLICK:

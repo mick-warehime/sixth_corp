@@ -17,3 +17,5 @@ class SceneView(View):
         self._screen.clear()
         for artist in self._artists:
             artist.render(screen=self._screen, scene=self._scene)
+        # VERY IMPORTANT TO CALL UPDATE ONCE
+        self._screen.update()
