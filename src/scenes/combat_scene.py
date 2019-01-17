@@ -1,12 +1,9 @@
 from typing import Sequence
 
-from characters.ability_examples import FireLaser
 from characters.character_base import Character
-from characters.character_examples import CharacterTypes
-from characters.character_factory import build_character
 from characters.conditions import IsDead
-from characters.mods_base import GenericMod
 from scenes.scenes_base import Effect, Resolution, Scene
+from world.world import get_location
 
 
 class CombatResolution(Resolution):
@@ -24,8 +21,7 @@ class CombatScene(Scene):
 
     def __init__(self) -> None:
         super().__init__()
-        self._enemy: Character = build_character(CharacterTypes.DRONE)
-        self._enemy.attempt_pickup(GenericMod(abilities_granted=FireLaser(2)))
+        self._enemy: Character = get_location().random_enemy()
         self.selected: Character = None
         self.current_moves: Sequence[str] = None
 
