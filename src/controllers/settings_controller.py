@@ -14,6 +14,7 @@ class SettingsController(Controller):
     def notify(self, event: EventType) -> None:
         if not self._active:
             return
+
         if event != Event.TICK:
             self.update()
 

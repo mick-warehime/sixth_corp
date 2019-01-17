@@ -1,6 +1,7 @@
 import logging
 
-from events.events_base import EventListener, EventType
+from events.events_base import (ControllerActivatedEvent, EventListener,
+                                EventManager, EventType)
 
 
 class Controller(EventListener):
@@ -8,15 +9,18 @@ class Controller(EventListener):
     def __init__(self) -> None:
         super(Controller, self).__init__()
         self._active = True
-        self.activate()
 
     def activate(self) -> None:
-        logging.debug('Activating a {}'.format(self.__class__.__name__))
+        status = 'Activating a {}'.format(self.__class__.__name__)
+        logging.debug(status)
         self._active = True
+        EventManager.post(ControllerActivatedEvent(status))
 
     def deactivate(self) -> None:
-        logging.debug('Deactivating a {}'.format(self.__class__.__name__))
+        status = 'Deactivating a {}'.format(self.__class__.__name__)
+        logging.debug(status)
         self._active = False
+        EventManager.post(ControllerActivatedEvent(status))
 
     def notify(self, event: EventType) -> None:
         raise NotImplementedError

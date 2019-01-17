@@ -30,3 +30,8 @@ class Screen(object):
     def clear(self) -> None:
         """Removes everything from the screen."""
         pass
+
+    @abstractmethod
+    def update(self) -> None:
+        """Makes sure any render/clear calls have been posted to the screen."""
+        pass

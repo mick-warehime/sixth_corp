@@ -9,4 +9,4 @@ class SettingsArtist(SceneArtist):
     def render(self, screen: Screen, scene: SettingsScene) -> None:
         background_image = scene.background
         screen.render_image(background_image, 0, 0)
-        screen.render_texts(scene.options, size=35, x=250, y=250, color=WHITE)
+        screen.render_texts(scene.options, font_size=35, x=250, y=250, color=WHITE)
