@@ -76,7 +76,7 @@ class ControllerActivatedEvent(object):
         return '{}'.format(self.status)
 
 
-EventType = Union[Event, InputEvent, NewSceneEvent, MoveExecutedEvent]
+EventType = Union[Event, InputEvent, NewSceneEvent, MoveExecutedEvent, ControllerActivatedEvent]
 
 
 class EventManager(object):
