@@ -54,8 +54,7 @@ class Keyboard(EventListener):
 
     def post_bound_event(self, key: str) -> None:
         binding = self.get_binding(key)
-        event = self.bindings.event_for_binding(binding)
-        EventManager.post(Event(event))
+        EventManager.post(Event(binding))
 
     def get_pygame_events(self) -> List[pygame.event.EventType]:
         return pygame.event.get()

@@ -18,6 +18,7 @@ class Event(Enum):
 
     # bindable events
     SETTINGS = 'SETTINGS'
+    INVENTORY = 'INVENTORY'
 
     # comparing enums gives wrong result without this
     # has to do with this file being imported twice

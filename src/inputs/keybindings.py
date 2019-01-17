@@ -21,7 +21,10 @@ class Keybindings(object):
             for row in reader:
                 key = row[self.key_field]
                 binding = row[self.binding_field]
-                bindings[key] = Event[binding]
+                try:
+                    bindings[key] = Event[binding]
+                except KeyError:
+                    raise NotImplementedError('Binding <{}> does not exist. Add Event.{}?'.format(binding, binding))
 
         self.bindings = bindings
 
@@ -54,9 +57,3 @@ class Keybindings(object):
             keys.append("{}: {}".format(key, value))
         keys.append("--------------------")
         return '\n'.join(keys)
-
-    @classmethod
-    def event_for_binding(self, binding: EventType) -> Event:
-        if binding == Event.SETTINGS:
-            return Event.SETTINGS
-        return Event.NONE
