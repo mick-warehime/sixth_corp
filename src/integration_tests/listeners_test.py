@@ -41,7 +41,7 @@ class IntegrationTest(TestCase):
         assert any(isinstance(l, CombatSceneController) for l in EventManager.listeners)
 
     @mock.patch('views.pygame_screen.pygame')
-    def test_changing_combat_scenes_swaps_listener(self, mock_pygame):
+    def test_changing_decision_scenes_swaps_listener(self, mock_pygame):
         game = Game()  # noqa: F841
         start_len = len(EventManager.listeners)
 
