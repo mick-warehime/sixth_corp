@@ -1,14 +1,13 @@
 import random
 from unittest import TestCase, mock
+
 from controllers.combat_scene_controller import CombatSceneController
 from controllers.decision_scene_controller import DecisionSceneController
-from controllers.game import Game
-from controllers.game import initialize_pygame
+from controllers.game import Game, initialize_pygame
 from events import event_utils
 from events.events_base import EventManager
 from scenes.combat_scene import CombatScene
 from scenes.decision_scene import DecisionScene
-from parameterized import parameterized
 
 # Needs to be called for game to run.
 initialize_pygame(no_UI=True)
