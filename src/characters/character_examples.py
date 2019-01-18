@@ -4,6 +4,7 @@ from typing import NamedTuple, Tuple
 
 from characters.ability_examples import FireLaser
 from characters.chassis_examples import ChassisData, ChassisTypes
+from characters.mod_examples import ModTypes
 from characters.mods_base import ModData
 from combat.ai_factory import AIType
 
@@ -24,10 +25,9 @@ _HARMLESS = CharacterData(ChassisTypes.HARMLESS.data,  # type: ignore
 _USELESS = CharacterData(ChassisTypes.USELESS.data,  # type: ignore
                          'useless enemy')
 
-small_laser = ModData(abilities_granted=(FireLaser(2),))  # type: ignore
-big_laser = ModData(abilities_granted=(FireLaser(4),))  # type: ignore
 _HUMAN_PLAYER = CharacterData(ChassisTypes.WALLE.data, 'Player 1',
-                              (small_laser, big_laser),
+                              (ModTypes.SMALL_LASER.data,
+                               ModTypes.BIG_LASER.data),
                               'src/images/walle.png', AIType.Human)
 
 
