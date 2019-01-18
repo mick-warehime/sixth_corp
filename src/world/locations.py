@@ -1,5 +1,6 @@
 from characters.character_base import Character
-from characters.character_factory import CharacterTypes, build_character
+from characters.character_examples import CharacterTypes
+from characters.character_factory import build_character
 from world.location_base import Location
 
 _BACKGROUND_IMAGE_LOADING = 'src/images/background_loading.png'

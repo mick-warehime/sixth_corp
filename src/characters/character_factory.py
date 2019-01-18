@@ -1,6 +1,6 @@
 from typing import Union
 
-from characters.character_examples import CharacterData, CharacterTypes
+from characters.character_examples import CharacterData
 from characters.character_impl import CharacterImpl
 from characters.character_position import Position
 from characters.chassis_factory import build_chassis
