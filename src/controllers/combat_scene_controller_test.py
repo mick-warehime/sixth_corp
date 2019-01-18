@@ -27,7 +27,7 @@ class CombatSceneControllerTest(TestCase):
     def test_game_over(self, mock_update, mock_loader, mock_pygame):
         ctl = create_combat_controller(enemy=create_enemy(10))
 
-        self.assertFalse(ctl.model.is_game_over())
+        self.assertFalse(ctl.scene.is_game_over())
 
     @mock.patch('views.pygame_screen.pygame')
     @mock.patch('views.pygame_images.load_image')
@@ -36,11 +36,11 @@ class CombatSceneControllerTest(TestCase):
         health = 2
         enemy = create_enemy(health)
         ctl = create_combat_controller(enemy)
-        self.assertFalse(ctl.model.scene.is_resolved())
+        self.assertFalse(ctl.scene.is_resolved())
 
         IncrementAttribute(enemy, Attribute.HEALTH, -health).execute()
 
-        self.assertTrue(ctl.model.scene.is_resolved())
+        self.assertTrue(ctl.scene.is_resolved())
 
     @mock.patch('views.pygame_screen.pygame')
     @mock.patch('views.pygame_images.load_image')
