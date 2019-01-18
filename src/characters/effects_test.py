@@ -4,7 +4,7 @@ from characters.character_examples import CharacterTypes
 from characters.character_factory import build_character
 from characters.effects import (AcquireMod, ChangeLocation, IncrementAttribute,
                                 RestartGame)
-from characters.mod_examples import HelmOfBeingOnFire
+from characters.mods_base import GenericMod
 from characters.player import get_player, reset_player
 from characters.states import Attribute
 from world.locations import LoadingLocation, MarsLocation
@@ -43,7 +43,7 @@ def test_increment_attribute():
 
 
 def test_acquire_mod(player):
-    mod = HelmOfBeingOnFire()
+    mod = GenericMod()
     assert mod not in player.inventory.all_mods()
     AcquireMod(mod).execute()
     assert mod in player.inventory.all_mods()
