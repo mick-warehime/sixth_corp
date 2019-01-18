@@ -4,7 +4,7 @@ from characters.character_factory import build_character
 from characters.chassis import TEMP_DEFAULT_SLOT
 from characters.chassis_examples import ChassisData
 from characters.mod_examples import FireLaser
-from characters.mods_factory import ModData
+from characters.mods_base import ModData
 from characters.states import Attribute
 from combat.ai_factory import AIType
 
