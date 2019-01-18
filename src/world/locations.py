@@ -14,7 +14,7 @@ class LoadingLocation(Location):
 
     # TODO - this doesnt make sense here
     def random_enemy(self) -> Character:
-        return build_character(CharacterTypes.DRONE)
+        return build_character(CharacterTypes.DRONE.data)
 
 
 class MarsLocation(Location):
@@ -23,7 +23,7 @@ class MarsLocation(Location):
         super().__init__(_BACKGROUND_IMAGE_MARS)
 
     def random_enemy(self) -> Character:
-        return build_character(CharacterTypes.DRONE)
+        return build_character(CharacterTypes.DRONE.data)
 
 
 class CityLocation(Location):
@@ -32,4 +32,4 @@ class CityLocation(Location):
         super().__init__(_BACKGROUND_IMAGE_CITY)
 
     def random_enemy(self) -> Character:
-        return build_character(CharacterTypes.DRONE)
+        return build_character(CharacterTypes.DRONE.data)

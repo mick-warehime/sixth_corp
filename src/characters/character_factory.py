@@ -9,13 +9,7 @@ from characters.states import Attribute
 from combat.ai_factory import AIType, build_ai
 
 
-def build_character(
-        character: Union[CharacterTypes, CharacterData]) -> CharacterImpl:
-    if isinstance(character, CharacterTypes):
-        data = character.data
-    else:
-        data = character
-
+def build_character(data: CharacterData) -> CharacterImpl:
     chassis = build_chassis(data.chassis_data)
     char = CharacterImpl(chassis, image_path=data.image_path, name=data.name)
 

@@ -35,7 +35,7 @@ def test_increment_player_attribute(player):
 
 
 def test_increment_attribute():
-    char = build_character(CharacterTypes.DRONE)
+    char = build_character(CharacterTypes.DRONE.data)
     health = char.get_attribute(Attribute.HEALTH)
     delta = -3
     IncrementAttribute(char, Attribute.HEALTH, delta).execute()
