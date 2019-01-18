@@ -42,7 +42,7 @@ _mod_types_to_data = {
     ModTypes.FIRE_HELM: ModData(states_granted=(State.ON_FIRE,)),
     ModTypes.SLEEPY_AMULET: ModData(states_granted=(State.SLEEPY,)),
     ModTypes.CAMOUFLAGE_PAINT: ModData(attribute_modifiers={Skill.STEALTH: 1}),
-    ModTypes.SMALL_LASER: ModData(abilities_granted=FireLaser(2)),
-    ModTypes.BIG_LASER: ModData(abilities_granted=FireLaser(4))
+    ModTypes.SMALL_LASER: ModData(abilities_granted=(FireLaser(2),)),
+    ModTypes.BIG_LASER: ModData(abilities_granted=(FireLaser(4),))
 
 }

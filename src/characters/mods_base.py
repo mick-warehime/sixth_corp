@@ -1,6 +1,6 @@
 """Base implementation of mods and inventory."""
 import abc
-from typing import Dict, Sequence, Union, NamedTuple, Tuple
+from typing import Dict, NamedTuple, Sequence, Tuple, Union
 
 from characters.abilities_base import Ability
 from characters.states import AttributeType, State
@@ -49,9 +49,7 @@ class GenericMod(Mod):
         return self._abilities
 
 
-ModData = NamedTuple(
-    'ModData', [('states_granted', Tuple[State, ...]),
-                ('attribute_modifiers', Dict[AttributeType, int]),
-                ('abilities_granted', Tuple[Ability, ...])])
-
-ModData.__new__.__defaults__ = ((), {}, ())  # type: ignore
+class ModData(NamedTuple):
+    states_granted: Tuple[State, ...] = ()
+    attribute_modifiers: Dict[AttributeType, int] = {}
+    abilities_granted: Tuple[Ability, ...] = ()

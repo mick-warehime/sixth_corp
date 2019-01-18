@@ -2,7 +2,6 @@
 from enum import Enum
 from typing import NamedTuple, Tuple
 
-from characters.ability_examples import FireLaser
 from characters.chassis_examples import ChassisData, ChassisTypes
 from characters.mod_examples import ModTypes
 from characters.mods_base import ModData
