@@ -1,4 +1,3 @@
-import random
 from typing import Sequence
 
 from characters.character_base import Character
@@ -32,12 +31,14 @@ class CombatScene(Scene):
 
         self.selected: Character = None
         self.current_moves: Sequence[str] = None
+        self._set_targets()
 
     def enemy(self) -> Character:
         return self._enemy
 
     def set_enemy(self, enemy: Character) -> None:
         self._enemy = enemy
+        self._set_targets()
 
     def is_resolved(self) -> bool:
         return IsDead().check(self._enemy)
@@ -52,11 +53,7 @@ class CombatScene(Scene):
         return IsDead().check(self._player)
 
     def enemy_action(self) -> Move:
-        moves = valid_moves(self.enemy(), (self.enemy(), self._player))
-        if len(moves) < 1:
-            raise NotImplementedError('Enemy should always have moves')
-
-        return random.choice(moves)
+        return self._enemy.select_move()
 
     def player_moves(self, target: Character) -> Sequence[Move]:
         moves: Sequence[Move] = []
@@ -69,3 +66,6 @@ class CombatScene(Scene):
     def select_player_move(self, move: Move) -> None:
         enemy_move = self.enemy_action()
         self.combat_manager.take_turn([move], [enemy_move])
+
+    def _set_targets(self) -> None:
+        self._enemy.set_targets([self._player])
