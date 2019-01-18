@@ -1,5 +1,6 @@
 from characters.character_base import Character
-from characters.character_factory import CharacterTypes, build_character
+from characters.character_examples import CharacterTypes
+from characters.character_factory import build_character
 from world.location_base import Location
 
 _BACKGROUND_IMAGE_LOADING = 'src/images/background_loading.png'
@@ -14,7 +15,7 @@ class LoadingLocation(Location):
 
     # TODO - this doesnt make sense here
     def random_enemy(self) -> Character:
-        return build_character(CharacterTypes.DRONE)
+        return build_character(CharacterTypes.DRONE.data)
 
 
 class MarsLocation(Location):
@@ -23,7 +24,7 @@ class MarsLocation(Location):
         super().__init__(_BACKGROUND_IMAGE_MARS)
 
     def random_enemy(self) -> Character:
-        return build_character(CharacterTypes.DRONE)
+        return build_character(CharacterTypes.DRONE.data)
 
 
 class CityLocation(Location):
@@ -32,4 +33,4 @@ class CityLocation(Location):
         super().__init__(_BACKGROUND_IMAGE_CITY)
 
     def random_enemy(self) -> Character:
-        return build_character(CharacterTypes.DRONE)
+        return build_character(CharacterTypes.DRONE.data)

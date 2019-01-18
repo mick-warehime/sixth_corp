@@ -23,7 +23,7 @@ class CharacterImpl(Character):
                  name: str = 'unnamed Character') -> None:
         super().__init__()
         if chassis is None:
-            chassis = build_chassis(ChassisTypes.WALLE)
+            chassis = build_chassis(ChassisTypes.WALLE.data)
         self._name = name
         self.inventory: InventoryBase = chassis
         self._base_status = BasicStatus()

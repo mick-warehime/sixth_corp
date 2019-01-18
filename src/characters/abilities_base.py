@@ -48,6 +48,3 @@ class Ability(metaclass=abc.ABCMeta):
         if not isinstance(other, self.__class__):
             return self.__class__.__name__ < other.__class__.__name__
         return self._attrs < other._attrs  # type: ignore
-
-    def __hash__(self) -> int:
-        return hash((self.__class__.__name__,) + self._attrs)  # type: ignore

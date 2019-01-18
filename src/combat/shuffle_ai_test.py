@@ -9,8 +9,8 @@ from combat.shuffle_ai import ShuffleAI
 class ShuffleAITest(TestCase):
 
     def test_shuffle_ai_only_provides_usable_moves(self):
-        user = build_character(CharacterTypes.HARMLESS)
-        target = build_character(CharacterTypes.HARMLESS)
+        user = build_character(CharacterTypes.HARMLESS.data)
+        target = build_character(CharacterTypes.HARMLESS.data)
         ai = ShuffleAI(user=user)
         ai.set_targets([target])
 
@@ -19,8 +19,8 @@ class ShuffleAITest(TestCase):
             self.assertIsInstance(move.ability, Harmless)
 
     def test_shuffle_ai_moves_dont_repeat(self):
-        user = build_character(CharacterTypes.HARMLESS)
-        target = build_character(CharacterTypes.HARMLESS)
+        user = build_character(CharacterTypes.HARMLESS.data)
+        target = build_character(CharacterTypes.HARMLESS.data)
         ai = ShuffleAI(user=user)
         ai.set_targets([target])
 
@@ -41,8 +41,8 @@ class ShuffleAITest(TestCase):
             self.assertLess(move_repeat_count, 3)
 
     def test_no_valid_moves_raises(self):
-        user = build_character(CharacterTypes.USELESS)
-        target = build_character(CharacterTypes.USELESS)
+        user = build_character(CharacterTypes.USELESS.data)
+        target = build_character(CharacterTypes.USELESS.data)
         ai = ShuffleAI(user=user)
         ai.set_targets([target])
 
