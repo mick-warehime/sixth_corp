@@ -24,7 +24,9 @@ class Keybindings(object):
                 try:
                     bindings[key] = Event[binding]
                 except KeyError:
-                    raise NotImplementedError('Binding <{}> does not exist. Add Event.{}?'.format(binding, binding))
+                    raise NotImplementedError(
+                        'Binding <{}> does not exist. Add Event.{}?'.format(
+                            binding, binding))
 
         self.bindings = bindings
 
