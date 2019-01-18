@@ -23,10 +23,6 @@ class CombatManager(object):
     def __init__(self, attackers: CombatGroup, defenders: CombatGroup) -> None:
         self._attackers = attackers
         self._defenders = defenders
-        for attacker in attackers:
-            attacker.set_targets(defenders)
-        for defender in defenders:
-            defender.set_targets(attackers)
         self.attackers_moves = self._enumerate_moveset(self._attackers, self._defenders)
         self.defenders_moves = self._enumerate_moveset(self._defenders, self._attackers)
         self.history: Sequence[CombatHistory] = []
