@@ -14,7 +14,7 @@ class CharacterTest(TestCase):
 
     def _character(self):
         chassis = ChassisData({TEMP_DEFAULT_SLOT: 10},
-                              attributes_modifiers={Attribute.MAX_HEALTH: 10})
+                              attribute_modifiers={Attribute.MAX_HEALTH: 10})
         return build_character(CharacterData(chassis))
 
     def test_character_has_attributes(self):
