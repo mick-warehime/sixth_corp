@@ -6,7 +6,6 @@ from characters.character_factory import build_character
 from characters.chassis import TEMP_DEFAULT_SLOT
 from characters.chassis_examples import ChassisData
 from characters.conditions import IsDead
-from characters.mod_examples import HelmOfBeingOnFire, HullPlating
 from characters.mods_base import GenericMod
 from characters.states import Attribute, State
 
@@ -32,14 +31,15 @@ class CharacterTest(TestCase):
         char = self._character()
 
         assert not char.has_state(State.ON_FIRE)
-        char.attempt_pickup(HelmOfBeingOnFire())
+        char.attempt_pickup(GenericMod(states_granted=State.ON_FIRE))
         assert char.has_state(State.ON_FIRE)
 
     def test_mods_affect_max_attribute(self):
         char = self._character()
         max_health = char.get_attribute(Attribute.MAX_HEALTH)
         bonus = 5
-        char.attempt_pickup(HullPlating(bonus))
+        char.attempt_pickup(
+            GenericMod(attribute_modifiers={Attribute.MAX_HEALTH: bonus}))
 
         assert char.get_attribute(Attribute.MAX_HEALTH) == max_health + bonus
 
