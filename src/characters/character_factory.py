@@ -1,5 +1,3 @@
-from typing import Union
-
 from characters.character_examples import CharacterData
 from characters.character_impl import CharacterImpl
 from characters.character_position import Position
