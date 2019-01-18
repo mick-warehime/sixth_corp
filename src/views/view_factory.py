@@ -15,6 +15,7 @@ class SceneViewType(Enum):
     Combat = 'combat'
     Decision = 'decision'
     Settings = 'settings'
+    Inventory = 'inventory'
 
 
 def build_scene_view(view_type: SceneViewType, scene: Scene) -> View:
@@ -23,6 +24,8 @@ def build_scene_view(view_type: SceneViewType, scene: Scene) -> View:
     elif view_type == SceneViewType.Decision:
         artists = [BackgroundArtist(), DecisionArtist()]
     elif view_type == SceneViewType.Settings:
+        artists = [SettingsArtist()]
+    elif view_type == SceneViewType.Inventory:
         artists = [SettingsArtist()]
     else:
         raise ValueError('No such view type: {}'.format(view_type))

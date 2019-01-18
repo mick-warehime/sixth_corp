@@ -30,3 +30,7 @@ class OverlayArtist(SceneArtist):
         x_scene = int(width / 2 + 100)
         y_scene = int(height / 2 - 5)
         screen.render_text(scene_text, 22, x_scene, y_scene, WHITE)
+
+        # key hints
+        screen.render_text('i: Inventory', 28, 20, 50, WHITE)
+        screen.render_text('x: Settings', 28, 1050, 15, WHITE)
