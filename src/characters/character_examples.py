@@ -7,22 +7,18 @@ from characters.mod_examples import ModTypes
 from characters.mods_base import ModData
 from combat.ai_factory import AIType
 
-CharacterData = NamedTuple(
-    'EnemyData', [('chassis_data', ChassisData),
-                  ('name', str),
-                  ('mods', Tuple[ModData, ...]),
-                  ('image_path', str),
-                  ('ai_type', AIType)])
 
-# Sets default values.
-CharacterData.__new__.__defaults__ = ('', (),  # type: ignore
-                                      'src/images/drone.png', AIType.Random)
+class CharacterData(NamedTuple):
+    chassis_data: ChassisData
+    name: str = 'unnamed Character'
+    mods: Tuple[ModData, ...] = ()
+    image_path: str = 'src/images/drone.png'
+    ai_type: AIType = AIType.Random
 
-_DRONE = CharacterData(ChassisTypes.DRONE.data, 'drone')  # type: ignore
-_HARMLESS = CharacterData(ChassisTypes.HARMLESS.data,  # type: ignore
-                          'harmless enemy')
-_USELESS = CharacterData(ChassisTypes.USELESS.data,  # type: ignore
-                         'useless enemy')
+
+_DRONE = CharacterData(ChassisTypes.DRONE.data, 'drone')
+_HARMLESS = CharacterData(ChassisTypes.HARMLESS.data, 'harmless enemy')
+_USELESS = CharacterData(ChassisTypes.USELESS.data, 'useless enemy')
 
 _HUMAN_PLAYER = CharacterData(ChassisTypes.WALLE.data, 'Player 1',
                               (ModTypes.SMALL_LASER.data,
