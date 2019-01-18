@@ -1,7 +1,12 @@
+import random
 from typing import Sequence
 
 from characters.character_base import Character
 from characters.conditions import IsDead
+from characters.player import get_player
+from combat.combat_manager_base import CombatManager
+from combat.moves_base import Move
+from combat.moves_factory import valid_moves
 from scenes.scenes_base import Effect, Resolution, Scene
 from world.world import get_location
 
@@ -21,7 +26,10 @@ class CombatScene(Scene):
 
     def __init__(self) -> None:
         super().__init__()
+        self._player = get_player()
         self._enemy: Character = get_location().random_enemy()
+        self.combat_manager = CombatManager([self._player], [self._enemy])
+
         self.selected: Character = None
         self.current_moves: Sequence[str] = None
 
@@ -39,3 +47,25 @@ class CombatScene(Scene):
 
     def __str__(self) -> str:
         return 'CombatScene(enemy = {})'.format(str(self.enemy()))
+
+    def is_game_over(self) -> bool:
+        return IsDead().check(self._player)
+
+    def enemy_action(self) -> Move:
+        moves = valid_moves(self.enemy(), (self.enemy(), self._player))
+        if len(moves) < 1:
+            raise NotImplementedError('Enemy should always have moves')
+
+        return random.choice(moves)
+
+    def player_moves(self, target: Character) -> Sequence[Move]:
+        moves: Sequence[Move] = []
+        if target is not None:
+            moves = valid_moves(self._player, (target,))
+        self.current_moves = moves
+        self.selected = target
+        return moves
+
+    def select_player_move(self, move: Move) -> None:
+        enemy_move = self.enemy_action()
+        self.combat_manager.take_turn([move], [enemy_move])
