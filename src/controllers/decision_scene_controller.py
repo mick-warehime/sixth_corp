@@ -9,14 +9,12 @@ from events.events_base import (ControllerActivatedEvent, Event, EventType,
 from scenes.decision_scene import DecisionScene
 from scenes.scene_examples import game_over
 from views.view_factory import SceneViewType, build_scene_view
-from world.world import get_world
 
 
 class DecisionSceneController(Controller):
 
     def __init__(self, scene: DecisionScene) -> None:
         super().__init__()
-        self._world = get_world()
         self._scene = scene
         self.view = build_scene_view(SceneViewType.Decision, scene)
         self.update()

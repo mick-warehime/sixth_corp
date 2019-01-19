@@ -8,13 +8,16 @@ from events import event_utils
 from events.events_base import EventManager
 from scenes.combat_scene import CombatScene
 from scenes.decision_scene import DecisionScene
-
 # Needs to be called for game to run.
+from world.locations import MarsLocation
+from world.world import set_location
+
 initialize_pygame(no_UI=True)
 # To ensure determinism.
 random.seed(11)
 
 decision_scene = DecisionScene('dummy prompt', {})
+set_location(MarsLocation())
 combat_scene = CombatScene()
 
 
