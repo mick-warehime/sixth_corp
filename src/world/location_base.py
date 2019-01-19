@@ -16,7 +16,7 @@ class Location(EventListener):
         return self._background_image_path
 
     def random_enemy(self) -> Character:
-        raise NotImplemented('Base class must implement random_enemy.')
+        raise NotImplementedError('Base class must implement random_enemy.')
 
     def notify(self, event: EventType) -> None:
         if isinstance(event, NewSceneEvent):
