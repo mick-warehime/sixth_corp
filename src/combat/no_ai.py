@@ -5,4 +5,4 @@ from combat.moves_base import Move
 class NoAI(AIImpl):
 
     def select_move(self) -> Move:
-        assert 'No AI has no moves.'
+        raise NotImplementedError('No AI has no moves.')

@@ -14,7 +14,7 @@ SCENE_CONTROLLERS = {DecisionScene: DecisionSceneController,
 INTERUPT_CONTROLLERS = [Event.SETTINGS, Event.INVENTORY]
 
 
-def interupt_controller(event: EventType) -> Controller:
+def interrupt_controller(event: EventType) -> Controller:
     if event == Event.SETTINGS:
         return SettingsController()
     elif event == Event.INVENTORY:
@@ -32,12 +32,12 @@ class SceneMachine(EventListener):
         self._game_controller: Controller = None
         self._prev_controller: Controller = None
         self._set_next_scene(loading_scene())
-        self._interupted = False
-        self._interupting_event: EventType = None
+        self._interrupted = False
+        self._interrupting_event: EventType = None
 
     def notify(self, event: EventType) -> None:
         if event in INTERUPT_CONTROLLERS:
-            self._toggle_interupt(event)
+            self._toggle_interrupt(event)
         if isinstance(event, NewSceneEvent):
             self._set_next_scene(event.scene)
 
@@ -49,20 +49,21 @@ class SceneMachine(EventListener):
         self.controller = controller(scene)
         self._game_controller = self.controller
 
-    def _toggle_interupt(self, event: EventType) -> None:
-        if not self._interupted or self._interupting_event != event:
-            # Game was not interupted or we are going from one interupt to the next.
-            self.controller = interupt_controller(event)
+    def _toggle_interrupt(self, event: EventType) -> None:
+        if not self._interrupted or self._interrupting_event != event:
+            # Game was not interrupted or we are going from one interrupt to the
+            # next.
+            self.controller = interrupt_controller(event)
             self._prev_controller = self._game_controller
-            self._interupted = True
-            self._interupting_event = event
+            self._interrupted = True
+            self._interrupting_event = event
         else:
             # Resume gameplay
             temp_ctrl = self.controller
             self.controller = self._game_controller
             self._prev_controller = temp_ctrl
-            self._interupted = False
-            self._interupting_event = None
+            self._interrupted = False
+            self._interrupting_event = None
 
         self.controller.activate()
         self._prev_controller.deactivate()

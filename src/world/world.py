@@ -1,31 +1,19 @@
 from world.location_base import Location
 from world.locations import LoadingLocation
 
-
-class World(object):
-    def __init__(self) -> None:
-        self.location: Location = LoadingLocation()
+_location: Location = LoadingLocation()
 
 
-_world = None
-
-
-def get_world() -> World:
-    global _world
-    if _world is None:
-        reset_world()
-    return _world
-
-
-def reset_world() -> None:
-    global _world
-    _world = World()
+def reset_location() -> None:
+    global _location
+    _location = LoadingLocation()
 
 
 def get_location() -> Location:
-    return get_world().location
+    global _location
+    return _location
 
 
 def set_location(location: Location) -> None:
-    global _world
-    _world.location = location
+    global _location
+    _location = location
