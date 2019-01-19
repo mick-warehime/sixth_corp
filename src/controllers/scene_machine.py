@@ -14,7 +14,7 @@ SCENE_CONTROLLERS = {DecisionScene: DecisionSceneController,
 INTERUPT_CONTROLLERS = [Event.SETTINGS, Event.INVENTORY]
 
 
-def interupt_controller(event: EventType) -> Controller:
+def interrupt_controller(event: EventType) -> Controller:
     if event == Event.SETTINGS:
         return SettingsController()
     elif event == Event.INVENTORY:
@@ -53,7 +53,7 @@ class SceneMachine(EventListener):
         if not self._interrupted or self._interrupting_event != event:
             # Game was not interrupted or we are going from one interrupt to the
             # next.
-            self.controller = interupt_controller(event)
+            self.controller = interrupt_controller(event)
             self._prev_controller = self._game_controller
             self._interrupted = True
             self._interrupting_event = event
