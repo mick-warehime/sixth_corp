@@ -13,9 +13,8 @@ class LoadingLocation(Location):
     def __init__(self) -> None:
         super().__init__(_BACKGROUND_IMAGE_LOADING)
 
-    # TODO - this doesnt make sense here
     def random_enemy(self) -> Character:
-        return build_character(CharacterTypes.DRONE.data)
+        raise NotImplementedError('LoadingLocation should not give enemies.')
 
 
 class MarsLocation(Location):
