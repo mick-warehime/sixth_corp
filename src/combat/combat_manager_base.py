@@ -23,11 +23,14 @@ class CombatManager(object):
     def __init__(self, attackers: CombatGroup, defenders: CombatGroup) -> None:
         self._attackers = attackers
         self._defenders = defenders
-        self.attackers_moves = self._enumerate_moveset(self._attackers, self._defenders)
-        self.defenders_moves = self._enumerate_moveset(self._defenders, self._attackers)
+        self.attackers_moves = self._enumerate_moveset(self._attackers,
+                                                       self._defenders)
+        self.defenders_moves = self._enumerate_moveset(self._defenders,
+                                                       self._attackers)
         self.history: Sequence[CombatHistory] = []
 
-    def take_turn(self, attack_moves: GroupMove, defense_moves: GroupMove) -> None:
+    def take_turn(self, attack_moves: GroupMove,
+                  defense_moves: GroupMove) -> None:
         self._execute_moves(attack_moves, attacker=True)
         self._execute_moves(defense_moves, attacker=False)
 
@@ -59,7 +62,8 @@ class CombatManager(object):
     def defenders_lose(self) -> bool:
         return self._all_dead(self._defenders)
 
-    def _enumerate_moveset(self, attackers: CombatGroup, defenders: CombatGroup) -> GroupMoveSet:
+    def _enumerate_moveset(self, attackers: CombatGroup,
+                           defenders: CombatGroup) -> GroupMoveSet:
         'All possible combinations of attack moves targeting all possible defenders'
         moveset = []
         for attacker in attackers:
@@ -79,4 +83,3 @@ class CombatManager(object):
             return self._defenders
 
         assert False, 'Dont call winners if game is not done'
-        return []
