@@ -15,9 +15,6 @@ class Slots(Enum):
     STORAGE = 'storage'
 
 
-TEMP_DEFAULT_SLOT = Slots.STORAGE
-
-
 class Mod(metaclass=abc.ABCMeta):
     """Grants state(s) or modifies character attributes."""
 
