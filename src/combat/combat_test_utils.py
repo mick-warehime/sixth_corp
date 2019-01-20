@@ -3,15 +3,15 @@ from characters.character_examples import CharacterData, CharacterTypes
 from characters.character_factory import build_character
 from characters.chassis_examples import ChassisData
 from characters.mod_examples import FireLaser
-from characters.mods_base import TEMP_DEFAULT_SLOT, ModData
+from characters.mods_base import ModData, Slots
 from characters.states import Attribute
 from combat.ai_factory import AIType
 
 
 def get_combatant(health, abilities, name, ai_type=AIType.Human) -> Character:
     mod_data = ModData(attribute_modifiers={Attribute.MAX_HEALTH: health},
-                       abilities_granted=abilities)
-    chassis_data = ChassisData({TEMP_DEFAULT_SLOT: 10})
+                       abilities_granted=abilities, valid_slots=(Slots.ARMS,))
+    chassis_data = ChassisData({Slots.ARMS: 10})
     char_data = CharacterData(chassis_data, name, (mod_data,), '', ai_type)
 
     return build_character(char_data)

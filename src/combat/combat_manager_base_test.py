@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from characters.ability_examples import FireLaser, Repair
-from characters.mods_base import GenericMod
+from characters.mods_base import GenericMod, Slots
 from characters.states import Attribute
 from combat.combat_manager_base import CombatManager
 from combat.combat_test_utils import create_combat_group
@@ -44,7 +44,8 @@ class CombatManagerTest(TestCase):
     def test_enumerates_attack_and_defense(self):
         attacker = create_combat_group(1, base_name='attacker')
         defender = create_combat_group(1, base_name='defender')
-        defender[0].attempt_pickup(GenericMod(abilities_granted=(Repair(5))))
+        defender[0].attempt_pickup(
+            GenericMod(abilities_granted=(Repair(5)), valid_slots=Slots.ARMS))
         defender[0].increment_attribute(Attribute.HEALTH, -5)
         manager = CombatManager(attackers=attacker, defenders=defender)
 
@@ -71,7 +72,8 @@ class CombatManagerTest(TestCase):
         self.assertEqual(len(defense_moves[1]), 1)
 
         # each defense move is just the laser ability
-        for expected_move, defender_moveset in zip([FireLaser, Repair], defense_moves):
+        for expected_move, defender_moveset in zip([FireLaser, Repair],
+                                                   defense_moves):
             for move in defender_moveset:
                 self.assertIsInstance(move.ability, expected_move)
 
@@ -80,7 +82,8 @@ class CombatManagerTest(TestCase):
         damage = 2
         ndefenders = 2
         attacker = create_combat_group(1, health=health, damage=damage)
-        two_defenders = create_combat_group(ndefenders, health=health, damage=damage)
+        two_defenders = create_combat_group(ndefenders, health=health,
+                                            damage=damage)
         manager = CombatManager(attackers=attacker, defenders=two_defenders)
 
         defense_moves = manager.defenders_moves
@@ -92,8 +95,10 @@ class CombatManagerTest(TestCase):
         self.assertEqual(attacker_health, health - ndefenders * damage)
 
         # attacker only hits one defender
-        first_defender_health = attack_moves[0][0].target.get_attribute(Attribute.HEALTH)
-        second_defender_health = attack_moves[1][0].target.get_attribute(Attribute.HEALTH)
+        first_defender_health = attack_moves[0][0].target.get_attribute(
+            Attribute.HEALTH)
+        second_defender_health = attack_moves[1][0].target.get_attribute(
+            Attribute.HEALTH)
         self.assertEqual(first_defender_health, health - damage)
         self.assertEqual(second_defender_health, health)
 
@@ -102,7 +107,8 @@ class CombatManagerTest(TestCase):
         damage = 2
         ndefenders = 2
         attacker = create_combat_group(1, health=health, damage=damage)
-        two_defenders = create_combat_group(ndefenders, health=health, damage=damage)
+        two_defenders = create_combat_group(ndefenders, health=health,
+                                            damage=damage)
         manager = CombatManager(attackers=attacker, defenders=two_defenders)
 
         defense_moves = manager.defenders_moves
@@ -126,7 +132,8 @@ class CombatManagerTest(TestCase):
         damage = 2
         ndefenders = 2
         attacker = create_combat_group(1, health=health, damage=damage)
-        two_defenders = create_combat_group(ndefenders, health=health, damage=damage)
+        two_defenders = create_combat_group(ndefenders, health=health,
+                                            damage=damage)
         manager = CombatManager(attackers=attacker, defenders=two_defenders)
 
         defense_moves = manager.defenders_moves

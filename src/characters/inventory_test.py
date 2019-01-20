@@ -5,10 +5,10 @@ import pytest
 from characters.ability_examples import FireLaser, Repair
 from characters.chassis import Chassis
 from characters.inventory import BasicInventory
-from characters.mods_base import TEMP_DEFAULT_SLOT, GenericMod
+from characters.mods_base import GenericMod, Slots
 from characters.states import Attribute, State
 
-factories = (BasicInventory, partial(Chassis, {TEMP_DEFAULT_SLOT: 4}))
+factories = (BasicInventory, partial(Chassis, {Slots.STORAGE: 4}))
 
 
 @pytest.mark.parametrize('make_inventory', factories)
@@ -21,31 +21,6 @@ def test_inventory_storage_sizes(make_inventory):
     assert len(list(inventory.all_mods())) == 1
     inventory.store(GenericMod())
     assert len(list(inventory.all_mods())) == 2
-
-
-def test_chassis_cannot_store_same_mod_twice():
-    chassis = Chassis({TEMP_DEFAULT_SLOT: 2})
-    mod = GenericMod()
-
-    chassis.store(mod)
-    assert not chassis.can_store(mod)
-
-
-def test_chassis_cannot_store_when_full():
-    chassis = Chassis({TEMP_DEFAULT_SLOT: 2})
-
-    chassis.store(GenericMod())
-    chassis.store(GenericMod())
-    assert not chassis.can_store(GenericMod())
-
-
-def test_chassis_base_mod_included():
-    base_mod = GenericMod(states_granted=State.ON_FIRE,
-                          attribute_modifiers={Attribute.CREDITS: 3},
-                          abilities_granted=FireLaser(3))
-    chassis = Chassis({}, base_mod=base_mod)
-
-    assert len(list(chassis.all_mods())) == 1
 
 
 @pytest.mark.parametrize('make_inventory', factories)
@@ -71,13 +46,16 @@ def test_basic_inventory_mods(make_inventory):
     inventory.store(GenericMod(attribute_modifiers={Attribute.MAX_HEALTH: 3},
                                abilities_granted=Repair(3)))
 
-    mods = list(inventory.mods(lambda x: bool(x.abilities_granted())))
+    mods = list(inventory.mods(lambda x: bool(x.abilities_granted()),
+                               active_only=False))
     assert len(mods) == 2
 
-    mods = list(inventory.mods(lambda x: bool(x.states_granted())))
+    mods = list(
+        inventory.mods(lambda x: bool(x.states_granted()), active_only=False))
     assert len(mods) == 1
 
-    mods = list(inventory.mods(lambda x: bool(x.attribute_modifiers())))
+    mods = list(inventory.mods(lambda x: bool(x.attribute_modifiers()),
+                               active_only=False))
     assert len(mods) == 3
 
 
