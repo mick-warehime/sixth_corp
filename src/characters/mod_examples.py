@@ -21,21 +21,6 @@ class ModTypes(Enum):
         return _mod_types_to_data[self]
 
 
-class BasicLaser(Mod):
-
-    def __init__(self, damage: int = 2) -> None:
-        self._ability = FireLaser(damage)
-
-    def states_granted(self) -> Sequence[State]:
-        return ()
-
-    def attribute_modifiers(self) -> Dict[AttributeType, int]:
-        return {}
-
-    def abilities_granted(self) -> Sequence[Ability]:
-        return self._ability,
-
-
 _mod_types_to_data = {
     ModTypes.BASIC_HULL_PLATING: ModData(
         attribute_modifiers={Attribute.MAX_HEALTH: 3}),
