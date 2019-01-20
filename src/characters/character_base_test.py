@@ -3,10 +3,9 @@ from unittest import TestCase
 from characters.ability_examples import FireLaser
 from characters.character_examples import CharacterData
 from characters.character_factory import build_character
-from characters.chassis import TEMP_DEFAULT_SLOT
 from characters.chassis_examples import ChassisData
 from characters.conditions import IsDead
-from characters.mods_base import GenericMod
+from characters.mods_base import GenericMod, TEMP_DEFAULT_SLOT
 from characters.states import Attribute, State
 
 

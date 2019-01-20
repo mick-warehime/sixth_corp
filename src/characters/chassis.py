@@ -1,21 +1,9 @@
 """Implementation of the Chassis"""
-from enum import Enum
 from functools import reduce
 from typing import Dict, Iterable, List
 
 from characters.inventory import InventoryBase
-from characters.mods_base import Mod
-
-
-class Slots(Enum):
-    HEAD = 'head'
-    CHEST = 'chest'
-    LEGS = 'legs'
-    ARMS = 'arms'
-    STORAGE = 'storage'
-
-
-TEMP_DEFAULT_SLOT = Slots.HEAD
+from characters.mods_base import Mod, Slots, TEMP_DEFAULT_SLOT
 
 
 class Chassis(InventoryBase):
