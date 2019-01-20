@@ -3,9 +3,9 @@ from functools import partial
 import pytest
 
 from characters.ability_examples import FireLaser, Repair
-from characters.chassis import TEMP_DEFAULT_SLOT, Chassis
+from characters.chassis import Chassis
 from characters.inventory import BasicInventory
-from characters.mods_base import GenericMod
+from characters.mods_base import TEMP_DEFAULT_SLOT, GenericMod
 from characters.states import Attribute, State
 
 factories = (BasicInventory, partial(Chassis, {TEMP_DEFAULT_SLOT: 4}))
@@ -55,7 +55,7 @@ def test_basic_inventory_removal(make_inventory):
     inventory = make_inventory()
 
     inventory.store(mod)
-    inventory.remove(mod)
+    inventory.remove_mod(mod)
 
     assert len(list(inventory.all_mods())) == 0
 

@@ -3,7 +3,7 @@ from typing import Dict, NamedTuple, Tuple
 
 from characters.abilities_base import Ability
 from characters.ability_examples import FireLaser, Harmless, Repair, Useless
-from characters.chassis import Slots
+from characters.mods_base import Slots
 from characters.states import Attribute, AttributeType, Skill, State
 
 
@@ -15,8 +15,8 @@ class ChassisData(NamedTuple):
 
 
 _WALLE = ChassisData(
-    slot_capacities={Slots.HEAD: 10, Slots.CHEST: 1, Slots.ARMS: 2,
-                     Slots.STORAGE: 1},
+    slot_capacities={Slots.HEAD: 1, Slots.CHEST: 1, Slots.ARMS: 2,
+                     Slots.STORAGE: 10},
     attribute_modifiers={Attribute.MAX_HEALTH: 10, Skill.STEALTH: 1,
                          Skill.MECHANICS: 1},
     abilities_granted=(Repair(5),))

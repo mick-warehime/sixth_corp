@@ -29,7 +29,7 @@ class InventoryBase(metaclass=abc.ABCMeta):
         self._store(mod)
 
     @abc.abstractmethod
-    def remove(self, mod: Mod) -> None:
+    def remove_mod(self, mod: Mod) -> None:
         """Remove a mod from the inventory."""
 
     @abc.abstractmethod
@@ -70,7 +70,7 @@ class BasicInventory(InventoryBase):
     def _store(self, mod: Mod) -> None:
         self._mods.append(mod)
 
-    def remove(self, mod: Mod) -> None:
+    def remove_mod(self, mod: Mod) -> None:
         assert mod in self._mods, 'mod {} not in inventory.'.format(mod)
         self._mods.remove(mod)
 
