@@ -34,10 +34,17 @@ class InventoryBase(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def all_mods(self) -> Iterable[Mod]:
-        """Iterate over all mods in storage."""
+        """Iterate over all mods, including inactive mods."""
 
-    def mods(self, check: Callable[[Mod], bool]) -> Iterable[Mod]:
+    @abc.abstractmethod
+    def all_active_mods(self) -> Iterable[Mod]:
+        """Iterate over all active mods."""
+
+    def mods(self, check: Callable[[Mod], bool],
+             active_only: bool = True) -> Iterable[Mod]:
         """All mods satisfying a given boolean function."""
+        if active_only:
+            return (m for m in self.all_active_mods() if check(m))
         return (m for m in self.all_mods() if check(m))
 
     def grants_state(self, state: State) -> bool:
@@ -76,3 +83,5 @@ class BasicInventory(InventoryBase):
 
     def all_mods(self) -> Iterable[Mod]:
         return (m for m in self._mods)
+
+    all_active_mods = all_mods

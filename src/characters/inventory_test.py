@@ -46,13 +46,16 @@ def test_basic_inventory_mods(make_inventory):
     inventory.store(GenericMod(attribute_modifiers={Attribute.MAX_HEALTH: 3},
                                abilities_granted=Repair(3)))
 
-    mods = list(inventory.mods(lambda x: bool(x.abilities_granted())))
+    mods = list(inventory.mods(lambda x: bool(x.abilities_granted()),
+                               active_only=False))
     assert len(mods) == 2
 
-    mods = list(inventory.mods(lambda x: bool(x.states_granted())))
+    mods = list(
+        inventory.mods(lambda x: bool(x.states_granted()), active_only=False))
     assert len(mods) == 1
 
-    mods = list(inventory.mods(lambda x: bool(x.attribute_modifiers())))
+    mods = list(inventory.mods(lambda x: bool(x.attribute_modifiers()),
+                               active_only=False))
     assert len(mods) == 3
 
 

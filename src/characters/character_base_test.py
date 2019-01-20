@@ -8,11 +8,13 @@ from characters.conditions import IsDead
 from characters.mods_base import GenericMod, Slots
 from characters.states import Attribute, State
 
+_ACTIVE_SLOT = Slots.ARMS
+
 
 class CharacterTest(TestCase):
 
     def _character(self):
-        chassis = ChassisData({Slots.STORAGE: 10},
+        chassis = ChassisData({Slots.STORAGE: 10, _ACTIVE_SLOT: 10},
                               attribute_modifiers={Attribute.MAX_HEALTH: 10})
         return build_character(CharacterData(chassis))
 
@@ -30,7 +32,8 @@ class CharacterTest(TestCase):
         char = self._character()
 
         assert not char.has_state(State.ON_FIRE)
-        char.attempt_pickup(GenericMod(states_granted=State.ON_FIRE))
+        char.attempt_pickup(
+            GenericMod(states_granted=State.ON_FIRE, valid_slots=_ACTIVE_SLOT))
         assert char.has_state(State.ON_FIRE)
 
     def test_mods_affect_max_attribute(self):
@@ -38,7 +41,8 @@ class CharacterTest(TestCase):
         max_health = char.get_attribute(Attribute.MAX_HEALTH)
         bonus = 5
         char.attempt_pickup(
-            GenericMod(attribute_modifiers={Attribute.MAX_HEALTH: bonus}))
+            GenericMod(attribute_modifiers={Attribute.MAX_HEALTH: bonus},
+                       valid_slots=_ACTIVE_SLOT))
 
         assert char.get_attribute(Attribute.MAX_HEALTH) == max_health + bonus
 
@@ -57,5 +61,6 @@ class CharacterTest(TestCase):
         ability = FireLaser(12)
         assert ability not in char.abilities()
 
-        char.attempt_pickup(GenericMod(abilities_granted=ability))
+        char.attempt_pickup(
+            GenericMod(abilities_granted=ability, valid_slots=_ACTIVE_SLOT))
         assert ability in char.abilities()
