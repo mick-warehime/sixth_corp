@@ -1,7 +1,7 @@
 """Base implementation of mods and inventory."""
 import abc
 from enum import Enum
-from typing import Dict, NamedTuple, Sequence, Tuple, Union, Container
+from typing import Dict, NamedTuple, Sequence, Tuple, Union, Container, Set
 
 from characters.abilities_base import Ability
 from characters.states import AttributeType, State
@@ -34,8 +34,17 @@ class Mod(metaclass=abc.ABCMeta):
         """Abilities granted by this mod."""
 
     @abc.abstractmethod
-    def valid_slots(self) -> Sequence[Slots]:
-        """Slots in which this mod may be stored."""
+    def _valid_slots(self) -> Set[Slots]:
+        """Slots in which this mod may be stored, excluding STORAGE."""
+
+    def valid_slots(self) -> Set[Slots]:
+        """Slots in which this mod may be stored.
+
+        By default, all mods can be stored in the STORAGE slot.
+        """
+        slots = self._valid_slots().copy()
+        slots.add(Slots.STORAGE)
+        return slots
 
 
 class GenericMod(Mod):
@@ -54,7 +63,7 @@ class GenericMod(Mod):
         if isinstance(valid_slots, Slots):
             valid_slots = (valid_slots,)
 
-        self._valid_slots = set(valid_slots)
+        self._slots = set(valid_slots)
         self._states = states_granted
         self._attr_mods = attribute_modifiers.copy()
         self._abilities = abilities_granted
@@ -68,8 +77,8 @@ class GenericMod(Mod):
     def abilities_granted(self) -> Sequence[Ability]:
         return self._abilities
 
-    def valid_slots(self) -> Container[Slots]:
-        return self._valid_slots
+    def _valid_slots(self) -> Set[Slots]:
+        return self._slots
 
 
 class ModData(NamedTuple):

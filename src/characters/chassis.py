@@ -4,7 +4,7 @@ from functools import reduce
 from typing import Dict, Iterable, List
 
 from characters.inventory import InventoryBase
-from characters.mods_base import Mod, Slots, TEMP_DEFAULT_SLOT
+from characters.mods_base import Mod, Slots
 
 
 class Chassis(InventoryBase):
@@ -42,9 +42,12 @@ class Chassis(InventoryBase):
         logging.debug('INVENTORY: Storing mod in slot {}.'.format(slot.value))
 
     def remove_mod(self, mod: Mod) -> None:
-        slot = TEMP_DEFAULT_SLOT
-        if mod in self._slots[slot]:
-            self._slots[slot].remove(mod)
+
+        for slot in mod.valid_slots():
+            if mod in self._slots[slot]:
+                self._slots[slot].remove(mod)
+                logging.debug(
+                    'INVENTORY: Mod removed from slot {}'.format(slot.value))
 
     def all_mods(self) -> Iterable[Mod]:
         # noinspection PyTypeChecker
