@@ -5,10 +5,10 @@ import pytest
 from characters.ability_examples import FireLaser, Repair
 from characters.chassis import Chassis
 from characters.inventory import BasicInventory
-from characters.mods_base import TEMP_DEFAULT_SLOT, GenericMod
+from characters.mods_base import GenericMod, Slots
 from characters.states import Attribute, State
 
-factories = (BasicInventory, partial(Chassis, {TEMP_DEFAULT_SLOT: 4}))
+factories = (BasicInventory, partial(Chassis, {Slots.STORAGE: 4}))
 
 
 @pytest.mark.parametrize('make_inventory', factories)
@@ -24,19 +24,11 @@ def test_inventory_storage_sizes(make_inventory):
 
 
 def test_chassis_cannot_store_same_mod_twice():
-    chassis = Chassis({TEMP_DEFAULT_SLOT: 2})
+    chassis = Chassis({Slots.STORAGE: 2})
     mod = GenericMod()
 
     chassis.store(mod)
     assert not chassis.can_store(mod)
-
-
-def test_chassis_cannot_store_when_full():
-    chassis = Chassis({TEMP_DEFAULT_SLOT: 2})
-
-    chassis.store(GenericMod())
-    chassis.store(GenericMod())
-    assert not chassis.can_store(GenericMod())
 
 
 def test_chassis_base_mod_included():

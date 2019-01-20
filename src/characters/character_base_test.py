@@ -5,14 +5,14 @@ from characters.character_examples import CharacterData
 from characters.character_factory import build_character
 from characters.chassis_examples import ChassisData
 from characters.conditions import IsDead
-from characters.mods_base import TEMP_DEFAULT_SLOT, GenericMod
+from characters.mods_base import GenericMod, Slots
 from characters.states import Attribute, State
 
 
 class CharacterTest(TestCase):
 
     def _character(self):
-        chassis = ChassisData({TEMP_DEFAULT_SLOT: 10},
+        chassis = ChassisData({Slots.STORAGE: 10},
                               attribute_modifiers={Attribute.MAX_HEALTH: 10})
         return build_character(CharacterData(chassis))
 
