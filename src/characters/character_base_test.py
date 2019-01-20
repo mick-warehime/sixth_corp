@@ -5,7 +5,7 @@ from characters.character_examples import CharacterData
 from characters.character_factory import build_character
 from characters.chassis_examples import ChassisData
 from characters.conditions import IsDead
-from characters.mods_base import GenericMod, TEMP_DEFAULT_SLOT
+from characters.mods_base import TEMP_DEFAULT_SLOT, GenericMod
 from characters.states import Attribute, State
 
 

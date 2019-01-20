@@ -1,7 +1,7 @@
 """Tests for the Chassis class"""
 from characters.chassis_examples import ChassisData
 from characters.chassis_factory import build_chassis
-from characters.mods_base import Slots, GenericMod
+from characters.mods_base import GenericMod, Slots
 
 
 def test_chassis_can_store_in_storage_by_default():

@@ -1,7 +1,7 @@
 """Base implementation of mods and inventory."""
 import abc
 from enum import Enum
-from typing import Dict, NamedTuple, Sequence, Tuple, Union, Container, Set
+from typing import Dict, NamedTuple, Sequence, Set, Tuple, Union
 
 from characters.abilities_base import Ability
 from characters.states import AttributeType, State

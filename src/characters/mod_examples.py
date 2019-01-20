@@ -1,5 +1,6 @@
 """Simple example mods."""
 from enum import Enum
+
 from characters.ability_examples import FireLaser
 from characters.mods_base import ModData, Slots
 from characters.states import Attribute, Skill, State
