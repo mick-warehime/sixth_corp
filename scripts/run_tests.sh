@@ -3,4 +3,4 @@
 
 echo -n "unit tests:"
 export PYTHONPATH=${PYTHONPATH}:src
-pytest src
+pytest --cov=src --cov-report term-missing:skip-covered src
