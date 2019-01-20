@@ -23,23 +23,6 @@ def test_inventory_storage_sizes(make_inventory):
     assert len(list(inventory.all_mods())) == 2
 
 
-def test_chassis_cannot_store_same_mod_twice():
-    chassis = Chassis({Slots.STORAGE: 2})
-    mod = GenericMod()
-
-    chassis.store(mod)
-    assert not chassis.can_store(mod)
-
-
-def test_chassis_base_mod_included():
-    base_mod = GenericMod(states_granted=State.ON_FIRE,
-                          attribute_modifiers={Attribute.CREDITS: 3},
-                          abilities_granted=FireLaser(3))
-    chassis = Chassis({}, base_mod=base_mod)
-
-    assert len(list(chassis.all_mods())) == 1
-
-
 @pytest.mark.parametrize('make_inventory', factories)
 def test_basic_inventory_removal(make_inventory):
     mod = GenericMod()
