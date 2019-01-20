@@ -34,7 +34,7 @@ class Mod(metaclass=abc.ABCMeta):
         """Abilities granted by this mod."""
 
     @abc.abstractmethod
-    def valid_slots(self) -> Container[Slots]:
+    def valid_slots(self) -> Sequence[Slots]:
         """Slots in which this mod may be stored."""
 
 

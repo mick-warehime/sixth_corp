@@ -55,7 +55,7 @@ def test_basic_inventory_removal(make_inventory):
     inventory = make_inventory()
 
     inventory.store(mod)
-    inventory.remove(mod)
+    inventory.remove_mod(mod)
 
     assert len(list(inventory.all_mods())) == 0
 

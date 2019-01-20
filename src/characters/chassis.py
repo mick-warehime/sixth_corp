@@ -1,4 +1,5 @@
 """Implementation of the Chassis"""
+import logging
 from functools import reduce
 from typing import Dict, Iterable, List
 
@@ -24,17 +25,23 @@ class Chassis(InventoryBase):
         self._base_mod = base_mod
 
     def can_store(self, mod: Mod) -> bool:
-        # For now we assume every mod goes on the HEAD slot
-        slot = TEMP_DEFAULT_SLOT
-        if len(self._slots[slot]) >= self._slot_capacities[slot]:
+        available_slots = self._open_slots(mod.valid_slots())
+        if not available_slots:
             return False
-        return mod not in self._slots[slot]
+        return all(mod not in self._slots[slot] for slot in available_slots)
+
+    def _open_slots(self, slots: Iterable[Slots]) -> List[Slots]:
+        return [s for s in slots if self._slot_vacant(s)]
+
+    def _slot_vacant(self, slot: Slots) -> bool:
+        return len(self._slots[slot]) < self._slot_capacities[slot]
 
     def _store(self, mod: Mod) -> None:
-        slot = TEMP_DEFAULT_SLOT
+        slot = self._open_slots(mod.valid_slots())[0]
         self._slots[slot].append(mod)
+        logging.debug('INVENTORY: Storing mod in slot {}.'.format(slot.value))
 
-    def remove(self, mod: Mod) -> None:
+    def remove_mod(self, mod: Mod) -> None:
         slot = TEMP_DEFAULT_SLOT
         if mod in self._slots[slot]:
             self._slots[slot].remove(mod)
