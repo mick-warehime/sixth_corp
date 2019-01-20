@@ -11,8 +11,13 @@ def test_chassis_can_store_in_storage_by_default():
     assert storage_only_chassis.can_store(mod)
 
 
-def test_chassis_cannot_store_when_full():
+def test_chassis_can_store_after_making_space():
     chassis = build_chassis(ChassisData({Slots.STORAGE: 1}))
-    chassis.store(GenericMod())
+    mod = GenericMod()
+    chassis.store(mod)
 
-    assert not chassis.can_store(GenericMod())
+    second_mod = GenericMod()
+    assert not chassis.can_store(second_mod)
+    chassis.remove_mod(mod)
+    assert chassis.can_store(second_mod)
+    chassis.remove_mod(second_mod)
