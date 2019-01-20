@@ -62,5 +62,5 @@ class CharacterTest(TestCase):
         assert ability not in char.abilities()
 
         char.attempt_pickup(
-            GenericMod(abilities_granted=ability, valid_slots=_ACTIVE_SLOT))
+            GenericMod(abilities_granted=ability, valid_slots=_ACTIVE_SLOT1111))
         assert ability in char.abilities()

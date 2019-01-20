@@ -38,7 +38,13 @@ class Chassis(InventoryBase):
         return len(self._stored_mods[slot]) < self._slot_capacities[slot]
 
     def _store(self, mod: Mod) -> None:
-        slot = self._open_slots(mod.valid_slots())[0]
+        slots_available = self._open_slots(mod.valid_slots())
+        active_slots_available = set(slots_available) - {Slots.STORAGE}
+        if active_slots_available:
+            slot = active_slots_available.pop()
+        else:
+            slot = Slots.STORAGE
+
         self._stored_mods[slot].append(mod)
         logging.debug('INVENTORY: Storing mod in slot {}.'.format(slot.value))
 
