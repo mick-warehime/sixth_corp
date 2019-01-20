@@ -41,3 +41,26 @@ def test_chassis_base_mod_included():
     chassis = Chassis({}, base_mod=base_mod)
 
     assert len(list(chassis.all_mods())) == 1
+
+
+def test_chassis_stores_in_active_slot_first():
+    chassis = Chassis({Slots.ARMS: 1, Slots.STORAGE: 1})
+
+    fire_mod = GenericMod(states_granted=State.ON_FIRE, valid_slots=Slots.ARMS)
+    chassis.store(fire_mod)
+    assert chassis.grants_state(State.ON_FIRE)
+    assert fire_mod in chassis.all_active_mods()
+
+
+def test_chassis_mods_in_storage_not_active():
+    chassis = Chassis({Slots.ARMS: 1, Slots.STORAGE: 1})
+    mod = GenericMod(valid_slots=Slots.CHEST)
+    chassis.store(mod)
+    assert mod not in chassis.all_active_mods()
+    assert mod in chassis.all_mods()
+
+
+def test_chassis_base_mod_is_active():
+    mod = GenericMod()
+    chassis = Chassis({}, base_mod=mod)
+    assert mod in chassis.all_active_mods()
