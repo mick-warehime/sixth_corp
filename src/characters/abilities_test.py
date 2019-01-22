@@ -10,7 +10,7 @@ from characters.states import Attribute
 
 @pytest.fixture()
 def character():
-    return build_character(CharacterData(ChassisTypes.WALLE.data))
+    return build_character(CharacterData(ChassisTypes.NO_LEGS.data))
 
 
 def test_repair_ability(character):
@@ -25,7 +25,7 @@ def test_repair_ability(character):
 def test_fire_laser(character):
     damage = 3
     fire_laser = FireLaser(damage)
-    other_char = build_character(CharacterData(ChassisTypes.WALLE.data))
+    other_char = build_character(CharacterData(ChassisTypes.NO_LEGS.data))
 
     assert not fire_laser.can_use(character, character)
     assert fire_laser.can_use(character, other_char)

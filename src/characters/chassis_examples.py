@@ -14,14 +14,14 @@ class ChassisData(NamedTuple):
     abilities_granted: Tuple[Ability, ...] = ()
 
 
-_WALLE = ChassisData(
+_NO_LEGS = ChassisData(
     slot_capacities={Slots.HEAD: 1, Slots.CHEST: 1, Slots.ARMS: 2,
                      Slots.STORAGE: 10},
     attribute_modifiers={Attribute.MAX_HEALTH: 10, Skill.STEALTH: 1,
                          Skill.MECHANICS: 1},
     abilities_granted=(Repair(5),))
 
-_DRONE = ChassisData(
+_SINGLE_LASER = ChassisData(
     slot_capacities={Slots.HEAD: 1, Slots.STORAGE: 1},
     states_granted=(State.ON_FIRE,),
     attribute_modifiers={Attribute.MAX_HEALTH: 5},
@@ -40,8 +40,8 @@ _USELESS = ChassisData(
 
 
 class ChassisTypes(Enum):
-    WALLE = 'WallE'
-    DRONE = 'drone'
+    NO_LEGS = 'WallE'
+    SINGLE_LASER = 'drone'
     HARMLESS = 'HARMLESS'
     USELESS = 'USELESS'
 
@@ -54,7 +54,7 @@ class ChassisTypes(Enum):
 
 
 _chassis_type_to_data: Dict[ChassisTypes, ChassisData] = {
-    ChassisTypes.WALLE: _WALLE,
-    ChassisTypes.DRONE: _DRONE,
+    ChassisTypes.NO_LEGS: _NO_LEGS,
+    ChassisTypes.SINGLE_LASER: _SINGLE_LASER,
     ChassisTypes.HARMLESS: _HARMLESS,
     ChassisTypes.USELESS: _USELESS}
