@@ -3,8 +3,8 @@ import abc
 from enum import Enum
 from typing import Dict, NamedTuple, Sequence, Set, Tuple, Union
 
-from characters.abilities_base import Ability
 from characters.states import AttributeType, State
+from characters.subroutines_base import Subroutine
 
 
 class Slots(Enum):
@@ -27,7 +27,7 @@ class Mod(metaclass=abc.ABCMeta):
         """Attribute modifiers granted by this mod."""
 
     @abc.abstractmethod
-    def abilities_granted(self) -> Sequence[Ability]:
+    def subroutines_granted(self) -> Sequence[Subroutine]:
         """Abilities granted by this mod."""
 
     @abc.abstractmethod
@@ -49,21 +49,21 @@ class GenericMod(Mod):
     def __init__(
             self, states_granted: Union[State, Sequence[State]] = (),
             attribute_modifiers: Dict[AttributeType, int] = None,
-            abilities_granted: Union[Ability, Sequence[Ability]] = (),
+            subroutines_granted: Union[Subroutine, Sequence[Subroutine]] = (),
             valid_slots: Union[Slots, Sequence[Slots]] = Slots.STORAGE) -> None:
         if isinstance(states_granted, State):
             states_granted = states_granted,
         if attribute_modifiers is None:
             attribute_modifiers = {}
-        if isinstance(abilities_granted, Ability):
-            abilities_granted = abilities_granted,
+        if isinstance(subroutines_granted, Subroutine):
+            subroutines_granted = subroutines_granted,
         if isinstance(valid_slots, Slots):
             valid_slots = (valid_slots,)
 
         self._slots = set(valid_slots)
         self._states = states_granted
         self._attr_mods = attribute_modifiers.copy()
-        self._abilities = abilities_granted
+        self._subroutines = subroutines_granted
 
     def states_granted(self) -> Sequence[State]:
         return self._states
@@ -71,8 +71,8 @@ class GenericMod(Mod):
     def attribute_modifiers(self) -> Dict[AttributeType, int]:
         return self._attr_mods
 
-    def abilities_granted(self) -> Sequence[Ability]:
-        return self._abilities
+    def subroutines_granted(self) -> Sequence[Subroutine]:
+        return self._subroutines
 
     def _valid_slots(self) -> Set[Slots]:
         return self._slots
@@ -81,5 +81,5 @@ class GenericMod(Mod):
 class ModData(NamedTuple):
     states_granted: Tuple[State, ...] = ()
     attribute_modifiers: Dict[AttributeType, int] = {}
-    abilities_granted: Tuple[Ability, ...] = ()
+    subroutines_granted: Tuple[Subroutine, ...] = ()
     valid_slots: Tuple[Slots, ...] = (Slots.STORAGE,)

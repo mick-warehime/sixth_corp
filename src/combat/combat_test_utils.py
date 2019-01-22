@@ -8,9 +8,9 @@ from characters.states import Attribute
 from combat.ai_factory import AIType
 
 
-def get_combatant(health, abilities, name, ai_type=AIType.Human) -> Character:
+def get_combatant(health, subroutines, name, ai_type=AIType.Human) -> Character:
     mod_data = ModData(attribute_modifiers={Attribute.MAX_HEALTH: health},
-                       abilities_granted=abilities, valid_slots=(Slots.ARMS,))
+                       subroutines_granted=subroutines, valid_slots=(Slots.ARMS,))
     chassis_data = ChassisData({Slots.ARMS: 10})
     char_data = CharacterData(chassis_data, name, (mod_data,), '', ai_type)
 
@@ -18,7 +18,7 @@ def get_combatant(health, abilities, name, ai_type=AIType.Human) -> Character:
 
 
 def create_combat_group(group_size, health=10, damage=2, base_name='combatant'):
-    return [get_combatant(health=health, abilities=(FireLaser(damage)),
+    return [get_combatant(health=health, subroutines=(FireLaser(damage)),
                           name=base_name + str(i))
             for i in range(group_size)]
 

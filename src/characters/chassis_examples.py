@@ -1,47 +1,47 @@
 from enum import Enum
 from typing import Dict, NamedTuple, Tuple
 
-from characters.abilities_base import Ability
-from characters.ability_examples import FireLaser, Harmless, Repair, Useless
 from characters.mods_base import Slots
 from characters.states import Attribute, AttributeType, Skill, State
+from characters.subroutine_examples import FireLaser, Harmless, Repair, Useless
+from characters.subroutines_base import Subroutine
 
 
 class ChassisData(NamedTuple):
     slot_capacities: Dict[Slots, int] = {}
     states_granted: Tuple[State, ...] = ()
     attribute_modifiers: Dict[AttributeType, int] = {}
-    abilities_granted: Tuple[Ability, ...] = ()
+    subroutines_granted: Tuple[Subroutine, ...] = ()
 
 
-_WALLE = ChassisData(
+_NO_LEGS = ChassisData(
     slot_capacities={Slots.HEAD: 1, Slots.CHEST: 1, Slots.ARMS: 2,
                      Slots.STORAGE: 10},
     attribute_modifiers={Attribute.MAX_HEALTH: 10, Skill.STEALTH: 1,
                          Skill.MECHANICS: 1},
-    abilities_granted=(Repair(5),))
+    subroutines_granted=(Repair(5),))
 
-_DRONE = ChassisData(
+_SINGLE_LASER = ChassisData(
     slot_capacities={Slots.HEAD: 1, Slots.STORAGE: 1},
     states_granted=(State.ON_FIRE,),
     attribute_modifiers={Attribute.MAX_HEALTH: 5},
-    abilities_granted=(FireLaser(2),)
+    subroutines_granted=(FireLaser(2),)
 )
 
 _HARMLESS = ChassisData(
     attribute_modifiers={Attribute.MAX_HEALTH: 1},
-    abilities_granted=(Harmless(1), Harmless(2), Useless(1), Useless(2))
+    subroutines_granted=(Harmless(1), Harmless(2), Useless(1), Useless(2))
 )
 
 _USELESS = ChassisData(
     attribute_modifiers={Attribute.MAX_HEALTH: 1},
-    abilities_granted=(Useless(1), Useless(2))
+    subroutines_granted=(Useless(1), Useless(2))
 )
 
 
 class ChassisTypes(Enum):
-    WALLE = 'WallE'
-    DRONE = 'drone'
+    NO_LEGS = 'WallE'
+    SINGLE_LASER = 'drone'
     HARMLESS = 'HARMLESS'
     USELESS = 'USELESS'
 
@@ -54,7 +54,7 @@ class ChassisTypes(Enum):
 
 
 _chassis_type_to_data: Dict[ChassisTypes, ChassisData] = {
-    ChassisTypes.WALLE: _WALLE,
-    ChassisTypes.DRONE: _DRONE,
+    ChassisTypes.NO_LEGS: _NO_LEGS,
+    ChassisTypes.SINGLE_LASER: _SINGLE_LASER,
     ChassisTypes.HARMLESS: _HARMLESS,
     ChassisTypes.USELESS: _USELESS}

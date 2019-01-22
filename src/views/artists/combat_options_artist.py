@@ -14,5 +14,5 @@ class CombatOptionsArtist(SceneArtist):
         screen.render_texts(list(options), font_size=25, x=200, y=200, color=GREEN, spacing=50)
 
     def _combat_options(self, moves: Sequence[Move]) -> Sequence[str]:
-        return ['{} - {}'.format(i + 1, m.ability.description())
+        return ['{} - {}'.format(i + 1, m.subroutine.description())
                 for i, m in enumerate(moves)]

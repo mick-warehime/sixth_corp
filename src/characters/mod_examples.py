@@ -1,9 +1,9 @@
 """Simple example mods."""
 from enum import Enum
 
-from characters.ability_examples import FireLaser
 from characters.mods_base import ModData, Slots
 from characters.states import Attribute, Skill, State
+from characters.subroutine_examples import FireLaser
 
 
 class ModTypes(Enum):
@@ -26,9 +26,9 @@ _mod_types_to_data = {
                                 valid_slots=(Slots.HEAD,)),
     ModTypes.CAMOUFLAGE_PAINT: ModData(attribute_modifiers={Skill.STEALTH: 1},
                                        valid_slots=(Slots.CHEST,)),
-    ModTypes.SMALL_LASER: ModData(abilities_granted=(FireLaser(2),),
+    ModTypes.SMALL_LASER: ModData(subroutines_granted=(FireLaser(2),),
                                   valid_slots=(Slots.ARMS,)),
-    ModTypes.BIG_LASER: ModData(abilities_granted=(FireLaser(4),),
+    ModTypes.BIG_LASER: ModData(subroutines_granted=(FireLaser(4),),
                                 valid_slots=(Slots.ARMS,))
 
 }

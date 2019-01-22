@@ -1,26 +1,26 @@
 from itertools import product
 from typing import Sequence
 
-from characters.abilities_base import Ability
 from characters.character_base import Character
+from characters.subroutines_base import Subroutine
 from combat.moves_base import Move
 
 
 class MoveImpl(object):
-    def __init__(self, ability: Ability, user: Character,
+    def __init__(self, subroutine: Subroutine, user: Character,
                  target: Character) -> None:
-        self.ability = ability
+        self.subroutine = subroutine
         self._user = user
         self.target = target
 
     def execute(self) -> None:
-        self.ability.use(self._user, self.target)
+        self.subroutine.use(self._user, self.target)
 
     def describe(self) -> str:
-        return self.ability.describe_use(self._user, self.target)
+        return self.subroutine.describe_use(self._user, self.target)
 
     def can_use(self) -> bool:
-        return self.ability.can_use(self._user, self.target)
+        return self.subroutine.can_use(self._user, self.target)
 
     def __repr__(self) -> str:
         return 'MOVE: {}'.format(self.describe())
@@ -35,4 +35,4 @@ def valid_moves(user: Character,
 
 
 def all_moves(user: Character, targets: Sequence[Character]) -> Sequence[Move]:
-    return [MoveImpl(a, user, t) for a, t in product(user.abilities(), targets)]
+    return [MoveImpl(a, user, t) for a, t in product(user.subroutines(), targets)]
