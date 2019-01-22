@@ -25,6 +25,9 @@ class Repair(Subroutine):
     def cpu_slots(self) -> int:
         return max(1, self._amount // 2)
 
+    def time_slots(self) -> int:
+        return max(1, self._amount // 2)
+
 
 class FireLaser(Subroutine):
 
@@ -47,6 +50,9 @@ class FireLaser(Subroutine):
         return 'Fire laser! ({} damage)'.format(self._damage)
 
     def cpu_slots(self) -> int:
+        return max(1, self._damage // 2)
+
+    def time_slots(self) -> int:
         return max(1, self._damage // 2)
 
 
@@ -72,6 +78,9 @@ class Harmless(Subroutine):
     def cpu_slots(self) -> int:
         return 1
 
+    def time_slots(self) -> int:
+        return 2
+
 
 class Useless(Subroutine):
 
@@ -93,3 +102,6 @@ class Useless(Subroutine):
 
     def cpu_slots(self) -> int:
         return 1
+
+    def time_slots(self) -> int:
+        return 2

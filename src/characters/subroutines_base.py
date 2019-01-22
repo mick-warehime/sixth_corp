@@ -24,6 +24,10 @@ class Subroutine(metaclass=abc.ABCMeta):
         """Number of CPU slots required for use."""
 
     @abc.abstractmethod
+    def time_slots(self) -> int:
+        """Number of time slots required before subroutine takes effect."""
+
+    @abc.abstractmethod
     def describe_use(self, user: Stateful, target: Stateful) -> str:
         """Description of the subroutine as it was last used."""
 
