@@ -22,6 +22,9 @@ class Repair(Subroutine):
     def description(self) -> str:
         return 'Repair {} damage.'.format(self._amount)
 
+    def cpu_slots(self) -> int:
+        return max(1, self._amount // 2)
+
 
 class FireLaser(Subroutine):
 
@@ -43,6 +46,9 @@ class FireLaser(Subroutine):
     def description(self) -> str:
         return 'Fire laser! ({} damage)'.format(self._damage)
 
+    def cpu_slots(self) -> int:
+        return max(1, self._damage // 2)
+
 
 class Harmless(Subroutine):
 
@@ -57,10 +63,14 @@ class Harmless(Subroutine):
 
     def describe_use(self, user: Stateful, target: Stateful) -> str:
         style = '{} from {} does nothing to {}'
-        return style.format(self.description(), user.description(), target.description())
+        return style.format(self.description(), user.description(),
+                            target.description())
 
     def description(self) -> str:
         return 'Harmless subroutine {}'.format(self.value)
+
+    def cpu_slots(self) -> int:
+        return 1
 
 
 class Useless(Subroutine):
@@ -80,3 +90,6 @@ class Useless(Subroutine):
 
     def description(self) -> str:
         return 'Useless subroutine {}'.format(self.value)
+
+    def cpu_slots(self) -> int:
+        return 1
