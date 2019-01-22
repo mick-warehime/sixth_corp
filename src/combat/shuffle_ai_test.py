@@ -1,8 +1,8 @@
 from unittest import TestCase
 
-from characters.ability_examples import Harmless
 from characters.character_examples import CharacterTypes
 from characters.character_factory import build_character
+from characters.subroutine_examples import Harmless
 from combat.shuffle_ai import ShuffleAI
 
 
@@ -16,7 +16,7 @@ class ShuffleAITest(TestCase):
 
         for i in range(1000):
             move = ai.select_move()
-            self.assertIsInstance(move.ability, Harmless)
+            self.assertIsInstance(move.subroutine, Harmless)
 
     def test_shuffle_ai_moves_dont_repeat(self):
         user = build_character(CharacterTypes.HARMLESS.data)

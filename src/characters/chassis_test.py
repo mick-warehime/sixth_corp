@@ -1,10 +1,10 @@
 """Tests for the Chassis class"""
-from characters.ability_examples import FireLaser
 from characters.chassis import Chassis
 from characters.chassis_examples import ChassisData
 from characters.chassis_factory import build_chassis
 from characters.mods_base import GenericMod, Slots
 from characters.states import Attribute, State
+from characters.subroutine_examples import FireLaser
 
 
 def test_chassis_can_store_in_storage_by_default():
@@ -37,7 +37,7 @@ def test_chassis_cannot_store_same_mod_twice():
 def test_chassis_base_mod_included():
     base_mod = GenericMod(states_granted=State.ON_FIRE,
                           attribute_modifiers={Attribute.CREDITS: 3},
-                          abilities_granted=FireLaser(3))
+                          subroutines_granted=FireLaser(3))
     chassis = Chassis({}, base_mod=base_mod)
 
     assert len(list(chassis.all_mods())) == 1

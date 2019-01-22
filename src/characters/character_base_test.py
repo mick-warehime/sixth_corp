@@ -1,12 +1,12 @@
 from unittest import TestCase
 
-from characters.ability_examples import FireLaser
 from characters.character_examples import CharacterData
 from characters.character_factory import build_character
 from characters.chassis_examples import ChassisData
 from characters.conditions import IsDead
 from characters.mods_base import GenericMod, Slots
 from characters.states import Attribute, State
+from characters.subroutine_examples import FireLaser
 
 _ACTIVE_SLOT = Slots.ARMS
 
@@ -55,12 +55,12 @@ class CharacterTest(TestCase):
         char.increment_attribute(Attribute.HEALTH, bonus)
         assert char.get_attribute(Attribute.HEALTH) == max_health
 
-    def test_mods_add_abilities(self):
+    def test_mods_add_subroutines(self):
         char = self._character()
 
-        ability = FireLaser(12)
-        assert ability not in char.abilities()
+        subroutine = FireLaser(12)
+        assert subroutine not in char.subroutines()
 
         char.attempt_pickup(
-            GenericMod(abilities_granted=ability, valid_slots=_ACTIVE_SLOT))
-        assert ability in char.abilities()
+            GenericMod(subroutines_granted=subroutine, valid_slots=_ACTIVE_SLOT))
+        assert subroutine in char.subroutines()

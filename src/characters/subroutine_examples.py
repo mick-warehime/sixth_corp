@@ -1,9 +1,9 @@
-from characters.abilities_base import Ability
 from characters.conditions import FullHealth
 from characters.states import Attribute, Stateful
+from characters.subroutines_base import Subroutine
 
 
-class Repair(Ability):
+class Repair(Subroutine):
 
     def __init__(self, amount: int) -> None:
         assert amount > 0
@@ -23,7 +23,7 @@ class Repair(Ability):
         return 'Repair {} damage.'.format(self._amount)
 
 
-class FireLaser(Ability):
+class FireLaser(Subroutine):
 
     def __init__(self, damage: int) -> None:
         assert damage > 0
@@ -44,7 +44,7 @@ class FireLaser(Ability):
         return 'Fire laser! ({} damage)'.format(self._damage)
 
 
-class Harmless(Ability):
+class Harmless(Subroutine):
 
     def __init__(self, harmless_value: int) -> None:
         self.value = harmless_value
@@ -60,10 +60,10 @@ class Harmless(Ability):
         return style.format(self.description(), user.description(), target.description())
 
     def description(self) -> str:
-        return 'Harmless ability {}'.format(self.value)
+        return 'Harmless subroutine {}'.format(self.value)
 
 
-class Useless(Ability):
+class Useless(Subroutine):
 
     def __init__(self, useless_value: int) -> None:
         self.value = useless_value
@@ -75,8 +75,8 @@ class Useless(Ability):
         return False
 
     def describe_use(self, user: Stateful, target: Stateful) -> str:
-        style = '{} cant use this useless ability against {}'
+        style = '{} cant use this useless subroutine against {}'
         return style.format(user.description(), target.description())
 
     def description(self) -> str:
-        return 'Useless ability {}'.format(self.value)
+        return 'Useless subroutine {}'.format(self.value)

@@ -2,9 +2,9 @@
 import abc
 from typing import Callable, Iterable, List, Sequence
 
-from characters.abilities_base import Ability
 from characters.mods_base import Mod
 from characters.states import AttributeType, State
+from characters.subroutines_base import Subroutine
 
 
 class InventoryBase(metaclass=abc.ABCMeta):
@@ -54,12 +54,12 @@ class InventoryBase(metaclass=abc.ABCMeta):
         mods = self.mods(lambda m: attribute in m.attribute_modifiers())
         return sum(m.attribute_modifiers()[attribute] for m in mods)
 
-    def all_abilities(self) -> Sequence[Ability]:
-        mods = self.mods(lambda m: bool(m.abilities_granted()))
-        abilities: List[Ability] = []
+    def all_subroutines(self) -> Sequence[Subroutine]:
+        mods = self.mods(lambda m: bool(m.subroutines_granted()))
+        subroutines: List[Subroutine] = []
         for mod in mods:
-            abilities.extend(mod.abilities_granted())
-        return sorted(abilities)
+            subroutines.extend(mod.subroutines_granted())
+        return sorted(subroutines)
 
 
 class BasicInventory(InventoryBase):

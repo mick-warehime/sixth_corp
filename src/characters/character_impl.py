@@ -3,7 +3,6 @@ import logging
 from functools import partial
 from typing import List, Sequence
 
-from characters.abilities_base import Ability
 from characters.character_base import Character
 from characters.character_position import Position
 from characters.chassis import Chassis
@@ -12,6 +11,7 @@ from characters.chassis_factory import build_chassis
 from characters.inventory import InventoryBase
 from characters.mods_base import Mod
 from characters.states import Attribute, AttributeType, BasicStatus, State
+from characters.subroutines_base import Subroutine
 from combat.ai_base import AI
 from combat.moves_base import Move
 
@@ -65,8 +65,8 @@ class CharacterImpl(Character):
                 '{} attempted to pickup {} but was unable.'.format(self,
                                                                    mod_type))
 
-    def abilities(self) -> Sequence[Ability]:
-        return self.inventory.all_abilities()
+    def subroutines(self) -> Sequence[Subroutine]:
+        return self.inventory.all_subroutines()
 
     def has_state(self, state: State) -> bool:
         return (self._base_status.has_state(state)

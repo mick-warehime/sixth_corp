@@ -1,8 +1,8 @@
 from unittest import TestCase
 
-from characters.ability_examples import FireLaser, Repair
 from characters.mods_base import GenericMod, Slots
 from characters.states import Attribute
+from characters.subroutine_examples import FireLaser, Repair
 from combat.combat_manager_base import CombatManager
 from combat.combat_test_utils import create_combat_group
 
@@ -23,10 +23,10 @@ class CombatManagerTest(TestCase):
         self.assertEqual(len(attack_moves[0]), 1)
         self.assertEqual(len(attack_moves[1]), 1)
 
-        # each attack move is just the laser ability
+        # each attack move is just the laser subroutine
         for attacker_moveset in attack_moves:
             for move in attacker_moveset:
-                self.assertIsInstance(move.ability, FireLaser)
+                self.assertIsInstance(move.subroutine, FireLaser)
 
         defense_moves = manager.defenders_moves
 
@@ -36,16 +36,16 @@ class CombatManagerTest(TestCase):
         # the possible defense move consists of two moves, each defender attacking
         self.assertEqual(len(defense_moves[0]), 2)
 
-        # each defense move is just the laser ability
+        # each defense move is just the laser subroutine
         for defender_moveset in defense_moves:
             for move in defender_moveset:
-                self.assertIsInstance(move.ability, FireLaser)
+                self.assertIsInstance(move.subroutine, FireLaser)
 
     def test_enumerates_attack_and_defense(self):
         attacker = create_combat_group(1, base_name='attacker')
         defender = create_combat_group(1, base_name='defender')
         defender[0].attempt_pickup(
-            GenericMod(abilities_granted=(Repair(5)), valid_slots=Slots.ARMS))
+            GenericMod(subroutines_granted=(Repair(5)), valid_slots=Slots.ARMS))
         defender[0].increment_attribute(Attribute.HEALTH, -5)
         manager = CombatManager(attackers=attacker, defenders=defender)
 
@@ -57,10 +57,10 @@ class CombatManagerTest(TestCase):
         # only one attacker (each possible move is a single move)
         self.assertEqual(len(attack_moves[0]), 1)
 
-        # each attack move is just the laser ability
+        # each attack move is just the laser subroutine
         for attacker_moveset in attack_moves:
             for move in attacker_moveset:
-                self.assertIsInstance(move.ability, FireLaser)
+                self.assertIsInstance(move.subroutine, FireLaser)
 
         defense_moves = manager.defenders_moves
 
@@ -71,11 +71,11 @@ class CombatManagerTest(TestCase):
         self.assertEqual(len(defense_moves[0]), 1)
         self.assertEqual(len(defense_moves[1]), 1)
 
-        # each defense move is just the laser ability
+        # each defense move is just the laser subroutine
         for expected_move, defender_moveset in zip([FireLaser, Repair],
                                                    defense_moves):
             for move in defender_moveset:
-                self.assertIsInstance(move.ability, expected_move)
+                self.assertIsInstance(move.subroutine, expected_move)
 
     def test_step_applies_moves(self):
         health = 10
