@@ -10,7 +10,7 @@ from characters.chassis_examples import ChassisTypes
 from characters.chassis_factory import build_chassis
 from characters.inventory import InventoryBase
 from characters.mods_base import Mod
-from characters.states import Attribute, AttributeType, BasicStatus, State
+from characters.states import Attributes, AttributeType, BasicStatus, State
 from characters.subroutines_base import Subroutine
 from combat.ai_base import AI
 from combat.moves_base import Move
@@ -32,8 +32,8 @@ class CharacterImpl(Character):
         self._ai: AI = None
 
         self._base_status.set_attribute_bounds(
-            Attribute.HEALTH, 0,
-            partial(self.get_attribute, Attribute.MAX_HEALTH))
+            Attributes.HEALTH, 0,
+            partial(self.get_attribute, Attributes.MAX_HEALTH))
 
     @property
     def image_path(self) -> str:

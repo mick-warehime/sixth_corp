@@ -2,7 +2,7 @@
 from enum import Enum
 
 from characters.mods_base import ModData, Slots
-from characters.states import Attribute, Skill, State
+from characters.states import Attributes, Skill, State
 from characters.subroutine_examples import FireLaser
 
 
@@ -20,7 +20,7 @@ class ModTypes(Enum):
 
 _mod_types_to_data = {
     ModTypes.BASIC_HULL_PLATING: ModData(
-        attribute_modifiers={Attribute.MAX_HEALTH: 3},
+        attribute_modifiers={Attributes.MAX_HEALTH: 3},
         valid_slots=(Slots.CHEST,)),
     ModTypes.FIRE_HELM: ModData(states_granted=(State.ON_FIRE,),
                                 valid_slots=(Slots.HEAD,)),

@@ -20,7 +20,7 @@ class State(Enum):
         return self.value
 
 
-class Attribute(Enum):
+class Attributes(Enum):
     HEALTH = 'health'
     MAX_HEALTH = 'maximum health'
     CREDITS = 'credits'
@@ -35,10 +35,10 @@ class Skill(Enum):
     MECHANICS = 'mechanics'
 
 
-AttributeType = Union[Attribute, Skill]
+AttributeType = Union[Attributes, Skill]
 
 _BoundFun = Callable[[], int]
-_BoundType = Union[int, Attribute, _BoundFun]
+_BoundType = Union[int, Attributes, _BoundFun]
 
 
 class Stateful(object, metaclass=ABCMeta):
@@ -103,7 +103,7 @@ class BasicStatus(Stateful):
         if isinstance(bound, int):
             def int_fun() -> int:
                 return bound  # type: ignore
-        elif isinstance(bound, Attribute):
+        elif isinstance(bound, Attributes):
             def int_fun() -> int:
                 return self.get_attribute(bound)  # type: ignore
         else:

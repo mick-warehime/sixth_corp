@@ -3,7 +3,7 @@ from characters.chassis import Chassis
 from characters.chassis_examples import ChassisData
 from characters.chassis_factory import build_chassis
 from characters.mods_base import GenericMod, Slots
-from characters.states import Attribute, State
+from characters.states import Attributes, State
 from characters.subroutine_examples import FireLaser
 
 
@@ -36,7 +36,7 @@ def test_chassis_cannot_store_same_mod_twice():
 
 def test_chassis_base_mod_included():
     base_mod = GenericMod(states_granted=State.ON_FIRE,
-                          attribute_modifiers={Attribute.CREDITS: 3},
+                          attribute_modifiers={Attributes.CREDITS: 3},
                           subroutines_granted=FireLaser(3))
     chassis = Chassis({}, base_mod=base_mod)
 

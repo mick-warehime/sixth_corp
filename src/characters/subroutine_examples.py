@@ -1,5 +1,5 @@
 from characters.conditions import FullHealth
-from characters.states import Attribute, Stateful
+from characters.states import Attributes, Stateful
 from characters.subroutines_base import Subroutine
 
 
@@ -10,7 +10,7 @@ class Repair(Subroutine):
         self._amount = amount
 
     def _use(self, user: Stateful, target: Stateful) -> None:
-        target.increment_attribute(Attribute.HEALTH, self._amount)
+        target.increment_attribute(Attributes.HEALTH, self._amount)
 
     def can_use(self, user: Stateful, target: Stateful) -> bool:
         return user == target and not FullHealth().check(target)
@@ -30,7 +30,7 @@ class FireLaser(Subroutine):
         self._damage = damage
 
     def _use(self, user: Stateful, target: Stateful) -> None:
-        target.increment_attribute(Attribute.HEALTH, -self._damage)
+        target.increment_attribute(Attributes.HEALTH, -self._damage)
 
     def can_use(self, user: Stateful, target: Stateful) -> bool:
         return user is not target
