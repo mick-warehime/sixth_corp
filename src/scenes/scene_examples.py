@@ -2,7 +2,7 @@
 from characters.effects import ChangeLocation, IncrementAttribute, RestartGame
 from characters.player import get_player
 from characters.skills import Difficulty, skill_check
-from characters.states import Attribute, Skill
+from characters.states import Attributes, Skill
 from scenes.combat_scene import CombatScene
 from scenes.decision_scene import (DecisionOption, DecisionScene,
                                    from_transition, transition_to)
@@ -41,7 +41,7 @@ def swamp_scene() -> DecisionScene:
                       'You expertly sneak up on the drone and deactivate it.'
                       ' You upload its credit 3 keys into your storage.'
                       ' Back to beginning.',
-                      IncrementAttribute(get_player(), Attribute.CREDITS, 3)),
+                      IncrementAttribute(get_player(), Attributes.CREDITS, 3)),
         transition_to(example_combat_scene,
                       'The drone awakens. Prepare to fight!'),
         Skill.STEALTH)
@@ -57,15 +57,15 @@ def second_scene() -> DecisionScene:
     player = get_player()
     main_text = (
         'Player HP: {}. Player Max HP: {}.'.format(
-            player.get_attribute(Attribute.HEALTH),
-            player.get_attribute(Attribute.MAX_HEALTH)))
+            player.get_attribute(Attributes.HEALTH),
+            player.get_attribute(Attributes.MAX_HEALTH)))
 
     options = {
         '0': DecisionOption('Gain 1 HP', second_scene,
-                            IncrementAttribute(get_player(), Attribute.HEALTH,
+                            IncrementAttribute(get_player(), Attributes.HEALTH,
                                                1)),
         '1': DecisionOption('Lose 1 HP', second_scene,
-                            IncrementAttribute(get_player(), Attribute.HEALTH,
+                            IncrementAttribute(get_player(), Attributes.HEALTH,
                                                -1))
     }
     return DecisionScene(main_text, options)

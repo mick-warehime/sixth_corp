@@ -1,7 +1,7 @@
 from unittest import TestCase, mock
 
 from characters.effects import IncrementAttribute
-from characters.states import Attribute
+from characters.states import Attributes
 from combat.combat_test_utils import create_enemy
 from controllers.combat_scene_controller import CombatSceneController
 from events.event_utils import simulate_key_press, simulate_mouse_click
@@ -38,7 +38,7 @@ class CombatSceneControllerTest(TestCase):
         ctl = create_combat_controller(enemy)
         self.assertFalse(ctl.scene.is_resolved())
 
-        IncrementAttribute(enemy, Attribute.HEALTH, -health).execute()
+        IncrementAttribute(enemy, Attributes.HEALTH, -health).execute()
 
         self.assertTrue(ctl.scene.is_resolved())
 

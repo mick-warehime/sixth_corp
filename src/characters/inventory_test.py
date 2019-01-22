@@ -5,7 +5,7 @@ import pytest
 from characters.chassis import Chassis
 from characters.inventory import BasicInventory
 from characters.mods_base import GenericMod, Slots
-from characters.states import Attribute, State
+from characters.states import Attributes, State
 from characters.subroutine_examples import FireLaser, Repair
 
 factories = (BasicInventory, partial(Chassis, {Slots.STORAGE: 4}))
@@ -41,9 +41,9 @@ def test_basic_inventory_mods(make_inventory):
 
     inventory.store(GenericMod(subroutines_granted=FireLaser(2)))
     inventory.store(GenericMod(states_granted=State.ON_FIRE,
-                               attribute_modifiers={Attribute.MAX_HEALTH: 2}))
-    inventory.store(GenericMod(attribute_modifiers={Attribute.MAX_HEALTH: 1}))
-    inventory.store(GenericMod(attribute_modifiers={Attribute.MAX_HEALTH: 3},
+                               attribute_modifiers={Attributes.MAX_HEALTH: 2}))
+    inventory.store(GenericMod(attribute_modifiers={Attributes.MAX_HEALTH: 1}))
+    inventory.store(GenericMod(attribute_modifiers={Attributes.MAX_HEALTH: 3},
                                subroutines_granted=Repair(3)))
 
     mods = list(inventory.mods(lambda x: bool(x.subroutines_granted()),
@@ -62,11 +62,11 @@ def test_basic_inventory_mods(make_inventory):
 def test_total_modifier():
     inventory = BasicInventory()
 
-    assert inventory.total_modifier(Attribute.MAX_HEALTH) == 0
-    inventory.store(GenericMod(attribute_modifiers={Attribute.MAX_HEALTH: 5}))
-    assert inventory.total_modifier(Attribute.MAX_HEALTH) == 5
-    inventory.store(GenericMod(attribute_modifiers={Attribute.MAX_HEALTH: 3}))
-    assert inventory.total_modifier(Attribute.MAX_HEALTH) == 8
+    assert inventory.total_modifier(Attributes.MAX_HEALTH) == 0
+    inventory.store(GenericMod(attribute_modifiers={Attributes.MAX_HEALTH: 5}))
+    assert inventory.total_modifier(Attributes.MAX_HEALTH) == 5
+    inventory.store(GenericMod(attribute_modifiers={Attributes.MAX_HEALTH: 3}))
+    assert inventory.total_modifier(Attributes.MAX_HEALTH) == 8
 
 
 def test_state_granted():

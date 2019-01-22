@@ -1,5 +1,5 @@
 from characters.conditions import HasState, IsDead
-from characters.states import Attribute, BasicStatus, State
+from characters.states import Attributes, BasicStatus, State
 
 
 def test_condition_and():
@@ -18,7 +18,7 @@ def test_condition_or():
 
     cond = HasState(State.ON_FIRE) | IsDead()
     assert cond.check(stateful)
-    stateful.set_attribute(Attribute.HEALTH, 1)
+    stateful.set_attribute(Attributes.HEALTH, 1)
     assert not cond.check(stateful)
 
     stateful.set_state(State.FROZEN, True)
@@ -39,7 +39,7 @@ def test_alive_to_dead():
     stateful = BasicStatus()
 
     assert IsDead().check(stateful)
-    stateful.set_attribute(Attribute.HEALTH, 3)
+    stateful.set_attribute(Attributes.HEALTH, 3)
     assert not IsDead().check(stateful)
-    stateful.set_attribute(Attribute.HEALTH, 0)
+    stateful.set_attribute(Attributes.HEALTH, 0)
     assert IsDead().check(stateful)

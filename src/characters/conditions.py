@@ -1,7 +1,7 @@
 import abc
 from typing import Any
 
-from characters.states import Attribute, State, Stateful
+from characters.states import Attributes, State, Stateful
 
 
 class Condition(metaclass=abc.ABCMeta):
@@ -67,11 +67,11 @@ class HasState(Condition):
 class IsDead(Condition):
 
     def check(self, target: Stateful) -> bool:
-        return not target.get_attribute(Attribute.HEALTH)
+        return not target.get_attribute(Attributes.HEALTH)
 
 
 class FullHealth(Condition):
 
     def check(self, target: Stateful) -> bool:
         value = target.get_attribute
-        return value(Attribute.HEALTH) == value(Attribute.MAX_HEALTH)
+        return value(Attributes.HEALTH) == value(Attributes.MAX_HEALTH)

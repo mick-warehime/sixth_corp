@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from characters.mods_base import GenericMod, Slots
-from characters.states import Attribute
+from characters.states import Attributes
 from characters.subroutine_examples import FireLaser, Repair
 from combat.combat_manager_base import CombatManager
 from combat.combat_test_utils import create_combat_group
@@ -46,7 +46,7 @@ class CombatManagerTest(TestCase):
         defender = create_combat_group(1, base_name='defender')
         defender[0].attempt_pickup(
             GenericMod(subroutines_granted=(Repair(5)), valid_slots=Slots.ARMS))
-        defender[0].increment_attribute(Attribute.HEALTH, -5)
+        defender[0].increment_attribute(Attributes.HEALTH, -5)
         manager = CombatManager(attackers=attacker, defenders=defender)
 
         attack_moves = manager.attackers_moves
@@ -91,14 +91,14 @@ class CombatManagerTest(TestCase):
         manager.take_turn(attack_moves[0], defense_moves[0])
 
         # both defenders attack
-        attacker_health = attacker[0].get_attribute(Attribute.HEALTH)
+        attacker_health = attacker[0].get_attribute(Attributes.HEALTH)
         self.assertEqual(attacker_health, health - ndefenders * damage)
 
         # attacker only hits one defender
         first_defender_health = attack_moves[0][0].target.get_attribute(
-            Attribute.HEALTH)
+            Attributes.HEALTH)
         second_defender_health = attack_moves[1][0].target.get_attribute(
-            Attribute.HEALTH)
+            Attributes.HEALTH)
         self.assertEqual(first_defender_health, health - damage)
         self.assertEqual(second_defender_health, health)
 

@@ -6,7 +6,7 @@ from characters.effects import (AcquireMod, ChangeLocation, IncrementAttribute,
                                 RestartGame)
 from characters.mods_base import GenericMod
 from characters.player import get_player, reset_player
-from characters.states import Attribute
+from characters.states import Attributes
 from world.locations import LoadingLocation, MarsLocation
 from world.world import get_location
 
@@ -21,25 +21,25 @@ def teardown_function(function):
 
 
 def test_restart_game(player):
-    player.increment_attribute(Attribute.HEALTH, -1)
-    old_health = player.get_attribute(Attribute.HEALTH)
+    player.increment_attribute(Attributes.HEALTH, -1)
+    old_health = player.get_attribute(Attributes.HEALTH)
     RestartGame().execute()
-    assert old_health is not get_player().get_attribute(Attribute.HEALTH)
+    assert old_health is not get_player().get_attribute(Attributes.HEALTH)
 
 
 def test_increment_player_attribute(player):
-    health = player.get_attribute(Attribute.HEALTH)
+    health = player.get_attribute(Attributes.HEALTH)
     delta = -2
-    IncrementAttribute(player, Attribute.HEALTH, delta).execute()
-    assert player.get_attribute(Attribute.HEALTH) == health + delta
+    IncrementAttribute(player, Attributes.HEALTH, delta).execute()
+    assert player.get_attribute(Attributes.HEALTH) == health + delta
 
 
 def test_increment_attribute():
     char = build_character(CharacterTypes.DRONE.data)
-    health = char.get_attribute(Attribute.HEALTH)
+    health = char.get_attribute(Attributes.HEALTH)
     delta = -3
-    IncrementAttribute(char, Attribute.HEALTH, delta).execute()
-    assert char.get_attribute(Attribute.HEALTH) == health + delta
+    IncrementAttribute(char, Attributes.HEALTH, delta).execute()
+    assert char.get_attribute(Attributes.HEALTH) == health + delta
 
 
 def test_acquire_mod(player):

@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from characters.states import Attribute, State
+from characters.states import Attributes, State
 from combat.combat_gym import CombatGym
 from combat.combat_test_utils import create_combat_group
 
@@ -57,7 +57,7 @@ class CombatGymTest(TestCase):
             attackers=attacker,
             defenders=two_defenders,
             character_attributes=[
-                Attribute.MAX_HEALTH])
+                Attributes.MAX_HEALTH])
         states = list(manager.state_space())
 
         max_attr = manager.max_attribute()

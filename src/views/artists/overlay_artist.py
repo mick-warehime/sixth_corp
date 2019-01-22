@@ -1,5 +1,5 @@
 from characters.player import get_player
-from characters.states import Attribute
+from characters.states import Attributes
 from data import constants
 from data.colors import DARK_GRAY, RED, WHITE
 from scenes.scenes_base import Scene
@@ -18,8 +18,8 @@ class OverlayArtist(SceneArtist):
 
         # draw health
         player = get_player()
-        health = player.get_attribute(Attribute.HEALTH)
-        max_health = player.get_attribute(Attribute.MAX_HEALTH)
+        health = player.get_attribute(Attributes.HEALTH)
+        max_health = player.get_attribute(Attributes.MAX_HEALTH)
         health_text = 'Health: {} / {}'.format(health, max_health)
         x_health = int(width / 2 - 300)
         y_health = int(height / 2 - 5)

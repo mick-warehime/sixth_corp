@@ -3,7 +3,7 @@ from itertools import product
 from typing import Any, Sequence, Tuple
 
 from characters.character_base import Character
-from characters.states import Attribute, State
+from characters.states import Attributes, State
 from combat.combat_manager_base import CombatGroup, CombatManager, GroupMove
 
 RewardFunc = Any
@@ -24,12 +24,12 @@ class CombatGym(CombatManager):
             self,
             attackers: CombatGroup,
             defenders: CombatGroup,
-            character_attributes: Sequence[Attribute] = None,
+            character_attributes: Sequence[Attributes] = None,
             character_states: Sequence[State] = None) -> None:
         super().__init__(attackers, defenders)
         self._previous_state: CombatState = None
 
-        self._character_attributes = [Attribute.HEALTH]
+        self._character_attributes = [Attributes.HEALTH]
         if character_attributes is not None:
             self._character_attributes += character_attributes
 
@@ -77,7 +77,7 @@ class CombatGym(CombatManager):
     def max_attribute(self) -> int:
         return int(CombatGym.ATTRIBUTE_MAX / CombatGym.ATTRIBUTE_STEP)
 
-    def _clamped_attr_value(self, char: Character, attr: Attribute) -> int:
+    def _clamped_attr_value(self, char: Character, attr: Attributes) -> int:
         """Limits the possible values of attributes to 0, 1, 2, ... MAX/STEP"""
 
         # TODO - consider allowing negative/more attribute states

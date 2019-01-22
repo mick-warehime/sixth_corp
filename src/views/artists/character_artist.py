@@ -1,6 +1,6 @@
 from characters.character_base import Character
 from characters.player import get_player
-from characters.states import Attribute
+from characters.states import Attributes
 from data.colors import GREEN, RED
 from scenes.combat_scene import CombatScene
 from views.artists.scene_artist_base import SceneArtist
@@ -27,8 +27,8 @@ class CharacterArtist(SceneArtist):
 
     def _render_health(self, character: Character, screen: Screen) -> None:
         pos = character.position
-        health = character.get_attribute(Attribute.HEALTH)
-        max_health = character.get_attribute(Attribute.MAX_HEALTH)
+        health = character.get_attribute(Attributes.HEALTH)
+        max_health = character.get_attribute(Attributes.MAX_HEALTH)
         health_bar = '{} / {}'.format(health, max_health)
         x = int(pos.x + pos.w / 4.0)
         y = pos.y - 40
