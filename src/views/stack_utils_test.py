@@ -1,5 +1,6 @@
 from unittest import TestCase
-from views.stack_utils import stack_position, point_collides_stack_element
+
+from views.stack_utils import point_collides_stack_element, stack_position
 
 
 class StackUtilsTest(TestCase):

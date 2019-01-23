@@ -1,4 +1,5 @@
 from pygame.rect import Rect
+
 from characters.character_position import Position
 
 

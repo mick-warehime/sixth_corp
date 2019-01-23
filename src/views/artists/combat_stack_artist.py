@@ -4,8 +4,8 @@ from combat.moves_factory import build_move
 from data.colors import DARK_GRAY, LIGHT_GRAY, RED, WHITE
 from scenes.combat_scene import CombatScene
 from views.artists.scene_artist_base import SceneArtist
-from views.stack_utils import stack_position
 from views.screen_base import Screen
+from views.stack_utils import stack_position
 
 _TEXT_SPACE = 10
 _STACK_OUTLINE = 2
