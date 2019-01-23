@@ -1,6 +1,5 @@
 import logging
 
-from characters.character_base import Character
 from characters.player import get_player
 from controllers.controller import Controller
 from controllers.pygame_collisions import point_collides_rect
@@ -9,6 +8,7 @@ from events.events_base import (ControllerActivatedEvent, Event, EventType,
                                 InputEvent, MoveExecutedEvent)
 from scenes.combat_scene import CombatScene
 from scenes.scene_examples import game_over
+from views.stack_utils import point_collides_stack_element
 from views.view_factory import SceneViewType, build_scene_view
 
 NUMBER_KEYS = [str(i) for i in range(9)]
@@ -21,7 +21,6 @@ class CombatSceneController(Controller):
         self.scene = scene
 
         self._characters = [get_player(), self.scene.enemy()]
-        self.selected_character: Character = None
 
         self.view = build_scene_view(SceneViewType.Combat, scene)
         self.update()
@@ -46,39 +45,50 @@ class CombatSceneController(Controller):
             return
 
         input_key = int(input_event.key)
-        moves = self.scene.player_moves(self.selected_character)
+        moves = self.scene.player_moves()
         if len(moves) >= input_key > 0:
             selected_move = moves[input_key - 1]
             self.scene.select_player_move(selected_move)
+            self.scene.append_stack(selected_move)
 
     def _handle_mouse(self, input_event: InputEvent) -> None:
         x = input_event.mouse[0]
         y = input_event.mouse[1]
+        self._handle_character_selection(x, y)
+        self._handle_stack_selection(x, y)
+
+    def _handle_stack_selection(self, x: int, y: int) -> None:
+        for i in range(len(self.scene.stack)):
+            if point_collides_stack_element(i, x, y):
+                self.scene.try_pop_stack(i)
+                break
+        logging.debug('MOUSE: Clicked nothing.')
+
+    def _handle_character_selection(self, x: int, y: int) -> None:
         for char in self._characters:
             pos = char.position
             if point_collides_rect(x, y, pos.x, pos.y, pos.w, pos.h):
-                if self.selected_character == char:
+                if self.scene.selected == char:
                     continue
-                self.selected_character = char
+                self.scene.selected = char
                 logging.debug('MOUSE: Selected: {}'.format(char))
                 return
 
         logging.debug('MOUSE: Clicked nothing.')
         # if no character was clicked clear field
-        if self.selected_character is not None:
+        if self.scene.selected is not None:
             logging.debug(
-                'MOUSE: Deselected: {}'.format(self.selected_character))
+                'MOUSE: Deselected: {}'.format(self.scene.selected))
 
-        self.selected_character = None
+            self.scene.selected = None
 
     def update(self) -> None:
-        self.scene.player_moves(self.selected_character)
+        self.scene.player_moves()
         self.view.update()
         self._update_scene()
 
     def _handle_move_executed(self, event: MoveExecutedEvent) -> None:
         if event.attacker:
-            self.selected_character = None
             self.update()
 
     def _update_scene(self) -> None:

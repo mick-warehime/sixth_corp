@@ -18,4 +18,5 @@ def stack_position(index: int) -> Position:
 
 def point_collides_stack_element(index: int, px: int, py: int) -> bool:
     pos = stack_position(index)
+    print(pos.x, pos.y, pos.w, pos.h, px, py)
     return point_collides_pos(px, py, pos)

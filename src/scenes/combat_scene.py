@@ -30,8 +30,18 @@ class CombatScene(Scene):
         self.combat_manager = CombatManager([self._player], [self._enemy])
 
         self.selected: Character = None
-        self.current_moves: Sequence[str] = None
+        self.current_moves = self.player_moves()
         self._set_targets()
+        self.stack = [self.enemy_move()]
+
+    def try_pop_stack(self, index: int) -> None:
+        print('el {} lenstack {}'.format(index, len(self.stack)))
+        el = self.stack[index]
+        if el.user == self._player:
+            self.stack.pop(index)
+
+    def append_stack(self, move: Move) -> None:
+        self.stack.append(move)
 
     def enemy(self) -> Character:
         return self._enemy
@@ -52,19 +62,14 @@ class CombatScene(Scene):
     def is_game_over(self) -> bool:
         return IsDead().check(self._player)
 
-    def enemy_action(self) -> Move:
+    def enemy_move(self) -> Move:
         return self._enemy.select_move()
 
-    def player_moves(self, target: Character) -> Sequence[Move]:
-        moves: Sequence[Move] = []
-        if target is not None:
-            moves = valid_moves(self._player, (target,))
-        self.current_moves = moves
-        self.selected = target
-        return moves
+    def player_moves(self) -> Sequence[Move]:
+        return valid_moves(self._player, (self._player, self._enemy))
 
     def select_player_move(self, move: Move) -> None:
-        enemy_move = self.enemy_action()
+        enemy_move = self.enemy_move()
         self.combat_manager.take_turn([move], [enemy_move])
 
     def _set_targets(self) -> None:
