@@ -4,15 +4,11 @@ from combat.moves_factory import build_move
 from data.colors import DARK_GRAY, LIGHT_GRAY, RED, WHITE
 from scenes.combat_scene import CombatScene
 from views.artists.scene_artist_base import SceneArtist
+from views.stack_utils import stack_position
 from views.screen_base import Screen
 
-_STACK_TOP_X = 425
-_STACK_TOP_Y = 200
-_STACK_WIDTH = 250
-_STACK_HEIGHT = 50
+_TEXT_SPACE = 10
 _STACK_OUTLINE = 2
-_TEXT_DELTA_X = 10
-_TEXT_DELTA_Y = 10
 _FONT_SIZE = 24
 _TARGET_SIZE = 50
 
@@ -28,40 +24,39 @@ class CombatStackArtist(SceneArtist):
                 FireLaser(1), enemy, player), build_move(
                 Repair(1), player, player)]
         for i, move in enumerate(stack):
-            x = _STACK_TOP_X
-            y = _STACK_TOP_Y + i * _STACK_HEIGHT
+            pos = stack_position(i)
 
             # Stack Ability + timer
             fake_time = len(stack) - i
-            screen.render_rect(x, y, _STACK_WIDTH, _STACK_HEIGHT, DARK_GRAY, 0)
-            screen.render_rect(x, y, _STACK_WIDTH, _STACK_HEIGHT, LIGHT_GRAY, _STACK_OUTLINE)
+            screen.render_rect(pos.x, pos.y, pos.w, pos.h, DARK_GRAY, 0)
+            screen.render_rect(pos.x, pos.y, pos.w, pos.h, LIGHT_GRAY, _STACK_OUTLINE)
             screen.render_text(
                 move.subroutine.description(),
                 _FONT_SIZE,
-                x + _TEXT_DELTA_X,
-                y + _TEXT_DELTA_Y,
+                pos.x + _TEXT_SPACE,
+                pos.y + _TEXT_SPACE,
                 WHITE)
             screen.render_text(
                 'T: {}'.format(fake_time),
                 _FONT_SIZE,
-                x +
-                _STACK_WIDTH -
+                pos.x +
+                pos.w -
                 5 *
-                _TEXT_DELTA_X,
-                y +
-                _TEXT_DELTA_Y,
+                _TEXT_SPACE,
+                pos.y +
+                _TEXT_SPACE,
                 RED)
 
             # USER + TARGET
             screen.render_image(
                 move.user.image_path,
-                x - _TARGET_SIZE,
-                y,
+                pos.x - _TARGET_SIZE,
+                pos.y,
                 _TARGET_SIZE,
                 _TARGET_SIZE)
             screen.render_image(
                 move.target.image_path,
-                x + _STACK_WIDTH,
-                y,
+                pos.x + pos.w,
+                pos.y,
                 _TARGET_SIZE,
                 _TARGET_SIZE)
