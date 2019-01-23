@@ -10,23 +10,28 @@ class MoveImpl(object):
     def __init__(self, subroutine: Subroutine, user: Character,
                  target: Character) -> None:
         self.subroutine = subroutine
-        self._user = user
+        self.user = user
         self.target = target
 
     def execute(self) -> None:
-        self.subroutine.use(self._user, self.target)
+        self.subroutine.use(self.user, self.target)
 
     def describe(self) -> str:
-        return self.subroutine.describe_use(self._user, self.target)
+        return self.subroutine.describe_use(self.user, self.target)
 
     def can_use(self) -> bool:
-        return self.subroutine.can_use(self._user, self.target)
+        return self.subroutine.can_use(self.user, self.target)
 
     def __repr__(self) -> str:
         return 'MOVE: {}'.format(self.describe())
 
     def __str__(self) -> str:
         return self.__repr__()
+
+
+def build_move(subroutine: Subroutine, user: Character,
+               target: Character) -> Move:
+    return MoveImpl(subroutine, user, target)
 
 
 def valid_moves(user: Character,
