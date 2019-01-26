@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from views.artists.drawing_utils import rescale_to_screen
+from views.artists.drawing_utils import rescale_horizontal, rescale_vertical
 
 
 class Position(object):
@@ -8,8 +8,8 @@ class Position(object):
     def __init__(self, x: int = 0, y: int = 0, w: int = 0, h: int = 0,
                  rescale: bool = True) -> None:
         if rescale:
-            x, y = rescale_to_screen(x, y)
-            w, h = rescale_to_screen(w, h)
+            x, w = rescale_horizontal(x, w)
+            y, h = rescale_vertical(y, h)
 
         self.x = x
         self.y = y

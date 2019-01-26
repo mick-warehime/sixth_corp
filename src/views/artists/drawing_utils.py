@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, Union
 
 from data.constants import SCREEN_SIZE
 
@@ -10,11 +10,16 @@ _HORIZONTAL_SCALE /= _REF_SCREEN_WIDTH
 _VERTICAL_SCALE /= _REF_SCREEN_HEIGHT
 
 
-def rescale_to_screen(horizontal: int, vertical: int) -> Tuple[int, int]:
-    if _HORIZONTAL_SCALE != 1:
-        horizontal *= _HORIZONTAL_SCALE
+def _rescale_lengths(scale: float, *lengths: int) -> Union[
+    int, Tuple[int, ...]]:
+    if scale != 1:
+        lengths = tuple((int(l * scale) for l in lengths))
+    return lengths if len(lengths) > 1 else lengths[0]
 
-    if _VERTICAL_SCALE != 1:
-        vertical *= _VERTICAL_SCALE
 
-    return int(horizontal), int(vertical)
+def rescale_horizontal(*horizontal_lengths: int) -> Union[int, Tuple[int, ...]]:
+    return _rescale_lengths(_HORIZONTAL_SCALE, *horizontal_lengths)
+
+
+def rescale_vertical(*vertical_lengths: int) -> Union[int, Tuple[int, ...]]:
+    return _rescale_lengths(_VERTICAL_SCALE, *vertical_lengths)
