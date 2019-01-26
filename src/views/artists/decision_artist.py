@@ -4,6 +4,7 @@ from typing import Callable, List, Union
 from data.colors import GREEN
 from data.constants import TEXTWIDTH
 from scenes.decision_scene import DecisionScene
+from views.artists.drawing_utils import rescale_horizontal, rescale_vertical
 from views.artists.scene_artist_base import SceneArtist
 from views.screen_base import Screen
 
@@ -40,4 +41,8 @@ class DecisionArtist(SceneArtist):
         main_text_fun = _parse_text_fun(main_text)
 
         texts = _format_text(main_text_fun(), option_text)
-        screen.render_texts(texts, font_size=40, x=250, y=250, color=GREEN, spacing=50)
+
+        x, font_size, spacing = rescale_horizontal(250, 40, 50)
+        y = rescale_vertical(250)
+        screen.render_texts(texts, font_size=font_size, x=x, y=y, color=GREEN,
+                            spacing=spacing)
