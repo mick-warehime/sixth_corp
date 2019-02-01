@@ -42,12 +42,14 @@ class PygameScreen(Screen):
             y += spacing
             self.render_text(text, font_size, x, y, color)
 
-    def render_text(self, text: str, font_size: int, x: int, y: int, color: Color) -> None:
+    def render_text(self, text: str, font_size: int, x: int, y: int,
+                    color: Color) -> None:
         font = self._font(font_size)
         rasterized = font.render(text, True, color)
         self._screen.blit(rasterized, (x, y))
 
-    def render_image(self, image_path: str, x: int, y: int, w: int, h: int) -> None:
+    def render_image(self, image_path: str, x: int, y: int, w: int,
+                     h: int) -> None:
         image = load_image(image_path)
         rect = image.get_rect()
         rect.x = x
@@ -56,8 +58,10 @@ class PygameScreen(Screen):
             image = pygame.transform.scale(image, (w, h))
         self._screen.blit(image, rect)
 
-    def render_rect(self, x: int, y: int, w: int, h: int, color: Color, width: int) -> None:
-        pygame.draw.rect(self._screen, color, pygame.rect.Rect(x, y, w, h), width)
+    def render_rect(self, x: int, y: int, w: int, h: int, color: Color,
+                    width: int) -> None:
+        pygame.draw.rect(self._screen, color, pygame.rect.Rect(x, y, w, h),
+                         width)
 
     def clear(self) -> None:
         self._screen.fill((0, 0, 0))
