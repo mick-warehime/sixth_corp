@@ -8,10 +8,10 @@ from views.artists.scene_artist_base import SceneArtist
 from views.screen_base import Screen
 from views.stack_utils import stack_position
 
-_TEXT_SPACE = rescale_horizontal(10)
-_STACK_OUTLINE = rescale_horizontal(2)
-_FONT_SIZE = rescale_horizontal(24)
-_TARGET_SIZE = rescale_horizontal(50)
+_TEXT_SPACE, = rescale_horizontal(10)
+_STACK_OUTLINE, = rescale_horizontal(2)
+_FONT_SIZE, = rescale_horizontal(24)
+_TARGET_SIZE, = rescale_horizontal(50)
 
 
 class CombatStackArtist(SceneArtist):

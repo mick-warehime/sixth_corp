@@ -43,6 +43,6 @@ class DecisionArtist(SceneArtist):
         texts = _format_text(main_text_fun(), option_text)
 
         x, font_size, spacing = rescale_horizontal(250, 40, 50)
-        y = rescale_vertical(250)
+        y, = rescale_vertical(250)
         screen.render_texts(texts, font_size=font_size, x=x, y=y, color=GREEN,
                             spacing=spacing)

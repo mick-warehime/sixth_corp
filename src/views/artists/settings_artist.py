@@ -12,7 +12,7 @@ class SettingsArtist(SceneArtist):
         background_image = scene.background
 
         x, font_size, spacing = rescale_horizontal(250, 35, 50)
-        y = rescale_vertical(250)
+        y, = rescale_vertical(250)
         screen.render_image(background_image, 0, 0, *SCREEN_SIZE)
         screen.render_texts(
             list(scene.options),
