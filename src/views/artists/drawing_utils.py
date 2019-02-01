@@ -10,7 +10,7 @@ _VERTICAL_SCALE = SCREEN_SIZE[1] / _REF_SCREEN_HEIGHT
 
 
 def _rescale_lengths(scale: float,
-                     *lengths: int) ->Tuple[int, ...]:
+                     *lengths: int) -> Tuple[int, ...]:
     if scale != 1:
         lengths = tuple((int(l * scale) for l in lengths))
     return lengths
