@@ -1,6 +1,6 @@
 """Implementation of  BasicStatus"""
 from collections import defaultdict
-from typing import Callable, Union, Dict, Tuple
+from typing import Callable, Dict, Tuple, Union
 
 from characters.states import Attributes, AttributeType, State, Status
 
