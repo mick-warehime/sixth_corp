@@ -9,7 +9,8 @@ from characters.chassis import Chassis
 from characters.chassis_examples import ChassisTypes
 from characters.chassis_factory import build_chassis
 from characters.inventory import InventoryBase
-from characters.states import Attributes, AttributeType, BasicStatus, State
+from characters.states import Attributes, AttributeType, State, Status
+from characters.status import BasicStatus
 from combat.ai_base import AI
 from combat.moves_base import Move
 
@@ -22,16 +23,15 @@ class CharacterImpl(Character):
         super().__init__()
         if chassis is None:
             chassis = build_chassis(ChassisTypes.NO_LEGS.data)
-        self._name = name
         self._inventory: InventoryBase = chassis
-        self._base_status = BasicStatus()
+        self._status = _CombinedStatus(name, self._inventory)
         self._image_path = image_path
         self._position: Position = None
         self._ai: AI = None
 
-        self._base_status.set_attribute_bounds(
-            Attributes.HEALTH, 0,
-            partial(self.get_attribute, Attributes.MAX_HEALTH))
+    @property
+    def status(self) -> Status:
+        return self._status
 
     @property
     def inventory(self) -> InventoryBase:
@@ -57,21 +57,6 @@ class CharacterImpl(Character):
     def position(self, pos: Position) -> None:
         self._position = pos
 
-    def has_state(self, state: State) -> bool:
-        return (self._base_status.has_state(state)
-                or self.inventory.grants_state(state))
-
-    def increment_attribute(self, attribute: AttributeType, delta: int) -> None:
-        self._base_status.increment_attribute(attribute, delta)
-
-    def get_attribute(self, attribute: AttributeType) -> int:
-        modifier = self.inventory.total_modifier(attribute)
-        value = self._base_status.get_attribute(attribute) + modifier
-        return self._base_status.value_in_bounds(value, attribute)
-
-    def description(self) -> str:
-        return self._name
-
     def select_move(self) -> Move:
         return self._ai.select_move()
 
@@ -79,4 +64,36 @@ class CharacterImpl(Character):
         self._ai.set_targets(targets)
 
     def __repr__(self) -> str:
-        return self._name
+        return self._status.name
+
+
+class _CombinedStatus(Status):
+    """In-game state deriving from a BasisStatus and an Inventory.
+
+    The mods in the inventory augment the states and attributes of the basic
+    status.
+    """
+
+    def __init__(self, name: str, inventory: InventoryBase) -> None:
+        self._base_status = BasicStatus()
+        self._inventory = inventory
+        self.name = name
+
+        self._base_status.set_attribute_bounds(
+            Attributes.HEALTH, 0,
+            partial(self.get_attribute, Attributes.MAX_HEALTH))
+
+    def has_state(self, state: State) -> bool:
+        return (self._base_status.has_state(state)
+                or self._inventory.grants_state(state))
+
+    def get_attribute(self, attribute: AttributeType) -> int:
+        modifier = self._inventory.total_modifier(attribute)
+        value = self._base_status.get_attribute(attribute) + modifier
+        return self._base_status.value_in_bounds(value, attribute)
+
+    def increment_attribute(self, attribute: AttributeType, delta: int) -> None:
+        self._base_status.increment_attribute(attribute, delta)
+
+    def description(self) -> str:
+        return self.name

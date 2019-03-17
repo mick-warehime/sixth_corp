@@ -46,7 +46,7 @@ class CombatManagerTest(TestCase):
         defender = create_combat_group(1, base_name='defender')
         defender[0].inventory.attempt_store(
             GenericMod(subroutines_granted=(Repair(5)), valid_slots=Slots.ARMS))
-        defender[0].increment_attribute(Attributes.HEALTH, -5)
+        defender[0].status.increment_attribute(Attributes.HEALTH, -5)
         manager = CombatManager(attackers=attacker, defenders=defender)
 
         attack_moves = manager.attackers_moves
@@ -91,13 +91,13 @@ class CombatManagerTest(TestCase):
         manager.take_turn(attack_moves[0], defense_moves[0])
 
         # both defenders attack
-        attacker_health = attacker[0].get_attribute(Attributes.HEALTH)
+        attacker_health = attacker[0].status.get_attribute(Attributes.HEALTH)
         self.assertEqual(attacker_health, health - ndefenders * damage)
 
         # attacker only hits one defender
-        first_defender_health = attack_moves[0][0].target.get_attribute(
+        first_defender_health = attack_moves[0][0].target.status.get_attribute(
             Attributes.HEALTH)
-        second_defender_health = attack_moves[1][0].target.get_attribute(
+        second_defender_health = attack_moves[1][0].target.status.get_attribute(
             Attributes.HEALTH)
         self.assertEqual(first_defender_health, health - damage)
         self.assertEqual(second_defender_health, health)

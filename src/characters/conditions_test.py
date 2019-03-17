@@ -1,32 +1,43 @@
 from characters.conditions import HasState, IsDead
-from characters.states import Attributes, BasicStatus, State
+from characters.states import Attributes, State, Stateful
+from characters.status import BasicStatus
+
+
+class _DummyStateful(Stateful):
+
+    @property
+    def status(self) -> BasicStatus:
+        return self._status
+
+    def __init__(self):
+        self._status = BasicStatus()
 
 
 def test_condition_and():
-    stateful = BasicStatus()
+    stateful = _DummyStateful()
 
     cond = HasState(State.ON_FIRE) & IsDead()
     assert not cond.check(stateful)
-    stateful.set_state(State.ON_FIRE, True)
+    stateful.status.set_state(State.ON_FIRE, True)
     assert cond.check(stateful)
 
     assert not (cond & HasState(State.FROZEN)).check(stateful)
 
 
 def test_condition_or():
-    stateful = BasicStatus()
+    stateful = _DummyStateful()
 
     cond = HasState(State.ON_FIRE) | IsDead()
     assert cond.check(stateful)
-    stateful.set_attribute(Attributes.HEALTH, 1)
+    stateful.status.increment_attribute(Attributes.HEALTH, 1)
     assert not cond.check(stateful)
 
-    stateful.set_state(State.FROZEN, True)
+    stateful.status.set_state(State.FROZEN, True)
     assert (cond | HasState(State.FROZEN)).check(stateful)
 
 
 def test_condition_not():
-    stateful = BasicStatus()
+    stateful = _DummyStateful()
     cond = HasState(State.ON_FIRE)
 
     assert ~cond.check(stateful)
@@ -36,10 +47,10 @@ def test_condition_not():
 
 
 def test_alive_to_dead():
-    stateful = BasicStatus()
+    stateful = _DummyStateful()
 
     assert IsDead().check(stateful)
-    stateful.set_attribute(Attributes.HEALTH, 3)
+    stateful.status.increment_attribute(Attributes.HEALTH, 3)
     assert not IsDead().check(stateful)
-    stateful.set_attribute(Attributes.HEALTH, 0)
+    stateful.status.increment_attribute(Attributes.HEALTH, -3)
     assert IsDead().check(stateful)

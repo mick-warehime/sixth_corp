@@ -16,8 +16,8 @@ def build_character(data: CharacterData) -> CharacterImpl:
         assert char.inventory.can_store(mod), 'Mod cannot be picked up.'
         char.inventory.attempt_store(mod)
 
-    health = char.get_attribute(Attributes.MAX_HEALTH)
-    char.increment_attribute(Attributes.HEALTH, health)
+    health = char.status.get_attribute(Attributes.MAX_HEALTH)
+    char.status.increment_attribute(Attributes.HEALTH, health)
 
     # TODO(#112) - move positions to combat view
     if data.ai_type == AIType.Human:

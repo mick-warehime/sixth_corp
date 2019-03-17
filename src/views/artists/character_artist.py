@@ -27,8 +27,8 @@ class CharacterArtist(SceneArtist):
 
     def _render_health(self, character: Character, screen: Screen) -> None:
         pos = character.position
-        health = character.get_attribute(Attributes.HEALTH)
-        max_health = character.get_attribute(Attributes.MAX_HEALTH)
+        health = character.status.get_attribute(Attributes.HEALTH)
+        max_health = character.status.get_attribute(Attributes.MAX_HEALTH)
         health_bar = '{} / {}'.format(health, max_health)
         x = int(pos.x + pos.w / 4.0)
         y = pos.y - 40
@@ -38,7 +38,7 @@ class CharacterArtist(SceneArtist):
         pos = character.position
         x = int(pos.x + pos.w / 4.0)
         y = pos.y + 40 + pos.h
-        screen.render_text(character.description(), 30, x, y, GREEN)
+        screen.render_text(character.status.description(), 30, x, y, GREEN)
 
     def _render_selected(self, character: Character, screen: Screen, scene: CombatScene) -> None:
         if character == scene.selected:

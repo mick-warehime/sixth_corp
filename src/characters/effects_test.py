@@ -21,25 +21,25 @@ def teardown_function(function):
 
 
 def test_restart_game(player):
-    player.increment_attribute(Attributes.HEALTH, -1)
-    old_health = player.get_attribute(Attributes.HEALTH)
+    player.status.increment_attribute(Attributes.HEALTH, -1)
+    old_health = player.status.get_attribute(Attributes.HEALTH)
     RestartGame().execute()
-    assert old_health is not get_player().get_attribute(Attributes.HEALTH)
+    assert old_health is not get_player().status.get_attribute(Attributes.HEALTH)
 
 
 def test_increment_player_attribute(player):
-    health = player.get_attribute(Attributes.HEALTH)
+    health = player.status.get_attribute(Attributes.HEALTH)
     delta = -2
     IncrementAttribute(player, Attributes.HEALTH, delta).execute()
-    assert player.get_attribute(Attributes.HEALTH) == health + delta
+    assert player.status.get_attribute(Attributes.HEALTH) == health + delta
 
 
 def test_increment_attribute():
     char = build_character(CharacterTypes.DRONE.data)
-    health = char.get_attribute(Attributes.HEALTH)
+    health = char.status.get_attribute(Attributes.HEALTH)
     delta = -3
     IncrementAttribute(char, Attributes.HEALTH, delta).execute()
-    assert char.get_attribute(Attributes.HEALTH) == health + delta
+    assert char.status.get_attribute(Attributes.HEALTH) == health + delta
 
 
 def test_acquire_mod(player):
