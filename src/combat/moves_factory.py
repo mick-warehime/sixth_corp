@@ -40,4 +40,5 @@ def valid_moves(user: Character,
 
 
 def all_moves(user: Character, targets: Sequence[Character]) -> Sequence[Move]:
-    return [MoveImpl(a, user, t) for a, t in product(user.subroutines(), targets)]
+    return [MoveImpl(a, user, t) for a, t in
+            product(user.inventory.all_subroutines(), targets)]

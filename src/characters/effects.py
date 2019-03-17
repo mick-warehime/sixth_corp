@@ -31,7 +31,7 @@ class AcquireMod(Effect):
         self._mod = mod
 
     def execute(self) -> None:
-        get_player().attempt_pickup(self._mod)
+        get_player().inventory.attempt_store(self._mod)
 
 
 class ChangeLocation(Effect):

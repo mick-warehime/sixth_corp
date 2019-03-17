@@ -25,7 +25,7 @@ class CharacterImpl(Character):
         if chassis is None:
             chassis = build_chassis(ChassisTypes.NO_LEGS.data)
         self._name = name
-        self.inventory: InventoryBase = chassis
+        self._inventory: InventoryBase = chassis
         self._base_status = BasicStatus()
         self._image_path = image_path
         self._position: Position = None
@@ -34,6 +34,10 @@ class CharacterImpl(Character):
         self._base_status.set_attribute_bounds(
             Attributes.HEALTH, 0,
             partial(self.get_attribute, Attributes.MAX_HEALTH))
+
+    @property
+    def inventory(self) -> InventoryBase:
+        return self._inventory
 
     @property
     def image_path(self) -> str:
@@ -54,16 +58,6 @@ class CharacterImpl(Character):
     @position.setter
     def position(self, pos: Position) -> None:
         self._position = pos
-
-    def attempt_pickup(self, mod: Mod) -> None:
-        mod_type = mod.__class__.__name__
-        if self.inventory.can_store(mod):
-            logging.debug('{} picking up {}'.format(self, mod_type))
-            self.inventory.store(mod)
-        else:
-            logging.debug(
-                '{} attempted to pickup {} but was unable.'.format(self,
-                                                                   mod_type))
 
     def has_state(self, state: State) -> bool:
         return (self._base_status.has_state(state)

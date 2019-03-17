@@ -1,5 +1,6 @@
 """Basic implementation of character inventory."""
 import abc
+import logging
 from typing import Callable, Iterable, List, Sequence
 
 from characters.mods_base import Mod
@@ -17,6 +18,18 @@ class InventoryBase(metaclass=abc.ABCMeta):
     def _store(self, mod: Mod) -> None:
         """Internal implementation of mod storage.
         """
+
+    def attempt_store(self, mod: Mod) -> None:
+        """Store a mod if possible.
+        """
+        mod_type = mod.__class__.__name__
+        if self.can_store(mod):
+            logging.debug('{} picking up {}'.format(self, mod_type))
+            self._store(mod)
+        else:
+            logging.debug(
+                '{} attempted to pickup {} but was unable.'.format(self,
+                                                                   mod_type))
 
     def store(self, mod: Mod) -> None:
         """Store a mod.
