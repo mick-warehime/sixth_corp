@@ -31,16 +31,6 @@ class InventoryBase(metaclass=abc.ABCMeta):
                 '{} attempted to pickup {} but was unable.'.format(self,
                                                                    mod_type))
 
-    def store(self, mod: Mod) -> None:
-        """Store a mod.
-
-        This method fails if can_store is False.
-        """
-        if not self.can_store(mod):
-            raise ValueError('Mod of type {} cannot be stored.'.format(
-                mod.__class__.__name__))
-        self._store(mod)
-
     @abc.abstractmethod
     def remove_mod(self, mod: Mod) -> None:
         """Remove a mod from the inventory."""
