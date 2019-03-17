@@ -1,7 +1,7 @@
 """Basic class for player and enemies."""
-import logging
+
 from functools import partial
-from typing import List, Sequence
+from typing import List
 
 from characters.character_base import Character
 from characters.character_position import Position
@@ -9,9 +9,7 @@ from characters.chassis import Chassis
 from characters.chassis_examples import ChassisTypes
 from characters.chassis_factory import build_chassis
 from characters.inventory import InventoryBase
-from characters.mods_base import Mod
 from characters.states import Attributes, AttributeType, BasicStatus, State
-from characters.subroutines_base import Subroutine
 from combat.ai_base import AI
 from combat.moves_base import Move
 

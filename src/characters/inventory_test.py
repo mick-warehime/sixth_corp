@@ -41,10 +41,13 @@ def test_basic_inventory_mods(make_inventory):
 
     inventory.attempt_store(GenericMod(subroutines_granted=FireLaser(2)))
     inventory.attempt_store(GenericMod(states_granted=State.ON_FIRE,
-                               attribute_modifiers={Attributes.MAX_HEALTH: 2}))
-    inventory.attempt_store(GenericMod(attribute_modifiers={Attributes.MAX_HEALTH: 1}))
-    inventory.attempt_store(GenericMod(attribute_modifiers={Attributes.MAX_HEALTH: 3},
-                               subroutines_granted=Repair(3)))
+                                       attribute_modifiers={
+                                           Attributes.MAX_HEALTH: 2}))
+    inventory.attempt_store(
+        GenericMod(attribute_modifiers={Attributes.MAX_HEALTH: 1}))
+    inventory.attempt_store(
+        GenericMod(attribute_modifiers={Attributes.MAX_HEALTH: 3},
+                   subroutines_granted=Repair(3)))
 
     mods = list(inventory.mods(lambda x: bool(x.subroutines_granted()),
                                active_only=False))
@@ -63,9 +66,11 @@ def test_total_modifier():
     inventory = BasicInventory()
 
     assert inventory.total_modifier(Attributes.MAX_HEALTH) == 0
-    inventory.attempt_store(GenericMod(attribute_modifiers={Attributes.MAX_HEALTH: 5}))
+    inventory.attempt_store(
+        GenericMod(attribute_modifiers={Attributes.MAX_HEALTH: 5}))
     assert inventory.total_modifier(Attributes.MAX_HEALTH) == 5
-    inventory.attempt_store(GenericMod(attribute_modifiers={Attributes.MAX_HEALTH: 3}))
+    inventory.attempt_store(
+        GenericMod(attribute_modifiers={Attributes.MAX_HEALTH: 3}))
     assert inventory.total_modifier(Attributes.MAX_HEALTH) == 8
 
 

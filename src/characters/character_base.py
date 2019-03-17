@@ -4,7 +4,6 @@ from typing import List
 
 from characters.character_position import Position
 from characters.inventory import InventoryBase
-from characters.mods_base import Mod
 from characters.states import Stateful
 
 
