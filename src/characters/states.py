@@ -57,10 +57,6 @@ class Status(metaclass=ABCMeta):
     def increment_attribute(self, attribute: AttributeType, delta: int) -> None:
         """Increment an attribute by a fixed amount."""
 
-    @abstractmethod
-    def description(self) -> str:
-        """Basic description of the object for logging and display purposes."""
-
 
 class Stateful(metaclass=ABCMeta):
     """An in-game object with an in-game state."""
@@ -69,3 +65,7 @@ class Stateful(metaclass=ABCMeta):
     @abstractmethod
     def status(self) -> Status:
         """This is what stores the object's state."""
+
+    @abstractmethod
+    def description(self) -> str:
+        """Basic description of the object for logging and display purposes."""

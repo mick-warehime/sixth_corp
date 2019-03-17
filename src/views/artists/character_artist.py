@@ -38,7 +38,7 @@ class CharacterArtist(SceneArtist):
         pos = character.position
         x = int(pos.x + pos.w / 4.0)
         y = pos.y + 40 + pos.h
-        screen.render_text(character.status.description(), 30, x, y, GREEN)
+        screen.render_text(character.description(), 30, x, y, GREEN)
 
     def _render_selected(self, character: Character, screen: Screen, scene: CombatScene) -> None:
         if character == scene.selected:

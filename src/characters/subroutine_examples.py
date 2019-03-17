@@ -17,7 +17,7 @@ class Repair(Subroutine):
 
     def describe_use(self, user: Stateful, target: Stateful) -> str:
         style = '{} repairs itself for {} damage.'
-        return style.format(user.status.description(), self._amount)
+        return style.format(user.description(), self._amount)
 
     def description(self) -> str:
         return 'Repair {} damage.'.format(self._amount)
@@ -43,8 +43,8 @@ class FireLaser(Subroutine):
 
     def describe_use(self, user: Stateful, target: Stateful) -> str:
         style = '{} fires a laser at {} for {} damage!'
-        return style.format(user.status.description(),
-                            target.status.description(), self._damage)
+        return style.format(user.description(),
+                            target.description(), self._damage)
 
     def description(self) -> str:
         return 'Fire laser! ({} damage)'.format(self._damage)
@@ -69,8 +69,8 @@ class Harmless(Subroutine):
 
     def describe_use(self, user: Stateful, target: Stateful) -> str:
         style = '{} from {} does nothing to {}'
-        return style.format(self.description(), user.status.description(),
-                            target.status.description())
+        return style.format(self.description(), user.description(),
+                            target.description())
 
     def description(self) -> str:
         return 'Harmless subroutine {}'.format(self.value)
@@ -95,8 +95,8 @@ class Useless(Subroutine):
 
     def describe_use(self, user: Stateful, target: Stateful) -> str:
         style = '{} cant use this useless subroutine against {}'
-        return style.format(user.status.description(),
-                            target.status.description())
+        return style.format(user.description(),
+                            target.description())
 
     def description(self) -> str:
         return 'Useless subroutine {}'.format(self.value)

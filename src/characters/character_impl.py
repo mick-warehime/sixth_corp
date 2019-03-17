@@ -24,10 +24,11 @@ class CharacterImpl(Character):
         if chassis is None:
             chassis = build_chassis(ChassisTypes.NO_LEGS.data)
         self._inventory: InventoryBase = chassis
-        self._status = _CombinedStatus(name, self._inventory)
+        self._status = _CombinedStatus(self._inventory)
         self._image_path = image_path
         self._position: Position = None
         self._ai: AI = None
+        self._name = name
 
     @property
     def status(self) -> Status:
@@ -64,7 +65,10 @@ class CharacterImpl(Character):
         self._ai.set_targets(targets)
 
     def __repr__(self) -> str:
-        return self._status.name
+        return self.description()
+
+    def description(self) -> str:
+        return self._name
 
 
 class _CombinedStatus(Status):
@@ -74,10 +78,9 @@ class _CombinedStatus(Status):
     status.
     """
 
-    def __init__(self, name: str, inventory: InventoryBase) -> None:
+    def __init__(self, inventory: InventoryBase) -> None:
         self._base_status = BasicStatus()
         self._inventory = inventory
-        self.name = name
 
         self._base_status.set_attribute_bounds(
             Attributes.HEALTH, 0,
@@ -94,6 +97,3 @@ class _CombinedStatus(Status):
 
     def increment_attribute(self, attribute: AttributeType, delta: int) -> None:
         self._base_status.increment_attribute(attribute, delta)
-
-    def description(self) -> str:
-        return self.name
