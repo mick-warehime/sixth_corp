@@ -1,5 +1,5 @@
 from characters.conditions import HasState, IsDead
-from characters.states import Attributes, State, Stateful, Status
+from characters.states import Attributes, State, Stateful
 from characters.status import BasicStatus
 
 

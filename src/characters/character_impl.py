@@ -64,7 +64,7 @@ class CharacterImpl(Character):
         self._ai.set_targets(targets)
 
     def __repr__(self) -> str:
-        return self.status._name
+        return self._status.name
 
 
 class _CombinedStatus(Status):
@@ -74,10 +74,10 @@ class _CombinedStatus(Status):
     status.
     """
 
-    def __init__(self, name: str, inventory: InventoryBase):
+    def __init__(self, name: str, inventory: InventoryBase) -> None:
         self._base_status = BasicStatus()
         self._inventory = inventory
-        self._name = name
+        self.name = name
 
         self._base_status.set_attribute_bounds(
             Attributes.HEALTH, 0,
@@ -96,4 +96,4 @@ class _CombinedStatus(Status):
         self._base_status.increment_attribute(attribute, delta)
 
     def description(self) -> str:
-        return self._name
+        return self.name
