@@ -6,6 +6,8 @@ from characters.states import Stateful
 
 
 class Subroutine(metaclass=abc.ABCMeta):
+    """An action that can be taken by a Stateful object on a Stateful object.
+    """
 
     @abc.abstractmethod
     def _use(self, user: Stateful, target: Stateful) -> None:

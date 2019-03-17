@@ -44,7 +44,7 @@ class CombatManagerTest(TestCase):
     def test_enumerates_attack_and_defense(self):
         attacker = create_combat_group(1, base_name='attacker')
         defender = create_combat_group(1, base_name='defender')
-        defender[0].attempt_pickup(
+        defender[0].inventory.attempt_store(
             GenericMod(subroutines_granted=(Repair(5)), valid_slots=Slots.ARMS))
         defender[0].increment_attribute(Attributes.HEALTH, -5)
         manager = CombatManager(attackers=attacker, defenders=defender)

@@ -14,7 +14,7 @@ def build_character(data: CharacterData) -> CharacterImpl:
     for mod_data in data.mods:
         mod = build_mod(mod_data)
         assert char.inventory.can_store(mod), 'Mod cannot be picked up.'
-        char.attempt_pickup(mod)
+        char.inventory.attempt_store(mod)
 
     health = char.get_attribute(Attributes.MAX_HEALTH)
     char.increment_attribute(Attributes.HEALTH, health)

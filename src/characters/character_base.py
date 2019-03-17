@@ -3,7 +3,7 @@ from abc import abstractmethod
 from typing import List
 
 from characters.character_position import Position
-from characters.mods_base import Mod
+from characters.inventory import InventoryBase
 from characters.states import Stateful
 
 
@@ -33,9 +33,10 @@ class Character(Stateful):
     def position(self, pos: Position) -> None:
         pass
 
+    @property
     @abstractmethod
-    def attempt_pickup(self, mod: Mod) -> None:
-        pass
+    def inventory(self) -> InventoryBase:
+        """All characters have an inventory."""
 
     @abstractmethod
     def select_move(self) -> 'Move':  # type: ignore
