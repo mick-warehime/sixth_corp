@@ -65,9 +65,6 @@ class CharacterImpl(Character):
                 '{} attempted to pickup {} but was unable.'.format(self,
                                                                    mod_type))
 
-    def subroutines(self) -> Sequence[Subroutine]:
-        return self.inventory.all_subroutines()
-
     def has_state(self, state: State) -> bool:
         return (self._base_status.has_state(state)
                 or self.inventory.grants_state(state))

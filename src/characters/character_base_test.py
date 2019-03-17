@@ -59,8 +59,9 @@ class CharacterTest(TestCase):
         char = self._character()
 
         subroutine = FireLaser(12)
-        assert subroutine not in char.subroutines()
+        assert subroutine not in char.inventory.all_subroutines()
 
         char.attempt_pickup(
-            GenericMod(subroutines_granted=subroutine, valid_slots=_ACTIVE_SLOT))
-        assert subroutine in char.subroutines()
+            GenericMod(subroutines_granted=subroutine,
+                       valid_slots=_ACTIVE_SLOT))
+        assert subroutine in char.inventory.all_subroutines()
