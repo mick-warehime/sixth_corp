@@ -49,7 +49,7 @@ class CombatGym(CombatManager):
                     combat_state.append(attr)
 
                 for state in self._character_states:
-                    val = int(member.has_state(state))
+                    val = int(member.status.has_state(state))
                     combat_state.append(val)
 
                 group_state.append(tuple(combat_state))
@@ -81,7 +81,7 @@ class CombatGym(CombatManager):
         """Limits the possible values of attributes to 0, 1, 2, ... MAX/STEP"""
 
         # TODO - consider allowing negative/more attribute states
-        val = char.get_attribute(attr)
+        val = char.status.get_attribute(attr)
         step = math.ceil(val / CombatGym.ATTRIBUTE_STEP)
         return min(step, self.max_attribute())
 

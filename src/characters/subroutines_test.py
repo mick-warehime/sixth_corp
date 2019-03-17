@@ -1,5 +1,6 @@
 import pytest
 
+from characters.character_base import Character
 from characters.character_examples import CharacterData
 from characters.character_factory import build_character
 from characters.chassis_examples import ChassisTypes
@@ -13,10 +14,10 @@ def character():
     return build_character(CharacterData(ChassisTypes.NO_LEGS.data))
 
 
-def test_repair_subroutine(character):
+def test_repair_subroutine(character: Character):
     repair = Repair(3)
     assert not repair.can_use(character, character)
-    character.increment_attribute(Attributes.HEALTH, -1)
+    character.status.increment_attribute(Attributes.HEALTH, -1)
     assert repair.can_use(character, character)
     repair.use(character, character)
     assert FullHealth().check(character)
@@ -30,7 +31,7 @@ def test_fire_laser(character):
     assert not fire_laser.can_use(character, character)
     assert fire_laser.can_use(character, other_char)
     fire_laser.use(character, other_char)
-    value = other_char.get_attribute
+    value = other_char.status.get_attribute
     assert value(Attributes.HEALTH) == value(Attributes.MAX_HEALTH) - damage
 
 

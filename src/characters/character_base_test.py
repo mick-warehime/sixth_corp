@@ -20,40 +20,40 @@ class CharacterTest(TestCase):
 
     def test_character_has_attributes(self):
         char = self._character()
-        assert char.get_attribute(Attributes.HEALTH)
+        assert char.status.get_attribute(Attributes.HEALTH)
 
     def test_kill_character(self):
         char = self._character()
-        health = char.get_attribute(Attributes.HEALTH)
-        char.increment_attribute(Attributes.HEALTH, -health)
+        health = char.status.get_attribute(Attributes.HEALTH)
+        char.status.increment_attribute(Attributes.HEALTH, -health)
         self.assertTrue(IsDead().check(char))
 
     def test_character_state_change(self):
         char = self._character()
 
-        assert not char.has_state(State.ON_FIRE)
+        assert not char.status.has_state(State.ON_FIRE)
         char.inventory.attempt_store(
             GenericMod(states_granted=State.ON_FIRE, valid_slots=_ACTIVE_SLOT))
-        assert char.has_state(State.ON_FIRE)
+        assert char.status.has_state(State.ON_FIRE)
 
     def test_mods_affect_max_attribute(self):
         char = self._character()
-        max_health = char.get_attribute(Attributes.MAX_HEALTH)
+        max_health = char.status.get_attribute(Attributes.MAX_HEALTH)
         bonus = 5
         char.inventory.attempt_store(
             GenericMod(attribute_modifiers={Attributes.MAX_HEALTH: bonus},
                        valid_slots=_ACTIVE_SLOT))
 
-        assert char.get_attribute(Attributes.MAX_HEALTH) == max_health + bonus
+        assert char.status.get_attribute(Attributes.MAX_HEALTH) == max_health + bonus
 
     def test_max_attributes_determine_bounds(self):
         char = self._character()
-        max_health = char.get_attribute(Attributes.MAX_HEALTH)
+        max_health = char.status.get_attribute(Attributes.MAX_HEALTH)
         bonus = 5
 
-        assert char.get_attribute(Attributes.HEALTH) == max_health
-        char.increment_attribute(Attributes.HEALTH, bonus)
-        assert char.get_attribute(Attributes.HEALTH) == max_health
+        assert char.status.get_attribute(Attributes.HEALTH) == max_health
+        char.status.increment_attribute(Attributes.HEALTH, bonus)
+        assert char.status.get_attribute(Attributes.HEALTH) == max_health
 
     def test_mods_add_subroutines(self):
         char = self._character()

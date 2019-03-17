@@ -22,7 +22,7 @@ class IncrementAttribute(Effect):
         self._amount = amount
 
     def execute(self) -> None:
-        self._target.increment_attribute(self._attribute, self._amount)
+        self._target.status.increment_attribute(self._attribute, self._amount)
 
 
 class AcquireMod(Effect):

@@ -57,8 +57,8 @@ def second_scene() -> DecisionScene:
     player = get_player()
     main_text = (
         'Player HP: {}. Player Max HP: {}.'.format(
-            player.get_attribute(Attributes.HEALTH),
-            player.get_attribute(Attributes.MAX_HEALTH)))
+            player.status.get_attribute(Attributes.HEALTH),
+            player.status.get_attribute(Attributes.MAX_HEALTH)))
 
     options = {
         '0': DecisionOption('Gain 1 HP', second_scene,

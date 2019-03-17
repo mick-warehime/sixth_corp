@@ -61,17 +61,17 @@ class HasState(Condition):
         self._state = state
 
     def check(self, target: Stateful) -> bool:
-        return target.has_state(self._state)
+        return target.status.has_state(self._state)
 
 
 class IsDead(Condition):
 
     def check(self, target: Stateful) -> bool:
-        return not target.get_attribute(Attributes.HEALTH)
+        return not target.status.get_attribute(Attributes.HEALTH)
 
 
 class FullHealth(Condition):
 
     def check(self, target: Stateful) -> bool:
-        value = target.get_attribute
+        value = target.status.get_attribute
         return value(Attributes.HEALTH) == value(Attributes.MAX_HEALTH)
