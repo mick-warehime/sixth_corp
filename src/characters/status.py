@@ -73,6 +73,3 @@ class BasicStatus(Status):
     def set_attribute(self, attribute: AttributeType, value: int) -> None:
         value = self.value_in_bounds(value, attribute)
         self._attributes[attribute] = value
-
-    def description(self) -> str:
-        return 'BasicStatus'

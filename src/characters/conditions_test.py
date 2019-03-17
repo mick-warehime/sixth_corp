@@ -5,6 +5,9 @@ from characters.status import BasicStatus
 
 class _DummyStateful(Stateful):
 
+    def description(self) -> str:
+        return 'dummy stateful'
+
     @property
     def status(self) -> BasicStatus:
         return self._status

@@ -49,5 +49,5 @@ class SimulationManager(object):
 
         raise SimulationError(
             'Combat between {} and {} took more than {} turns'.format(
-                attacker.status.description(), defender.status.description(),
+                attacker.description(), defender.description(),
                 max_turns))
