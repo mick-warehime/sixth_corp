@@ -1,33 +1,28 @@
 """Basic class for player and enemies."""
 
 from functools import partial
-from typing import List
 
 from characters.character_base import Character
 from characters.character_position import Position
 from characters.chassis import Chassis
-from characters.chassis_examples import ChassisTypes
-from characters.chassis_factory import build_chassis
 from characters.inventory import InventoryBase
 from characters.states import Attributes, AttributeType, State, Status
 from characters.status import BasicStatus
 from combat.ai_base import AI
-from combat.moves_base import Move
 
 
 class CharacterImpl(Character):
     """Stateful object with states and attributes affected by mods."""
 
-    def __init__(self, chassis: Chassis = None, image_path: str = None,
+    def __init__(self, chassis: Chassis, ai: AI, image_path: str,
                  name: str = 'unnamed Character') -> None:
         super().__init__()
-        if chassis is None:
-            chassis = build_chassis(ChassisTypes.NO_LEGS.data)
+
         self._inventory: InventoryBase = chassis
         self._status = _CombinedStatus(self._inventory)
         self._image_path = image_path
         self._position: Position = None
-        self._ai: AI = None
+        self._ai: AI = ai
         self._name = name
 
     @property
@@ -43,12 +38,8 @@ class CharacterImpl(Character):
         return self._image_path
 
     @property
-    def ai(self) -> str:
+    def ai(self) -> AI:
         return self._ai
-
-    @ai.setter
-    def ai(self, ai: 'AI') -> None:
-        self._ai = ai
 
     @property
     def position(self) -> Position:
@@ -57,12 +48,6 @@ class CharacterImpl(Character):
     @position.setter
     def position(self, pos: Position) -> None:
         self._position = pos
-
-    def select_move(self) -> Move:
-        return self._ai.select_move()
-
-    def set_targets(self, targets: List['Character']) -> None:
-        self._ai.set_targets(targets)
 
     def __repr__(self) -> str:
         return self.description()

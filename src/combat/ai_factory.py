@@ -1,6 +1,5 @@
 from enum import Enum
 
-from characters.character_base import Character
 from combat.ai_base import AI
 from combat.no_ai import NoAI
 from combat.random_ai import RandomAI
@@ -13,12 +12,12 @@ class AIType(Enum):
     Human = 'Human'
 
 
-def build_ai(character: Character, ai_type: AIType) -> AI:
+def build_ai(ai_type: AIType) -> AI:
     if ai_type == AIType.Random:
-        return RandomAI(character)
+        return RandomAI()
     elif ai_type == AIType.Shuffle:
-        return ShuffleAI(character)
+        return ShuffleAI()
     elif ai_type == AIType.Human:
-        return NoAI(character)
+        return NoAI()
 
     raise ValueError('Unexpected AIType {}'.format(ai_type))
