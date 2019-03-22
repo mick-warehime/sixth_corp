@@ -15,7 +15,8 @@ class AITest(TestCase):
     @parameterized.expand(AI_TYPES)
     def test_no_valid_moves_raises(self, ai_type):
         user = build_character(CharacterTypes.USELESS.data)
-        ai = build_ai(user, ai_type)
+        ai = build_ai(ai_type)
+        ai.set_user(user)
         target = build_character(CharacterTypes.USELESS.data)
         ai.set_targets([target])
 

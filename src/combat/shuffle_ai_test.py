@@ -11,7 +11,8 @@ class ShuffleAITest(TestCase):
     def test_shuffle_ai_only_provides_usable_moves(self):
         user = build_character(CharacterTypes.HARMLESS.data)
         target = build_character(CharacterTypes.HARMLESS.data)
-        ai = ShuffleAI(user=user)
+        ai = ShuffleAI()
+        ai.set_user(user)
         ai.set_targets([target])
 
         for i in range(1000):
@@ -21,7 +22,8 @@ class ShuffleAITest(TestCase):
     def test_shuffle_ai_moves_dont_repeat(self):
         user = build_character(CharacterTypes.HARMLESS.data)
         target = build_character(CharacterTypes.HARMLESS.data)
-        ai = ShuffleAI(user=user)
+        ai = ShuffleAI()
+        ai.set_user(user)
         ai.set_targets([target])
 
         prev_move_description = ''
@@ -43,7 +45,8 @@ class ShuffleAITest(TestCase):
     def test_no_valid_moves_raises(self):
         user = build_character(CharacterTypes.USELESS.data)
         target = build_character(CharacterTypes.USELESS.data)
-        ai = ShuffleAI(user=user)
+        ai = ShuffleAI()
+        ai.set_user(user)
         ai.set_targets([target])
 
         with self.assertRaises(AssertionError):

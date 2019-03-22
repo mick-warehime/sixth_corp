@@ -18,7 +18,7 @@ from combat.moves_base import Move
 class CharacterImpl(Character):
     """Stateful object with states and attributes affected by mods."""
 
-    def __init__(self, chassis: Chassis, image_path: str,
+    def __init__(self, chassis: Chassis, ai: AI, image_path: str,
                  name: str = 'unnamed Character') -> None:
         super().__init__()
 
@@ -26,7 +26,7 @@ class CharacterImpl(Character):
         self._status = _CombinedStatus(self._inventory)
         self._image_path = image_path
         self._position: Position = None
-        self._ai: AI = None
+        self._ai: AI = ai
         self._name = name
 
     @property
