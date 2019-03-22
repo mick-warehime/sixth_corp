@@ -1,6 +1,5 @@
 """Basic class for player and enemies."""
 from abc import abstractmethod
-from typing import List
 
 from characters.character_position import Position
 from characters.inventory import InventoryBase
@@ -34,11 +33,3 @@ class Character(Stateful):
     @abstractmethod
     def inventory(self) -> InventoryBase:
         """All characters have an inventory."""
-
-    @abstractmethod
-    def select_move(self) -> 'Move':  # type: ignore
-        pass
-
-    @abstractmethod
-    def set_targets(self, targets: List['Character']) -> None:
-        pass

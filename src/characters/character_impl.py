@@ -1,7 +1,6 @@
 """Basic class for player and enemies."""
 
 from functools import partial
-from typing import List
 
 from characters.character_base import Character
 from characters.character_position import Position
@@ -10,7 +9,6 @@ from characters.inventory import InventoryBase
 from characters.states import Attributes, AttributeType, State, Status
 from characters.status import BasicStatus
 from combat.ai_base import AI
-from combat.moves_base import Move
 
 
 class CharacterImpl(Character):
@@ -50,12 +48,6 @@ class CharacterImpl(Character):
     @position.setter
     def position(self, pos: Position) -> None:
         self._position = pos
-
-    def select_move(self) -> Move:
-        return self._ai.select_move()
-
-    def set_targets(self, targets: List['Character']) -> None:
-        self._ai.set_targets(targets)
 
     def __repr__(self) -> str:
         return self.description()

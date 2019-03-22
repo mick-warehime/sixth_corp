@@ -53,7 +53,7 @@ class CombatScene(Scene):
         return IsDead().check(self._player)
 
     def enemy_action(self) -> Move:
-        return self._enemy.select_move()
+        return self._enemy.ai.select_move()
 
     def player_moves(self, target: Character) -> Sequence[Move]:
         moves: Sequence[Move] = []
@@ -68,4 +68,4 @@ class CombatScene(Scene):
         self.combat_manager.take_turn([move], [enemy_move])
 
     def _set_targets(self) -> None:
-        self._enemy.set_targets([self._player])
+        self._enemy.ai.set_targets([self._player])
