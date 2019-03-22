@@ -4,7 +4,7 @@ from characters.character_position import Position
 from characters.chassis_factory import build_chassis
 from characters.mods_factory import build_mod
 from characters.states import Attributes
-from combat.ai_factory import AIType, build_ai, build_ai
+from combat.ai_factory import AIType, build_ai
 
 
 def build_character(data: CharacterData) -> CharacterImpl:

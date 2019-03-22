@@ -6,8 +6,6 @@ from typing import List
 from characters.character_base import Character
 from characters.character_position import Position
 from characters.chassis import Chassis
-from characters.chassis_examples import ChassisTypes
-from characters.chassis_factory import build_chassis
 from characters.inventory import InventoryBase
 from characters.states import Attributes, AttributeType, State, Status
 from characters.status import BasicStatus

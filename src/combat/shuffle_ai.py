@@ -1,7 +1,6 @@
 from random import shuffle
 from typing import Iterator, List
 
-from characters.character_base import Character
 from combat.ai_impl import AIImpl
 from combat.moves_base import Move
 
