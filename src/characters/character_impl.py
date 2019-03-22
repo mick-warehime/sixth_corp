@@ -40,12 +40,8 @@ class CharacterImpl(Character):
         return self._image_path
 
     @property
-    def ai(self) -> str:
+    def ai(self) -> AI:
         return self._ai
-
-    @ai.setter
-    def ai(self, ai: 'AI') -> None:
-        self._ai = ai
 
     @property
     def position(self) -> Position:

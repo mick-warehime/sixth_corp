@@ -5,6 +5,7 @@ from typing import List
 from characters.character_position import Position
 from characters.inventory import InventoryBase
 from characters.states import Stateful
+from combat.ai_base import AI
 
 
 class Character(Stateful):
@@ -12,11 +13,7 @@ class Character(Stateful):
 
     @property
     @abstractmethod
-    def ai(self) -> 'AI':  # type: ignore
-        pass
-
-    @ai.setter
-    def ai(self, ai: 'AI') -> None:  # type: ignore
+    def ai(self) -> AI:
         pass
 
     @property
