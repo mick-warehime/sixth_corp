@@ -18,11 +18,10 @@ from combat.moves_base import Move
 class CharacterImpl(Character):
     """Stateful object with states and attributes affected by mods."""
 
-    def __init__(self, chassis: Chassis = None, image_path: str = None,
+    def __init__(self, chassis: Chassis, image_path: str,
                  name: str = 'unnamed Character') -> None:
         super().__init__()
-        if chassis is None:
-            chassis = build_chassis(ChassisTypes.NO_LEGS.data)
+
         self._inventory: InventoryBase = chassis
         self._status = _CombinedStatus(self._inventory)
         self._image_path = image_path
