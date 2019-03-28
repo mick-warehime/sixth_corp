@@ -3,7 +3,7 @@ from typing import Dict, NamedTuple, Tuple
 
 from characters.mods_base import Slots
 from characters.states import Attributes, AttributeType, Skill, State
-from characters.subroutine_examples import FireLaser, Harmless, Repair, Useless
+from characters.subroutine_examples import FireLaser, DoNothing, Repair, Unusable
 from characters.subroutines_base import Subroutine
 
 
@@ -30,12 +30,12 @@ _SINGLE_LASER = ChassisData(
 
 _HARMLESS = ChassisData(
     attribute_modifiers={Attributes.MAX_HEALTH: 1, Attributes.CPU_SLOTS: 1},
-    subroutines_granted=(Harmless(1), Harmless(2), Useless(1), Useless(2))
+    subroutines_granted=(DoNothing(1), DoNothing(2), Unusable(1), Unusable(2))
 )
 
 _USELESS = ChassisData(
     attribute_modifiers={Attributes.MAX_HEALTH: 1, Attributes.CPU_SLOTS: 1},
-    subroutines_granted=(Useless(1), Useless(2))
+    subroutines_granted=(Unusable(1), Unusable(2))
 )
 
 
