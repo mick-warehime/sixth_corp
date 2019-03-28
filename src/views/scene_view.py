@@ -10,6 +10,7 @@ from views.artists.character_artist import CharacterArtist
 from views.artists.combat_options_artist import CombatOptionsArtist
 from views.artists.combat_stack_artist import CombatStackArtist
 from views.artists.decision_artist import DecisionArtist
+from views.artists.inventory_artist import InventoryArtist
 from views.artists.overlay_artist import OverlayArtist
 from views.artists.scene_artist_base import SceneArtist
 from views.artists.settings_artist import SettingsArtist
@@ -45,7 +46,7 @@ def _build_scene_artists(scene: Scene) -> List[SceneArtist]:
     elif isinstance(scene, SettingsScene):
         artists = [SettingsArtist()]
     elif isinstance(scene, InventoryScene):
-        artists = [SettingsArtist()]
+        artists = [InventoryArtist()]
     else:
         raise ValueError('Unrecognized Scene {}'.format(scene))
     return artists
