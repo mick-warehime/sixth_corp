@@ -9,7 +9,7 @@ from events.events_base import (ControllerActivatedEvent, Event, EventType,
                                 InputEvent, MoveExecutedEvent)
 from scenes.combat_scene import CombatScene
 from scenes.scene_examples import game_over
-from views.view_factory import build_scene_view
+from views.scene_view import SceneView
 
 NUMBER_KEYS = [str(i) for i in range(9)]
 
@@ -23,7 +23,7 @@ class CombatSceneController(Controller):
         self._characters = [get_player(), self.scene.enemy()]
         self.selected_character: Character = None
 
-        self.view = build_scene_view(scene)
+        self.view = SceneView(scene)
         self.update()
 
     def notify(self, event: EventType) -> None:
