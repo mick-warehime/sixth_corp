@@ -2,8 +2,8 @@ from unittest import TestCase
 
 from characters.character_examples import CharacterTypes
 from characters.character_factory import build_character
-from characters.subroutine_examples import Harmless
-from combat.shuffle_ai import ShuffleAI
+from characters.subroutine_examples import DoNothing
+from combat.ai_factory import build_ai, AIType
 
 
 class ShuffleAITest(TestCase):
@@ -11,24 +11,24 @@ class ShuffleAITest(TestCase):
     def test_shuffle_ai_only_provides_usable_moves(self):
         user = build_character(CharacterTypes.HARMLESS.data)
         target = build_character(CharacterTypes.HARMLESS.data)
-        ai = ShuffleAI()
+        ai = build_ai(AIType.Shuffle)
         ai.set_user(user)
         ai.set_targets([target])
 
-        for i in range(1000):
+        for _ in range(1000):
             move = ai.select_move()
-            self.assertIsInstance(move.subroutine, Harmless)
+            self.assertIsInstance(move.subroutine, DoNothing)
 
     def test_shuffle_ai_moves_dont_repeat(self):
         user = build_character(CharacterTypes.HARMLESS.data)
         target = build_character(CharacterTypes.HARMLESS.data)
-        ai = ShuffleAI()
+        ai = build_ai(AIType.Shuffle)
         ai.set_user(user)
         ai.set_targets([target])
 
         prev_move_description = ''
         move_repeat_count = 0
-        for i in range(10000):
+        for _ in range(10000):
             move = ai.select_move()
             move_description = move.describe()
             if move_description == prev_move_description:
@@ -45,9 +45,9 @@ class ShuffleAITest(TestCase):
     def test_no_valid_moves_raises(self):
         user = build_character(CharacterTypes.USELESS.data)
         target = build_character(CharacterTypes.USELESS.data)
-        ai = ShuffleAI()
+        ai = build_ai(AIType.Shuffle)
         ai.set_user(user)
         ai.set_targets([target])
 
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             ai.select_move()
