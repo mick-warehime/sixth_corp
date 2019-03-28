@@ -19,7 +19,7 @@ class SimulationManager(object):
         """Runs {n_runs} combat simulations and reports attackers win frequency."""
 
         attacker_wins = 0
-        for i in range(n_runs):
+        for _ in range(n_runs):
             attacker = build_character(attacker_data)
             defender = build_character(defender_data)
             attacker.ai.set_targets([defender])  # type: ignore
@@ -37,7 +37,7 @@ class SimulationManager(object):
 
         max_turns = 1000
         manager = CombatManager([attacker], [defender])
-        for i in range(max_turns):
+        for _ in range(max_turns):
             attack_move = attacker.ai.select_move()
             defense_move = defender.ai.select_move()
             manager.take_turn([attack_move], [defense_move])

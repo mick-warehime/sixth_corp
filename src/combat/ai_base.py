@@ -10,7 +10,7 @@ class AI(object):
 
     @abstractmethod
     def select_move(self) -> Move:
-        pass
+        """Select the next move for the AI's user."""
 
     @abstractmethod
     def set_user(self, user: Stateful) -> None:

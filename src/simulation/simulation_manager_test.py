@@ -27,7 +27,7 @@ class TestSimulationManager(TestCase):
 
     def test_combatants_without_moves_raises(self):
         manager = SimulationManager()
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             manager.simulate(CharacterTypes.USELESS.data,
                              CharacterTypes.USELESS.data,
                              n_runs=100)
