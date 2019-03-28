@@ -1,5 +1,5 @@
 
-from typing import Sequence, Callable
+from typing import Callable, Sequence
 
 from characters.character_base import Character
 from characters.states import Stateful
