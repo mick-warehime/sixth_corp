@@ -5,6 +5,7 @@ from scenes.scenes_base import Effect, Resolution, Scene, SceneConstructor
 
 
 class DecisionOption(Resolution):
+    """Resolves by calling a scene constructor function."""
 
     def __init__(self, description: str, next_scene_fun: SceneConstructor,
                  effects: Union[Effect, Sequence[Effect]] = ()) -> None:
@@ -23,6 +24,7 @@ class DecisionOption(Resolution):
 
 
 class DecisionScene(Scene):
+    """A Scene that is resolved by the player making a choice."""
 
     def __init__(self, prompt: str, choices: Dict[str, DecisionOption]) -> None:
         super().__init__()
