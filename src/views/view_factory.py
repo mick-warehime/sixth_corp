@@ -1,6 +1,8 @@
-from enum import Enum
-
+from scenes.combat_scene import CombatScene
+from scenes.decision_scene import DecisionScene
+from scenes.inventory_scene import InventoryScene
 from scenes.scenes_base import Scene
+from scenes.settings_scene import SettingsScene
 from views.artists.background_artist import BackgroundArtist
 from views.artists.character_artist import CharacterArtist
 from views.artists.combat_options_artist import CombatOptionsArtist
@@ -12,27 +14,20 @@ from views.scene_view import SceneView
 from views.view_base import View
 
 
-class SceneViewType(Enum):
-    Combat = 'combat'
-    Decision = 'decision'
-    Settings = 'settings'
-    Inventory = 'inventory'
-
-
-def build_scene_view(view_type: SceneViewType, scene: Scene) -> View:
-    if view_type == SceneViewType.Combat:
+def build_scene_view(scene: Scene) -> View:
+    if isinstance(scene, CombatScene):
         artists = [
             BackgroundArtist(),
             OverlayArtist(),
             CharacterArtist(),
             CombatOptionsArtist(),
             CombatStackArtist()]
-    elif view_type == SceneViewType.Decision:
+    elif isinstance(scene, DecisionScene):
         artists = [BackgroundArtist(), DecisionArtist()]
-    elif view_type == SceneViewType.Settings:
+    elif isinstance(scene, SettingsScene):
         artists = [SettingsArtist()]
-    elif view_type == SceneViewType.Inventory:
+    elif isinstance(scene, InventoryScene):
         artists = [SettingsArtist()]
     else:
-        raise ValueError('No such view type: {}'.format(view_type))
+        raise ValueError('Unrecognized Scene {}'.format(scene))
     return SceneView(scene, artists)
