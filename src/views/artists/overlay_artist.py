@@ -26,7 +26,7 @@ class OverlayArtist(SceneArtist):
         screen.render_text(health_text, font_size=21, x=x_health, y=y_health, color=RED)
 
         # draw scene number
-        scene_text = 'Scene: {}'.format(get_location().scene)
+        scene_text = 'Scene: {}'.format(get_location().scene_number)
         x_scene = int(width / 2 + 100)
         y_scene = int(height / 2 - 5)
         screen.render_text(scene_text, 22, x_scene, y_scene, WHITE)
