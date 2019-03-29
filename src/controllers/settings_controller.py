@@ -1,14 +1,14 @@
 from controllers.controller import Controller
 from events.events_base import Event, EventType
 from scenes.settings_scene import SettingsScene
-from views.view_factory import SceneViewType, build_scene_view
+from views.scene_view import SceneView
 
 
 class SettingsController(Controller):
 
     def __init__(self) -> None:
         super(SettingsController, self).__init__()
-        self.view = build_scene_view(SceneViewType.Settings, SettingsScene())
+        self.view = SceneView(SettingsScene())
         self.update()
 
     def notify(self, event: EventType) -> None:

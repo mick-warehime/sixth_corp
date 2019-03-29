@@ -8,7 +8,7 @@ from events.events_base import (ControllerActivatedEvent, Event, EventType,
                                 InputEvent)
 from scenes.decision_scene import DecisionScene
 from scenes.scene_examples import game_over
-from views.view_factory import SceneViewType, build_scene_view
+from views.scene_view import SceneView
 
 
 class DecisionSceneController(Controller):
@@ -16,7 +16,7 @@ class DecisionSceneController(Controller):
     def __init__(self, scene: DecisionScene) -> None:
         super().__init__()
         self._scene = scene
-        self.view = build_scene_view(SceneViewType.Decision, scene)
+        self.view = SceneView(scene)
         self.update()
 
     def _handle_input(self, input_event: InputEvent) -> None:

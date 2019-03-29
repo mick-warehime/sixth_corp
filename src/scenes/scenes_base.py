@@ -27,6 +27,7 @@ class Resolution(object):
 
     @property
     def effects(self) -> Sequence[Effect]:
+        """These are implemented when the resolution occurs."""
         raise NotImplementedError
 
 
