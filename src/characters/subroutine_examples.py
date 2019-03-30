@@ -1,3 +1,5 @@
+from typing import Any
+
 from characters.conditions import FullHealth
 from characters.states import Attributes, Stateful
 from characters.subroutines_base import Subroutine
@@ -80,6 +82,14 @@ class DoNothing(Subroutine):
 
     def time_slots(self) -> int:
         return 2
+
+    def __eq__(self, other: Any) -> bool:
+        if not isinstance(other, DoNothing):
+            return False
+        return self.value == other.value
+
+    def __hash__(self) -> int:
+        return hash(('do_nothing', self.value))
 
 
 class Unusable(Subroutine):

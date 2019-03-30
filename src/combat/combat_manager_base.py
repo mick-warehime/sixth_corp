@@ -1,10 +1,10 @@
 from itertools import product
-from typing import Sequence, Set, Tuple
+from typing import List, Sequence, Set, Tuple
 
 from characters.character_base import Character
 from characters.conditions import IsDead
+from characters.states import Stateful
 from combat.moves_base import Move
-from combat.moves_factory import valid_moves
 from events.events_base import EventManager, MoveExecutedEvent
 
 GroupMove = Sequence[Move]
@@ -14,7 +14,7 @@ CombatHistory = Tuple[GroupMove, GroupMove, bool, bool]
 
 
 def _describe_moves(moves: GroupMove) -> Sequence[str]:
-    return [m.describe() for m in moves]
+    return [m.description() for m in moves]
 
 
 class CombatManager(object):
@@ -28,6 +28,13 @@ class CombatManager(object):
         self.defenders_moves = self._enumerate_moveset(self._defenders,
                                                        self._attackers)
         self.history: Sequence[CombatHistory] = []
+
+    @staticmethod
+    def valid_moves(user: Character, targets: Sequence[Stateful]) -> List[Move]:
+        return [Move(sub, user, target)
+                for sub, target in
+                product(user.inventory.all_subroutines(), targets)
+                if sub.can_use(user, target)]
 
     def take_turn(self, attack_moves: GroupMove,
                   defense_moves: GroupMove) -> None:
@@ -45,8 +52,9 @@ class CombatManager(object):
 
     def _execute_moves(self, moves: GroupMove, attacker: bool) -> None:
         for move in moves:
-            assert move.can_use(), move.describe()
-            EventManager.post(MoveExecutedEvent(move, is_attacker_move=attacker))
+            assert move.is_usable(), move.description()
+            EventManager.post(
+                MoveExecutedEvent(move, is_attacker_move=attacker))
             move.execute()
 
     def is_done(self) -> bool:
@@ -67,12 +75,12 @@ class CombatManager(object):
         'All possible combinations of attack moves targeting all possible defenders'
         moveset = []
         for attacker in attackers:
-            attacks = valid_moves(attacker, defenders)
+            attacks = self.valid_moves(attacker, defenders)
             # TODO(mick) - buffs can only target self not team. if we replace '[attacker]' with
             # 'attackers' here then we end up with friendly fire. potentially need to add
             # skill type = {attack, utility, defend, etc} and target accordingly. we could
             # also add the notion of 'side/team' to the character so can use does the right thing
-            buffs = valid_moves(attacker, [attacker])
+            buffs = self.valid_moves(attacker, [attacker])
             moveset.append(attacks + buffs)
         return list(product(*moveset))
 
