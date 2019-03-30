@@ -63,7 +63,7 @@ class CombatSceneController(Controller):
 
         # Check if a character was clicked.
         for char in self._characters:
-            pos = char.position
+            pos = char.rect
             if point_collides_rect(x, y, pos.x, pos.y, pos.w, pos.h):
                 if self.selected_character == char:
                     continue

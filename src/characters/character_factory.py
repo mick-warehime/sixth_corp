@@ -1,6 +1,7 @@
+from pygame.rect import Rect
+
 from characters.character_examples import CharacterData
 from characters.character_impl import CharacterImpl
-from characters.character_position import Position
 from characters.chassis_factory import build_chassis
 from characters.mods_factory import build_mod
 from characters.states import Attributes
@@ -33,6 +34,6 @@ def build_character(data: CharacterData) -> CharacterImpl:
 
     x, w = rescale_horizontal(x, w)
     y, h = rescale_vertical(y, h)
-    char.position = Position(x, y, w, h)
+    char.rect = Rect(x, y, w, h)
 
     return char

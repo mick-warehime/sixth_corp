@@ -15,7 +15,7 @@ def create_combat_controller(enemy):
 
 
 def select_enemy(enemy):
-    cx, cy = enemy.position.center()
+    cx, cy = enemy.rect.center
     simulate_mouse_click(cx, cy)
 
 

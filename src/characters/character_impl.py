@@ -2,8 +2,9 @@
 
 from functools import partial
 
+from pygame.rect import Rect
+
 from characters.character_base import Character
-from characters.character_position import Position
 from characters.chassis import Chassis
 from characters.inventory import InventoryBase
 from characters.states import Attributes, AttributeType, State, Status
@@ -21,7 +22,7 @@ class CharacterImpl(Character):
         self._inventory: InventoryBase = chassis
         self._status = _CombinedStatus(self._inventory)
         self._image_path = image_path
-        self._position: Position = None
+        self._rect: Rect = None
         self._ai: AI = ai
         self._name = name
 
@@ -42,12 +43,12 @@ class CharacterImpl(Character):
         return self._ai
 
     @property
-    def position(self) -> Position:
-        return self._position
+    def rect(self) -> Rect:
+        return self._rect
 
-    @position.setter
-    def position(self, pos: Position) -> None:
-        self._position = pos
+    @rect.setter
+    def rect(self, rect: Rect) -> None:
+        self._rect = rect
 
     def __repr__(self) -> str:
         return self.description()
