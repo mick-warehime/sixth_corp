@@ -3,7 +3,6 @@ import logging
 from characters.character_base import Character
 from characters.player import get_player
 from controllers.controller import Controller
-from controllers.pygame_collisions import point_collides_rect
 from events.event_utils import post_scene_change
 from events.events_base import (ControllerActivatedEvent, Event, EventType,
                                 InputEvent, MoveExecutedEvent)
@@ -63,8 +62,7 @@ class CombatSceneController(Controller):
 
         # Check if a character was clicked.
         for char in self._characters:
-            pos = char.rect
-            if point_collides_rect(x, y, pos.x, pos.y, pos.w, pos.h):
+            if char.rect.collidepoint(x, y):
                 if self.selected_character == char:
                     continue
                 self.selected_character = char

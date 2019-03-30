@@ -6,7 +6,7 @@ from scenes.combat_scene import CombatScene
 from views.artists.drawing_utils import rescale_horizontal
 from views.artists.scene_artist_base import SceneArtist
 from views.screen_base import Screen
-from views.stack_utils import stack_position
+from views.stack_utils import stack_rect
 
 _TEXT_SPACE, = rescale_horizontal(10)
 _STACK_OUTLINE, = rescale_horizontal(2)
@@ -25,35 +25,35 @@ class CombatStackArtist(SceneArtist):
                 FireLaser(1), enemy, player), build_move(
                 Repair(1), player, player)]
         for i, move in enumerate(stack):
-            pos = stack_position(i)
+            rect = stack_rect(i)
 
             # Stack Ability + timer
             fake_time = len(stack) - i
-            screen.render_rect(pos.x, pos.y, pos.w, pos.h, DARK_GRAY, 0)
-            screen.render_rect(pos.x, pos.y, pos.w, pos.h, LIGHT_GRAY,
+            screen.render_rect(rect.x, rect.y, rect.w, rect.h, DARK_GRAY, 0)
+            screen.render_rect(rect.x, rect.y, rect.w, rect.h, LIGHT_GRAY,
                                _STACK_OUTLINE)
             screen.render_text(
                 move.subroutine.description(),
                 _FONT_SIZE,
-                pos.x + _TEXT_SPACE,
-                pos.y + _TEXT_SPACE,
+                rect.x + _TEXT_SPACE,
+                rect.y + _TEXT_SPACE,
                 WHITE)
             screen.render_text(
                 'T: {}'.format(fake_time),
                 _FONT_SIZE,
-                pos.x + pos.w - 5 * _TEXT_SPACE,
-                pos.y + _TEXT_SPACE, RED)
+                rect.x + rect.w - 5 * _TEXT_SPACE,
+                rect.y + _TEXT_SPACE, RED)
 
             # USER + TARGET
             screen.render_image(
                 move.user.image_path,
-                pos.x - _TARGET_SIZE,
-                pos.y,
+                rect.x - _TARGET_SIZE,
+                rect.y,
                 _TARGET_SIZE,
                 _TARGET_SIZE)
             screen.render_image(
                 move.target.image_path,
-                pos.x + pos.w,
-                pos.y,
+                rect.x + rect.w,
+                rect.y,
                 _TARGET_SIZE,
                 _TARGET_SIZE)
