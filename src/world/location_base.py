@@ -9,7 +9,7 @@ class Location(EventListener):
     def __init__(self, background_image_path: str) -> None:
         super().__init__()
         self._background_image_path = background_image_path
-        self.scene = 0
+        self.scene_number = 0
 
     @property
     def background_image_path(self) -> str:
@@ -20,4 +20,4 @@ class Location(EventListener):
 
     def notify(self, event: EventType) -> None:
         if isinstance(event, NewSceneEvent):
-            self.scene += 1
+            self.scene_number += 1

@@ -8,6 +8,7 @@ from views.screen_base import Screen
 
 
 class CharacterArtist(SceneArtist):
+    """Draws Characters on the screen."""
 
     def render(self, screen: Screen, scene: CombatScene) -> None:
         player = get_player()
@@ -22,11 +23,11 @@ class CharacterArtist(SceneArtist):
         self._render_name(character, screen)
 
     def _render_image(self, character: Character, screen: Screen) -> None:
-        pos = character.position
+        pos = character.rect
         screen.render_image(character.image_path, pos.x, pos.y, pos.w, pos.h)
 
     def _render_health(self, character: Character, screen: Screen) -> None:
-        pos = character.position
+        pos = character.rect
         health = character.status.get_attribute(Attributes.HEALTH)
         max_health = character.status.get_attribute(Attributes.MAX_HEALTH)
         health_bar = '{} / {}'.format(health, max_health)
@@ -35,12 +36,12 @@ class CharacterArtist(SceneArtist):
         screen.render_text(health_bar, 30, x, y, GREEN)
 
     def _render_name(self, character: Character, screen: Screen) -> None:
-        pos = character.position
+        pos = character.rect
         x = int(pos.x + pos.w / 4.0)
         y = pos.y + 40 + pos.h
         screen.render_text(character.description(), 30, x, y, GREEN)
 
     def _render_selected(self, character: Character, screen: Screen, scene: CombatScene) -> None:
         if character == scene.selected:
-            pos = character.position
+            pos = character.rect
             screen.render_rect(pos.x, pos.y, pos.w, pos.h, RED, 2)

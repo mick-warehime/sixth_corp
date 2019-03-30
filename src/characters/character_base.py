@@ -1,7 +1,8 @@
 """Basic class for player and enemies."""
 from abc import abstractmethod
 
-from characters.character_position import Position
+from pygame.rect import Rect
+
 from characters.inventory import InventoryBase
 from characters.states import Stateful
 from combat.ai_base import AI
@@ -22,11 +23,11 @@ class Character(Stateful):
 
     @property
     @abstractmethod
-    def position(self) -> Position:
+    def rect(self) -> Rect:
         pass
 
-    @position.setter
-    def position(self, pos: Position) -> None:
+    @rect.setter
+    def rect(self, pos: Rect) -> None:
         pass
 
     @property

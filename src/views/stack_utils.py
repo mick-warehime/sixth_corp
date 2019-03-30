@@ -1,5 +1,6 @@
-from characters.character_position import Position
-from controllers.pygame_collisions import point_collides_pos
+from pygame.rect import Rect
+
+from views.artists.drawing_utils import rescale_horizontal, rescale_vertical
 
 _STACK_TOP_X = 425
 _STACK_TOP_Y = 200
@@ -7,15 +8,14 @@ _STACK_WIDTH = 250
 _STACK_HEIGHT = 50
 
 
-def stack_position(index: int) -> Position:
+def stack_rect(index: int) -> Rect:
     """Returns the position of the ith element in the stack."""
     x = _STACK_TOP_X
     y = _STACK_TOP_Y + index * _STACK_HEIGHT
     w = _STACK_WIDTH
     h = _STACK_HEIGHT
-    return Position(x, y, w, h)
 
+    x, w = rescale_horizontal(x, w)
+    y, h = rescale_vertical(y, h)
 
-def point_collides_stack_element(index: int, px: int, py: int) -> bool:
-    pos = stack_position(index)
-    return point_collides_pos(px, py, pos)
+    return Rect(x, y, w, h)

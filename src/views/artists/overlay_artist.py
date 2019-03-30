@@ -9,6 +9,7 @@ from world.world import get_location
 
 
 class OverlayArtist(SceneArtist):
+    """Draws basic overlay information, like player health."""
 
     def render(self, screen: Screen, scene: Scene) -> None:
         # draw gray background
@@ -23,10 +24,11 @@ class OverlayArtist(SceneArtist):
         health_text = 'Health: {} / {}'.format(health, max_health)
         x_health = int(width / 2 - 300)
         y_health = int(height / 2 - 5)
-        screen.render_text(health_text, font_size=21, x=x_health, y=y_health, color=RED)
+        screen.render_text(health_text, font_size=21, x=x_health, y=y_health,
+                           color=RED)
 
         # draw scene number
-        scene_text = 'Scene: {}'.format(get_location().scene)
+        scene_text = 'Scene: {}'.format(get_location().scene_number)
         x_scene = int(width / 2 + 100)
         y_scene = int(height / 2 - 5)
         screen.render_text(scene_text, 22, x_scene, y_scene, WHITE)
