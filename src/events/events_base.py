@@ -58,12 +58,12 @@ class InputEvent(object):
 class MoveExecutedEvent(object):
     """This event is triggered when any character executes a move."""
 
-    def __init__(self, move: Move, attacker: bool) -> None:
-        self.attacker = attacker
+    def __init__(self, move: Move, is_attacker_move: bool) -> None:
+        self.is_attacker_move = is_attacker_move
         self.move = move
 
     def __str__(self) -> str:
-        team_str = 'ATTACK MOVE' if self.attacker else 'DEFEND MOVE'
+        team_str = 'ATTACK MOVE' if self.is_attacker_move else 'DEFEND MOVE'
         return '%s - %s' % (team_str, self.move.describe())
 
 

@@ -46,7 +46,7 @@ class CombatManager(object):
     def _execute_moves(self, moves: GroupMove, attacker: bool) -> None:
         for move in moves:
             assert move.can_use(), move.describe()
-            EventManager.post(MoveExecutedEvent(move, attacker=attacker))
+            EventManager.post(MoveExecutedEvent(move, is_attacker_move=attacker))
             move.execute()
 
     def is_done(self) -> bool:
