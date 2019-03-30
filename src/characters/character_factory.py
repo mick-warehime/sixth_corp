@@ -5,6 +5,7 @@ from characters.chassis_factory import build_chassis
 from characters.mods_factory import build_mod
 from characters.states import Attributes
 from combat.ai_factory import AIType, build_ai
+from views.artists.drawing_utils import rescale_horizontal, rescale_vertical
 
 
 def build_character(data: CharacterData) -> CharacterImpl:
@@ -23,10 +24,15 @@ def build_character(data: CharacterData) -> CharacterImpl:
     char.status.increment_attribute(Attributes.HEALTH, health)
 
     # TODO(#112) - move positions to combat view
+
     if data.ai_type == AIType.Human:
-        pos = Position(200, 500, 150, 150)
+        x, y, w, h = 200, 500, 150, 150
+
     else:
-        pos = Position(800, 300, 200, 150)
-    char.position = pos
+        x, y, w, h = 800, 300, 200, 150
+
+    x, w = rescale_horizontal(x, w)
+    y, h = rescale_vertical(y, h)
+    char.position = Position(x, y, w, h)
 
     return char
