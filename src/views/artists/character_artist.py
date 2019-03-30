@@ -8,6 +8,7 @@ from views.screen_base import Screen
 
 
 class CharacterArtist(SceneArtist):
+    """Draws Characters on the screen."""
 
     def render(self, screen: Screen, scene: CombatScene) -> None:
         player = get_player()

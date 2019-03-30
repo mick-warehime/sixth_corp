@@ -6,6 +6,7 @@ from world.world import get_location
 
 
 class BackgroundArtist(SceneArtist):
+    """Draws the background image."""
 
     def render(self, screen: Screen, scene: Scene) -> None:
         background_image = get_location().background_image_path
