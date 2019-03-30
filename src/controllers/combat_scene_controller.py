@@ -15,6 +15,7 @@ NUMBER_KEYS = [str(i) for i in range(9)]
 
 
 class CombatSceneController(Controller):
+    """Controls updates for objects in a Combat Scene."""
 
     def __init__(self, scene: CombatScene) -> None:
         super(CombatSceneController, self).__init__()
@@ -23,37 +24,44 @@ class CombatSceneController(Controller):
         self._characters = [get_player(), self.scene.enemy()]
         self.selected_character: Character = None
 
-        self.view = SceneView(scene)
-        self.update()
+        self._view = SceneView(scene)
+        self._update_scene_and_view()
 
     def notify(self, event: EventType) -> None:
         if not self._active:
             return
         if isinstance(event, InputEvent):
             self._handle_input(event)
-            self.update()
+            self._update_scene_and_view()
         elif isinstance(event, MoveExecutedEvent):
             self._handle_move_executed(event)
         elif isinstance(event, ControllerActivatedEvent):
-            self.update()
+            self._update_scene_and_view()
 
     def _handle_input(self, input_event: InputEvent) -> None:
         if input_event.event == Event.MOUSE_CLICK:
-            self._handle_mouse(input_event)
+            self._handle_mouse_click(input_event)
             return
 
         if input_event.key not in NUMBER_KEYS:
             return
 
+        # Player move selection
         input_key = int(input_event.key)
         moves = self.scene.player_moves(self.selected_character)
         if len(moves) >= input_key > 0:
             selected_move = moves[input_key - 1]
             self.scene.select_player_move(selected_move)
 
-    def _handle_mouse(self, input_event: InputEvent) -> None:
+    def _handle_mouse_click(self, input_event: InputEvent) -> None:
         x = input_event.mouse[0]
         y = input_event.mouse[1]
+
+        # A single click on an unselected character will select it.
+        # Any subsequent clicks will deselect it (and may also select a new
+        # character).
+
+        # Check if a character was clicked.
         for char in self._characters:
             pos = char.position
             if point_collides_rect(x, y, pos.x, pos.y, pos.w, pos.h):
@@ -68,18 +76,17 @@ class CombatSceneController(Controller):
         if self.selected_character is not None:
             logging.debug(
                 'MOUSE: Deselected: {}'.format(self.selected_character))
+            self.selected_character = None
 
-        self.selected_character = None
-
-    def update(self) -> None:
+    def _update_scene_and_view(self) -> None:
         self.scene.player_moves(self.selected_character)
-        self.view.update()
+        self._view.update()
         self._update_scene()
 
     def _handle_move_executed(self, event: MoveExecutedEvent) -> None:
-        if event.attacker:
+        if event.is_attacker_move:
             self.selected_character = None
-            self.update()
+            self._update_scene_and_view()
 
     def _update_scene(self) -> None:
         if self.scene.is_game_over():
