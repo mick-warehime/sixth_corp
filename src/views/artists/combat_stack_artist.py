@@ -1,6 +1,6 @@
 from characters.player import get_player
 from characters.subroutine_examples import FireLaser, Repair
-from combat.moves_factory import build_move
+from combat.moves_base import Move
 from data.colors import DARK_GRAY, LIGHT_GRAY, RED, WHITE
 from scenes.combat_scene import CombatScene
 from views.artists.drawing_utils import rescale_horizontal
@@ -20,10 +20,8 @@ class CombatStackArtist(SceneArtist):
         player = get_player()
         enemy = scene.enemy()
         stack = [
-            build_move(
-                FireLaser(2), player, enemy), build_move(
-                FireLaser(1), enemy, player), build_move(
-                Repair(1), player, player)]
+            Move(FireLaser(2), player, enemy),
+            Move(FireLaser(1), enemy, player), Move(Repair(1), player, player)]
         for i, move in enumerate(stack):
             rect = stack_rect(i)
 

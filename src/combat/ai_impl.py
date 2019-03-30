@@ -1,11 +1,10 @@
-
+from itertools import product
 from typing import Callable, Sequence
 
 from characters.character_base import Character
 from characters.states import Stateful
 from combat.ai_base import AI
 from combat.moves_base import Move
-from combat.moves_factory import all_moves
 
 SelectionFun = Callable[[Sequence[Move]], Move]
 
@@ -30,4 +29,5 @@ class AIImpl(AI):
         assert self._user is not None, 'Must set user first.'
         self._targets = targets
 
-        self.moves = all_moves(self._user, targets)
+        self.moves = [Move(a, self._user, t) for a, t in
+                      product(self._user.inventory.all_subroutines(), targets)]

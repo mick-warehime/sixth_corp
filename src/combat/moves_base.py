@@ -1,16 +1,19 @@
-from abc import abstractmethod
+from typing import NamedTuple
+
+from characters.states import Stateful
+from characters.subroutines_base import Subroutine
 
 
-class Move(object):
+class Move(NamedTuple):
+    subroutine: Subroutine
+    user: Stateful
+    target: Stateful
 
-    @abstractmethod
     def execute(self) -> None:
-        pass
+        self.subroutine.use(self.user, self.target)
 
-    @abstractmethod
-    def describe(self) -> str:
-        pass
+    def description(self) -> str:
+        return self.subroutine.describe_use(self.user, self.target)
 
-    @abstractmethod
-    def can_use(self) -> bool:
-        pass
+    def is_usable(self) -> bool:
+        return self.subroutine.can_use(self.user, self.target)

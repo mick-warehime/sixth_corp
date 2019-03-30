@@ -22,7 +22,7 @@ def _raise_error(moves: Sequence[Move]) -> Move:
 
 
 def _random_choice(moves: Sequence[Move]) -> Move:
-    usable_moves = [move for move in moves if move.can_use()]
+    usable_moves = [move for move in moves if move.is_usable()]
     if not usable_moves:
         raise ValueError('No moves available.')
     return choice(usable_moves)
@@ -40,7 +40,7 @@ class _MoveIterator(object):
         random.shuffle(unchecked_moves)
         while unchecked_moves:
             move = unchecked_moves.pop()
-            if move.can_use() and move not in self._used_moves:
+            if move.is_usable() and move not in self._used_moves:
                 self._used_moves.add(move)
                 return move
         if not self._used_moves:

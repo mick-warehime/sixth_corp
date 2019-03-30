@@ -30,7 +30,7 @@ class ShuffleAITest(TestCase):
         move_repeat_count = 0
         for _ in range(10000):
             move = ai.select_move()
-            move_description = move.describe()
+            move_description = move.description()
             if move_description == prev_move_description:
                 move_repeat_count += 1
             else:

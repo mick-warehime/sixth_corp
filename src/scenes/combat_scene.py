@@ -5,7 +5,6 @@ from characters.conditions import IsDead
 from characters.player import get_player
 from combat.combat_manager_base import CombatManager
 from combat.moves_base import Move
-from combat.moves_factory import valid_moves
 from scenes.scenes_base import Effect, Resolution, Scene
 from world.world import get_location
 
@@ -58,7 +57,7 @@ class CombatScene(Scene):
     def player_moves(self, target: Character) -> Sequence[Move]:
         moves: Sequence[Move] = []
         if target is not None:
-            moves = valid_moves(self._player, (target,))
+            moves = self.combat_manager.valid_moves(self._player, (target,))
         self.current_moves = moves
         self.selected = target
         return moves

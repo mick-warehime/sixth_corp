@@ -64,7 +64,7 @@ class MoveExecutedEvent(object):
 
     def __str__(self) -> str:
         team_str = 'ATTACK MOVE' if self.is_attacker_move else 'DEFEND MOVE'
-        return '%s - %s' % (team_str, self.move.describe())
+        return '%s - %s' % (team_str, self.move.description())
 
 
 class ControllerActivatedEvent(object):
