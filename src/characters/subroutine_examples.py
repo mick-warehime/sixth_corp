@@ -88,7 +88,7 @@ class DoNothing(Subroutine):
             return False
         return self.value == other.value
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash(('do_nothing', self.value))
 
 

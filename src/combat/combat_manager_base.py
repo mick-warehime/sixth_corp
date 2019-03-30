@@ -1,5 +1,5 @@
 from itertools import product
-from typing import Sequence, Set, Tuple, List
+from typing import List, Sequence, Set, Tuple
 
 from characters.character_base import Character
 from characters.conditions import IsDead
