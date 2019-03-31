@@ -19,7 +19,7 @@ class CombatScene(Scene):
         self.combat_manager = CombatManager([self._player], [self._enemy])
 
         self.selected_char: Character = None
-        self.current_moves: Sequence[str] = None
+        self.current_moves: Sequence[Move] = None
         self._set_targets()
 
     def characters(self) -> Tuple[Character, ...]:
