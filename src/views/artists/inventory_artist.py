@@ -11,11 +11,9 @@ class InventoryArtist(SceneArtist):
         background_image = scene.background
 
         screen.render_image(background_image, 0, 0, *SCREEN_SIZE)
-        screen.render_texts(
-            list(
-                scene.options),
-            font_size=35,
-            x=250,
-            y=250,
-            color=WHITE,
-            spacing=50)
+        screen.render_texts(list(scene.options),
+                            font_size=35,
+                            x=250,
+                            y=250,
+                            color=WHITE,
+                            spacing=50)
