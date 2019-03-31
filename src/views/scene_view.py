@@ -1,5 +1,8 @@
+from functools import reduce
 from typing import List
 
+from data.constants import SCREEN_SIZE
+from views.layouts import Layout
 from scenes.combat_scene import CombatScene
 from scenes.decision_scene import DecisionScene
 from scenes.inventory_scene import InventoryScene
@@ -24,6 +27,7 @@ class SceneView(View):
         self._scene = scene
         self._screen = get_screen()
         self._artists = _build_scene_artists(scene)
+        self._layout = _build_scene_layout(scene)
 
     def update(self) -> None:
         self._screen.clear()
@@ -31,6 +35,10 @@ class SceneView(View):
             artist.render(screen=self._screen, scene=self._scene)
         # VERY IMPORTANT TO CALL UPDATE ONCE
         self._screen.update()
+
+    @property
+    def layout(self) -> Layout:
+        return self._layout
 
 
 def _build_scene_artists(scene: Scene) -> List[SceneArtist]:
@@ -50,3 +58,25 @@ def _build_scene_artists(scene: Scene) -> List[SceneArtist]:
     else:
         raise ValueError('Unrecognized Scene {}'.format(scene))
     return artists
+
+
+def _build_scene_layout(scene) -> Layout:
+    if isinstance(scene, CombatScene):
+        characters = scene.characters()
+        # player side layout
+        player = characters[0]
+        player_layout = Layout([(None, 1), (player, 1), (None, 1)], 'vertical')
+
+        # stack layout
+        stack_layout = Layout()
+
+        # enemies layout
+        elements = [[(e, 1), (None, 1)] for e in characters[1:]]
+        elements = reduce(lambda a, b: a + b, elements)
+        enemies_layout = Layout(elements, 'vertical')
+
+        return Layout(
+            [(player_layout, 1), (stack_layout, 1), (enemies_layout, 1)],
+            'horizontal', SCREEN_SIZE)
+
+    return Layout(dimensions=SCREEN_SIZE)
