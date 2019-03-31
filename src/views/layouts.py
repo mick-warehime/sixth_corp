@@ -1,16 +1,3 @@
-# layout
-#
-# Determines Rect layouts for ingame objects
-#
-# initialize with:
-# direction - 'v' or 'h'
-# elements: Sequence[Tuple(Any,int)] (an object and a weight)
-# dimensions: Tuple[int,int] (absolute size of the layout)
-#
-# API:
-# is_object_at(x:int, y:int) ->bool
-# get_object_at(x:int, y:int) -> Any
-# get_rect_at(x:int, y: int) -> Any
 from enum import Enum
 from itertools import accumulate
 from typing import Sequence, Tuple, Any, List
