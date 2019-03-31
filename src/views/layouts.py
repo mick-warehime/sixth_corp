@@ -141,21 +141,28 @@ class Layout(object):
         Rects are returned. If the element is not in the layout, then an empty
         list is returned.
 
-        If the element is a Layout, an exception is raised.
+        If the element is this Layout instance, then all Rects are returned.
 
         If the element is None, then all 'gap' rects are returned.
 
         Args:
             element: Component of the layout whose rect we would like.
         """
-        # If any element of the layout is itself a Layout, we must do a tree
-        # search.
 
-        if isinstance(element, Layout):
-            raise NotImplementedError('Cannot handle Layout input.')
+        assert self._container is not None
 
+        # All rects case
         rects = []
+        if element is self:
+            rects.append(self._container.copy())
+            for index, candidate in enumerate(self._elements):
+                if isinstance(candidate, Layout):
+                    rects.extend(candidate.get_rects(candidate))
+                else:
+                    rects.append(self._rect_for_index(index))
+            return rects
 
+        # Single element case
         for index, candidate in enumerate(self._elements):
             if element == candidate:
                 rects.append(self._rect_for_index(index))
