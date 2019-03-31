@@ -3,13 +3,15 @@ from characters.states import Attributes
 from data.colors import GREEN, RED
 from scenes.combat_scene import CombatScene
 from views.artists.scene_artist_base import SceneArtist
+from views.layouts import Layout
 from views.screen_base import Screen
 
 
 class CharacterArtist(SceneArtist):
     """Draws Characters on the screen."""
 
-    def render(self, screen: Screen, scene: CombatScene) -> None:
+    def render(self, screen: Screen, scene: CombatScene,
+               layout: Layout) -> None:
         for char in scene.characters():
             _render_character(char, screen)
             # Draw selection

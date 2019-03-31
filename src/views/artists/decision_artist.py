@@ -6,6 +6,7 @@ from data.constants import TEXTWIDTH
 from scenes.decision_scene import DecisionScene
 from views.artists.drawing_utils import rescale_horizontal, rescale_vertical
 from views.artists.scene_artist_base import SceneArtist
+from views.layouts import Layout
 from views.screen_base import Screen
 
 _TextFun = Callable[[], str]
@@ -33,7 +34,7 @@ def _parse_text_fun(main_text: _TextOrFun) -> _TextFun:
 
 class DecisionArtist(SceneArtist):
 
-    def render(self, screen: Screen, scene: DecisionScene) -> None:
+    def render(self, screen: Screen, scene: DecisionScene, layout: Layout) -> None:
         main_text = scene.prompt
         options = {key_val: choice.description
                    for key_val, choice in scene.choices.items()}
