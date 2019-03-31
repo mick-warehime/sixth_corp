@@ -12,8 +12,6 @@ from scenes.scenes_base import Effect, Resolution, Scene
 from world.locations import CityLocation
 
 
-# Scenes
-
 def loading_scene() -> DecisionScene:
     options = {
         's': DecisionOption('Start Game', swamp_scene,
