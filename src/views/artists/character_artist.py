@@ -1,5 +1,4 @@
 from characters.character_base import Character
-from characters.player import get_player
 from characters.states import Attributes
 from data.colors import GREEN, RED
 from scenes.combat_scene import CombatScene
@@ -11,9 +10,7 @@ class CharacterArtist(SceneArtist):
     """Draws Characters on the screen."""
 
     def render(self, screen: Screen, scene: CombatScene) -> None:
-        player = get_player()
-        enemy = scene.enemy()
-        for char in [player, enemy]:
+        for char in scene.characters():
             self._render_character(char, screen)
             self._render_selected(char, screen, scene)
 
@@ -41,7 +38,8 @@ class CharacterArtist(SceneArtist):
         y = pos.y + 40 + pos.h
         screen.render_text(character.description(), 30, x, y, GREEN)
 
-    def _render_selected(self, character: Character, screen: Screen, scene: CombatScene) -> None:
-        if character == scene.selected:
+    def _render_selected(self, character: Character, screen: Screen,
+                         scene: CombatScene) -> None:
+        if character == scene.selected_char:
             pos = character.rect
             screen.render_rect(pos.x, pos.y, pos.w, pos.h, RED, 2)
