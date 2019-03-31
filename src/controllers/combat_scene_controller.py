@@ -5,7 +5,6 @@ from events.event_utils import post_scene_change
 from events.events_base import (ControllerActivatedEvent, Event, EventType,
                                 InputEvent, MoveExecutedEvent)
 from scenes.combat_scene import CombatScene
-from scenes.scene_examples import game_over_scene
 from views.scene_view import SceneView
 
 NUMBER_KEYS = [str(i) for i in range(9)]
