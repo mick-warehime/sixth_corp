@@ -65,14 +65,18 @@ def _build_scene_layout(scene) -> Layout:
         characters = scene.characters()
         # player side layout
         player = characters[0]
+
         player_layout = Layout([(None, 1), (player, 1), (None, 1)], 'vertical')
+        player_layout = Layout([(None, 1), (player_layout, 1), (None, 1)],
+                               'horizontal')
 
         # stack layout
         stack_layout = Layout()
 
         # enemies layout
-        elements = [[(e, 1), (None, 1)] for e in characters[1:]]
+        elements = [[(None, 1), (e, 1)] for e in characters[1:]]
         elements = reduce(lambda a, b: a + b, elements)
+        elements.append((None, 1))
         enemies_layout = Layout(elements, 'vertical')
 
         return Layout(

@@ -54,13 +54,12 @@ class CombatSceneController(Controller):
         # Any subsequent clicks will deselect it (and may also select a new
         # character).
 
-        # Check if a character was clicked.
-        for char in self.scene.characters():
-            if char.rect.collidepoint(x, y):
-                if self.scene.selected_char == char:
-                    continue
-                self.scene.selected_char = char
-                logging.debug('MOUSE: Selected: {}'.format(char))
+        # Check if a character was newly clicked.
+        clicked_obj = self._view.layout.object_at(x, y)
+        if clicked_obj in self.scene.characters():
+            if self.scene.selected_char != clicked_obj:
+                self.scene.selected_char = clicked_obj
+                logging.debug('MOUSE: Selected: {}'.format(clicked_obj))
                 return
 
         logging.debug('MOUSE: Clicked nothing.')

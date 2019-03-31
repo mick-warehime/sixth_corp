@@ -1,3 +1,5 @@
+from pygame.rect import Rect
+
 from characters.character_base import Character
 from characters.states import Attributes
 from data.colors import GREEN, RED
@@ -13,16 +15,17 @@ class CharacterArtist(SceneArtist):
     def render(self, screen: Screen, scene: CombatScene,
                layout: Layout) -> None:
         for char in scene.characters():
-            _render_character(char, screen)
+            rects = layout.get_rects(char)
+            assert len(rects) == 1
+
+            rect = rects[0]
+            _render_character(char, screen, rect)
             # Draw selection
             if char == scene.selected_char:
-                pos = char.rect
-                screen.render_rect(pos.x, pos.y, pos.w, pos.h, RED, 2)
+                screen.render_rect(rect.x, rect.y, rect.w, rect.h, RED, 2)
 
 
-def _render_character(character: Character, screen: Screen) -> None:
-    rect = character.rect
-
+def _render_character(character: Character, screen: Screen, rect: Rect) -> None:
     screen.render_image(character.image_path, rect.x, rect.y, rect.w,
                         rect.h)
 
