@@ -45,7 +45,7 @@ class CombatSceneController(Controller):
 
         # Player move selection
         input_key = int(input_event.key)
-        moves = self.scene.player_moves(self.scene.selected)
+        moves = self.scene.player_moves(self.scene.selected_char)
         if len(moves) >= input_key > 0:
             selected_move = moves[input_key - 1]
             self.scene.select_player_move(selected_move)
@@ -61,27 +61,27 @@ class CombatSceneController(Controller):
         # Check if a character was clicked.
         for char in self._characters:
             if char.rect.collidepoint(x, y):
-                if self.scene.selected == char:
+                if self.scene.selected_char == char:
                     continue
-                self.scene.selected = char
+                self.scene.selected_char = char
                 logging.debug('MOUSE: Selected: {}'.format(char))
                 return
 
         logging.debug('MOUSE: Clicked nothing.')
         # if no character was clicked clear field
-        if self.scene.selected is not None:
+        if self.scene.selected_char is not None:
             logging.debug(
-                'MOUSE: Deselected: {}'.format(self.scene.selected))
-            self.scene.selected = None
+                'MOUSE: Deselected: {}'.format(self.scene.selected_char))
+            self.scene.selected_char = None
 
     def _update_scene_and_view(self) -> None:
-        self.scene.player_moves(self.scene.selected)
+        self.scene.player_moves(self.scene.selected_char)
         self._view.update()
         self._update_scene()
 
     def _handle_move_executed(self, event: MoveExecutedEvent) -> None:
         if event.is_attacker_move:
-            self.scene.selected = None
+            self.scene.selected_char = None
             self._update_scene_and_view()
 
     def _update_scene(self) -> None:

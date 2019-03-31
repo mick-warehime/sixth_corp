@@ -43,6 +43,6 @@ class CharacterArtist(SceneArtist):
 
     def _render_selected(self, character: Character, screen: Screen,
                          scene: CombatScene) -> None:
-        if character == scene.selected:
+        if character == scene.selected_char:
             pos = character.rect
             screen.render_rect(pos.x, pos.y, pos.w, pos.h, RED, 2)

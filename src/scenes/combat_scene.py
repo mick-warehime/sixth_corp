@@ -28,7 +28,7 @@ class CombatScene(Scene):
         self._enemy: Character = get_location().random_enemy()
         self.combat_manager = CombatManager([self._player], [self._enemy])
 
-        self.selected: Character = None
+        self.selected_char: Character = None
         self.current_moves: Sequence[str] = None
         self._set_targets()
 
@@ -59,7 +59,7 @@ class CombatScene(Scene):
         if target is not None:
             moves = self.combat_manager.valid_moves(self._player, (target,))
         self.current_moves = moves
-        self.selected = target
+        self.selected_char = target
         return moves
 
     def select_player_move(self, move: Move) -> None:

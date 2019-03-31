@@ -45,53 +45,53 @@ class CombatSceneControllerTest(TestCase):
     def test_selected_enemy(self, mock_pygame, mock_loader):
         enemy = create_enemy(2)
         ctl = create_combat_controller(enemy)
-        self.assertIsNone(ctl.scene.selected)
+        self.assertIsNone(ctl.scene.selected_char)
 
         select_enemy(enemy)
 
-        self.assertIsNotNone(ctl.scene.selected)
-        self.assertEqual(ctl.scene.selected, enemy)
+        self.assertIsNotNone(ctl.scene.selected_char)
+        self.assertEqual(ctl.scene.selected_char, enemy)
 
         simulate_mouse_click(-1000, -1000)
-        self.assertIsNone(ctl.scene.selected)
+        self.assertIsNone(ctl.scene.selected_char)
 
     @mock.patch('views.pygame_screen.pygame')
     @mock.patch('views.pygame_images.load_image')
     def test_enemy_unselected_after_move(self, mock_pygame, mock_loader):
         enemy = create_enemy(2)
         ctl = create_combat_controller(enemy)
-        self.assertIsNone(ctl.scene.selected)
+        self.assertIsNone(ctl.scene.selected_char)
 
         select_enemy(enemy)
 
-        self.assertIsNotNone(ctl.scene.selected)
-        self.assertEqual(ctl.scene.selected, enemy)
+        self.assertIsNotNone(ctl.scene.selected_char)
+        self.assertEqual(ctl.scene.selected_char, enemy)
 
         simulate_key_press('1')
-        self.assertIsNone(ctl.scene.selected)
+        self.assertIsNone(ctl.scene.selected_char)
 
     @mock.patch('views.pygame_screen.pygame')
     @mock.patch('views.pygame_images.load_image')
     def test_reclick_unselects(self, mock_pygame, mock_loader):
         enemy = create_enemy(2)
         ctl = create_combat_controller(enemy)
-        self.assertIsNone(ctl.scene.selected)
+        self.assertIsNone(ctl.scene.selected_char)
 
         select_enemy(enemy)
 
-        self.assertIsNotNone(ctl.scene.selected)
-        self.assertEqual(ctl.scene.selected, enemy)
+        self.assertIsNotNone(ctl.scene.selected_char)
+        self.assertEqual(ctl.scene.selected_char, enemy)
 
         select_enemy(enemy)
-        self.assertIsNone(ctl.scene.selected)
+        self.assertIsNone(ctl.scene.selected_char)
 
     @mock.patch('views.pygame_screen.pygame')
     @mock.patch('views.pygame_images.load_image')
     def test_click_nothing_selects_nothing(self, mock_pygame, mock_loader):
         enemy = create_enemy(2)
         ctl = create_combat_controller(enemy)
-        self.assertIsNone(ctl.scene.selected)
+        self.assertIsNone(ctl.scene.selected_char)
 
         simulate_mouse_click(-100, -100)
 
-        self.assertIsNone(ctl.scene.selected)
+        self.assertIsNone(ctl.scene.selected_char)
