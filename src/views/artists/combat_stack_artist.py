@@ -1,4 +1,3 @@
-from characters.player import get_player
 from characters.subroutine_examples import FireLaser, Repair
 from combat.moves_base import Move
 from data.colors import DARK_GRAY, LIGHT_GRAY, RED, WHITE
@@ -17,8 +16,7 @@ _TARGET_SIZE, = rescale_horizontal(50)
 class CombatStackArtist(SceneArtist):
 
     def render(self, screen: Screen, scene: CombatScene) -> None:
-        player = get_player()
-        enemy = scene.enemy()
+        player, enemy = scene.characters()
         stack = [
             Move(FireLaser(2), player, enemy),
             Move(FireLaser(1), enemy, player), Move(Repair(1), player, player)]

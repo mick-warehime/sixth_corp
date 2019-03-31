@@ -7,7 +7,7 @@ from events.event_utils import post_scene_change
 from events.events_base import (ControllerActivatedEvent, Event, EventType,
                                 InputEvent)
 from scenes.decision_scene import DecisionScene
-from scenes.scene_examples import game_over
+from scenes.scene_examples import game_over_scene
 from views.scene_view import SceneView
 
 
@@ -45,7 +45,7 @@ class DecisionSceneController(Controller):
 
             self.deactivate()
             if IsDead().check(get_player()):
-                post_scene_change(game_over())
+                post_scene_change(game_over_scene())
                 return
             post_scene_change(resolution.next_scene())
 
