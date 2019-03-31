@@ -5,19 +5,9 @@ from characters.conditions import IsDead
 from characters.player import get_player
 from combat.combat_manager_base import CombatManager
 from combat.moves_base import Move
-from scenes.scenes_base import Effect, Resolution, Scene
+from scenes import scene_examples
+from scenes.scenes_base import Resolution, Scene
 from world.world import get_location
-
-
-class CombatResolution(Resolution):
-
-    @property
-    def effects(self) -> Sequence[Effect]:
-        return []
-
-    def next_scene(self) -> Scene:
-        from scenes.scene_examples import start_scene
-        return start_scene()
 
 
 class CombatScene(Scene):
@@ -40,19 +30,17 @@ class CombatScene(Scene):
         self._set_targets()
 
     def is_resolved(self) -> bool:
-        return IsDead().check(self._enemy)
+        return IsDead().check(self._enemy) or IsDead().check(self._player)
 
     def get_resolution(self) -> Resolution:
-        return CombatResolution()
+        assert self.is_resolved()
+        if IsDead().check(self._enemy):
+            return scene_examples.CombatResolution()
+        assert IsDead().check(self._player)
+        return scene_examples.EndGame()
 
     def __str__(self) -> str:
         return 'CombatScene(enemy = {})'.format(str(self._enemy))
-
-    def is_game_over(self) -> bool:
-        return IsDead().check(self._player)
-
-    def enemy_action(self) -> Move:
-        return self._enemy.ai.select_move()
 
     def player_moves(self, target: Character) -> Sequence[Move]:
         moves: Sequence[Move] = []
@@ -63,7 +51,7 @@ class CombatScene(Scene):
         return moves
 
     def select_player_move(self, move: Move) -> None:
-        enemy_move = self.enemy_action()
+        enemy_move = self._enemy.ai.select_move()
         self.combat_manager.take_turn([move], [enemy_move])
 
     def _set_targets(self) -> None:

@@ -1,13 +1,18 @@
 """Simple decision scene examples."""
+from typing import Sequence
+
 from characters.effects import ChangeLocation, IncrementAttribute, RestartGame
 from characters.player import get_player
 from characters.skills import Difficulty, skill_check
 from characters.states import Attributes, Skill
-from scenes.combat_scene import CombatScene
+from scenes import combat_scene
 from scenes.decision_scene import (DecisionOption, DecisionScene,
                                    from_transition, transition_to)
+from scenes.scenes_base import Resolution, Scene, Effect
 from world.locations import CityLocation
 
+
+# Scenes
 
 def loading_scene() -> DecisionScene:
     options = {
@@ -71,11 +76,33 @@ def second_scene() -> DecisionScene:
     return DecisionScene(main_text, options)
 
 
-def example_combat_scene() -> CombatScene:
-    return CombatScene()
+def example_combat_scene() -> 'combat_scene.CombatScene':
+    return combat_scene.CombatScene()
 
 
-def game_over() -> DecisionScene:
-    prompt = 'Game over. You lose.'
+def game_over_scene() -> DecisionScene:
+    prompt = 'Game over. You loose.'
     options = {'1': DecisionOption('Play again.', loading_scene, RestartGame())}
     return DecisionScene(prompt, options)
+
+
+# Resolutions
+
+class EndGame(Resolution):
+
+    def next_scene(self) -> Scene:
+        return game_over_scene()
+
+    @property
+    def effects(self) -> Sequence[Effect]:
+        return ()
+
+
+class CombatResolution(Resolution):
+
+    @property
+    def effects(self) -> Sequence[Effect]:
+        return []
+
+    def next_scene(self) -> Scene:
+        return start_scene()

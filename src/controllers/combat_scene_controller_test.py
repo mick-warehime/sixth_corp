@@ -26,7 +26,7 @@ class CombatSceneControllerTest(TestCase):
     def test_game_over(self, mock_pygame, mock_loader):
         ctl = create_combat_controller(enemy=create_enemy(10))
 
-        self.assertFalse(ctl.scene.is_game_over())
+        self.assertFalse(ctl.scene.is_resolved())
 
     @mock.patch('views.pygame_screen.pygame')
     @mock.patch('views.pygame_images.load_image')

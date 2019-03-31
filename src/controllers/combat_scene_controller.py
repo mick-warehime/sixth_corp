@@ -5,7 +5,7 @@ from events.event_utils import post_scene_change
 from events.events_base import (ControllerActivatedEvent, Event, EventType,
                                 InputEvent, MoveExecutedEvent)
 from scenes.combat_scene import CombatScene
-from scenes.scene_examples import game_over
+from scenes.scene_examples import game_over_scene
 from views.scene_view import SceneView
 
 NUMBER_KEYS = [str(i) for i in range(9)]
@@ -82,11 +82,9 @@ class CombatSceneController(Controller):
             self._update_scene_and_view()
 
     def _update_scene(self) -> None:
-        if self.scene.is_game_over():
-            post_scene_change(game_over())
-        elif self.scene.is_resolved():
+        if self.scene.is_resolved():
             resolution = self.scene.get_resolution()
             for effect in resolution.effects:
                 effect.execute()
-            logging.debug('Combat scene resolved. Enemy defeated.')
+            logging.debug('Combat scene resolved.')
             post_scene_change(resolution.next_scene())
