@@ -1,0 +1,184 @@
+# layout
+#
+# Determines Rect layouts for ingame objects
+#
+# initialize with:
+# direction - 'v' or 'h'
+# elements: Sequence[Tuple(Any,int)] (an object and a weight)
+# dimensions: Tuple[int,int] (absolute size of the layout)
+#
+# API:
+# is_object_at(x:int, y:int) ->bool
+# get_object_at(x:int, y:int) -> Any
+# get_rect_at(x:int, y: int) -> Any
+from enum import Enum
+from itertools import accumulate
+from typing import Sequence, Tuple, Any
+
+from pygame.rect import Rect
+
+
+class _LayoutDirections(Enum):
+    VERTICAL = 'vertical'
+    HORIZONTAL = 'horizontal'
+
+
+class Layout(object):
+    """Determines Rect positions for ingame elements.
+
+    Layouts are used to organize the positions of rects on the screen, with an
+    interface to pull out the objects associated with any point.
+    """
+
+    def __init__(self, elements: Sequence[Tuple[Any, int]],
+                 direction: str = 'vertical',
+                 dimensions: Tuple[int, int] = None) -> None:
+        """Initialize a Layout.
+
+        Args:
+            elements: The ingame objects composing the Layout, paired with their
+                weights. E.g., [(obj_A, 2), (obj_B, 1), (obj_C, 4)] corresponds
+                to assigning a rect to obj_A that is twice as big as that of
+                obj_B and half as big as that of obj_C. Rects are ordered in the
+                layout from top (left) to bottom (right). elements which are
+                themselves Layout objects are treated differently from others in
+                that all API calls to this Layout are passed through these
+                elements. "None" elements are treated as gaps between other
+                elements.
+            direction: 'vertical' or 'horizontal' layout direction.
+            dimensions: (optional) Set a fixed absolute dimension for the
+                layout container. This should only be passed to the top-level
+                Layout and should match the desired screen (w,h) size.
+        """
+        self._elements = tuple(x[0] for x in elements)
+        self._cumulative_weights = tuple(
+            accumulate((x[1] for x in elements), lambda a, b: a + b))
+        if self._cumulative_weights:
+            self._total_weight = self._cumulative_weights[-1]
+        else:
+            self._total_weight = 0
+
+        try:
+            self._direction = _LayoutDirections(direction)
+        except ValueError:
+            raise ValueError('Input direction must be one of {}'.format(
+                [k.value for k in _LayoutDirections]))
+
+        self._container = None
+        if dimensions is not None:
+            self._set_container(Rect(0, 0, *dimensions))
+
+    def is_object_at(self, x: int, y: int) -> bool:
+        """Whether an object exists at the specified point.
+
+        Args:
+            x: horizontal direction from the left.
+            y: vertical direction from the top.
+        """
+        assert self._container is not None
+
+        if not self._container.collidepoint(x, y):  # point is outside layout.
+            return False
+
+        if not self._elements:
+            return False
+
+        element = self._elements[self._element_index_at(x, y)]
+        if isinstance(element, Layout):
+            return element.is_object_at(x, y)
+
+        return element is not None
+
+    def object_at(self, x: int, y: int) -> Any:
+        """Returns the object at the specified point.
+
+        If no object is at the specified point, i.e. if it corresponds to a
+        gap between objects, this function returns None.
+
+        Args:
+            x: horizontal direction from the left.
+            y: vertical direction from the top.
+        """
+        assert self._container is not None
+        if not self._container.collidepoint(x, y):  # point is outside layout.
+            return None
+
+        if not self._elements:
+            return None
+
+        element = self._elements[self._element_index_at(x, y)]
+        if isinstance(element, Layout):
+            return element.object_at(x, y)
+        return element
+
+    def rect_at(self, x: int, y: int) -> Rect:
+        """Returns the Rect associated with the specified point.
+
+        A new Rect object is generated at each call.
+
+        Args:
+            x: horizontal direction from the left.
+            y: vertical direction from the top.
+        """
+        assert self._container is not None
+        if not self._container.collidepoint(x, y):  # point is outside layout.
+            raise ValueError('Point is outside layout bounds.')
+
+        if not self._elements:
+            return self._container.copy()
+
+        index = self._element_index_at(x, y)
+        element = self._elements[index]
+        if isinstance(element, Layout):
+            return element.rect_at(x, y)
+
+        return self._rect_for_index(index)
+
+    def _rect_for_index(self, index: int):
+        assert 0 <= index < len(self._elements)
+        # The rect is shifted to match the container position and scaled
+        # to match its weight and the layout orientation.
+        weight = self._cumulative_weights[index]
+        prev_weight = 0 if index == 0 else self._cumulative_weights[index - 1]
+        container = self._container
+        x = container.x
+        y = container.y
+        w = container.width
+        h = container.height
+        if self._direction == _LayoutDirections.HORIZONTAL:
+            x += (prev_weight / self._total_weight) * container.width
+            w = (weight - prev_weight) * container.width / self._total_weight
+        else:
+            y += (prev_weight / self._total_weight) * container.height
+            h = (weight - prev_weight) * container.width / self._total_weight
+        return Rect(x, y, w, h)
+
+    def _element_index_at(self, x: int, y: int):
+        # Find the index of the rect corresponding to the input point. We only
+        # consider one direction (x or y). The cumulative weights represent the
+        # bottom (or right) edges of each rect. We shift and rescale x (or y)
+        # so that the containing rect's weight is just larger than the new
+        # value
+        assert self._container is not None
+        if self._direction == _LayoutDirections.HORIZONTAL:
+            pos_weight = float(x - self._container.x) / self._container.width
+        else:
+            pos_weight = float(y - self._container.y) / self._container.height
+        pos_weight *= self._total_weight
+
+        if pos_weight < self._cumulative_weights[0]:
+            return 0
+        index = 0
+        for index, _ in enumerate(w for w in self._cumulative_weights
+                                  if w <= pos_weight):
+            pass
+        return index + 1
+
+    def _set_container(self, container: Rect) -> None:
+        """Specify Layout container and containers for all child Layouts."""
+        assert self._container is None, 'containers only specified once.'
+        self._container = container
+
+        for index, child in enumerate(self._elements):
+            if isinstance(child, Layout):
+                child._set_container(self._rect_for_index(index))
