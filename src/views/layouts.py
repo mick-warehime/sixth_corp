@@ -13,7 +13,7 @@
 # get_rect_at(x:int, y: int) -> Any
 from enum import Enum
 from itertools import accumulate
-from typing import Sequence, Tuple, Any
+from typing import Sequence, Tuple, Any, List
 
 from pygame.rect import Rect
 
@@ -133,6 +133,36 @@ class Layout(object):
             return element.rect_at(x, y)
 
         return self._rect_for_index(index)
+
+    def get_rects(self, element: Any) -> List[Rect]:
+        """Get the Rects of an element in the Layout.
+
+        If the element is included more than once, then all of its associated
+        Rects are returned. If the element is not in the layout, then an empty
+        list is returned.
+
+        If the element is a Layout, an exception is raised.
+
+        If the element is None, then all 'gap' rects are returned.
+
+        Args:
+            element: Component of the layout whose rect we would like.
+        """
+        # If any element of the layout is itself a Layout, we must do a tree
+        # search.
+
+        if isinstance(element, Layout):
+            raise NotImplementedError('Cannot handle Layout input.')
+
+        rects = []
+
+        for index, candidate in enumerate(self._elements):
+            if element == candidate:
+                rects.append(self._rect_for_index(index))
+            elif isinstance(candidate, Layout):
+                rects.extend(candidate.get_rects(element))
+
+        return rects
 
     def _rect_for_index(self, index: int):
         assert 0 <= index < len(self._elements)
