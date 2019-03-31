@@ -12,12 +12,12 @@ class Character(Stateful):
     @property
     @abstractmethod
     def ai(self) -> AI:
-        pass
+        """AI used to determine in-game actions."""
 
     @property
     @abstractmethod
     def image_path(self) -> str:
-        pass
+        """File path to character image"""
 
     @property
     @abstractmethod
