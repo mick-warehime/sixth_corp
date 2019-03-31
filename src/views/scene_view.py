@@ -17,7 +17,7 @@ from views.artists.inventory_artist import InventoryArtist
 from views.artists.overlay_artist import OverlayArtist
 from views.artists.scene_artist_base import SceneArtist
 from views.artists.settings_artist import SettingsArtist
-from views.screen_factory import get_screen
+from views.pygame_screen import get_screen
 from views.view_base import View
 
 

@@ -5,7 +5,7 @@ from scenes.combat_scene import CombatScene
 from views.artists.drawing_utils import rescale_horizontal
 from views.artists.scene_artist_base import SceneArtist
 from views.layouts import Layout
-from views.screen_base import Screen
+from views.pygame_screen import Screen
 from views.stack_utils import stack_rect
 
 _TEXT_SPACE, = rescale_horizontal(10)

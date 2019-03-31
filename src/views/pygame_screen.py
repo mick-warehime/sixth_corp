@@ -1,13 +1,60 @@
+from abc import abstractmethod
 from typing import Dict, List
 
 import pygame
 
 from data import constants
 from views.pygame_images import load_image
-from views.screen_base import Color, Screen
+
+Color = List[int]
 
 
-class PygameScreen(Screen):
+class Screen(object):
+
+    @abstractmethod
+    def render_texts(
+            self,
+            texts: List[str],
+            font_size: int,
+            x: int,
+            y: int,
+            color: Color,
+            spacing: int) -> None:
+        """Adds text to the screen with a font_size, position and color."""
+        pass
+
+    @abstractmethod
+    def render_text(
+            self, text: str, font_size: int, x: int, y: int,
+            color: Color) -> None:
+        """Adds text to the screen with a font_size, position and color."""
+        pass
+
+    @abstractmethod
+    def render_image(self, image_path: str, x: int, y: int, w: int,
+                     h: int) -> None:
+        """Adds an image to the screen at (x, y) with width, w, and height, h.
+        """
+        pass
+
+    @abstractmethod
+    def render_rect(self, x: int, y: int, w: int, h: int, color: Color,
+                    width: int) -> None:
+        """Draws a rectangle onto the current screen."""
+        pass
+
+    @abstractmethod
+    def clear(self) -> None:
+        """Removes everything from the screen."""
+        pass
+
+    @abstractmethod
+    def update(self) -> None:
+        """Makes sure any render/clear calls have been posted to the screen."""
+        pass
+
+
+class _PygameScreen(Screen):
     _screen: pygame.Surface = None
 
     def __init__(self) -> None:
@@ -28,6 +75,7 @@ class PygameScreen(Screen):
         self._screen = pygame.display.set_mode(constants.SCREEN_SIZE)
 
     def update(self) -> None:
+        """Makes sure any render/clear calls have been posted to the screen."""
         pygame.display.flip()
 
     def render_texts(
@@ -65,3 +113,13 @@ class PygameScreen(Screen):
 
     def clear(self) -> None:
         self._screen.fill((0, 0, 0))
+
+
+_screen = None
+
+
+def get_screen() -> Screen:
+    global _screen
+    if _screen is None:
+        _screen = _PygameScreen()
+    return _screen

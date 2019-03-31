@@ -2,7 +2,7 @@ import abc
 
 from scenes.scenes_base import Scene
 from views.layouts import Layout
-from views.screen_base import Screen
+from views.pygame_screen import Screen
 
 
 class SceneArtist(metaclass=abc.ABCMeta):

@@ -6,7 +6,7 @@ from data.colors import GREEN, RED
 from scenes.combat_scene import CombatScene
 from views.artists.scene_artist_base import SceneArtist
 from views.layouts import Layout
-from views.screen_base import Screen
+from views.pygame_screen import Screen
 
 
 class CharacterArtist(SceneArtist):
@@ -26,8 +26,7 @@ class CharacterArtist(SceneArtist):
 
 
 def _render_character(character: Character, screen: Screen, rect: Rect) -> None:
-    screen.render_image(character.image_path, rect.x, rect.y, rect.w,
-                        rect.h)
+    screen.render_image(character.image_path, rect.x, rect.y, rect.w, rect.h)
 
     # Draw health
     health = character.status.get_attribute(Attributes.HEALTH)

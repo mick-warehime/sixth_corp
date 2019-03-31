@@ -2,7 +2,7 @@ from data.constants import SCREEN_SIZE
 from scenes.scenes_base import Scene
 from views.artists.scene_artist_base import SceneArtist
 from views.layouts import Layout
-from views.screen_base import Screen
+from views.pygame_screen import Screen
 from world.world import get_location
 
 

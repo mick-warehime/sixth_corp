@@ -7,7 +7,7 @@ from scenes.decision_scene import DecisionScene
 from views.artists.drawing_utils import rescale_horizontal, rescale_vertical
 from views.artists.scene_artist_base import SceneArtist
 from views.layouts import Layout
-from views.screen_base import Screen
+from views.pygame_screen import Screen
 
 _TextFun = Callable[[], str]
 _TextOrFun = Union[str, _TextFun]
