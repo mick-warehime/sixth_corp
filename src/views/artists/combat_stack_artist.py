@@ -17,8 +17,7 @@ _TARGET_SIZE, = rescale_horizontal(50)
 class CombatStackArtist(SceneArtist):
 
     def render(self, screen: Screen, scene: CombatScene) -> None:
-        player = get_player()
-        enemy = scene.enemy()
+        player, enemy = scene.characters()
         stack = [
             Move(FireLaser(2), player, enemy),
             Move(FireLaser(1), enemy, player), Move(Repair(1), player, player)]

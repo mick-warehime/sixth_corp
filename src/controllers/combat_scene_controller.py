@@ -1,7 +1,5 @@
 import logging
 
-from characters.character_base import Character
-from characters.player import get_player
 from controllers.controller import Controller
 from events.event_utils import post_scene_change
 from events.events_base import (ControllerActivatedEvent, Event, EventType,
@@ -20,7 +18,6 @@ class CombatSceneController(Controller):
         super(CombatSceneController, self).__init__()
         self.scene = scene
 
-        self._characters = [get_player(), self.scene.enemy()]
         self._view = SceneView(scene)
         self._update_scene_and_view()
 
@@ -59,7 +56,7 @@ class CombatSceneController(Controller):
         # character).
 
         # Check if a character was clicked.
-        for char in self._characters:
+        for char in self.scene.characters():
             if char.rect.collidepoint(x, y):
                 if self.scene.selected_char == char:
                     continue

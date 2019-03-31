@@ -11,9 +11,7 @@ class CharacterArtist(SceneArtist):
     """Draws Characters on the screen."""
 
     def render(self, screen: Screen, scene: CombatScene) -> None:
-        player = get_player()
-        enemy = scene.enemy()
-        for char in [player, enemy]:
+        for char in scene.characters():
             self._render_character(char, screen)
             self._render_selected(char, screen, scene)
 

@@ -1,4 +1,4 @@
-from typing import Sequence
+from typing import Sequence, Tuple
 
 from characters.character_base import Character
 from characters.conditions import IsDead
@@ -32,8 +32,8 @@ class CombatScene(Scene):
         self.current_moves: Sequence[str] = None
         self._set_targets()
 
-    def enemy(self) -> Character:
-        return self._enemy
+    def characters(self) -> Tuple[Character, ...]:
+        return self._player, self._enemy
 
     def set_enemy(self, enemy: Character) -> None:
         self._enemy = enemy
@@ -46,7 +46,7 @@ class CombatScene(Scene):
         return CombatResolution()
 
     def __str__(self) -> str:
-        return 'CombatScene(enemy = {})'.format(str(self.enemy()))
+        return 'CombatScene(enemy = {})'.format(str(self._enemy))
 
     def is_game_over(self) -> bool:
         return IsDead().check(self._player)
