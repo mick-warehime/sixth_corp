@@ -11,35 +11,27 @@ class CharacterArtist(SceneArtist):
 
     def render(self, screen: Screen, scene: CombatScene) -> None:
         for char in scene.characters():
-            self._render_character(char, screen)
-            self._render_selected(char, screen, scene)
+            _render_character(char, screen)
+            # Draw selection
+            if char == scene.selected_char:
+                pos = char.rect
+                screen.render_rect(pos.x, pos.y, pos.w, pos.h, RED, 2)
 
-    def _render_character(self, character: Character, screen: Screen) -> None:
-        self._render_image(character, screen)
-        self._render_health(character, screen)
-        self._render_name(character, screen)
 
-    def _render_image(self, character: Character, screen: Screen) -> None:
-        pos = character.rect
-        screen.render_image(character.image_path, pos.x, pos.y, pos.w, pos.h)
+def _render_character(character: Character, screen: Screen) -> None:
+    rect = character.rect
 
-    def _render_health(self, character: Character, screen: Screen) -> None:
-        pos = character.rect
-        health = character.status.get_attribute(Attributes.HEALTH)
-        max_health = character.status.get_attribute(Attributes.MAX_HEALTH)
-        health_bar = '{} / {}'.format(health, max_health)
-        x = int(pos.x + pos.w / 4.0)
-        y = pos.y - 40
-        screen.render_text(health_bar, 30, x, y, GREEN)
+    screen.render_image(character.image_path, rect.x, rect.y, rect.w,
+                        rect.h)
 
-    def _render_name(self, character: Character, screen: Screen) -> None:
-        pos = character.rect
-        x = int(pos.x + pos.w / 4.0)
-        y = pos.y + 40 + pos.h
-        screen.render_text(character.description(), 30, x, y, GREEN)
+    # Draw health
+    health = character.status.get_attribute(Attributes.HEALTH)
+    max_health = character.status.get_attribute(Attributes.MAX_HEALTH)
+    health_bar = '{} / {}'.format(health, max_health)
+    x = int(rect.x + rect.w / 4.0)
+    y = rect.y - 40
+    screen.render_text(health_bar, 30, x, y, GREEN)
 
-    def _render_selected(self, character: Character, screen: Screen,
-                         scene: CombatScene) -> None:
-        if character == scene.selected_char:
-            pos = character.rect
-            screen.render_rect(pos.x, pos.y, pos.w, pos.h, RED, 2)
+    # Draw name
+    y += 40 + rect.h
+    screen.render_text(character.description(), 30, x, y, GREEN)
