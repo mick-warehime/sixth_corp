@@ -14,9 +14,13 @@ def create_combat_controller(enemy):
     return CombatSceneController(scene)
 
 
-def select_enemy(enemy):
-    cx, cy = enemy.rect.center
-    simulate_mouse_click(cx, cy)
+def select_enemy(enemy, controller: CombatSceneController):
+    rects = controller._view.layout.get_rects(enemy)
+    assert len(rects) == 1
+
+    center = rects[0].center
+    print(center)
+    simulate_mouse_click(*center)
 
 
 class CombatSceneControllerTest(TestCase):
@@ -47,7 +51,7 @@ class CombatSceneControllerTest(TestCase):
         ctl = create_combat_controller(enemy)
         self.assertIsNone(ctl.scene.selected_char)
 
-        select_enemy(enemy)
+        select_enemy(enemy, ctl)
 
         self.assertIsNotNone(ctl.scene.selected_char)
         self.assertEqual(ctl.scene.selected_char, enemy)
@@ -62,7 +66,7 @@ class CombatSceneControllerTest(TestCase):
         ctl = create_combat_controller(enemy)
         self.assertIsNone(ctl.scene.selected_char)
 
-        select_enemy(enemy)
+        select_enemy(enemy, ctl)
 
         self.assertIsNotNone(ctl.scene.selected_char)
         self.assertEqual(ctl.scene.selected_char, enemy)
@@ -77,12 +81,12 @@ class CombatSceneControllerTest(TestCase):
         ctl = create_combat_controller(enemy)
         self.assertIsNone(ctl.scene.selected_char)
 
-        select_enemy(enemy)
+        select_enemy(enemy, ctl)
 
         self.assertIsNotNone(ctl.scene.selected_char)
         self.assertEqual(ctl.scene.selected_char, enemy)
 
-        select_enemy(enemy)
+        select_enemy(enemy, ctl)
         self.assertIsNone(ctl.scene.selected_char)
 
     @mock.patch('views.pygame_screen.pygame')
