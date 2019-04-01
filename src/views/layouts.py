@@ -27,11 +27,11 @@ class Layout(object):
                 weights. E.g., [(obj_A, 2), (obj_B, 1), (obj_C, 4)] corresponds
                 to assigning a rect to obj_A that is twice as big as that of
                 obj_B and half as big as that of obj_C. Rects are ordered in the
-                layout from top (left) to bottom (right). elements which are
+                layout from top (left) to bottom (right).  "None" elements are
+                treated as gaps between other elements. elements which are
                 themselves Layout objects are treated differently from others in
                 that all API calls to this Layout are passed through these
-                elements. "None" elements are treated as gaps between other
-                elements.
+                elements. A Layout may only appear as a single element.
             direction: 'vertical' or 'horizontal' layout direction.
             dimensions: (optional) Set a fixed absolute dimension for the
                 layout container. This should only be passed to the top-level
@@ -203,6 +203,10 @@ class Layout(object):
         assert self._container is None, 'containers only specified once.'
         self._container = container
 
+        layout_children = set()
         for index, child in enumerate(self._elements):
             if isinstance(child, Layout):
+                if child in layout_children:
+                    raise ValueError('Layout may only exist as one element.')
                 child._set_container(self._rect_for_index(index))
+                layout_children.add(child)

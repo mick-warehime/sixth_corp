@@ -27,9 +27,8 @@ class CombatStackArtist(SceneArtist):
 
             # Stack Ability + timer
             fake_time = len(stack) - i
-            screen.render_rect(rect.x, rect.y, rect.w, rect.h, DARK_GRAY, 0)
-            screen.render_rect(rect.x, rect.y, rect.w, rect.h, LIGHT_GRAY,
-                               _STACK_OUTLINE)
+            screen.render_rect(rect, DARK_GRAY, 0)
+            screen.render_rect(rect, LIGHT_GRAY, _STACK_OUTLINE)
             screen.render_text(
                 move.subroutine.description(),
                 _FONT_SIZE,

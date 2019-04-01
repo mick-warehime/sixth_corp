@@ -1,3 +1,5 @@
+from pygame.rect import Rect
+
 from characters.player import get_player
 from characters.states import Attributes
 from data import constants
@@ -16,7 +18,7 @@ class OverlayArtist(SceneArtist):
         # draw gray background
         height = 40
         width = constants.SCREEN_SIZE[0]
-        screen.render_rect(0, 0, width, height, DARK_GRAY, 0)
+        screen.render_rect(Rect(0, 0, width, height), DARK_GRAY, 0)
 
         # draw health
         player = get_player()
@@ -36,4 +38,5 @@ class OverlayArtist(SceneArtist):
 
         # key hints
         screen.render_text('i: Inventory', 28, 20, 50, WHITE)
+        screen.render_text('d: debug', 28, 20, 75, WHITE)
         screen.render_text('x: Settings', 28, 1050, 15, WHITE)

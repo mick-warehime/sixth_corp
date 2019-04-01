@@ -1,4 +1,5 @@
 import logging
+from enum import Enum
 
 from controllers.controller import Controller
 from events.event_utils import post_scene_change
@@ -7,7 +8,19 @@ from events.events_base import (ControllerActivatedEvent, Event, EventType,
 from scenes.combat_scene import CombatScene
 from views.scene_view import SceneView
 
-NUMBER_KEYS = [str(i) for i in range(9)]
+COMBAT_KEYBOARD_INPUTS = [str(i) for i in range(9)] + ['d']
+
+
+class _InputTypes(Enum):
+    MOVE_CHOICE = '0123456789'
+    TOGGLE_DEBUG = 'd'
+
+    @staticmethod
+    def get_input_type(key: str) -> '_InputTypes':
+        for input_type in _InputTypes:
+            if key in input_type.value:
+                return input_type
+        return None
 
 
 class CombatSceneController(Controller):
@@ -36,15 +49,19 @@ class CombatSceneController(Controller):
             self._handle_mouse_click(input_event)
             return
 
-        if input_event.key not in NUMBER_KEYS:
-            return
+        input_type = _InputTypes.get_input_type(input_event.key)
 
-        # Player move selection
-        input_key = int(input_event.key)
-        moves = self.scene.player_moves(self.scene.selected_char)
-        if len(moves) >= input_key > 0:
-            selected_move = moves[input_key - 1]
-            self.scene.select_player_move(selected_move)
+        if input_type == _InputTypes.MOVE_CHOICE:
+            # Player move selection
+            input_key = int(input_event.key)
+            moves = self.scene.player_moves(self.scene.selected_char)
+            if len(moves) >= input_key > 0:
+                selected_move = moves[input_key - 1]
+                self.scene.select_player_move(selected_move)
+        elif input_type == _InputTypes.TOGGLE_DEBUG:
+            self._view.toggle_debug()
+        else:
+            assert input_type is None
 
     def _handle_mouse_click(self, input_event: InputEvent) -> None:
         x = input_event.mouse[0]

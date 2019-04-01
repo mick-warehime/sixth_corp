@@ -2,6 +2,7 @@ from abc import abstractmethod
 from typing import Dict, List
 
 import pygame
+from pygame.rect import Rect
 
 from data import constants
 from views.pygame_images import load_image
@@ -38,10 +39,17 @@ class Screen(object):
         pass
 
     @abstractmethod
-    def render_rect(self, x: int, y: int, w: int, h: int, color: Color,
-                    width: int) -> None:
-        """Draws a rectangle onto the current screen."""
-        pass
+    def render_rect(self, rect: Rect, color: Color, width: int) -> None:
+        """Draws a rectangle onto the current screen.
+
+        Args:
+            rect: The rectangle to be drawn. Coordinates must match absolute
+                screen coordinates.
+            color: Fill or boundary color.
+            width: Boundary width. If zero, the rect is filled.
+
+        """
+
 
     @abstractmethod
     def clear(self) -> None:
@@ -106,10 +114,8 @@ class _PygameScreen(Screen):
             image = pygame.transform.scale(image, (w, h))
         self._screen.blit(image, rect)
 
-    def render_rect(self, x: int, y: int, w: int, h: int, color: Color,
-                    width: int) -> None:
-        pygame.draw.rect(self._screen, color, pygame.rect.Rect(x, y, w, h),
-                         width)
+    def render_rect(self, rect: Rect, color: Color, width: int) -> None:
+        pygame.draw.rect(self._screen, color, rect, width)
 
     def clear(self) -> None:
         self._screen.fill((0, 0, 0))

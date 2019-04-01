@@ -64,3 +64,29 @@ def test_empty_layout_rect_is_container():
     empty = Layout((), dimensions=(3, 4))
 
     assert empty.rect_at(0, 0) == Rect(0, 0, 3, 4)
+
+
+def test_get_rects_single_element():
+    layout = Layout([('A', 1), ('B', 2), ('A', 1)], 'horizontal', (4, 4))
+
+    actual = tuple(layout.get_rects('A'))
+    expected = (Rect(0, 0, 1, 4), Rect(3, 0, 1, 4))
+    assert actual == expected
+
+
+def test_get_rects_all():
+    inner_layout = Layout([('A', 1), ('B', 2), (None, 1)], 'horizontal')
+    outer_layout = Layout([(inner_layout, 1),
+                           ('D', 1),
+                           (None, 2)],
+                          'vertical', (20, 20))
+
+    actual = tuple(outer_layout.get_rects(outer_layout))
+    expected = (
+        Rect(0, 0, 20, 20), Rect(0, 0, 5, 5), Rect(0, 0, 20, 5),
+        Rect(5, 0, 10, 5), Rect(15, 0, 5, 5), Rect(0, 5, 20, 5),
+        Rect(0, 10, 20, 10))
+    for rect in actual:
+        assert rect in expected
+    for rect in expected:
+        assert rect in actual
