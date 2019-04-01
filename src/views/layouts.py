@@ -141,10 +141,10 @@ class Layout(object):
         # All rects case
         rects = []
         if element is self:
-            rects.append(self._container.copy())
             for index, candidate in enumerate(self._elements):
                 if isinstance(candidate, Layout):
                     rects.extend(candidate.get_rects(candidate))
+                    rects.append(candidate._container)
                 else:
                     rects.append(self._rect_for_index(index))
             return rects

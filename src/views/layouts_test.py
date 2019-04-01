@@ -82,10 +82,10 @@ def test_get_rects_all():
                           'vertical', (20, 20))
 
     actual = tuple(outer_layout.get_rects(outer_layout))
-    expected = (
-        Rect(0, 0, 20, 20), Rect(0, 0, 5, 5), Rect(0, 0, 20, 5),
-        Rect(5, 0, 10, 5), Rect(15, 0, 5, 5), Rect(0, 5, 20, 5),
-        Rect(0, 10, 20, 10))
+
+    expected = (Rect(0, 0, 5, 5), Rect(0, 0, 20, 5),
+                Rect(5, 0, 10, 5), Rect(15, 0, 5, 5), Rect(0, 5, 20, 5),
+                Rect(0, 10, 20, 10))
     for rect in actual:
         assert rect in expected
     for rect in expected:
