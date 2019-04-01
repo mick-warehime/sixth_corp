@@ -24,16 +24,4 @@ def build_character(data: CharacterData) -> CharacterImpl:
     health = char.status.get_attribute(Attributes.MAX_HEALTH)
     char.status.increment_attribute(Attributes.HEALTH, health)
 
-    # TODO(#112) - move positions to combat view
-
-    if data.ai_type == AIType.Human:
-        x, y, w, h = 200, 500, 150, 150
-
-    else:
-        x, y, w, h = 800, 300, 200, 150
-
-    x, w = rescale_horizontal(x, w)
-    y, h = rescale_vertical(y, h)
-    char.rect = Rect(x, y, w, h)
-
     return char
