@@ -69,7 +69,7 @@ def _build_scene_artists(scene: Scene) -> List[SceneArtist]:
     return artists
 
 
-def _build_scene_layout(scene) -> Layout:
+def _build_scene_layout(scene: Scene) -> Layout:
     if isinstance(scene, CombatScene):
         characters = scene.characters()
         # player side layout
@@ -83,8 +83,9 @@ def _build_scene_layout(scene) -> Layout:
         stack_layout = Layout()
 
         # enemies layout
-        elements = [[(None, 1), (e, 1)] for e in characters[1:]]
-        elements = reduce(lambda a, b: a + b, elements)
+        assert len(characters) > 1
+        elements = reduce(lambda a, b: a + b,
+                          ([(None, 1), (e, 1)] for e in characters[1:]))
         elements.append((None, 1))
         enemies_layout = Layout(elements, 'vertical')
 

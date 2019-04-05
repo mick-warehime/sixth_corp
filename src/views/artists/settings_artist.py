@@ -1,5 +1,6 @@
 from data.colors import WHITE
 from data.constants import SCREEN_SIZE
+from scenes.scenes_base import Scene
 from scenes.settings_scene import SettingsScene
 from views.artists.drawing_utils import rescale_horizontal, rescale_vertical
 from views.artists.scene_artist_base import SceneArtist
@@ -9,8 +10,9 @@ from views.pygame_screen import Screen
 
 class SettingsArtist(SceneArtist):
 
-    def render(self, screen: Screen, scene: SettingsScene,
+    def render(self, screen: Screen, scene: Scene,
                layout: Layout) -> None:
+        assert isinstance(scene, SettingsScene)
         background_image = scene.background
 
         x, font_size, spacing = rescale_horizontal(250, 35, 50)

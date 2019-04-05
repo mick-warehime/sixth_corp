@@ -1,6 +1,6 @@
 from enum import Enum
 from itertools import accumulate
-from typing import Any, List, Sequence, Tuple
+from typing import Any, List, Sequence, Tuple, Set
 
 from pygame.rect import Rect
 
@@ -51,7 +51,7 @@ class Layout(object):
             raise ValueError('Input direction must be one of {}'.format(
                 [k.value for k in _LayoutDirections]))
 
-        self._container = None
+        self._container: Rect = None
         if dimensions is not None:
             self._set_container(Rect(0, 0, *dimensions))
 
@@ -137,7 +137,7 @@ class Layout(object):
 
         return rects
 
-    def _rect_for_index(self, index: int):
+    def _rect_for_index(self, index: int) -> Rect:
         assert 0 <= index < len(self._elements)
         # The rect is shifted to match the container position and scaled
         # to match its weight and the layout orientation.
@@ -156,12 +156,10 @@ class Layout(object):
             h = (weight - prev_weight) * container.height / self._total_weight
         return Rect(x, y, w, h)
 
-    def _element_index_at(self, x: int, y: int):
+    def _element_index_at(self, x: int, y: int) -> int:
         # Find the index of the rect corresponding to the input point. We only
         # consider one direction (x or y). The cumulative weights represent the
-        # bottom (or right) edges of each rect. We shift and rescale x (or y)
-        # so that the containing rect's weight is just larger than the new
-        # value
+        # right (or bottom) edges of each rect.
         assert self._container is not None
         if self._direction == _LayoutDirections.HORIZONTAL:
             pos_weight = float(x - self._container.x) / self._container.width
@@ -182,7 +180,7 @@ class Layout(object):
         assert self._container is None, 'containers only specified once.'
         self._container = container
 
-        layout_children = set()
+        layout_children: Set[Layout] = set()
         for index, child in enumerate(self._elements):
             if isinstance(child, Layout):
                 if child in layout_children:

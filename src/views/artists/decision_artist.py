@@ -4,6 +4,7 @@ from typing import Callable, List, Union
 from data.colors import GREEN
 from data.constants import TEXTWIDTH
 from scenes.decision_scene import DecisionScene
+from scenes.scenes_base import Scene
 from views.artists.drawing_utils import rescale_horizontal, rescale_vertical
 from views.artists.scene_artist_base import SceneArtist
 from views.layouts import Layout
@@ -34,7 +35,8 @@ def _parse_text_fun(main_text: _TextOrFun) -> _TextFun:
 
 class DecisionArtist(SceneArtist):
 
-    def render(self, screen: Screen, scene: DecisionScene, layout: Layout) -> None:
+    def render(self, screen: Screen, scene: Scene, layout: Layout) -> None:
+        assert isinstance(scene, DecisionScene)
         main_text = scene.prompt
         options = {key_val: choice.description
                    for key_val, choice in scene.choices.items()}
