@@ -75,7 +75,7 @@ def _build_scene_layout(scene) -> Layout:
         # player side layout
         player = characters[0]
 
-        player_layout = Layout([(None, 2), (player, 2)], 'vertical')
+        player_layout = Layout([(None, 2), (player, 1), (None, 2)], 'vertical')
         player_layout = Layout([(None, 1), (player_layout, 1), (None, 1)],
                                'horizontal')
 
