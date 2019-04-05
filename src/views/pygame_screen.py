@@ -50,7 +50,6 @@ class Screen(object):
 
         """
 
-
     @abstractmethod
     def clear(self) -> None:
         """Removes everything from the screen."""

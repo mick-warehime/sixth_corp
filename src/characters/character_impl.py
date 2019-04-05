@@ -42,14 +42,6 @@ class CharacterImpl(Character):
     def ai(self) -> AI:
         return self._ai
 
-    @property
-    def rect(self) -> Rect:
-        return self._rect
-
-    @rect.setter
-    def rect(self, rect: Rect) -> None:
-        self._rect = rect
-
     def __repr__(self) -> str:
         return self.description()
 

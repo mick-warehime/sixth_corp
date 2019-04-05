@@ -3,7 +3,6 @@ from typing import List
 
 from data.colors import GREEN
 from data.constants import SCREEN_SIZE
-from views.layouts import Layout
 from scenes.combat_scene import CombatScene
 from scenes.decision_scene import DecisionScene
 from scenes.inventory_scene import InventoryScene
@@ -18,6 +17,7 @@ from views.artists.inventory_artist import InventoryArtist
 from views.artists.overlay_artist import OverlayArtist
 from views.artists.scene_artist_base import SceneArtist
 from views.artists.settings_artist import SettingsArtist
+from views.layouts import Layout
 from views.pygame_screen import get_screen
 from views.view_base import View
 
