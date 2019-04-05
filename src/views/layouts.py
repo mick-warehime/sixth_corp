@@ -1,6 +1,6 @@
 from enum import Enum
 from itertools import accumulate
-from typing import Any, List, Sequence, Tuple, Set
+from typing import Any, List, Sequence, Set, Tuple
 
 from pygame.rect import Rect
 
