@@ -17,6 +17,30 @@ def test_vertical_layout_object_at():
     assert layout.object_at(x, 9) == 'C'
 
 
+def test_typical_nested_layout():
+    screen_size = 50, 30
+
+    top_row_mid = Layout([('F', 3), ('Y', 2), ('E', 5)], 'vertical')
+    top_row = Layout([('A', 20), (top_row_mid, 20), ('C', 10)], 'horizontal')
+
+    outer_layout = Layout([(top_row, 10), (None, 5), ('H', 15)], 'vertical',
+                          screen_size)
+
+    assert outer_layout.object_at(0, 0) == 'A'
+    assert outer_layout.object_at(10, 20) == 'H'
+    assert outer_layout.object_at(45, 5) == 'C'
+    assert outer_layout.object_at(25, 0) == 'F'
+    assert outer_layout.object_at(25, 4) == 'Y'
+    assert outer_layout.object_at(25, 6) == 'E'
+
+    for y in 0, 4, 6:
+        actual = top_row_mid.object_at(25, y)
+        expected = outer_layout.object_at(25, y)
+        assert actual == expected
+
+    assert top_row_mid.object_at(25, 11) is None
+
+
 def test_horizontal_layout_rect_at():
     # AABBBB--CCCC
 
