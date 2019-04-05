@@ -11,13 +11,9 @@ def test_vertical_layout_object_at():
 
     x = 6
 
-    assert layout.is_object_at(x, 0)
     assert layout.object_at(x, 0) == 'A'
-    assert layout.is_object_at(x, 3)
     assert layout.object_at(x, 3) == 'B'
-    assert not layout.is_object_at(x, 7)
     assert layout.object_at(x, 7) is None
-    assert layout.is_object_at(x, 9)
     assert layout.object_at(x, 9) == 'C'
 
 
@@ -53,10 +49,8 @@ def test_nested_layouts():
     outer_layout = Layout([(None, 1), (hor_layout, 1), (None, 1)],
                           dimensions=(9, 9))
 
-    assert outer_layout.is_object_at(3, 3)
     assert outer_layout.object_at(3, 3) == 'A'
     assert outer_layout.object_at(4, 3) == 'B'
-    assert outer_layout.is_object_at(5, 5)
     assert outer_layout.object_at(5, 5) == 'C'
 
 
@@ -68,7 +62,6 @@ def test_empty_layout_rect_is_container():
 
 def test_get_rects_single_element():
     layout = Layout([('A', 1), ('B', 2), ('A', 1)], 'horizontal', (4, 4))
-
     actual = tuple(layout.get_rects('A'))
     expected = (Rect(0, 0, 1, 4), Rect(3, 0, 1, 4))
     assert actual == expected

@@ -39,11 +39,11 @@ class Layout(object):
         """
         self._elements = tuple(x[0] for x in elements)
         self._cumulative_weights = tuple(
-            accumulate((x[1] for x in elements), lambda a, b: a + b))
+            accumulate((float(x[1]) for x in elements), lambda a, b: a + b))
         if self._cumulative_weights:
             self._total_weight = self._cumulative_weights[-1]
         else:
-            self._total_weight = 0
+            self._total_weight = 0.0
 
         try:
             self._direction = _LayoutDirections(direction)
@@ -54,27 +54,6 @@ class Layout(object):
         self._container = None
         if dimensions is not None:
             self._set_container(Rect(0, 0, *dimensions))
-
-    def is_object_at(self, x: int, y: int) -> bool:
-        """Whether an object exists at the specified point.
-
-        Args:
-            x: horizontal direction from the left.
-            y: vertical direction from the top.
-        """
-        assert self._container is not None
-
-        if not self._container.collidepoint(x, y):  # point is outside layout.
-            return False
-
-        if not self._elements:
-            return False
-
-        element = self._elements[self._element_index_at(x, y)]
-        if isinstance(element, Layout):
-            return element.is_object_at(x, y)
-
-        return element is not None
 
     def object_at(self, x: int, y: int) -> Any:
         """Returns the object at the specified point.
@@ -174,7 +153,7 @@ class Layout(object):
             w = (weight - prev_weight) * container.width / self._total_weight
         else:
             y += (prev_weight / self._total_weight) * container.height
-            h = (weight - prev_weight) * container.width / self._total_weight
+            h = (weight - prev_weight) * container.height / self._total_weight
         return Rect(x, y, w, h)
 
     def _element_index_at(self, x: int, y: int):
