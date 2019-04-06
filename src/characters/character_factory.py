@@ -1,12 +1,9 @@
-from pygame.rect import Rect
-
 from characters.character_examples import CharacterData
 from characters.character_impl import CharacterImpl
 from characters.chassis_factory import build_chassis
 from characters.mods_factory import build_mod
 from characters.states import Attributes
-from combat.ai_factory import AIType, build_ai
-from views.artists.drawing_utils import rescale_horizontal, rescale_vertical
+from combat.ai_factory import build_ai
 
 
 def build_character(data: CharacterData) -> CharacterImpl:
@@ -23,17 +20,5 @@ def build_character(data: CharacterData) -> CharacterImpl:
 
     health = char.status.get_attribute(Attributes.MAX_HEALTH)
     char.status.increment_attribute(Attributes.HEALTH, health)
-
-    # TODO(#112) - move positions to combat view
-
-    if data.ai_type == AIType.Human:
-        x, y, w, h = 200, 500, 150, 150
-
-    else:
-        x, y, w, h = 800, 300, 200, 150
-
-    x, w = rescale_horizontal(x, w)
-    y, h = rescale_vertical(y, h)
-    char.rect = Rect(x, y, w, h)
 
     return char

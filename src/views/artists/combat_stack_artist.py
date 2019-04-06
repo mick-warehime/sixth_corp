@@ -2,9 +2,11 @@ from characters.subroutine_examples import FireLaser, Repair
 from combat.moves_base import Move
 from data.colors import DARK_GRAY, LIGHT_GRAY, RED, WHITE
 from scenes.combat_scene import CombatScene
+from scenes.scenes_base import Scene
 from views.artists.drawing_utils import rescale_horizontal
 from views.artists.scene_artist_base import SceneArtist
-from views.screen_base import Screen
+from views.layouts import Layout
+from views.pygame_screen import Screen
 from views.stack_utils import stack_rect
 
 _TEXT_SPACE, = rescale_horizontal(10)
@@ -15,7 +17,9 @@ _TARGET_SIZE, = rescale_horizontal(50)
 
 class CombatStackArtist(SceneArtist):
 
-    def render(self, screen: Screen, scene: CombatScene) -> None:
+    def render(self, screen: Screen, scene: Scene,
+               layout: Layout) -> None:
+        assert isinstance(scene, CombatScene)
         player, enemy = scene.characters()
         stack = [
             Move(FireLaser(2), player, enemy),
@@ -25,9 +29,8 @@ class CombatStackArtist(SceneArtist):
 
             # Stack Ability + timer
             fake_time = len(stack) - i
-            screen.render_rect(rect.x, rect.y, rect.w, rect.h, DARK_GRAY, 0)
-            screen.render_rect(rect.x, rect.y, rect.w, rect.h, LIGHT_GRAY,
-                               _STACK_OUTLINE)
+            screen.render_rect(rect, DARK_GRAY, 0)
+            screen.render_rect(rect, LIGHT_GRAY, _STACK_OUTLINE)
             screen.render_text(
                 move.subroutine.description(),
                 _FONT_SIZE,

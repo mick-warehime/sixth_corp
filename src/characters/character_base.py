@@ -1,8 +1,6 @@
 """Basic class for player and enemies."""
 from abc import abstractmethod
 
-from pygame.rect import Rect
-
 from characters.inventory import InventoryBase
 from characters.states import Stateful
 from combat.ai_base import AI
@@ -14,21 +12,12 @@ class Character(Stateful):
     @property
     @abstractmethod
     def ai(self) -> AI:
-        pass
+        """AI used to determine in-game actions."""
 
     @property
     @abstractmethod
     def image_path(self) -> str:
-        pass
-
-    @property
-    @abstractmethod
-    def rect(self) -> Rect:
-        pass
-
-    @rect.setter
-    def rect(self, pos: Rect) -> None:
-        pass
+        """File path to character image"""
 
     @property
     @abstractmethod
