@@ -1,5 +1,5 @@
 from characters.character_base import Character
-from characters.character_examples import CharacterData, CharacterTypes
+from characters.character_examples import CharacterData
 from characters.character_factory import build_character
 from characters.chassis_examples import ChassisData
 from characters.mod_examples import FireLaser
@@ -23,9 +23,3 @@ def create_combat_group(group_size, health=10, damage=2, base_name='combatant'):
             for i in range(group_size)]
 
 
-def create_enemy(health: int = 10) -> Character:
-    enemy = build_character(CharacterTypes.DRONE.data)
-    cur_val = enemy.status.get_attribute(Attributes.HEALTH)
-    enemy.status.increment_attribute(Attributes.HEALTH, -cur_val)
-    enemy.status.increment_attribute(Attributes.HEALTH, health)
-    return enemy
