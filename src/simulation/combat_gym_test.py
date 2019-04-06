@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from characters.states import Attributes, State
-from combat.combat_gym import CombatGym
+from simulation.combat_gym import CombatGym
 from combat.combat_test_utils import create_combat_group
 
 
