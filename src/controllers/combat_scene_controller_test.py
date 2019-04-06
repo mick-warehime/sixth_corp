@@ -18,9 +18,7 @@ def select_enemy(enemy, controller: CombatSceneController):
     rects = controller._view.layout.get_rects(enemy)
     assert len(rects) == 1
 
-    center = rects[0].center
-    print(center)
-    simulate_mouse_click(*center)
+    simulate_mouse_click(*rects[0].center)
 
 
 class CombatSceneControllerTest(TestCase):
