@@ -1,6 +1,6 @@
 from typing import NamedTuple
 
-from characters.states import Stateful
+from models.characters.states import Stateful
 from characters.subroutines_base import Subroutine
 
 

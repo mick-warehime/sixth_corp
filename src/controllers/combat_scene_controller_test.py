@@ -5,7 +5,7 @@ from characters.character_examples import CharacterTypes
 from characters.character_factory import build_character
 
 from characters.effects import IncrementAttribute
-from characters.states import Attributes
+from models.characters.states import Attributes
 from controllers.combat_scene_controller import CombatSceneController
 from events.event_utils import simulate_key_press, simulate_mouse_click
 from scenes.combat_scene import CombatScene

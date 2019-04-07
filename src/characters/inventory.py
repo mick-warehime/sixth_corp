@@ -4,7 +4,7 @@ import logging
 from typing import Callable, Iterable, List, Sequence
 
 from characters.mods_base import Mod
-from characters.states import AttributeType, State
+from models.characters.states import AttributeType, State
 from characters.subroutines_base import Subroutine
 
 

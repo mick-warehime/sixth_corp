@@ -2,7 +2,7 @@ from characters.character_examples import CharacterData
 from characters.character_impl import CharacterImpl
 from characters.chassis_factory import build_chassis
 from characters.mods_factory import build_mod
-from characters.states import Attributes
+from models.characters.states import Attributes
 from combat.ai_factory import build_ai
 
 

@@ -2,7 +2,7 @@
 from enum import Enum
 
 from characters.mods_base import ModData, Slots
-from characters.states import Attributes, Skill, State
+from models.characters.states import Attributes, Skill, State
 from characters.subroutine_examples import FireLaser
 
 

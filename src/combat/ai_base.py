@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from typing import Sequence
 
-from characters.states import Stateful
+from models.characters.states import Stateful
 from combat.moves_base import Move
 
 

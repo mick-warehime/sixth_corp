@@ -4,7 +4,7 @@ from enum import Enum
 from typing import Sequence, Union
 
 from characters.player import get_player
-from characters.states import Skill
+from models.characters.states import Skill
 from scenes.scenes_base import Scene, SceneConstructor
 
 

@@ -2,7 +2,7 @@
 import abc
 from typing import Any, Tuple
 
-from characters.states import Stateful
+from models.characters.states import Stateful
 
 
 class Subroutine(metaclass=abc.ABCMeta):

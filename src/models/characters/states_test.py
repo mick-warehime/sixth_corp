@@ -1,6 +1,6 @@
 """Tests for states.py"""
 
-from characters.states import Attributes, State
+from models.characters.states import Attributes, State
 from characters.status import BasicStatus
 
 

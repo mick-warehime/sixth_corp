@@ -2,7 +2,7 @@ from enum import Enum
 from typing import Dict, NamedTuple, Tuple
 
 from characters.mods_base import Slots
-from characters.states import Attributes, AttributeType, Skill, State
+from models.characters.states import Attributes, AttributeType, Skill, State
 from characters.subroutine_examples import (DoNothing, FireLaser, Repair,
                                             Unusable)
 from characters.subroutines_base import Subroutine

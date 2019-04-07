@@ -5,7 +5,7 @@ from characters.character_examples import CharacterData
 from characters.character_factory import build_character
 from characters.chassis_examples import ChassisTypes
 from characters.conditions import FullHealth
-from characters.states import Attributes
+from models.characters.states import Attributes
 from characters.subroutine_examples import FireLaser, Repair
 
 

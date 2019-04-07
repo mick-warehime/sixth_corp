@@ -3,7 +3,7 @@ import abc
 from enum import Enum
 from typing import Dict, NamedTuple, Sequence, Set, Tuple, Union
 
-from characters.states import AttributeType, State
+from models.characters.states import AttributeType, State
 from characters.subroutines_base import Subroutine
 
 

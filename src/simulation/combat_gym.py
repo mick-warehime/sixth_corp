@@ -3,7 +3,7 @@ from itertools import product
 from typing import Any, Sequence, Tuple
 
 from characters.character_base import Character
-from characters.states import Attributes, State
+from models.characters.states import Attributes, State
 from combat.combat_manager_base import CombatGroup, CombatManager, GroupMove
 
 RewardFunc = Any

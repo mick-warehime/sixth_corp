@@ -2,7 +2,7 @@ from itertools import product
 from typing import Callable, Sequence
 
 from characters.character_base import Character
-from characters.states import Stateful
+from models.characters.states import Stateful
 from combat.ai_base import AI
 from combat.moves_base import Move
 

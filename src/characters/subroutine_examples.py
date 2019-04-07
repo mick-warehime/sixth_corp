@@ -1,7 +1,7 @@
 from typing import Any
 
 from characters.conditions import FullHealth
-from characters.states import Attributes, Stateful
+from models.characters.states import Attributes, Stateful
 from characters.subroutines_base import Subroutine
 
 

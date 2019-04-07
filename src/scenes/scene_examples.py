@@ -4,7 +4,7 @@ from typing import Sequence
 from characters.effects import ChangeLocation, IncrementAttribute, RestartGame
 from characters.player import get_player
 from characters.skills import Difficulty, skill_check
-from characters.states import Attributes, Skill
+from models.characters.states import Attributes, Skill
 from scenes import combat_scene
 from scenes.decision_scene import (DecisionOption, DecisionScene,
                                    from_transition, transition_to)

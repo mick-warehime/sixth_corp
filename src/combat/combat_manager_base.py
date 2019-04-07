@@ -3,7 +3,7 @@ from typing import List, Sequence, Set, Tuple
 
 from characters.character_base import Character
 from characters.conditions import IsDead
-from characters.states import Stateful
+from models.characters.states import Stateful
 from combat.moves_base import Move
 from events.events_base import EventManager, MoveExecutedEvent
 

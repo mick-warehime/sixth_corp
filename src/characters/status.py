@@ -2,7 +2,7 @@
 from collections import defaultdict
 from typing import Callable, Dict, Tuple, Union
 
-from characters.states import Attributes, AttributeType, State, Status
+from models.characters.states import Attributes, AttributeType, State, Status
 
 _BoundFun = Callable[[], int]
 _BoundType = Union[int, Attributes, _BoundFun]
