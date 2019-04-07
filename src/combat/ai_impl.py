@@ -4,7 +4,7 @@ from typing import Callable, Sequence
 from characters.character_base import Character
 from models.characters.states import Stateful
 from combat.ai_base import AI
-from combat.moves_base import Move
+from models.combat.moves_base import Move
 
 SelectionFun = Callable[[Sequence[Move]], Move]
 

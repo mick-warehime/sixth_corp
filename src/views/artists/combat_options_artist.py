@@ -1,6 +1,6 @@
 from typing import Sequence
 
-from combat.moves_base import Move
+from models.combat.moves_base import Move
 from data.colors import GREEN
 from scenes.combat_scene import CombatScene
 from scenes.scenes_base import Scene

@@ -2,7 +2,7 @@ from abc import abstractmethod
 from typing import Sequence
 
 from models.characters.states import Stateful
-from combat.moves_base import Move
+from models.combat.moves_base import Move
 
 
 class AI(object):

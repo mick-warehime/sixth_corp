@@ -4,7 +4,7 @@ from typing import List, Sequence, Set, Tuple
 from characters.character_base import Character
 from models.characters.conditions import IsDead
 from models.characters.states import Stateful
-from combat.moves_base import Move
+from models.combat.moves_base import Move
 from events.events_base import EventManager, MoveExecutedEvent
 
 GroupMove = Sequence[Move]

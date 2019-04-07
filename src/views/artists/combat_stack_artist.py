@@ -1,5 +1,5 @@
 from models.characters.subroutine_examples import FireLaser, Repair
-from combat.moves_base import Move
+from models.combat.moves_base import Move
 from data.colors import DARK_GRAY, LIGHT_GRAY, RED, WHITE
 from scenes.combat_scene import CombatScene
 from scenes.scenes_base import Scene

@@ -5,7 +5,7 @@ from typing import Sequence
 
 from combat.ai_base import AI
 from combat.ai_impl import AIImpl, SelectionFun
-from combat.moves_base import Move
+from models.combat.moves_base import Move
 
 
 class AIType(Enum):

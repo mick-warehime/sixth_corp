@@ -4,7 +4,7 @@ from characters.character_base import Character
 from models.characters.conditions import IsDead
 from characters.player import get_player
 from combat.combat_manager_base import CombatManager
-from combat.moves_base import Move
+from models.combat.moves_base import Move
 from scenes import scene_examples
 from scenes.scenes_base import Resolution, Scene
 from world.world import get_location
