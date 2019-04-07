@@ -2,7 +2,7 @@ import pytest
 
 from models.characters.character_base import Character
 from characters.character_examples import CharacterData
-from characters.character_factory import build_character
+from characters.character_impl import build_character
 from models.characters.chassis_examples import ChassisTypes
 from models.characters.conditions import FullHealth
 from models.characters.states import Attributes

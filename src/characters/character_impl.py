@@ -4,15 +4,19 @@ from functools import partial
 
 from pygame.rect import Rect
 
+from characters.character_examples import CharacterData
 from models.characters.character_base import Character
 from models.characters.chassis import Chassis
+from models.characters.chassis_factory import build_chassis
 from models.characters.inventory import InventoryBase
+from models.characters.mods_base import GenericMod
 from models.characters.states import Attributes, AttributeType, State, Status
 from models.characters.status import BasicStatus
 from models.combat.ai_base import AI
+from models.combat.ai_impl import build_ai
 
 
-class CharacterImpl(Character):
+class _CharacterImpl(Character):
     """Stateful object with states and attributes affected by mods."""
 
     def __init__(self, chassis: Chassis, ai: AI, image_path: str,
@@ -75,3 +79,22 @@ class _CombinedStatus(Status):
 
     def increment_attribute(self, attribute: AttributeType, delta: int) -> None:
         self._base_status.increment_attribute(attribute, delta)
+
+
+def build_character(data: CharacterData) -> _CharacterImpl:
+    chassis = build_chassis(data.chassis_data)
+
+    ai = build_ai(data.ai_type)
+    char = _CharacterImpl(chassis, ai, data.image_path, name=data.name)
+    ai.set_user(char)
+
+    for mod_data in data.mods:
+        mod = GenericMod(mod_data.states_granted, mod_data.attribute_modifiers,
+                         mod_data.subroutines_granted, mod_data.valid_slots)
+        assert char.inventory.can_store(mod), 'Mod cannot be picked up.'
+        char.inventory.attempt_store(mod)
+
+    health = char.status.get_attribute(Attributes.MAX_HEALTH)
+    char.status.increment_attribute(Attributes.HEALTH, health)
+
+    return char
