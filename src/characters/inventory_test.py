@@ -2,11 +2,11 @@ from functools import partial
 
 import pytest
 
-from characters.chassis import Chassis
+from models.characters.chassis import Chassis
 from models.characters.inventory import BasicInventory
 from models.characters.mods_base import GenericMod, Slots
 from models.characters.states import Attributes, State
-from characters.subroutine_examples import FireLaser, Repair
+from models.characters.subroutine_examples import FireLaser, Repair
 
 factories = (BasicInventory, partial(Chassis, {Slots.STORAGE: 4}))
 

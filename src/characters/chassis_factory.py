@@ -1,5 +1,5 @@
-from characters.chassis import Chassis
-from characters.chassis_examples import ChassisData
+from models.characters.chassis import Chassis
+from models.characters.chassis_examples import ChassisData
 from models.characters.mods_base import GenericMod
 
 

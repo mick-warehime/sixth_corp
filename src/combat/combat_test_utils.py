@@ -1,7 +1,7 @@
 from characters.character_base import Character
 from characters.character_examples import CharacterData
 from characters.character_factory import build_character
-from characters.chassis_examples import ChassisData
+from models.characters.chassis_examples import ChassisData
 from characters.mod_examples import FireLaser
 from models.characters.mods_base import ModData, Slots
 from models.characters.states import Attributes

@@ -4,8 +4,8 @@ from parameterized import parameterized
 
 from characters.character_examples import CharacterData
 from characters.character_factory import build_character
-from characters.chassis_examples import ChassisData
-from characters.subroutine_examples import Unusable
+from models.characters.chassis_examples import ChassisData
+from models.characters.subroutine_examples import Unusable
 from combat.ai_factory import AIType, build_ai
 
 AI_TYPES = [[AIType.Random], [AIType.Shuffle]]

@@ -3,10 +3,10 @@ import pytest
 from characters.character_base import Character
 from characters.character_examples import CharacterData
 from characters.character_factory import build_character
-from characters.chassis_examples import ChassisTypes
+from models.characters.chassis_examples import ChassisTypes
 from models.characters.conditions import FullHealth
 from models.characters.states import Attributes
-from characters.subroutine_examples import FireLaser, Repair
+from models.characters.subroutine_examples import FireLaser, Repair
 
 
 @pytest.fixture()

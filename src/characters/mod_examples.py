@@ -3,7 +3,7 @@ from enum import Enum
 
 from models.characters.mods_base import ModData, Slots
 from models.characters.states import Attributes, Skill, State
-from characters.subroutine_examples import FireLaser
+from models.characters.subroutine_examples import FireLaser
 
 
 class ModTypes(Enum):

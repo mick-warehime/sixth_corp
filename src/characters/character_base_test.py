@@ -2,11 +2,11 @@ from unittest import TestCase
 
 from characters.character_examples import CharacterData
 from characters.character_factory import build_character
-from characters.chassis_examples import ChassisData
+from models.characters.chassis_examples import ChassisData
 from models.characters.conditions import IsDead
 from models.characters.mods_base import GenericMod, Slots
 from models.characters.states import Attributes, State
-from characters.subroutine_examples import FireLaser
+from models.characters.subroutine_examples import FireLaser
 
 _ACTIVE_SLOT = Slots.ARMS
 
