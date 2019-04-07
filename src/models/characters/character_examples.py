@@ -12,7 +12,7 @@ class CharacterData(NamedTuple):
     chassis_data: ChassisData
     name: str = 'unnamed Character'
     mods: Tuple[ModData, ...] = ()
-    image_path: str = 'src/images/drone.png'
+    image_path: str = 'src/data/images/drone.png'
     ai_type: AIType = AIType.Random
 
 
@@ -24,7 +24,7 @@ _HUMAN_PLAYER = CharacterData(ChassisTypes.NO_LEGS.data, 'Player 1',
                               (ModTypes.SMALL_LASER.data,
                                ModTypes.BIG_LASER.data,
                                ModTypes.BASIC_HULL_PLATING.data),
-                              'src/images/walle.png', AIType.Human)
+                              'src/data/images/walle.png', AIType.Human)
 
 
 class CharacterTypes(Enum):

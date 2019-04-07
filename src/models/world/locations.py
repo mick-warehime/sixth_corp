@@ -3,9 +3,9 @@ from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character
 from models.world.location_base import Location
 
-_BACKGROUND_IMAGE_LOADING = 'src/images/background_loading.png'
-_BACKGROUND_IMAGE_CITY = 'src/images/background_city.png'
-_BACKGROUND_IMAGE_MARS = 'src/images/background_mars.png'
+_BACKGROUND_IMAGE_LOADING = 'src/data/images/background_loading.png'
+_BACKGROUND_IMAGE_CITY = 'src/data/images/background_city.png'
+_BACKGROUND_IMAGE_MARS = 'src/data/images/background_mars.png'
 
 
 class LoadingLocation(Location):

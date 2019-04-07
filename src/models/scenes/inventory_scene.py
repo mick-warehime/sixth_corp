@@ -4,7 +4,7 @@ from models.scenes.scenes_base import Resolution, Scene
 class InventoryScene(Scene):
 
     def __init__(self) -> None:
-        self.background = 'src/images/background_inventory.png'
+        self.background = 'src/data/images/background_inventory.png'
         self.options = ('Inventory!', 'i: Return')
 
     # TODO(mick) - move settings, combat, decision scene -> model classes
