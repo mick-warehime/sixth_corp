@@ -1,7 +1,7 @@
 """Simple decision scene examples."""
 from typing import Sequence
 
-from characters.effects import ChangeLocation, IncrementAttribute, RestartGame
+from models.characters.effects import ChangeLocation, IncrementAttribute, RestartGame
 from models.characters.player import get_player
 from models.scenes.skill_checks import Difficulty, skill_check
 from models.characters.states import Attributes, Skill
