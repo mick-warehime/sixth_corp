@@ -1,7 +1,7 @@
 """Tests for the Chassis class"""
 from models.characters.chassis import Chassis
 from models.characters.chassis_examples import ChassisData
-from characters.chassis_factory import build_chassis
+from models.characters.chassis_factory import build_chassis
 from models.characters.mods_base import GenericMod, Slots
 from models.characters.states import Attributes, State
 from models.characters.subroutine_examples import FireLaser

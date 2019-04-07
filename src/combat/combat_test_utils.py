@@ -2,7 +2,7 @@ from models.characters.character_base import Character
 from characters.character_examples import CharacterData
 from characters.character_factory import build_character
 from models.characters.chassis_examples import ChassisData
-from characters.mod_examples import FireLaser
+from models.characters.mod_examples import FireLaser
 from models.characters.mods_base import ModData, Slots
 from models.characters.states import Attributes
 from models.combat.ai_impl import AIType

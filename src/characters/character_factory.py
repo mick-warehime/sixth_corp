@@ -1,6 +1,6 @@
 from characters.character_examples import CharacterData
 from characters.character_impl import CharacterImpl
-from characters.chassis_factory import build_chassis
+from models.characters.chassis_factory import build_chassis
 from models.characters.mods_base import GenericMod
 from models.characters.states import Attributes
 from models.combat.ai_impl import build_ai
