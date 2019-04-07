@@ -3,7 +3,7 @@ import abc
 import logging
 from typing import Callable, Iterable, List, Sequence
 
-from characters.mods_base import Mod
+from models.characters.mods_base import Mod
 from models.characters.states import AttributeType, State
 from models.characters.subroutines_base import Subroutine
 

@@ -1,6 +1,6 @@
 from characters.chassis import Chassis
 from characters.chassis_examples import ChassisData
-from characters.mods_base import GenericMod
+from models.characters.mods_base import GenericMod
 
 
 def build_chassis(data: ChassisData) -> Chassis:

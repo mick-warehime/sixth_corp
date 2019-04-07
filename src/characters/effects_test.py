@@ -4,7 +4,7 @@ from characters.character_examples import CharacterTypes
 from characters.character_factory import build_character
 from characters.effects import (AcquireMod, ChangeLocation, IncrementAttribute,
                                 RestartGame)
-from characters.mods_base import GenericMod
+from models.characters.mods_base import GenericMod
 from characters.player import get_player, reset_player
 from models.characters.states import Attributes
 from world.locations import LoadingLocation, MarsLocation

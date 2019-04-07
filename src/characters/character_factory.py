@@ -1,7 +1,7 @@
 from characters.character_examples import CharacterData
 from characters.character_impl import CharacterImpl
 from characters.chassis_factory import build_chassis
-from characters.mods_factory import build_mod
+from models.characters.mods_base import GenericMod
 from models.characters.states import Attributes
 from combat.ai_factory import build_ai
 
@@ -14,7 +14,8 @@ def build_character(data: CharacterData) -> CharacterImpl:
     ai.set_user(char)
 
     for mod_data in data.mods:
-        mod = build_mod(mod_data)
+        mod = GenericMod(mod_data.states_granted, mod_data.attribute_modifiers,
+                         mod_data.subroutines_granted, mod_data.valid_slots)
         assert char.inventory.can_store(mod), 'Mod cannot be picked up.'
         char.inventory.attempt_store(mod)
 

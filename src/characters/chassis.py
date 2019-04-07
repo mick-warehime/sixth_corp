@@ -4,7 +4,7 @@ from functools import reduce
 from typing import Dict, Iterable, List
 
 from characters.inventory import InventoryBase
-from characters.mods_base import Mod, Slots
+from models.characters.mods_base import Mod, Slots
 
 
 class Chassis(InventoryBase):
