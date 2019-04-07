@@ -6,7 +6,7 @@ from controllers.settings_controller import SettingsController
 from events.events_base import Event, EventListener, EventType, NewSceneEvent
 from models.scenes.combat_scene import CombatScene
 from models.scenes.decision_scene import DecisionScene
-from scenes.scene_examples import loading_scene
+from models.scenes.scene_examples import loading_scene
 from models.scenes.scenes_base import Scene
 
 SCENE_CONTROLLERS = {DecisionScene: DecisionSceneController,
