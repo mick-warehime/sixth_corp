@@ -3,7 +3,7 @@ from pygame.rect import Rect
 from models.characters.character_base import Character
 from models.characters.states import Attributes
 from data.colors import GREEN, RED
-from scenes.combat_scene import CombatScene
+from models.scenes.combat_scene import CombatScene
 from models.scenes.scenes_base import Scene
 from views.artists.scene_artist_base import SceneArtist
 from views.layouts import Layout

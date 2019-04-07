@@ -3,7 +3,7 @@ from typing import Callable, List, Union
 
 from data.colors import GREEN
 from data.constants import TEXTWIDTH
-from scenes.decision_scene import DecisionScene
+from models.scenes.decision_scene import DecisionScene
 from models.scenes.scenes_base import Scene
 from views.artists.drawing_utils import rescale_horizontal, rescale_vertical
 from views.artists.scene_artist_base import SceneArtist

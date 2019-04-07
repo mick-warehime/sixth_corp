@@ -8,7 +8,7 @@ from characters.effects import IncrementAttribute
 from models.characters.states import Attributes
 from controllers.combat_scene_controller import CombatSceneController
 from events.event_utils import simulate_key_press, simulate_mouse_click
-from scenes.combat_scene import CombatScene
+from models.scenes.combat_scene import CombatScene
 
 
 def create_combat_controller(enemy):

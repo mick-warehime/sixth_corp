@@ -1,7 +1,7 @@
 from models.characters.subroutine_examples import FireLaser, Repair
 from models.combat.moves_base import Move
 from data.colors import DARK_GRAY, LIGHT_GRAY, RED, WHITE
-from scenes.combat_scene import CombatScene
+from models.scenes.combat_scene import CombatScene
 from models.scenes.scenes_base import Scene
 from views.artists.drawing_utils import rescale_horizontal
 from views.artists.scene_artist_base import SceneArtist

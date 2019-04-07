@@ -1,6 +1,6 @@
 from controllers.controller import Controller
 from events.events_base import Event, EventType
-from scenes.inventory_scene import InventoryScene
+from models.scenes.inventory_scene import InventoryScene
 from views.scene_view import SceneView
 
 

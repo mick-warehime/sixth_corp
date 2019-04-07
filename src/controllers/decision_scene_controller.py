@@ -6,7 +6,7 @@ from controllers.controller import Controller
 from events.event_utils import post_scene_change
 from events.events_base import (ControllerActivatedEvent, Event, EventType,
                                 InputEvent)
-from scenes.decision_scene import DecisionScene
+from models.scenes.decision_scene import DecisionScene
 from scenes.scene_examples import game_over_scene
 from views.scene_view import SceneView
 
