@@ -5,7 +5,7 @@ from models.characters.chassis_examples import ChassisData
 from characters.mod_examples import FireLaser
 from models.characters.mods_base import ModData, Slots
 from models.characters.states import Attributes
-from combat.ai_impl import AIType
+from models.combat.ai_impl import AIType
 
 
 def get_combatant(health, subroutines, name, ai_type=AIType.Human) -> Character:

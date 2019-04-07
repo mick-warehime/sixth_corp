@@ -5,7 +5,7 @@ from typing import NamedTuple, Tuple
 from models.characters.chassis_examples import ChassisData, ChassisTypes
 from characters.mod_examples import ModTypes
 from models.characters.mods_base import ModData
-from combat.ai_impl import AIType
+from models.combat.ai_impl import AIType
 
 
 class CharacterData(NamedTuple):

@@ -4,7 +4,7 @@ from typing import Any, Sequence, Tuple
 
 from models.characters.character_base import Character
 from models.characters.states import Attributes, State
-from combat.combat_manager_base import CombatGroup, CombatManager, GroupMove
+from models.combat.combat_manager_base import CombatGroup, CombatManager, GroupMove
 
 RewardFunc = Any
 CombatState = Sequence[int]
