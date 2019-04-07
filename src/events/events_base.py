@@ -4,7 +4,7 @@ from typing import Tuple, Union
 from weakref import WeakSet
 
 from models.combat.moves_base import Move
-from scenes.scenes_base import Scene
+from models.scenes.scenes_base import Scene
 
 
 class Event(Enum):

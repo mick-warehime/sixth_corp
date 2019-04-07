@@ -6,7 +6,7 @@ from data.constants import SCREEN_SIZE
 from scenes.combat_scene import CombatScene
 from scenes.decision_scene import DecisionScene
 from scenes.inventory_scene import InventoryScene
-from scenes.scenes_base import Scene
+from models.scenes.scenes_base import Scene
 from scenes.settings_scene import SettingsScene
 from views.artists.background_artist import BackgroundArtist
 from views.artists.character_artist import CharacterArtist

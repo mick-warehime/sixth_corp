@@ -7,8 +7,8 @@ from characters.effects import (AcquireMod, ChangeLocation, IncrementAttribute,
 from models.characters.mods_base import GenericMod
 from models.characters.player import get_player, reset_player
 from models.characters.states import Attributes
-from world.locations import LoadingLocation, MarsLocation
-from world.world import get_location
+from models.world.locations import LoadingLocation, MarsLocation
+from models.world.world import get_location
 
 
 @pytest.fixture(scope='function')

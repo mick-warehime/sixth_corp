@@ -1,7 +1,7 @@
 from models.characters.character_base import Character
 from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character
-from world.location_base import Location
+from models.world.location_base import Location
 
 _BACKGROUND_IMAGE_LOADING = 'src/images/background_loading.png'
 _BACKGROUND_IMAGE_CITY = 'src/images/background_city.png'

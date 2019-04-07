@@ -1,5 +1,5 @@
-from world.location_base import Location
-from world.locations import LoadingLocation
+from models.world.location_base import Location
+from models.world.locations import LoadingLocation
 
 _location: Location = LoadingLocation()
 

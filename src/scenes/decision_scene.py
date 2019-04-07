@@ -1,7 +1,7 @@
 from functools import partial
 from typing import Dict, Sequence, Union
 
-from scenes.scenes_base import Effect, Resolution, Scene, SceneConstructor
+from models.scenes.scenes_base import Effect, Resolution, Scene, SceneConstructor
 
 
 class DecisionOption(Resolution):

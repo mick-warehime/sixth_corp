@@ -1,5 +1,5 @@
 from events.events_base import Event, EventManager, InputEvent, NewSceneEvent
-from scenes.scenes_base import Scene
+from models.scenes.scenes_base import Scene
 
 
 def simulate_mouse_click(x: int, y: int) -> None:

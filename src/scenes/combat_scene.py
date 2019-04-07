@@ -6,8 +6,8 @@ from models.characters.player import get_player
 from models.combat.combat_manager_base import CombatManager
 from models.combat.moves_base import Move
 from scenes import scene_examples
-from scenes.scenes_base import Resolution, Scene
-from world.world import get_location
+from models.scenes.scenes_base import Resolution, Scene
+from models.world.world import get_location
 
 
 class CombatScene(Scene):

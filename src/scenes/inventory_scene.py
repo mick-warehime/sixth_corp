@@ -1,4 +1,4 @@
-from scenes.scenes_base import Resolution, Scene
+from models.scenes.scenes_base import Resolution, Scene
 
 
 class InventoryScene(Scene):
