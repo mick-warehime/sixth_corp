@@ -3,7 +3,7 @@ from characters.character_impl import CharacterImpl
 from characters.chassis_factory import build_chassis
 from models.characters.mods_base import GenericMod
 from models.characters.states import Attributes
-from combat.ai_factory import build_ai
+from combat.ai_impl import build_ai
 
 
 def build_character(data: CharacterData) -> CharacterImpl:

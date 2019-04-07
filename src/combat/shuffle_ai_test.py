@@ -3,7 +3,7 @@ from unittest import TestCase
 from characters.character_examples import CharacterTypes
 from characters.character_factory import build_character
 from models.characters.subroutine_examples import DoNothing
-from combat.ai_factory import AIType, build_ai
+from combat.ai_impl import AIType, build_ai
 
 
 class ShuffleAITest(TestCase):
