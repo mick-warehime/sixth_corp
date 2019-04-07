@@ -3,7 +3,7 @@ from abc import abstractmethod
 
 from models.characters.inventory import InventoryBase
 from models.characters.states import Stateful
-from combat.ai_base import AI
+from models.combat.ai_base import AI
 
 
 class Character(Stateful):

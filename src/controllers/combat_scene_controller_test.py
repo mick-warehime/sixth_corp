@@ -1,6 +1,6 @@
 from unittest import TestCase, mock
 
-from characters.character_base import Character
+from models.characters.character_base import Character
 from characters.character_examples import CharacterTypes
 from characters.character_factory import build_character
 

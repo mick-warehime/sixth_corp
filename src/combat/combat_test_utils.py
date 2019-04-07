@@ -1,4 +1,4 @@
-from characters.character_base import Character
+from models.characters.character_base import Character
 from characters.character_examples import CharacterData
 from characters.character_factory import build_character
 from models.characters.chassis_examples import ChassisData

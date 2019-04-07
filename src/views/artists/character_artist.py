@@ -1,6 +1,6 @@
 from pygame.rect import Rect
 
-from characters.character_base import Character
+from models.characters.character_base import Character
 from models.characters.states import Attributes
 from data.colors import GREEN, RED
 from scenes.combat_scene import CombatScene

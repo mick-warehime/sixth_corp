@@ -1,7 +1,7 @@
 from itertools import product
 from typing import List, Sequence, Set, Tuple
 
-from characters.character_base import Character
+from models.characters.character_base import Character
 from models.characters.conditions import IsDead
 from models.characters.states import Stateful
 from models.combat.moves_base import Move

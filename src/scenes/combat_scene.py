@@ -1,6 +1,6 @@
 from typing import Sequence, Tuple
 
-from characters.character_base import Character
+from models.characters.character_base import Character
 from models.characters.conditions import IsDead
 from characters.player import get_player
 from combat.combat_manager_base import CombatManager
