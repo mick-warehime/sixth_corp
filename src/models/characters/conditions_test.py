@@ -1,4 +1,4 @@
-from characters.conditions import HasState, IsDead
+from models.characters.conditions import HasState, IsDead
 from models.characters.states import Attributes, State, Stateful
 from models.characters.status import BasicStatus
 
