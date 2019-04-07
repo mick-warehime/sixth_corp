@@ -1,7 +1,7 @@
 import logging
 
 from models.characters.conditions import IsDead
-from characters.player import get_player
+from models.characters.player import get_player
 from controllers.controller import Controller
 from events.event_utils import post_scene_change
 from events.events_base import (ControllerActivatedEvent, Event, EventType,

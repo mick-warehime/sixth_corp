@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from characters.character_examples import CharacterTypes
-from characters.character_impl import build_character
+from models.characters.character_examples import CharacterTypes
+from models.characters.character_impl import build_character
 from models.characters.subroutine_examples import DoNothing
 from models.combat.ai_impl import AIType, build_ai
 

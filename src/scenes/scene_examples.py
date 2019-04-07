@@ -2,7 +2,7 @@
 from typing import Sequence
 
 from characters.effects import ChangeLocation, IncrementAttribute, RestartGame
-from characters.player import get_player
+from models.characters.player import get_player
 from characters.skills import Difficulty, skill_check
 from models.characters.states import Attributes, Skill
 from scenes import combat_scene

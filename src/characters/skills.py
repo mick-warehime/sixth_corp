@@ -3,7 +3,7 @@ import random
 from enum import Enum
 from typing import Sequence, Union
 
-from characters.player import get_player
+from models.characters.player import get_player
 from models.characters.states import Skill
 from scenes.scenes_base import Scene, SceneConstructor
 

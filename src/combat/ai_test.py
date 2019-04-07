@@ -2,8 +2,8 @@ from unittest import TestCase
 
 from parameterized import parameterized
 
-from characters.character_examples import CharacterData
-from characters.character_impl import build_character
+from models.characters.character_examples import CharacterData
+from models.characters.character_impl import build_character
 from models.characters.chassis_examples import ChassisData
 from models.characters.subroutine_examples import Unusable
 from models.combat.ai_impl import AIType, build_ai

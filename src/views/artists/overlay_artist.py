@@ -1,6 +1,6 @@
 from pygame.rect import Rect
 
-from characters.player import get_player
+from models.characters.player import get_player
 from models.characters.states import Attributes
 from data import constants
 from data.colors import DARK_GRAY, RED, WHITE

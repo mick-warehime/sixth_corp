@@ -1,8 +1,8 @@
 from unittest import TestCase, mock
 
 from models.characters.character_base import Character
-from characters.character_examples import CharacterTypes
-from characters.character_impl import build_character
+from models.characters.character_examples import CharacterTypes
+from models.characters.character_impl import build_character
 
 from characters.effects import IncrementAttribute
 from models.characters.states import Attributes

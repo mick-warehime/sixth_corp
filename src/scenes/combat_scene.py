@@ -2,7 +2,7 @@ from typing import Sequence, Tuple
 
 from models.characters.character_base import Character
 from models.characters.conditions import IsDead
-from characters.player import get_player
+from models.characters.player import get_player
 from models.combat.combat_manager_base import CombatManager
 from models.combat.moves_base import Move
 from scenes import scene_examples

@@ -1,7 +1,7 @@
 """Singleton container allowing global access to player."""
 from models.characters.character_base import Character
-from characters.character_examples import CharacterTypes
-from characters.character_impl import build_character
+from models.characters.character_examples import CharacterTypes
+from models.characters.character_impl import build_character
 
 _player = None
 
