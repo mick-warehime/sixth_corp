@@ -6,7 +6,7 @@ from pygame.rect import Rect
 
 from characters.character_base import Character
 from characters.chassis import Chassis
-from characters.inventory import InventoryBase
+from models.characters.inventory import InventoryBase
 from models.characters.states import Attributes, AttributeType, State, Status
 from models.characters.status import BasicStatus
 from combat.ai_base import AI

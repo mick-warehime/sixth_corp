@@ -3,7 +3,7 @@ import logging
 from functools import reduce
 from typing import Dict, Iterable, List
 
-from characters.inventory import InventoryBase
+from models.characters.inventory import InventoryBase
 from models.characters.mods_base import Mod, Slots
 
 

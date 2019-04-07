@@ -1,7 +1,7 @@
 """Basic class for player and enemies."""
 from abc import abstractmethod
 
-from characters.inventory import InventoryBase
+from models.characters.inventory import InventoryBase
 from models.characters.states import Stateful
 from combat.ai_base import AI
 
