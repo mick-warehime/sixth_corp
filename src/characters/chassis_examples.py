@@ -5,7 +5,7 @@ from characters.mods_base import Slots
 from models.characters.states import Attributes, AttributeType, Skill, State
 from characters.subroutine_examples import (DoNothing, FireLaser, Repair,
                                             Unusable)
-from characters.subroutines_base import Subroutine
+from models.characters.subroutines_base import Subroutine
 
 
 class ChassisData(NamedTuple):

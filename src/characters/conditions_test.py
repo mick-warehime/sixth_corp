@@ -1,6 +1,6 @@
 from characters.conditions import HasState, IsDead
 from models.characters.states import Attributes, State, Stateful
-from characters.status import BasicStatus
+from models.characters.status import BasicStatus
 
 
 class _DummyStateful(Stateful):

@@ -2,7 +2,7 @@ from typing import Any
 
 from characters.conditions import FullHealth
 from models.characters.states import Attributes, Stateful
-from characters.subroutines_base import Subroutine
+from models.characters.subroutines_base import Subroutine
 
 
 class Repair(Subroutine):

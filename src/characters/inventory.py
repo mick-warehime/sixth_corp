@@ -5,7 +5,7 @@ from typing import Callable, Iterable, List, Sequence
 
 from characters.mods_base import Mod
 from models.characters.states import AttributeType, State
-from characters.subroutines_base import Subroutine
+from models.characters.subroutines_base import Subroutine
 
 
 class InventoryBase(metaclass=abc.ABCMeta):

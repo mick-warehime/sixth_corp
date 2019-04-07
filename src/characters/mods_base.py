@@ -4,7 +4,7 @@ from enum import Enum
 from typing import Dict, NamedTuple, Sequence, Set, Tuple, Union
 
 from models.characters.states import AttributeType, State
-from characters.subroutines_base import Subroutine
+from models.characters.subroutines_base import Subroutine
 
 
 class Slots(Enum):
