@@ -19,10 +19,9 @@ from views.artists.scene_artist_base import SceneArtist
 from views.artists.settings_artist import SettingsArtist
 from views.layouts import Layout
 from views.pygame_screen import get_screen
-from views.view_base import View
 
 
-class SceneView(View):
+class SceneView(object):
 
     def __init__(self, scene: Scene) -> None:
         self._scene = scene
