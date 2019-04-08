@@ -1,11 +1,11 @@
 import logging
 
-from models.characters.conditions import IsDead
-from models.characters.player import get_player
 from controllers.controller import Controller
 from events.event_utils import post_scene_change
 from events.events_base import (ControllerActivatedEvent, Event, EventType,
                                 InputEvent)
+from models.characters.conditions import IsDead
+from models.characters.player import get_player
 from models.scenes.decision_scene import DecisionScene
 from models.scenes.scene_examples import game_over_scene
 from views.scene_view import SceneView

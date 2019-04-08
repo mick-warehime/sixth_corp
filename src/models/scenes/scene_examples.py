@@ -1,14 +1,15 @@
 """Simple decision scene examples."""
 from typing import Sequence
 
-from models.characters.effects import ChangeLocation, IncrementAttribute, RestartGame
+from models.characters.effects import (ChangeLocation, IncrementAttribute,
+                                       RestartGame)
 from models.characters.player import get_player
-from models.scenes.skill_checks import Difficulty, skill_check
 from models.characters.states import Attributes, Skill
 from models.scenes import combat_scene
 from models.scenes.decision_scene import (DecisionOption, DecisionScene,
                                           from_transition, transition_to)
 from models.scenes.scenes_base import Effect, Resolution, Scene
+from models.scenes.skill_checks import Difficulty, skill_check
 from models.world.locations import CityLocation
 
 

@@ -1,11 +1,11 @@
 import math
 from itertools import product
-from typing import Any, Sequence, Tuple, List
+from typing import Any, List, Sequence, Tuple
 
 from models.characters.character_base import Character
 from models.characters.states import Attributes, State
-from models.combat.combat_manager_base import CombatGroup, CombatManager, \
-    GroupMove
+from models.combat.combat_manager_base import (CombatGroup, CombatManager,
+                                               GroupMove)
 
 RewardFunc = Any
 CombatState = Sequence[int]

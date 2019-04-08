@@ -1,8 +1,8 @@
 from unittest import TestCase
 
 from models.characters.states import Attributes, State
-from simulation.combat_gym import CombatGym
 from models.combat.combat_test_utils import create_combat_group
+from simulation.combat_gym import CombatGym
 
 
 class CombatGymTest(TestCase):

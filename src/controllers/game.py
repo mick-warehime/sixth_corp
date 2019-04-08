@@ -4,10 +4,10 @@ from enum import Enum
 
 import pygame
 
+from controllers.inputs.keyboard import Keyboard
 from controllers.scene_machine import SceneMachine
 from data import constants
 from events.events_base import Event, EventListener, EventManager, EventType
-from controllers.inputs.keyboard import Keyboard
 
 
 class GameState(Enum):

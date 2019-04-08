@@ -3,8 +3,8 @@ import tempfile
 from typing import Dict
 from unittest import TestCase
 
-from events.events_base import Event
 from controllers.inputs.keybindings import Keybindings
+from events.events_base import Event
 
 
 class KeybindingsTest(TestCase):

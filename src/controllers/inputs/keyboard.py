@@ -2,9 +2,9 @@ from typing import List, Tuple
 
 import pygame
 
+from controllers.inputs.keybindings import Keybindings
 from events.events_base import (Event, EventListener, EventManager, EventType,
                                 InputEvent)
-from controllers.inputs.keybindings import Keybindings
 
 
 class Keyboard(EventListener):

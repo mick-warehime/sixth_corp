@@ -1,10 +1,10 @@
 from itertools import product
 from typing import List, Sequence, Set, Tuple
 
+from events.events_base import EventManager, MoveExecutedEvent
 from models.characters.character_base import Character
 from models.characters.conditions import IsDead
 from models.combat.moves_base import Move
-from events.events_base import EventManager, MoveExecutedEvent
 
 GroupMove = Sequence[Move]
 GroupMoveSet = Sequence[GroupMove]

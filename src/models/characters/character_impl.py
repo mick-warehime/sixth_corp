@@ -4,8 +4,8 @@ from functools import partial
 
 from pygame.rect import Rect
 
-from models.characters.character_examples import CharacterData
 from models.characters.character_base import Character
+from models.characters.character_examples import CharacterData
 from models.characters.chassis import Chassis
 from models.characters.chassis_factory import build_chassis
 from models.characters.inventory import InventoryBase

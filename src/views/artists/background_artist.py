@@ -1,9 +1,9 @@
 from data.constants import SCREEN_SIZE
 from models.scenes.scenes_base import Scene
+from models.world.world import get_location
 from views.artists.scene_artist_base import SceneArtist
 from views.layouts import Layout
 from views.pygame_screen import Screen
-from models.world.world import get_location
 
 
 class BackgroundArtist(SceneArtist):

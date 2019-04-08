@@ -2,8 +2,8 @@ import pytest
 
 from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character
-from models.characters.effects import (AcquireMod, ChangeLocation, IncrementAttribute,
-                                       RestartGame)
+from models.characters.effects import (AcquireMod, ChangeLocation,
+                                       IncrementAttribute, RestartGame)
 from models.characters.mods_base import GenericMod
 from models.characters.player import get_player, reset_player
 from models.characters.states import Attributes

@@ -21,5 +21,3 @@ def create_combat_group(group_size, health=10, damage=2, base_name='combatant'):
     return [get_combatant(health=health, subroutines=(FireLaser(damage)),
                           name=base_name + str(i))
             for i in range(group_size)]
-
-

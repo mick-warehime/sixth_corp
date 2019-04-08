@@ -1,13 +1,12 @@
 from unittest import TestCase, mock
 
+from controllers.combat_scene_controller import CombatSceneController
+from events.event_utils import simulate_key_press, simulate_mouse_click
 from models.characters.character_base import Character
 from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character
-
 from models.characters.effects import IncrementAttribute
 from models.characters.states import Attributes
-from controllers.combat_scene_controller import CombatSceneController
-from events.event_utils import simulate_key_press, simulate_mouse_click
 from models.scenes.combat_scene import CombatScene
 
 

@@ -1,5 +1,5 @@
-from models.characters.character_base import Character
 from events.events_base import EventListener, EventType, NewSceneEvent
+from models.characters.character_base import Character
 
 """Class that represents the current location (sights, sounds, flavors)."""
 
