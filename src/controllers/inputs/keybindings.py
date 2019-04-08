@@ -3,26 +3,27 @@ import logging
 from typing import Dict
 
 from data.constants import PREFERENCES_FILE
-from events.events_base import Event, EventType
+from events.events_base import EventTypes, EventType
 
 
 class Keybindings(object):
+    """Stores all key bindings, mapping them to events."""
     preference_file = PREFERENCES_FILE
     binding_field = 'binding'
     key_field = 'key'
 
     def __init__(self) -> None:
-        self.bindings: Dict[str, Event] = dict()
+        self.bindings: Dict[str, EventTypes] = dict()
 
     def load(self) -> None:
-        bindings: Dict[str, Event] = dict()
+        bindings: Dict[str, EventTypes] = dict()
         with open(self.preference_file) as bindings_file:
             reader = csv.DictReader(bindings_file)
             for row in reader:
                 key = row[self.key_field]
                 binding = row[self.binding_field]
                 try:
-                    bindings[key] = Event[binding]
+                    bindings[key] = EventTypes[binding]
                 except KeyError:
                     raise NotImplementedError(
                         'Binding <{}> does not exist. Add Event.{}?'.format(
@@ -42,7 +43,7 @@ class Keybindings(object):
                 writer.writerow(
                     {self.binding_field: binding, self.key_field: key})
 
-    def update_binding(self, key: str, event: Event) -> None:
+    def update_binding(self, key: str, event: EventTypes) -> None:
         self.bindings[key] = event
 
         self.save()
@@ -51,7 +52,7 @@ class Keybindings(object):
         logging.debug(str(self))
 
     def get_binding(self, key: str) -> EventType:
-        return self.bindings.get(key, Event.NONE)
+        return self.bindings.get(key, EventTypes.NONE)
 
     def __str__(self) -> str:
         keys = ["\nKEY BINDINGS", "--------------------"]

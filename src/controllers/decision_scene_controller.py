@@ -2,7 +2,7 @@ import logging
 
 from controllers.controller import Controller
 from events.event_utils import post_scene_change
-from events.events_base import (ControllerActivatedEvent, Event, EventType,
+from events.events_base import (ControllerActivatedEvent, EventTypes, EventType,
                                 InputEvent)
 from models.characters.conditions import IsDead
 from models.characters.player import get_player
@@ -27,7 +27,7 @@ class DecisionSceneController(Controller):
         if not self._active:
             return
 
-        if event == Event.TICK:
+        if event == EventTypes.TICK:
             self.check_resolution()
         elif isinstance(event, InputEvent):
             self._handle_input(event)

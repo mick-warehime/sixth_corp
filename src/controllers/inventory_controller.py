@@ -1,5 +1,5 @@
 from controllers.controller import Controller
-from events.events_base import Event, EventType
+from events.events_base import EventTypes, EventType
 from models.scenes.inventory_scene import InventoryScene
 from views.scene_view import SceneView
 
@@ -15,7 +15,7 @@ class InventoryController(Controller):
         if not self._active:
             return
 
-        if event != Event.TICK:
+        if event != EventTypes.TICK:
             self.update()
 
     def update(self) -> None:

@@ -3,7 +3,7 @@ from unittest import TestCase, mock
 from controllers.inventory_controller import InventoryController
 from controllers.scene_machine import SceneMachine
 from controllers.settings_controller import SettingsController
-from events.events_base import Event
+from events.events_base import EventTypes
 
 
 class SceneMachineTest(TestCase):
@@ -13,7 +13,7 @@ class SceneMachineTest(TestCase):
         machine = SceneMachine()
 
         self.assertNotIsInstance(machine.controller, SettingsController)
-        machine.notify(Event.SETTINGS)
+        machine.notify(EventTypes.SETTINGS)
         self.assertIsInstance(machine.controller, SettingsController)
 
     @mock.patch('views.pygame_screen.pygame')
@@ -21,7 +21,7 @@ class SceneMachineTest(TestCase):
         machine = SceneMachine()
 
         self.assertNotIsInstance(machine.controller, InventoryController)
-        machine.notify(Event.INVENTORY)
+        machine.notify(EventTypes.INVENTORY)
         self.assertIsInstance(machine.controller, InventoryController)
 
     @mock.patch('views.pygame_screen.pygame')
@@ -29,9 +29,9 @@ class SceneMachineTest(TestCase):
         machine = SceneMachine()
 
         self.assertNotIsInstance(machine.controller, InventoryController)
-        machine.notify(Event.INVENTORY)
+        machine.notify(EventTypes.INVENTORY)
         self.assertIsInstance(machine.controller, InventoryController)
-        machine.notify(Event.SETTINGS)
+        machine.notify(EventTypes.SETTINGS)
         self.assertIsInstance(machine.controller, SettingsController)
-        machine.notify(Event.SETTINGS)
+        machine.notify(EventTypes.SETTINGS)
         self.assertNotIsInstance(machine.controller, SettingsController)

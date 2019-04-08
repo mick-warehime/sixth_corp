@@ -3,7 +3,7 @@ from typing import List, Tuple
 import pygame
 
 from controllers.inputs.keybindings import Keybindings
-from events.events_base import (Event, EventListener, EventManager, EventType,
+from events.events_base import (EventTypes, EventListener, EventManager, EventType,
                                 InputEvent)
 
 
@@ -14,7 +14,7 @@ class Keyboard(EventListener):
         self.bindings.load()
 
     def notify(self, event: EventType) -> None:
-        if event == Event.TICK:
+        if event == EventTypes.TICK:
             self.handle_inputs()
 
     def handle_inputs(self) -> None:
@@ -22,7 +22,7 @@ class Keyboard(EventListener):
         for pg_event in self.get_pygame_events():
             # handle window manager closing our window
             if self.is_quit_event(pg_event):
-                EventManager.post(Event.QUIT)
+                EventManager.post(EventTypes.QUIT)
             # handle key down events
             elif pg_event.type == pygame.KEYDOWN:
                 self.handle_keypress(pg_event.unicode)
@@ -32,10 +32,10 @@ class Keyboard(EventListener):
                 self.handle_mouse_click()
 
     def handle_keypress(self, key_name: str) -> None:
-        if self.get_binding(key_name) != Event.NONE:
+        if self.get_binding(key_name) != EventTypes.NONE:
             self.post_bound_event(key=key_name)
         else:
-            input_event = InputEvent(event=Event.KEYPRESS, key=key_name)
+            input_event = InputEvent(event_type=EventTypes.KEYPRESS, key=key_name)
             EventManager.post(input_event)
 
     def handle_mouse_click(self) -> None:
@@ -43,7 +43,7 @@ class Keyboard(EventListener):
         EventManager.post(mouse_event)
 
     def mouse_event(self) -> InputEvent:
-        return InputEvent(event=Event.MOUSE_CLICK, key='',
+        return InputEvent(event_type=EventTypes.MOUSE_CLICK, key='',
                           mouse=self.mouse_pos())
 
     def mouse_pos(self) -> Tuple[int, int]:
@@ -54,7 +54,7 @@ class Keyboard(EventListener):
 
     def post_bound_event(self, key: str) -> None:
         binding = self.get_binding(key)
-        EventManager.post(Event(binding))
+        EventManager.post(EventTypes(binding))
 
     def get_pygame_events(self) -> List[pygame.event.EventType]:
         return pygame.event.get()

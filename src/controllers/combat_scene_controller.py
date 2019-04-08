@@ -3,7 +3,7 @@ from enum import Enum
 
 from controllers.controller import Controller
 from events.event_utils import post_scene_change
-from events.events_base import (ControllerActivatedEvent, Event, EventType,
+from events.events_base import (ControllerActivatedEvent, EventTypes, EventType,
                                 InputEvent, MoveExecutedEvent)
 from models.scenes.combat_scene import CombatScene
 from views.scene_view import SceneView
@@ -45,7 +45,7 @@ class CombatSceneController(Controller):
             self._update_scene_and_view()
 
     def _handle_input(self, input_event: InputEvent) -> None:
-        if input_event.event == Event.MOUSE_CLICK:
+        if input_event.event_type == EventTypes.MOUSE_CLICK:
             self._handle_mouse_click(input_event)
             return
 

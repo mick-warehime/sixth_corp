@@ -1,16 +1,17 @@
+import abc
 import logging
 from enum import Enum
-from typing import Tuple, Union
+from typing import Tuple, Union, NamedTuple
 from weakref import WeakSet
 
 from models.combat.moves_base import Move
 from models.scenes.scenes_base import Scene
 
 
-class Event(Enum):
-    NONE = 'NONE'
-    QUIT = 'QUIT'
-    TICK = 'TICK'
+class EventTypes(Enum):
+    NONE = 'NONE'  # Null event, signifies nothing.
+    QUIT = 'QUIT'  # signals to quit the game.
+    TICK = 'TICK'  # single tick of the game clock.
     KEYDOWN = 'KEYDOWN'
     KEYUP = 'KEYUP'
     MOUSE_CLICK = 'MOUSE_CLICK'
@@ -24,7 +25,7 @@ class Event(Enum):
     # has to do with this file being imported twice
     # but i can't for the life of me figure out why/how/where
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, Enum):
+        if isinstance(other, EventTypes):
             return self.value == other.value
         return False
 
@@ -41,43 +42,37 @@ class NewSceneEvent(object):
         return 'NewSceneEvent({})'.format(str(self.scene))
 
 
-class InputEvent(object):
-
-    def __init__(self, event: Event, key: str = '', pressed: bool = False,
-                 mouse: Tuple[int, int] = (-1, -1)) -> None:
-        self.event = event
-        self.key = key
-        self.mouse = mouse
-        self.pressed = pressed
+class InputEvent(NamedTuple):
+    event_type: EventTypes
+    key: str = ''
+    pressed: bool = False
+    mouse: Tuple[int, int] = (-1, -1)
 
     def __str__(self) -> str:
         return '%s, key=%s, mouse=%s, pressed=%s' % (
-            self.event, self.key, self.mouse, self.pressed)
+            self.event_type, self.key, self.mouse, self.pressed)
 
 
-class MoveExecutedEvent(object):
+class MoveExecutedEvent(NamedTuple):
     """This event is triggered when any character executes a move."""
-
-    def __init__(self, move: Move, is_attacker_move: bool) -> None:
-        self.is_attacker_move = is_attacker_move
-        self.move = move
+    move: Move
+    is_attacker_move: bool
 
     def __str__(self) -> str:
         team_str = 'ATTACK MOVE' if self.is_attacker_move else 'DEFEND MOVE'
         return '%s - %s' % (team_str, self.move.description())
 
 
-class ControllerActivatedEvent(object):
+class ControllerActivatedEvent(NamedTuple):
     """This event is triggered when a controller is activated or deactivated."""
-
-    def __init__(self, acivation_status: str) -> None:
-        self.status = acivation_status
+    status: str
 
     def __str__(self) -> str:
         return '{}'.format(self.status)
 
 
-EventType = Union[Event, InputEvent, NewSceneEvent, MoveExecutedEvent, ControllerActivatedEvent]
+EventType = Union[EventTypes, InputEvent, NewSceneEvent, MoveExecutedEvent,
+                  ControllerActivatedEvent]
 
 
 class EventManager(object):
@@ -91,17 +86,19 @@ class EventManager(object):
 
     @classmethod
     def post(cls, event: EventType) -> None:
-        if not event == Event.TICK:
+        if not event == EventTypes.TICK:
             logging.debug('EVENT: {}'.format(str(event)))
 
         for l in cls.listeners.copy():
             l.notify(event)
 
 
-class EventListener(object):
+class EventListener(metaclass=abc.ABCMeta):
 
     def __init__(self) -> None:
         EventManager.register(self)
 
+    @abc.abstractmethod
     def notify(self, event: EventType) -> None:
-        raise NotImplementedError('Subclesses must implement this method.')
+        """Notify the listener of an event."""
+        pass

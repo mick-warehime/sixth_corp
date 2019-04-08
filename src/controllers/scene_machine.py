@@ -3,7 +3,7 @@ from controllers.controller import Controller
 from controllers.decision_scene_controller import DecisionSceneController
 from controllers.inventory_controller import InventoryController
 from controllers.settings_controller import SettingsController
-from events.events_base import Event, EventListener, EventType, NewSceneEvent
+from events.events_base import EventTypes, EventListener, EventType, NewSceneEvent
 from models.scenes.combat_scene import CombatScene
 from models.scenes.decision_scene import DecisionScene
 from models.scenes.scene_examples import loading_scene
@@ -11,13 +11,13 @@ from models.scenes.scenes_base import Scene
 
 SCENE_CONTROLLERS = {DecisionScene: DecisionSceneController,
                      CombatScene: CombatSceneController}
-INTERUPT_CONTROLLERS = [Event.SETTINGS, Event.INVENTORY]
+INTERUPT_CONTROLLERS = [EventTypes.SETTINGS, EventTypes.INVENTORY]
 
 
 def interrupt_controller(event: EventType) -> Controller:
-    if event == Event.SETTINGS:
+    if event == EventTypes.SETTINGS:
         return SettingsController()
-    elif event == Event.INVENTORY:
+    elif event == EventTypes.INVENTORY:
         return InventoryController()
     else:
         raise ValueError('No controller set for event {}'.format(event))
