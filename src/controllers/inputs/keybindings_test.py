@@ -4,7 +4,7 @@ from typing import Dict
 from unittest import TestCase
 
 from events.events_base import Event
-from inputs.keybindings import Keybindings
+from controllers.inputs.keybindings import Keybindings
 
 
 class KeybindingsTest(TestCase):

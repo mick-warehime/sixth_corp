@@ -4,7 +4,7 @@ import pygame
 
 from events.events_base import (Event, EventListener, EventManager, EventType,
                                 InputEvent)
-from inputs.keybindings import Keybindings
+from controllers.inputs.keybindings import Keybindings
 
 
 class Keyboard(EventListener):
