@@ -1,5 +1,5 @@
 from itertools import product
-from typing import List, Sequence, Set, Tuple
+from typing import List, Sequence, Tuple
 
 from events.events_base import EventManager, MoveExecutedEvent
 from models.characters.character_base import Character
