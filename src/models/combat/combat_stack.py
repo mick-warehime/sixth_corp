@@ -20,10 +20,8 @@ class CombatStack(object):
 
     add_move: Add a move to the stack.
 
-    extract_resolved_moves: Moves that have resolved since the last time
+    extract_resolved_moves: Extract moves that have resolved since the last time
         advance_time was called.
-
-
 
     """
 
