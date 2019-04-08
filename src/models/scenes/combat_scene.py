@@ -3,7 +3,7 @@ from typing import Sequence, Tuple
 from models.characters.character_base import Character
 from models.characters.conditions import IsDead
 from models.characters.player import get_player
-from models.combat.combat_manager_base import CombatManager
+from models.combat.combat_manager_base import CombatManager, valid_moves
 from models.combat.moves_base import Move
 from models.scenes import scene_examples
 from models.scenes.scenes_base import Resolution, Scene
@@ -45,7 +45,7 @@ class CombatScene(Scene):
     def player_moves(self, target: Character) -> Sequence[Move]:
         moves: Sequence[Move] = []
         if target is not None:
-            moves = self.combat_manager.valid_moves(self._player, (target,))
+            moves = valid_moves(self._player, (target,))
         self.current_moves = moves
         self.selected_char = target
         return moves

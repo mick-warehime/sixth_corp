@@ -1,13 +1,13 @@
 from typing import NamedTuple
 
-from models.characters.states import Stateful
+from models.characters.character_base import Character
 from models.characters.subroutines_base import Subroutine
 
 
 class Move(NamedTuple):
     subroutine: Subroutine
-    user: Stateful
-    target: Stateful
+    user: Character
+    target: Character
 
     def execute(self) -> None:
         self.subroutine.use(self.user, self.target)

@@ -2,10 +2,9 @@ import random
 from enum import Enum
 from itertools import product
 from random import choice
-from typing import Callable, Sequence
+from typing import Callable, Sequence, Set
 
 from models.characters.character_base import Character
-from models.characters.states import Stateful
 from models.combat.ai_base import AI
 from models.combat.moves_base import Move
 
@@ -24,7 +23,7 @@ class _AIImpl(AI):
         Args:
             select_move_fun: Function that selected the next move in a combat.
         """
-        self._user = None
+        self._user: Character = None
         self.moves: Sequence[Move] = []
         self._targets: Sequence[Character] = None
         self._select_move_fun = select_move_fun
@@ -32,7 +31,7 @@ class _AIImpl(AI):
     def select_move(self) -> Move:
         return self._select_move_fun(self.moves)
 
-    def set_user(self, user: Stateful) -> None:
+    def set_user(self, user: Character) -> None:
         self._user = user
 
     def set_targets(self, targets: Sequence[Character]) -> None:
@@ -70,8 +69,8 @@ def _random_choice(moves: Sequence[Move]) -> Move:
 class _MoveIterator(object):
     """Runs through all usable moves once before repeating."""
 
-    def __init__(self):
-        self._used_moves = set()
+    def __init__(self) -> None:
+        self._used_moves: Set[Move] = set()
 
     def next_move(self, moves: Sequence[Move]) -> Move:
 

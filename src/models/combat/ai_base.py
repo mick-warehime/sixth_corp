@@ -1,7 +1,6 @@
 from abc import abstractmethod
 from typing import Sequence
 
-from models.characters.states import Stateful
 from models.combat.moves_base import Move
 
 
@@ -13,9 +12,10 @@ class AI(object):
         """Select the next move for the AI's user."""
 
     @abstractmethod
-    def set_user(self, user: Stateful) -> None:
+    def set_user(self, user: 'Character') -> None:  # type: ignore
         """Assign a user (state) to the AI."""
 
     @abstractmethod
-    def set_targets(self, targets: Sequence[Stateful]) -> None:
+    def set_targets(self,
+                    targets: Sequence['Character']) -> None:  # type: ignore
         """Specify possible targets for moves."""

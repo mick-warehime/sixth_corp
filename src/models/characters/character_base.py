@@ -3,7 +3,6 @@ from abc import abstractmethod
 
 from models.characters.inventory import InventoryBase
 from models.characters.states import Stateful
-from models.combat.ai_base import AI
 
 
 class Character(Stateful):
@@ -11,7 +10,7 @@ class Character(Stateful):
 
     @property
     @abstractmethod
-    def ai(self) -> AI:
+    def ai(self) -> 'AI':  # type: ignore
         """AI used to determine in-game actions."""
 
     @property

@@ -1,10 +1,11 @@
 import math
 from itertools import product
-from typing import Any, Sequence, Tuple
+from typing import Any, Sequence, Tuple, List
 
 from models.characters.character_base import Character
 from models.characters.states import Attributes, State
-from models.combat.combat_manager_base import CombatGroup, CombatManager, GroupMove
+from models.combat.combat_manager_base import CombatGroup, CombatManager, \
+    GroupMove
 
 RewardFunc = Any
 CombatState = Sequence[int]
@@ -33,7 +34,7 @@ class CombatGym(CombatManager):
         if character_attributes is not None:
             self._character_attributes += character_attributes
 
-        self._character_states = []
+        self._character_states: List[State] = []
         if character_states is not None:
             self._character_states += character_states
 
@@ -66,7 +67,8 @@ class CombatGym(CombatManager):
         possible_attr_vals = list(range(max_attr + 1))
         possible_state_vals = [0, 1]
 
-        inidividual_states = [possible_attr_vals] * n_attrs + [possible_state_vals] * n_states
+        inidividual_states = [possible_attr_vals] * n_attrs + [
+            possible_state_vals] * n_states
 
         all_possible_ind_states = list(product(*inidividual_states))
         n_attackers = len(self._attackers)
@@ -85,7 +87,8 @@ class CombatGym(CombatManager):
         step = math.ceil(val / CombatGym.ATTRIBUTE_STEP)
         return min(step, self.max_attribute())
 
-    def step(self, attack_moves: GroupMove, defense_moves: GroupMove) -> CombatResult:
+    def step(self, attack_moves: GroupMove,
+             defense_moves: GroupMove) -> CombatResult:
         'Apply the attackers move followed by the defenders moves.'
         self.take_turn(attack_moves, defense_moves)
 

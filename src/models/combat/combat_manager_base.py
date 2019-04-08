@@ -3,18 +3,25 @@ from typing import List, Sequence, Set, Tuple
 
 from models.characters.character_base import Character
 from models.characters.conditions import IsDead
-from models.characters.states import Stateful
 from models.combat.moves_base import Move
 from events.events_base import EventManager, MoveExecutedEvent
 
 GroupMove = Sequence[Move]
-GroupMoveSet = Set[GroupMove]
+GroupMoveSet = Sequence[GroupMove]
 CombatGroup = Sequence[Character]
-CombatHistory = Tuple[GroupMove, GroupMove, bool, bool]
+CombatHistory = Tuple[Sequence[str], Sequence[str], bool, bool]
 
 
 def _describe_moves(moves: GroupMove) -> Sequence[str]:
     return [m.description() for m in moves]
+
+
+def valid_moves(user: Character, targets: Sequence[Character]) -> List[Move]:
+    """All valid moves from a user to a sequence of targets"""
+    return [Move(sub, user, target)
+            for sub, target in
+            product(user.inventory.all_subroutines(), targets)
+            if sub.can_use(user, target)]
 
 
 class CombatManager(object):
@@ -27,14 +34,7 @@ class CombatManager(object):
                                                        self._defenders)
         self.defenders_moves = self._enumerate_moveset(self._defenders,
                                                        self._attackers)
-        self.history: Sequence[CombatHistory] = []
-
-    @staticmethod
-    def valid_moves(user: Character, targets: Sequence[Stateful]) -> List[Move]:
-        return [Move(sub, user, target)
-                for sub, target in
-                product(user.inventory.all_subroutines(), targets)
-                if sub.can_use(user, target)]
+        self.history: List[CombatHistory] = []
 
     def take_turn(self, attack_moves: GroupMove,
                   defense_moves: GroupMove) -> None:
@@ -44,11 +44,8 @@ class CombatManager(object):
         attack_descr = _describe_moves(attack_moves)
         defense_descr = _describe_moves(defense_moves)
 
-        self.history.append(
-            (attack_descr,
-             defense_descr,
-             self.attackers_lose(),
-             self.defenders_lose()))
+        self.history.append((attack_descr, defense_descr, self.attackers_lose(),
+                             self.defenders_lose()))
 
     def _execute_moves(self, moves: GroupMove, attacker: bool) -> None:
         for move in moves:
@@ -75,12 +72,12 @@ class CombatManager(object):
         'All possible combinations of attack moves targeting all possible defenders'
         moveset = []
         for attacker in attackers:
-            attacks = self.valid_moves(attacker, defenders)
+            attacks = valid_moves(attacker, defenders)
             # TODO(mick) - buffs can only target self not team. if we replace '[attacker]' with
             # 'attackers' here then we end up with friendly fire. potentially need to add
             # skill type = {attack, utility, defend, etc} and target accordingly. we could
             # also add the notion of 'side/team' to the character so can use does the right thing
-            buffs = self.valid_moves(attacker, [attacker])
+            buffs = valid_moves(attacker, [attacker])
             moveset.append(attacks + buffs)
         return list(product(*moveset))
 
