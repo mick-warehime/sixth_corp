@@ -3,11 +3,11 @@ from typing import List
 
 from data.colors import GREEN
 from data.constants import SCREEN_SIZE
-from scenes.combat_scene import CombatScene
-from scenes.decision_scene import DecisionScene
-from scenes.inventory_scene import InventoryScene
-from scenes.scenes_base import Scene
-from scenes.settings_scene import SettingsScene
+from models.scenes.combat_scene import CombatScene
+from models.scenes.decision_scene import DecisionScene
+from models.scenes.inventory_scene import InventoryScene
+from models.scenes.scenes_base import Scene
+from models.scenes.settings_scene import SettingsScene
 from views.artists.background_artist import BackgroundArtist
 from views.artists.character_artist import CharacterArtist
 from views.artists.combat_options_artist import CombatOptionsArtist

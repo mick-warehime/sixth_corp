@@ -1,14 +1,14 @@
 from pygame.rect import Rect
 
-from characters.player import get_player
-from characters.states import Attributes
 from data import constants
 from data.colors import DARK_GRAY, RED, WHITE
-from scenes.scenes_base import Scene
+from models.characters.player import get_player
+from models.characters.states import Attributes
+from models.scenes.scenes_base import Scene
+from models.world.world import get_location
 from views.artists.scene_artist_base import SceneArtist
 from views.layouts import Layout
 from views.pygame_screen import Screen
-from world.world import get_location
 
 
 class OverlayArtist(SceneArtist):

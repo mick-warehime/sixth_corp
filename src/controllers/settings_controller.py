@@ -1,6 +1,6 @@
 from controllers.controller import Controller
 from events.events_base import Event, EventType
-from scenes.settings_scene import SettingsScene
+from models.scenes.settings_scene import SettingsScene
 from views.scene_view import SceneView
 
 

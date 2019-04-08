@@ -1,7 +1,7 @@
-from characters.character_base import Character
-from characters.character_examples import CharacterData
-from characters.character_factory import build_character
-from combat.combat_manager_base import CombatManager
+from models.characters.character_base import Character
+from models.characters.character_examples import CharacterData
+from models.characters.character_impl import build_character
+from models.combat.combat_manager_base import CombatManager
 
 
 class SimulationError(Exception):

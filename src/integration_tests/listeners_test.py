@@ -6,11 +6,11 @@ from controllers.decision_scene_controller import DecisionSceneController
 from controllers.game import Game, initialize_pygame
 from events import event_utils
 from events.events_base import EventManager
-from scenes.combat_scene import CombatScene
-from scenes.decision_scene import DecisionScene
+from models.scenes.combat_scene import CombatScene
+from models.scenes.decision_scene import DecisionScene
 # Needs to be called for game to run.
-from world.locations import MarsLocation
-from world.world import set_location
+from models.world.locations import MarsLocation
+from models.world.world import set_location
 
 initialize_pygame(no_UI=True)
 # To ensure determinism.

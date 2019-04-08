@@ -1,10 +1,10 @@
 from pygame.rect import Rect
 
-from characters.character_base import Character
-from characters.states import Attributes
 from data.colors import GREEN, RED
-from scenes.combat_scene import CombatScene
-from scenes.scenes_base import Scene
+from models.characters.character_base import Character
+from models.characters.states import Attributes
+from models.scenes.combat_scene import CombatScene
+from models.scenes.scenes_base import Scene
 from views.artists.scene_artist_base import SceneArtist
 from views.layouts import Layout
 from views.pygame_screen import Screen

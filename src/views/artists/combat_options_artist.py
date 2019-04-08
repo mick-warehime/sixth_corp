@@ -1,9 +1,9 @@
 from typing import Sequence
 
-from combat.moves_base import Move
 from data.colors import GREEN
-from scenes.combat_scene import CombatScene
-from scenes.scenes_base import Scene
+from models.combat.moves_base import Move
+from models.scenes.combat_scene import CombatScene
+from models.scenes.scenes_base import Scene
 from views.artists.drawing_utils import rescale_horizontal, rescale_vertical
 from views.artists.scene_artist_base import SceneArtist
 from views.layouts import Layout

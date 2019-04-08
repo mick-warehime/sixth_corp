@@ -1,11 +1,13 @@
 from unittest import TestCase, mock
 
-from characters.effects import IncrementAttribute
-from characters.states import Attributes
-from combat.combat_test_utils import create_enemy
 from controllers.combat_scene_controller import CombatSceneController
 from events.event_utils import simulate_key_press, simulate_mouse_click
-from scenes.combat_scene import CombatScene
+from models.characters.character_base import Character
+from models.characters.character_examples import CharacterTypes
+from models.characters.character_impl import build_character
+from models.characters.effects import IncrementAttribute
+from models.characters.states import Attributes
+from models.scenes.combat_scene import CombatScene
 
 
 def create_combat_controller(enemy):
@@ -26,7 +28,7 @@ class CombatSceneControllerTest(TestCase):
     @mock.patch('views.pygame_screen.pygame')
     @mock.patch('views.pygame_images.load_image')
     def test_game_over(self, mock_pygame, mock_loader):
-        ctl = create_combat_controller(enemy=create_enemy(10))
+        ctl = create_combat_controller(enemy=_create_enemy(10))
 
         self.assertFalse(ctl.scene.is_resolved())
 
@@ -34,7 +36,7 @@ class CombatSceneControllerTest(TestCase):
     @mock.patch('views.pygame_images.load_image')
     def test_kill_enemy(self, mock_pygame, mock_loader):
         health = 2
-        enemy = create_enemy(health)
+        enemy = _create_enemy(health)
         ctl = create_combat_controller(enemy)
         self.assertFalse(ctl.scene.is_resolved())
 
@@ -45,7 +47,7 @@ class CombatSceneControllerTest(TestCase):
     @mock.patch('views.pygame_screen.pygame')
     @mock.patch('views.pygame_images.load_image')
     def test_selected_enemy(self, mock_pygame, mock_loader):
-        enemy = create_enemy(2)
+        enemy = _create_enemy(2)
         ctl = create_combat_controller(enemy)
         self.assertIsNone(ctl.scene.selected_char)
 
@@ -60,7 +62,7 @@ class CombatSceneControllerTest(TestCase):
     @mock.patch('views.pygame_screen.pygame')
     @mock.patch('views.pygame_images.load_image')
     def test_enemy_unselected_after_move(self, mock_pygame, mock_loader):
-        enemy = create_enemy(2)
+        enemy = _create_enemy(2)
         ctl = create_combat_controller(enemy)
         self.assertIsNone(ctl.scene.selected_char)
 
@@ -75,7 +77,7 @@ class CombatSceneControllerTest(TestCase):
     @mock.patch('views.pygame_screen.pygame')
     @mock.patch('views.pygame_images.load_image')
     def test_reclick_unselects(self, mock_pygame, mock_loader):
-        enemy = create_enemy(2)
+        enemy = _create_enemy(2)
         ctl = create_combat_controller(enemy)
         self.assertIsNone(ctl.scene.selected_char)
 
@@ -90,10 +92,18 @@ class CombatSceneControllerTest(TestCase):
     @mock.patch('views.pygame_screen.pygame')
     @mock.patch('views.pygame_images.load_image')
     def test_click_nothing_selects_nothing(self, mock_pygame, mock_loader):
-        enemy = create_enemy(2)
+        enemy = _create_enemy(2)
         ctl = create_combat_controller(enemy)
         self.assertIsNone(ctl.scene.selected_char)
 
         simulate_mouse_click(-100, -100)
 
         self.assertIsNone(ctl.scene.selected_char)
+
+
+def _create_enemy(health: int = 10) -> Character:
+    enemy = build_character(CharacterTypes.DRONE.data)
+    cur_val = enemy.status.get_attribute(Attributes.HEALTH)
+    enemy.status.increment_attribute(Attributes.HEALTH, -cur_val)
+    enemy.status.increment_attribute(Attributes.HEALTH, health)
+    return enemy
