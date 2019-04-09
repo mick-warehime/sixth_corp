@@ -13,15 +13,12 @@ class SettingsArtist(SceneArtist):
     def render(self, screen: Screen, scene: Scene,
                layout: Layout) -> None:
         assert isinstance(scene, SettingsScene)
-        background_image = scene.background
 
         x, font_size, spacing = rescale_horizontal(250, 35, 50)
         y, = rescale_vertical(250)
-        screen.render_image(background_image, 0, 0, *SCREEN_SIZE)
-        screen.render_texts(
-            list(scene.options),
-            font_size=font_size,
-            x=x,
-            y=y,
-            color=WHITE,
-            spacing=spacing)
+        screen.render_texts(list(scene.options),
+                            font_size=font_size,
+                            x=x,
+                            y=y,
+                            color=WHITE,
+                            spacing=spacing)

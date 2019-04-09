@@ -51,18 +51,15 @@ class SceneView(object):
 
 def _build_scene_artists(scene: Scene) -> List[SceneArtist]:
     if isinstance(scene, CombatScene):
-        artists = [
-            BackgroundArtist(),
-            OverlayArtist(),
-            CharacterArtist(),
-            CombatOptionsArtist(),
-            CombatStackArtist()]
+        artists = [BackgroundArtist(scene), OverlayArtist(),
+                   CharacterArtist(), CombatOptionsArtist(),
+                   CombatStackArtist()]
     elif isinstance(scene, DecisionScene):
-        artists = [BackgroundArtist(), DecisionArtist()]
+        artists = [BackgroundArtist(scene), DecisionArtist()]
     elif isinstance(scene, SettingsScene):
-        artists = [SettingsArtist()]
+        artists = [BackgroundArtist(scene), SettingsArtist()]
     elif isinstance(scene, InventoryScene):
-        artists = [InventoryArtist()]
+        artists = [BackgroundArtist(scene), InventoryArtist()]
     else:
         raise ValueError('Unrecognized Scene {}'.format(scene))
     return artists

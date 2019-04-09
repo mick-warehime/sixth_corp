@@ -5,7 +5,6 @@ from data.colors import DARK_GRAY, RED, WHITE
 from models.characters.player import get_player
 from models.characters.states import Attributes
 from models.scenes.scenes_base import Scene
-from models.world.world import get_location
 from views.artists.scene_artist_base import SceneArtist
 from views.layouts import Layout
 from views.pygame_screen import Screen
@@ -30,11 +29,11 @@ class OverlayArtist(SceneArtist):
         screen.render_text(health_text, font_size=21, x=x_health, y=y_health,
                            color=RED)
 
-        # draw scene number
-        scene_text = 'Scene: {}'.format(get_location().scene_number)
-        x_scene = int(width / 2 + 100)
-        y_scene = int(height / 2 - 5)
-        screen.render_text(scene_text, 22, x_scene, y_scene, WHITE)
+        # # draw scene number
+        # scene_text = 'Scene: {}'.format(get_location().scene_number)
+        # x_scene = int(width / 2 + 100)
+        # y_scene = int(height / 2 - 5)
+        # screen.render_text(scene_text, 22, x_scene, y_scene, WHITE)
 
         # key hints
         screen.render_text('i: Inventory', 28, 20, 50, WHITE)

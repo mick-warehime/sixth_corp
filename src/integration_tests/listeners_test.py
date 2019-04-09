@@ -8,16 +8,13 @@ from events import event_utils
 from events.events_base import EventManager
 from models.scenes.combat_scene import CombatScene
 from models.scenes.decision_scene import DecisionScene
-# Needs to be called for game to run.
-from models.world.locations import MarsLocation
-from models.world.world import set_location
 
 initialize_pygame(no_UI=True)
 # To ensure determinism.
 random.seed(11)
 
 decision_scene = DecisionScene('dummy prompt', {})
-set_location(MarsLocation())
+
 combat_scene = CombatScene()
 
 
@@ -40,7 +37,8 @@ class IntegrationTest(TestCase):
 
         event_utils.post_scene_change(combat_scene)
         assert len(EventManager.listeners) <= start_len
-        assert any(isinstance(l, CombatSceneController) for l in EventManager.listeners)
+        assert any(isinstance(l, CombatSceneController) for l in
+                   EventManager.listeners)
 
     @mock.patch('views.pygame_screen.pygame')
     def test_changing_decision_scenes_swaps_listener(self, mock_pygame):
@@ -49,4 +47,5 @@ class IntegrationTest(TestCase):
 
         event_utils.post_scene_change(decision_scene)
         assert len(EventManager.listeners) <= start_len
-        assert any(isinstance(l, DecisionSceneController) for l in EventManager.listeners)
+        assert any(isinstance(l, DecisionSceneController) for l in
+                   EventManager.listeners)
