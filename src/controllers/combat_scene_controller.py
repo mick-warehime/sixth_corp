@@ -72,7 +72,7 @@ class CombatSceneController(Controller):
         # character).
 
         # Check if a character was newly clicked.
-        clicked_obj = self._view.layout.object_at(x, y)
+        clicked_obj = self.scene.layout.object_at(x, y)
         if clicked_obj in self.scene.characters():
             if self.scene.selected_char != clicked_obj:
                 self.scene.selected_char = clicked_obj

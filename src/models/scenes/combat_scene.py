@@ -1,6 +1,7 @@
+from functools import reduce
 from typing import Sequence, Tuple
 
-from data.constants import BackgroundImages
+from data.constants import BackgroundImages, SCREEN_SIZE
 from models.characters.character_base import Character
 from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character
@@ -10,6 +11,7 @@ from models.combat.combat_manager_base import CombatManager, valid_moves
 from models.combat.moves_base import Move
 from models.scenes import scene_examples
 from models.scenes.scenes_base import Resolution, Scene
+from views.layouts import Layout
 
 
 class CombatScene(Scene):
@@ -23,11 +25,16 @@ class CombatScene(Scene):
         self.selected_char: Character = None
         self.current_moves: Sequence[Move] = None
         self._set_targets()
+        self._layout = self._build_layout()
 
         if background_image is None:
             self._background_image = BackgroundImages.CITY.path
         else:
             self._background_image = background_image
+
+    @property
+    def layout(self) -> Layout:
+        return self._layout
 
     @property
     def background_image(self) -> str:
@@ -67,3 +74,26 @@ class CombatScene(Scene):
 
     def _set_targets(self) -> None:
         self._enemy.ai.set_targets([self._player])
+
+    def _build_layout(self) -> Layout:
+        characters = self.characters()
+        # player side layout
+        player = characters[0]
+
+        player_layout = Layout([(None, 2), (player, 1), (None, 2)], 'vertical')
+        player_layout = Layout([(None, 1), (player_layout, 1), (None, 1)],
+                               'horizontal')
+
+        # stack layout
+        stack_layout = Layout()
+
+        # enemies layout
+        assert len(characters) > 1
+        elements = reduce(lambda a, b: a + b,
+                          ([(None, 1), (e, 1)] for e in characters[1:]))
+        elements.append((None, 1))
+        enemies_layout = Layout(elements, 'vertical')
+
+        return Layout(
+            [(player_layout, 1), (stack_layout, 1), (enemies_layout, 1)],
+            'horizontal', SCREEN_SIZE)

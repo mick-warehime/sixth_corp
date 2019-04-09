@@ -6,14 +6,13 @@ from models.characters.player import get_player
 from models.characters.states import Attributes
 from models.scenes.scenes_base import Scene
 from views.artists.scene_artist_base import SceneArtist
-from views.layouts import Layout
 from views.pygame_screen import Screen
 
 
 class OverlayArtist(SceneArtist):
     """Draws basic overlay information, like player health."""
 
-    def render(self, screen: Screen, scene: Scene, layout: Layout) -> None:
+    def render(self, screen: Screen, scene: Scene) -> None:
         # draw gray background
         height = 40
         width = constants.SCREEN_SIZE[0]

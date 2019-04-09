@@ -17,8 +17,7 @@ _TARGET_SIZE, = rescale_horizontal(50)
 
 class CombatStackArtist(SceneArtist):
 
-    def render(self, screen: Screen, scene: Scene,
-               layout: Layout) -> None:
+    def render(self, screen: Screen, scene: Scene) -> None:
         assert isinstance(scene, CombatScene)
         player, enemy = scene.characters()
         stack = [
