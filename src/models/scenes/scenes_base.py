@@ -1,15 +1,23 @@
 """Basic interfaces for scenes, effects, and resolutions."""
+import abc
 from typing import Callable, Sequence
 
 
-class Scene(object):
+class Scene(metaclass=abc.ABCMeta):
     """Basic representation of a game scene."""
 
+    @abc.abstractmethod
     def is_resolved(self) -> bool:
-        raise NotImplementedError
+        """Whether the scene is resolved."""
 
+    @abc.abstractmethod
     def get_resolution(self) -> 'Resolution':
-        raise NotImplementedError
+        """The resolution to the scene (if is_resolved is True)."""
+
+    @property
+    @abc.abstractmethod
+    def background_image(self) -> str:
+        """The path to the background image."""
 
 
 class Effect(object):

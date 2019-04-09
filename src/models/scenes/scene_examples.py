@@ -1,6 +1,7 @@
 """Simple decision scene examples."""
 from typing import Sequence
 
+from data.constants import BackgroundImages
 from models.characters.effects import (IncrementAttribute, RestartGame)
 from models.characters.player import get_player
 from models.characters.states import Attributes, Skill
@@ -15,7 +16,8 @@ def loading_scene() -> DecisionScene:
     options = {
         's': DecisionOption('Start Game', swamp_scene),
         'x': DecisionOption('Settings', example_combat_scene)}
-    return DecisionScene('6TH Corp', options)
+    return DecisionScene('6TH Corp', options,
+                         background_image=BackgroundImages.LOADING.path)
 
 
 def start_scene() -> DecisionScene:

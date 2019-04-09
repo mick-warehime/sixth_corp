@@ -1,5 +1,6 @@
 from typing import Sequence, Tuple
 
+from data.constants import BackgroundImages
 from models.characters.character_base import Character
 from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character
@@ -13,7 +14,7 @@ from models.scenes.scenes_base import Resolution, Scene
 
 class CombatScene(Scene):
 
-    def __init__(self) -> None:
+    def __init__(self, background_image: str = None) -> None:
         super().__init__()
         self._player = get_player()
         self._enemy: Character = build_character(CharacterTypes.DRONE.data)
@@ -22,6 +23,15 @@ class CombatScene(Scene):
         self.selected_char: Character = None
         self.current_moves: Sequence[Move] = None
         self._set_targets()
+
+        if background_image is None:
+            self._background_image = BackgroundImages.CITY.path
+        else:
+            self._background_image = background_image
+
+    @property
+    def background_image(self) -> str:
+        return self._background_image
 
     def characters(self) -> Tuple[Character, ...]:
         return self._player, self._enemy

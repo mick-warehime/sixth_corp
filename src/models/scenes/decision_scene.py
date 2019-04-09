@@ -1,6 +1,7 @@
 from functools import partial
 from typing import Dict, Sequence, Union
 
+from data.constants import BackgroundImages
 from models.scenes.scenes_base import (Effect, Resolution, Scene,
                                        SceneConstructor)
 
@@ -27,11 +28,20 @@ class DecisionOption(Resolution):
 class DecisionScene(Scene):
     """A Scene that is resolved by the player making a choice."""
 
-    def __init__(self, prompt: str, choices: Dict[str, DecisionOption]) -> None:
+    def __init__(self, prompt: str, choices: Dict[str, DecisionOption],
+                 background_image: str = None) -> None:
         super().__init__()
         self.prompt = prompt
         self.choices = choices
         self._choice: DecisionOption = None
+        if background_image is None:
+            self._background_image: str = BackgroundImages.CITY.path
+        else:
+            self._background_image = background_image
+
+    @property
+    def background_image(self) -> str:
+        return self._background_image
 
     def is_resolved(self) -> bool:
         return self._choice is not None
