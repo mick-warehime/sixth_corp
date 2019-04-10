@@ -16,6 +16,7 @@ class EventTypes(Enum):
     KEYUP = 'KEYUP'
     MOUSE_CLICK = 'MOUSE_CLICK'
     KEYPRESS = 'KEYPRESS'
+    DEBUG = 'DEBUG'  # Toggle debug mode
 
     # bindable events
     SETTINGS = 'SETTINGS'

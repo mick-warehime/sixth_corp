@@ -1,26 +1,12 @@
 import logging
-from enum import Enum
 
 from controllers.controller import Controller
 from events.event_utils import post_scene_change
 from events.events_base import (ControllerActivatedEvent, EventTypes, EventType,
                                 InputEvent, MoveExecutedEvent)
 from models.scenes.combat_scene import CombatScene
-from views.scene_view import SceneView
 
-COMBAT_KEYBOARD_INPUTS = [str(i) for i in range(9)] + ['d']
-
-
-class _InputTypes(Enum):
-    MOVE_CHOICE = '0123456789'
-    TOGGLE_DEBUG = 'd'
-
-    @staticmethod
-    def get_input_type(key: str) -> '_InputTypes':
-        for input_type in _InputTypes:
-            if key in input_type.value:
-                return input_type
-        return None
+COMBAT_KEYBOARD_INPUTS = [str(i) for i in range(9)]
 
 
 class CombatSceneController(Controller):
@@ -29,39 +15,31 @@ class CombatSceneController(Controller):
     def __init__(self, scene: CombatScene) -> None:
         super(CombatSceneController, self).__init__()
         self.scene = scene
-
-        self._view = SceneView(scene)
-        self._update_scene_and_view()
+        self._update_scene()
 
     def notify(self, event: EventType) -> None:
         if not self._active:
             return
         if isinstance(event, InputEvent):
             self._handle_input(event)
-            self._update_scene_and_view()
+            self._update_scene()
         elif isinstance(event, MoveExecutedEvent):
             self._handle_move_executed(event)
         elif isinstance(event, ControllerActivatedEvent):
-            self._update_scene_and_view()
+            self._update_scene()
 
     def _handle_input(self, input_event: InputEvent) -> None:
         if input_event.event_type == EventTypes.MOUSE_CLICK:
             self._handle_mouse_click(input_event)
             return
 
-        input_type = _InputTypes.get_input_type(input_event.key)
-
-        if input_type == _InputTypes.MOVE_CHOICE:
+        if input_event.key in COMBAT_KEYBOARD_INPUTS:
             # Player move selection
             input_key = int(input_event.key)
             moves = self.scene.player_moves(self.scene.selected_char)
             if len(moves) >= input_key > 0:
                 selected_move = moves[input_key - 1]
                 self.scene.select_player_move(selected_move)
-        elif input_type == _InputTypes.TOGGLE_DEBUG:
-            self._view.toggle_debug()
-        else:
-            assert input_type is None
 
     def _handle_mouse_click(self, input_event: InputEvent) -> None:
         x = input_event.mouse[0]
@@ -86,17 +64,13 @@ class CombatSceneController(Controller):
                 'MOUSE: Deselected: {}'.format(self.scene.selected_char))
             self.scene.selected_char = None
 
-    def _update_scene_and_view(self) -> None:
-        self.scene.player_moves(self.scene.selected_char)
-        self._view.update()
-        self._update_scene()
-
     def _handle_move_executed(self, event: MoveExecutedEvent) -> None:
         if event.is_attacker_move:
             self.scene.selected_char = None
-            self._update_scene_and_view()
+            self._update_scene()
 
     def _update_scene(self) -> None:
+        self.scene.player_moves(self.scene.selected_char)
         if self.scene.is_resolved():
             resolution = self.scene.get_resolution()
             for effect in resolution.effects:

@@ -7,7 +7,9 @@ import pygame
 from controllers.inputs.keyboard import Keyboard
 from controllers.scene_machine import SceneMachine
 from data import constants
-from events.events_base import EventTypes, EventListener, EventManager, EventType
+from events.events_base import EventTypes, EventListener, EventManager, \
+    EventType, NewSceneEvent
+from models.scenes.scene_examples import loading_scene
 
 
 class GameState(Enum):
@@ -46,5 +48,8 @@ class Game(EventListener):
             self.clock.tick(constants.FRAMES_PER_SECOND)
 
     def run(self) -> None:
+
+        EventManager.post(NewSceneEvent(loading_scene()))
+
         while True:
             EventManager.post(EventTypes.TICK)
