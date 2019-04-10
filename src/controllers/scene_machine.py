@@ -1,9 +1,5 @@
-from controllers.combat_scene_controller import CombatSceneController
 from controllers.controller import Controller
 from controllers.controller_factory import build_controller
-from controllers.decision_scene_controller import DecisionSceneController
-from controllers.inventory_controller import InventoryController
-from controllers.settings_controller import SettingsController
 from events.event_utils import post_scene_change
 from events.events_base import EventTypes, EventListener, EventType, \
     NewSceneEvent
@@ -12,15 +8,6 @@ from models.scenes.scenes_base import Scene
 from models.scenes.settings_scene import SettingsScene
 
 _TEMPORARY_SCENES = (SettingsScene, InventoryScene)
-
-
-def interrupt_controller(event: EventType) -> Controller:
-    if event == EventTypes.SETTINGS:
-        return SettingsController()
-    elif event == EventTypes.INVENTORY:
-        return InventoryController()
-    else:
-        raise ValueError('No controller set for event {}'.format(event))
 
 
 def _event_matches_scene(event: EventTypes, scene: Scene):
