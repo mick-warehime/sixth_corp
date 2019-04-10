@@ -7,7 +7,6 @@ from models.scenes.decision_scene import DecisionScene
 from models.scenes.scenes_base import Scene
 from views.artists.drawing_utils import rescale_horizontal, rescale_vertical
 from views.artists.scene_artist_base import SceneArtist
-from views.layouts import Layout
 from views.pygame_screen import Screen
 
 _TextFun = Callable[[], str]
@@ -35,7 +34,7 @@ def _parse_text_fun(main_text: _TextOrFun) -> _TextFun:
 
 class DecisionArtist(SceneArtist):
 
-    def render(self, screen: Screen, scene: Scene, layout: Layout) -> None:
+    def render(self, screen: Screen, scene: Scene) -> None:
         assert isinstance(scene, DecisionScene)
         main_text = scene.prompt
         options = {key_val: choice.description

@@ -5,7 +5,6 @@ from models.scenes.combat_scene import CombatScene
 from models.scenes.scenes_base import Scene
 from views.artists.drawing_utils import rescale_horizontal
 from views.artists.scene_artist_base import SceneArtist
-from views.layouts import Layout
 from views.pygame_screen import Screen
 from views.stack_utils import stack_rect
 
@@ -17,8 +16,7 @@ _TARGET_SIZE, = rescale_horizontal(50)
 
 class CombatStackArtist(SceneArtist):
 
-    def render(self, screen: Screen, scene: Scene,
-               layout: Layout) -> None:
+    def render(self, screen: Screen, scene: Scene) -> None:
         assert isinstance(scene, CombatScene)
         player, enemy = scene.characters()
         stack = [

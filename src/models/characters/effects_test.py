@@ -2,13 +2,11 @@ import pytest
 
 from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character
-from models.characters.effects import (AcquireMod, ChangeLocation,
-                                       IncrementAttribute, RestartGame)
+from models.characters.effects import (AcquireMod, IncrementAttribute,
+                                       RestartGame)
 from models.characters.mods_base import GenericMod
 from models.characters.player import get_player, reset_player
 from models.characters.states import Attributes
-from models.world.locations import LoadingLocation, MarsLocation
-from models.world.world import get_location
 
 
 @pytest.fixture(scope='function')
@@ -24,7 +22,8 @@ def test_restart_game(player):
     player.status.increment_attribute(Attributes.HEALTH, -1)
     old_health = player.status.get_attribute(Attributes.HEALTH)
     RestartGame().execute()
-    assert old_health is not get_player().status.get_attribute(Attributes.HEALTH)
+    assert old_health is not get_player().status.get_attribute(
+        Attributes.HEALTH)
 
 
 def test_increment_player_attribute(player):
@@ -47,13 +46,3 @@ def test_acquire_mod(player):
     assert mod not in player.inventory.all_mods()
     AcquireMod(mod).execute()
     assert mod in player.inventory.all_mods()
-
-
-def test_change_location(player):
-    location = get_location()
-    assert isinstance(location, LoadingLocation)
-
-    ChangeLocation(MarsLocation()).execute()
-
-    new_location = get_location()
-    assert isinstance(new_location, MarsLocation)

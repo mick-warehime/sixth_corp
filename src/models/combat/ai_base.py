@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Sequence
+from typing import Optional, Sequence
 
 from models.combat.moves_base import Move
 
@@ -8,8 +8,11 @@ class AI(object):
     """AI for selecting enemy moves during combat."""
 
     @abstractmethod
-    def select_move(self) -> Move:
-        """Select the next move for the AI's user."""
+    def select_move(self) -> Optional[Move]:
+        """Select the next move for the AI's user.
+
+        If no move is possible, then return None.
+        """
 
     @abstractmethod
     def set_user(self, user: 'Character') -> None:  # type: ignore

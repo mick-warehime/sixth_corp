@@ -1,26 +1,21 @@
-from controllers.combat_scene_controller import CombatSceneController
+from typing import cast
+
 from controllers.controller import Controller
-from controllers.decision_scene_controller import DecisionSceneController
-from controllers.inventory_controller import InventoryController
-from controllers.settings_controller import SettingsController
-from events.events_base import Event, EventListener, EventType, NewSceneEvent
-from models.scenes.combat_scene import CombatScene
-from models.scenes.decision_scene import DecisionScene
-from models.scenes.scene_examples import loading_scene
+from controllers.controller_factory import build_controller
+from events.event_utils import post_scene_change
+from events.events_base import (EventListener, EventType, EventTypes,
+                                NewSceneEvent)
+from models.scenes.inventory_scene import InventoryScene
 from models.scenes.scenes_base import Scene
-
-SCENE_CONTROLLERS = {DecisionScene: DecisionSceneController,
-                     CombatScene: CombatSceneController}
-INTERUPT_CONTROLLERS = [Event.SETTINGS, Event.INVENTORY]
+from models.scenes.settings_scene import SettingsScene
 
 
-def interrupt_controller(event: EventType) -> Controller:
-    if event == Event.SETTINGS:
-        return SettingsController()
-    elif event == Event.INVENTORY:
-        return InventoryController()
-    else:
-        raise ValueError('No controller set for event {}'.format(event))
+def _event_matches_scene(event: EventTypes, scene: Scene) -> bool:
+    if event == EventTypes.SETTINGS and isinstance(scene, SettingsScene):
+        return True
+    if event == EventTypes.INVENTORY and isinstance(scene, InventoryScene):
+        return True
+    return False
 
 
 class SceneMachine(EventListener):
@@ -28,42 +23,42 @@ class SceneMachine(EventListener):
 
     def __init__(self) -> None:
         super().__init__()
-        self.controller: Controller = None
-        self._game_controller: Controller = None
-        self._prev_controller: Controller = None
-        self._set_next_scene(loading_scene())
-        self._interrupted = False
-        self._interrupting_event: EventType = None
+        self._current_controller: Controller = None
+
+        self._current_game_scene: Scene = None  # not inventory or settings.
+        self._current_scene: Scene = None
 
     def notify(self, event: EventType) -> None:
-        if event in INTERUPT_CONTROLLERS:
-            self._toggle_interrupt(event)
+
+        # toggle between settings/inventory scene and game scene
+        if event in (EventTypes.SETTINGS, EventTypes.INVENTORY):
+            new_scene: Scene = None
+            # go to temp scene
+            if self._current_scene is self._current_game_scene:
+                if event == EventTypes.SETTINGS:
+                    new_scene = SettingsScene()
+                else:
+                    new_scene = InventoryScene()
+            # go back to game scene
+            elif _event_matches_scene(cast(EventTypes, event),
+                                      self._current_scene):
+                new_scene = self._current_game_scene
+
+            if new_scene is not None:
+                post_scene_change(new_scene)
+
+        # Update scene and current controller
         if isinstance(event, NewSceneEvent):
-            self._set_next_scene(event.scene)
 
-    def _set_next_scene(self, scene: Scene) -> None:
-        scene_type = type(scene)
-        assert scene_type in SCENE_CONTROLLERS
+            if not isinstance(event.scene, (SettingsScene, InventoryScene)):
+                self._current_game_scene = event.scene
+            self._current_scene = event.scene
 
-        controller = SCENE_CONTROLLERS[scene_type]
-        self.controller = controller(scene)
-        self._game_controller = self.controller
+            if self._current_controller is not None:
+                self._current_controller.deactivate()
+            self._current_controller = build_controller(event.scene)
+            self._current_controller.activate()
 
-    def _toggle_interrupt(self, event: EventType) -> None:
-        if not self._interrupted or self._interrupting_event != event:
-            # Game was not interrupted or we are going from one interrupt to the
-            # next.
-            self.controller = interrupt_controller(event)
-            self._prev_controller = self._game_controller
-            self._interrupted = True
-            self._interrupting_event = event
-        else:
-            # Resume gameplay
-            temp_ctrl = self.controller
-            self.controller = self._game_controller
-            self._prev_controller = temp_ctrl
-            self._interrupted = False
-            self._interrupting_event = None
-
-        self.controller.activate()
-        self._prev_controller.deactivate()
+    @property
+    def controller(self) -> Controller:
+        return self._current_controller

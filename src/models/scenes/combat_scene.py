@@ -1,33 +1,50 @@
+from functools import reduce
 from typing import Sequence, Tuple
 
+from data.constants import SCREEN_SIZE, BackgroundImages
 from models.characters.character_base import Character
+from models.characters.character_examples import CharacterTypes
+from models.characters.character_impl import build_character
 from models.characters.conditions import IsDead
 from models.characters.player import get_player
 from models.combat.combat_manager_base import CombatManager, valid_moves
 from models.combat.moves_base import Move
 from models.scenes import scene_examples
 from models.scenes.scenes_base import Resolution, Scene
-from models.world.world import get_location
+from views.layouts import Layout
 
 
 class CombatScene(Scene):
 
-    def __init__(self) -> None:
+    def __init__(self, enemy: Character = None,
+                 background_image: str = None) -> None:
         super().__init__()
         self._player = get_player()
-        self._enemy: Character = get_location().random_enemy()
+        if enemy is None:
+            enemy = build_character(CharacterTypes.DRONE.data)
+        self._enemy: Character = enemy
         self.combat_manager = CombatManager([self._player], [self._enemy])
 
         self.selected_char: Character = None
         self.current_moves: Sequence[Move] = None
         self._set_targets()
+        self._layout = self._build_layout()
+
+        if background_image is None:
+            self._background_image = BackgroundImages.CITY.path
+        else:
+            self._background_image = background_image
+
+    @property
+    def layout(self) -> Layout:
+        return self._layout
+
+    @property
+    def background_image(self) -> str:
+        return self._background_image
 
     def characters(self) -> Tuple[Character, ...]:
         return self._player, self._enemy
-
-    def set_enemy(self, enemy: Character) -> None:
-        self._enemy = enemy
-        self._set_targets()
 
     def is_resolved(self) -> bool:
         return IsDead().check(self._enemy) or IsDead().check(self._player)
@@ -56,3 +73,26 @@ class CombatScene(Scene):
 
     def _set_targets(self) -> None:
         self._enemy.ai.set_targets([self._player])
+
+    def _build_layout(self) -> Layout:
+        characters = self.characters()
+        # player side layout
+        player = characters[0]
+
+        player_layout = Layout([(None, 2), (player, 1), (None, 2)], 'vertical')
+        player_layout = Layout([(None, 1), (player_layout, 1), (None, 1)],
+                               'horizontal')
+
+        # stack layout
+        stack_layout = Layout()
+
+        # enemies layout
+        assert len(characters) > 1
+        elements = reduce(lambda a, b: a + b,
+                          ([(None, 1), (e, 1)] for e in characters[1:]))
+        elements.append((None, 1))
+        enemies_layout = Layout(elements, 'vertical')
+
+        return Layout(
+            [(player_layout, 1), (stack_layout, 1), (enemies_layout, 1)],
+            'horizontal', SCREEN_SIZE)

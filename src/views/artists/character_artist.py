@@ -6,18 +6,16 @@ from models.characters.states import Attributes
 from models.scenes.combat_scene import CombatScene
 from models.scenes.scenes_base import Scene
 from views.artists.scene_artist_base import SceneArtist
-from views.layouts import Layout
 from views.pygame_screen import Screen
 
 
 class CharacterArtist(SceneArtist):
     """Draws Characters on the screen."""
 
-    def render(self, screen: Screen, scene: Scene,
-               layout: Layout) -> None:
+    def render(self, screen: Screen, scene: Scene) -> None:
         assert isinstance(scene, CombatScene)
         for char in scene.characters():
-            rects = layout.get_rects(char)
+            rects = scene.layout.get_rects(char)
             assert len(rects) == 1
 
             rect = rects[0]

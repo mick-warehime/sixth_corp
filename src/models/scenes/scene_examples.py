@@ -1,8 +1,8 @@
 """Simple decision scene examples."""
 from typing import Sequence
 
-from models.characters.effects import (ChangeLocation, IncrementAttribute,
-                                       RestartGame)
+from data.constants import BackgroundImages
+from models.characters.effects import IncrementAttribute, RestartGame
 from models.characters.player import get_player
 from models.characters.states import Attributes, Skill
 from models.scenes import combat_scene
@@ -10,15 +10,14 @@ from models.scenes.decision_scene import (DecisionOption, DecisionScene,
                                           from_transition, transition_to)
 from models.scenes.scenes_base import Effect, Resolution, Scene
 from models.scenes.skill_checks import Difficulty, skill_check
-from models.world.locations import CityLocation
 
 
 def loading_scene() -> DecisionScene:
     options = {
-        's': DecisionOption('Start Game', swamp_scene,
-                            [ChangeLocation(CityLocation())]),
+        's': DecisionOption('Start Game', swamp_scene),
         'x': DecisionOption('Settings', example_combat_scene)}
-    return DecisionScene('6TH Corp', options)
+    return DecisionScene('6TH Corp', options,
+                         background_image=BackgroundImages.LOADING.path)
 
 
 def start_scene() -> DecisionScene:
