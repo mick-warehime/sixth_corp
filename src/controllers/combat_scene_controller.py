@@ -2,8 +2,8 @@ import logging
 
 from controllers.controller import Controller
 from events.event_utils import post_scene_change
-from events.events_base import (ControllerActivatedEvent, EventTypes, EventType,
-                                InputEvent, MoveExecutedEvent)
+from events.events_base import (ControllerActivatedEvent, EventType,
+                                EventTypes, InputEvent, MoveExecutedEvent)
 from models.scenes.combat_scene import CombatScene
 
 COMBAT_KEYBOARD_INPUTS = [str(i) for i in range(9)]

@@ -1,4 +1,5 @@
-from events.events_base import EventTypes, EventManager, InputEvent, NewSceneEvent
+from events.events_base import (EventManager, EventTypes, InputEvent,
+                                NewSceneEvent)
 from models.scenes.scenes_base import Scene
 
 

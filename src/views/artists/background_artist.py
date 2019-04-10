@@ -7,7 +7,7 @@ from views.pygame_screen import Screen
 class BackgroundArtist(SceneArtist):
     """Draws the background image."""
 
-    def __init__(self, scene: Scene):
+    def __init__(self, scene: Scene) -> None:
         self._background_image: str = scene.background_image
 
     def render(self, screen: Screen, scene: Scene) -> None:

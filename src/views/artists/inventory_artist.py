@@ -1,5 +1,4 @@
 from data.colors import WHITE
-from data.constants import SCREEN_SIZE
 from models.scenes.inventory_scene import InventoryScene
 from models.scenes.scenes_base import Scene
 from views.artists.scene_artist_base import SceneArtist

@@ -4,7 +4,6 @@ from controllers.scene_machine import SceneMachine
 from events import event_utils
 from events.events_base import EventManager
 from models.scenes.combat_scene import CombatScene
-
 from models.scenes.scene_examples import loading_scene
 
 

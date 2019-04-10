@@ -1,7 +1,6 @@
 import abc
 
 from models.scenes.scenes_base import Scene
-from views.layouts import Layout
 from views.pygame_screen import Screen
 
 

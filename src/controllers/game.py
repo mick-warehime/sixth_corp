@@ -7,8 +7,8 @@ import pygame
 from controllers.inputs.keyboard import Keyboard
 from controllers.scene_machine import SceneMachine
 from data import constants
-from events.events_base import EventTypes, EventListener, EventManager, \
-    EventType, NewSceneEvent
+from events.events_base import (EventListener, EventManager, EventType,
+                                EventTypes, NewSceneEvent)
 from models.scenes.scene_examples import loading_scene
 
 

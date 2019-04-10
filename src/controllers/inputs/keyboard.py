@@ -3,8 +3,8 @@ from typing import List, Tuple
 import pygame
 
 from controllers.inputs.keybindings import Keybindings
-from events.events_base import (EventTypes, EventListener, EventManager, EventType,
-                                InputEvent)
+from events.events_base import (EventListener, EventManager, EventType,
+                                EventTypes, InputEvent)
 
 
 class Keyboard(EventListener):

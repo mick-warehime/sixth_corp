@@ -1,9 +1,8 @@
 """Implementation of ViewManager."""
 import logging
 
-from events.events_base import EventListener, EventType, NewSceneEvent, \
-    EventTypes
-from models.scenes.settings_scene import SettingsScene
+from events.events_base import (EventListener, EventType, EventTypes,
+                                NewSceneEvent)
 from views.scene_view import SceneView
 
 

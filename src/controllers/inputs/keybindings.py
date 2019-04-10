@@ -3,7 +3,7 @@ import logging
 from typing import Dict
 
 from data.constants import PREFERENCES_FILE
-from events.events_base import EventTypes, EventType
+from events.events_base import EventType, EventTypes
 
 
 class Keybindings(object):

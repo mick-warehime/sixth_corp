@@ -1,16 +1,16 @@
+from typing import cast
+
 from controllers.controller import Controller
 from controllers.controller_factory import build_controller
 from events.event_utils import post_scene_change
-from events.events_base import EventTypes, EventListener, EventType, \
-    NewSceneEvent
+from events.events_base import (EventListener, EventType, EventTypes,
+                                NewSceneEvent)
 from models.scenes.inventory_scene import InventoryScene
 from models.scenes.scenes_base import Scene
 from models.scenes.settings_scene import SettingsScene
 
-_TEMPORARY_SCENES = (SettingsScene, InventoryScene)
 
-
-def _event_matches_scene(event: EventTypes, scene: Scene):
+def _event_matches_scene(event: EventTypes, scene: Scene) -> bool:
     if event == EventTypes.SETTINGS and isinstance(scene, SettingsScene):
         return True
     if event == EventTypes.INVENTORY and isinstance(scene, InventoryScene):
@@ -40,7 +40,8 @@ class SceneMachine(EventListener):
                 else:
                     new_scene = InventoryScene()
             # go back to game scene
-            elif _event_matches_scene(event, self._current_scene):
+            elif _event_matches_scene(cast(EventTypes, event),
+                                      self._current_scene):
                 new_scene = self._current_game_scene
 
             if new_scene is not None:

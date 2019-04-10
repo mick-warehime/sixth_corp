@@ -1,5 +1,5 @@
 from controllers.controller import Controller
-from events.events_base import EventTypes, EventType
+from events.events_base import EventType, EventTypes
 
 
 class InventoryController(Controller):

@@ -1,7 +1,7 @@
 from functools import reduce
 from typing import Sequence, Tuple
 
-from data.constants import BackgroundImages, SCREEN_SIZE
+from data.constants import SCREEN_SIZE, BackgroundImages
 from models.characters.character_base import Character
 from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character

@@ -2,7 +2,7 @@
 from typing import Sequence
 
 from data.constants import BackgroundImages
-from models.characters.effects import (IncrementAttribute, RestartGame)
+from models.characters.effects import IncrementAttribute, RestartGame
 from models.characters.player import get_player
 from models.characters.states import Attributes, Skill
 from models.scenes import combat_scene

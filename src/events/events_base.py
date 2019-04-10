@@ -1,7 +1,7 @@
 import abc
 import logging
 from enum import Enum
-from typing import Tuple, Union, NamedTuple
+from typing import NamedTuple, Tuple, Union
 from weakref import WeakSet
 
 from models.combat.moves_base import Move
