@@ -16,10 +16,13 @@ from views.layouts import Layout
 
 class CombatScene(Scene):
 
-    def __init__(self, background_image: str = None) -> None:
+    def __init__(self, enemy: Character = None,
+                 background_image: str = None) -> None:
         super().__init__()
         self._player = get_player()
-        self._enemy: Character = build_character(CharacterTypes.DRONE.data)
+        if enemy is None:
+            enemy = build_character(CharacterTypes.DRONE.data)
+        self._enemy: Character = enemy
         self.combat_manager = CombatManager([self._player], [self._enemy])
 
         self.selected_char: Character = None
@@ -42,10 +45,6 @@ class CombatScene(Scene):
 
     def characters(self) -> Tuple[Character, ...]:
         return self._player, self._enemy
-
-    def set_enemy(self, enemy: Character) -> None:
-        self._enemy = enemy
-        self._set_targets()
 
     def is_resolved(self) -> bool:
         return IsDead().check(self._enemy) or IsDead().check(self._player)
