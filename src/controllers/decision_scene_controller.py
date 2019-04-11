@@ -2,7 +2,8 @@ import logging
 
 from controllers.controller import Controller
 from events.event_utils import post_scene_change
-from events.events_base import EventType, EventTypes, InputEvent
+from events.events_base import EventType, EventTypes, InputEvent, EventManager, \
+    DecisionEvent
 from models.characters.conditions import IsDead
 from models.characters.player import get_player
 from models.scenes.decision_scene import DecisionScene
@@ -15,20 +16,16 @@ class DecisionSceneController(Controller):
         super().__init__()
         self._scene = scene
 
-    def _handle_input(self, input_event: InputEvent) -> None:
-        if input_event.key in self._scene.choices:
-            self._scene.make_choice(input_event.key)
-
     def notify(self, event: EventType) -> None:
         if not self._active:
             return
 
-        if event == EventTypes.TICK:
-            self.check_resolution()
-        elif isinstance(event, InputEvent):
-            self._handle_input(event)
+        if isinstance(event, InputEvent):
+            # Player chooses a choice
+            if event.key in self._scene.choices:
+                EventManager.post(DecisionEvent(event.key, self._scene))
 
-    def check_resolution(self) -> None:
+        # handle scene resolution
         if self._scene.is_resolved():
             resolution = self._scene.get_resolution()
             for effect in resolution.effects:
@@ -36,7 +33,6 @@ class DecisionSceneController(Controller):
                     effect.__class__.__name__))
                 effect.execute()
 
-            self.deactivate()
             if IsDead().check(get_player()):
                 post_scene_change(game_over_scene())
                 return

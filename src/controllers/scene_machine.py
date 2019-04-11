@@ -54,10 +54,11 @@ class SceneMachine(EventListener):
                 self._current_game_scene = event.scene
             self._current_scene = event.scene
 
+            # The previous controller may not disappear after a new controller
+            # is assigned, so we must explicitly deactivate it.
             if self._current_controller is not None:
                 self._current_controller.deactivate()
             self._current_controller = build_controller(event.scene)
-            self._current_controller.activate()
 
     @property
     def controller(self) -> Controller:

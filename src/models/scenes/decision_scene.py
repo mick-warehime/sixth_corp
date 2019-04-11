@@ -2,6 +2,7 @@ from functools import partial
 from typing import Dict, Sequence, Union
 
 from data.constants import BackgroundImages
+from events.events_base import EventListener, EventType, DecisionEvent
 from models.scenes.scenes_base import (Effect, Resolution, Scene,
                                        SceneConstructor)
 
@@ -25,13 +26,13 @@ class DecisionOption(Resolution):
         return self._next_scene_fun()
 
 
-class DecisionScene(Scene):
+class DecisionScene(EventListener, Scene):
     """A Scene that is resolved by the player making a choice."""
 
     def __init__(self, prompt: str, choices: Dict[str, DecisionOption],
                  background_image: str = None) -> None:
-        super().__init__()
         self.prompt = prompt
+        super().__init__()
         self.choices = choices
         self._choice: DecisionOption = None
         if background_image is None:
@@ -39,16 +40,17 @@ class DecisionScene(Scene):
         else:
             self._background_image = background_image
 
+    def notify(self, event: EventType) -> None:
+        if isinstance(event, DecisionEvent) and self is event.scene:
+            assert event.choice in self.choices
+            self._choice = self.choices[event.choice]
+
     @property
     def background_image(self) -> str:
         return self._background_image
 
     def is_resolved(self) -> bool:
         return self._choice is not None
-
-    def make_choice(self, choice: str) -> None:
-        assert choice in self.choices
-        self._choice = self.choices[choice]
 
     def get_resolution(self) -> DecisionOption:
         return self._choice

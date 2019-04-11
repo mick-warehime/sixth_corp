@@ -84,9 +84,15 @@ class SelectPlayerMoveEvent(NamedTuple):
         return 'SelectPlayerMove({})'.format(self.move)
 
 
+class DecisionEvent(NamedTuple):
+    choice: str
+    # We included a scene reference in case two DecisionScenes are listening.
+    scene: Scene
+
+
 EventType = Union[EventTypes, InputEvent, NewSceneEvent, MoveExecutedEvent,
                   ControllerActivatedEvent, SelectCharacterEvent,
-                  SelectPlayerMoveEvent]
+                  SelectPlayerMoveEvent, DecisionEvent]
 
 
 class EventManager(object):
