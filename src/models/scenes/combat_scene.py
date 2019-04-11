@@ -1,5 +1,5 @@
 from functools import reduce
-from typing import Sequence, Tuple, Optional
+from typing import Sequence, Tuple, Optional, List
 
 from data.constants import SCREEN_SIZE, BackgroundImages
 from events.events_base import EventListener, EventType, SelectCharacterEvent
@@ -25,10 +25,9 @@ class CombatScene(EventListener, Scene):
         super().__init__()
         self._player = get_player()
 
-        self.combat_manager = CombatManager([self._player], [self._enemy])
+        self._combat_manager = CombatManager([self._player], [self._enemy])
 
         self._selected_char: Character = None
-        self.current_moves: Sequence[Move] = None
         self._set_targets()
         self._layout = self._build_layout()
 
@@ -42,7 +41,7 @@ class CombatScene(EventListener, Scene):
             self._selected_char = event.character
 
     @property
-    def selected_char(self)->Optional[Character]:
+    def selected_char(self) -> Optional[Character]:
         return self._selected_char
 
     @property
@@ -69,17 +68,21 @@ class CombatScene(EventListener, Scene):
     def __str__(self) -> str:
         return 'CombatScene(enemy = {})'.format(str(self._enemy))
 
+    def available_moves(self) -> List[Move]:
+        if self._selected_char is None:
+            return []
+        return valid_moves(self._player, [self._selected_char])
+
     def player_moves(self, target: Character) -> Sequence[Move]:
         moves: Sequence[Move] = []
         if target is not None:
             moves = valid_moves(self._player, (target,))
-        self.current_moves = moves
         self._selected_char = target
         return moves
 
     def select_player_move(self, move: Move) -> None:
         enemy_move = self._enemy.ai.select_move()
-        self.combat_manager.take_turn([move], [enemy_move])
+        self._combat_manager.take_turn([move], [enemy_move])
 
     def _set_targets(self) -> None:
         self._enemy.ai.set_targets([self._player])
