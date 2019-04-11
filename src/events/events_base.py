@@ -1,9 +1,10 @@
 import abc
 import logging
 from enum import Enum
-from typing import NamedTuple, Tuple, Union
+from typing import NamedTuple, Tuple, Union, Optional
 from weakref import WeakSet
 
+from models.characters.character_base import Character
 from models.combat.moves_base import Move
 from models.scenes.scenes_base import Scene
 
@@ -72,8 +73,12 @@ class ControllerActivatedEvent(NamedTuple):
         return '{}'.format(self.status)
 
 
+class SelectCharacterEvent(NamedTuple):
+    character: Optional[Character]
+
+
 EventType = Union[EventTypes, InputEvent, NewSceneEvent, MoveExecutedEvent,
-                  ControllerActivatedEvent]
+                  ControllerActivatedEvent, SelectCharacterEvent]
 
 
 class EventManager(object):

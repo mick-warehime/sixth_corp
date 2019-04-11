@@ -1,4 +1,5 @@
 from controllers.combat_scene_controller import CombatSceneController
+from controllers.controller_factory import build_controller
 from controllers.game import Game
 from controllers.scene_machine import SceneMachine
 from events import event_utils
@@ -13,18 +14,27 @@ def test_initializing_game_adds_listeners():
     assert len(EventManager.listeners) > 0
 
 
-def test_changing_combat_scenes_removes_previous_listener():
+def test_changing_scenes_removes_previous_listener():
     assert len(EventManager.listeners) == 0
     machine = SceneMachine()  # noqa: F841
     assert len(EventManager.listeners) == 1
 
-    event_utils.post_scene_change(loading_scene())
-    assert len(EventManager.listeners) == 2
-    assert not any(isinstance(ctl, CombatSceneController)
+    initial_scene = loading_scene()
+    initial_controller_type = type(build_controller(initial_scene))
+
+    final_scene = CombatScene()
+    final_controller_type = type(build_controller(final_scene))
+
+    event_utils.post_scene_change(initial_scene)
+
+    assert any(isinstance(l, initial_controller_type)
+               for l in EventManager.listeners)
+    assert not any(isinstance(ctl, final_controller_type)
                    for ctl in EventManager.listeners)
 
-    event_utils.post_scene_change(CombatScene())
-    assert len(EventManager.listeners) == 2
+    event_utils.post_scene_change(final_scene)
 
-    assert any(isinstance(ctl, CombatSceneController)
-               for ctl in EventManager.listeners)
+    assert any(isinstance(l, final_controller_type)
+               for l in EventManager.listeners)
+    assert not any(isinstance(ctl, initial_controller_type)
+                   for ctl in EventManager.listeners)

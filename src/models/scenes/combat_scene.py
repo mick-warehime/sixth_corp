@@ -1,7 +1,8 @@
 from functools import reduce
-from typing import Sequence, Tuple
+from typing import Sequence, Tuple, Optional
 
 from data.constants import SCREEN_SIZE, BackgroundImages
+from events.events_base import EventListener, EventType, SelectCharacterEvent
 from models.characters.character_base import Character
 from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character
@@ -14,18 +15,19 @@ from models.scenes.scenes_base import Resolution, Scene
 from views.layouts import Layout
 
 
-class CombatScene(Scene):
+class CombatScene(EventListener, Scene):
 
     def __init__(self, enemy: Character = None,
                  background_image: str = None) -> None:
-        super().__init__()
-        self._player = get_player()
         if enemy is None:
             enemy = build_character(CharacterTypes.DRONE.data)
         self._enemy: Character = enemy
+        super().__init__()
+        self._player = get_player()
+
         self.combat_manager = CombatManager([self._player], [self._enemy])
 
-        self.selected_char: Character = None
+        self._selected_char: Character = None
         self.current_moves: Sequence[Move] = None
         self._set_targets()
         self._layout = self._build_layout()
@@ -34,6 +36,14 @@ class CombatScene(Scene):
             self._background_image = BackgroundImages.CITY.path
         else:
             self._background_image = background_image
+
+    def notify(self, event: EventType) -> None:
+        if isinstance(event, SelectCharacterEvent):
+            self._selected_char = event.character
+
+    @property
+    def selected_char(self)->Optional[Character]:
+        return self._selected_char
 
     @property
     def layout(self) -> Layout:
@@ -64,7 +74,7 @@ class CombatScene(Scene):
         if target is not None:
             moves = valid_moves(self._player, (target,))
         self.current_moves = moves
-        self.selected_char = target
+        self._selected_char = target
         return moves
 
     def select_player_move(self, move: Move) -> None:

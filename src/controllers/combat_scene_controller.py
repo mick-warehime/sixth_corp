@@ -3,7 +3,8 @@ import logging
 from controllers.controller import Controller
 from events.event_utils import post_scene_change
 from events.events_base import (ControllerActivatedEvent, EventType,
-                                EventTypes, InputEvent, MoveExecutedEvent)
+                                EventTypes, InputEvent, MoveExecutedEvent,
+                                EventManager, SelectCharacterEvent)
 from models.scenes.combat_scene import CombatScene
 
 COMBAT_KEYBOARD_INPUTS = [str(i) for i in range(9)]
@@ -53,7 +54,7 @@ class CombatSceneController(Controller):
         clicked_obj = self.scene.layout.object_at(x, y)
         if clicked_obj in self.scene.characters():
             if self.scene.selected_char != clicked_obj:
-                self.scene.selected_char = clicked_obj
+                EventManager.post(SelectCharacterEvent(clicked_obj))
                 logging.debug('MOUSE: Selected: {}'.format(clicked_obj))
                 return
 
@@ -62,11 +63,11 @@ class CombatSceneController(Controller):
         if self.scene.selected_char is not None:
             logging.debug(
                 'MOUSE: Deselected: {}'.format(self.scene.selected_char))
-            self.scene.selected_char = None
+            EventManager.post(SelectCharacterEvent(None))
 
     def _handle_move_executed(self, event: MoveExecutedEvent) -> None:
         if event.is_attacker_move:
-            self.scene.selected_char = None
+            EventManager.post(SelectCharacterEvent(None))
             self._update_scene()
 
     def _update_scene(self) -> None:
