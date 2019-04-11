@@ -7,8 +7,17 @@ from controllers.decision_scene_controller import DecisionSceneController
 from controllers.game import Game, initialize_pygame
 from events import event_utils
 from events.events_base import EventManager, EventTypes
+from models.characters.character_examples import CharacterData
+from models.characters.character_impl import build_character
+from models.characters.chassis_examples import ChassisData
+from models.characters.conditions import IsDead
+from models.characters.mods_base import GenericMod, Slots
+from models.characters.player import get_player
+from models.characters.states import Attributes
+from models.characters.subroutine_examples import FireLaser
 from models.scenes.combat_scene import CombatScene
 from models.scenes.decision_scene import DecisionOption, DecisionScene
+from models.scenes.scenes_base import BasicResolution
 from views.view_manager import ViewManager
 
 # Ensure that working directory is sixth_corp
@@ -69,3 +78,51 @@ def test_press_debug_in_decision_scene_has_no_effect():
 
     EventManager.post(EventTypes.DEBUG)
     EventManager.post(EventTypes.TICK)
+
+
+def test_combat_scene_to_decision_scene():
+    game = Game()
+    view_manager = ViewManager()
+
+    # dummy decision scene to which will will transision
+    def dummy_scene():
+        return DecisionScene('dummy scene for testing purposes', {})
+
+    # combat scene with 1 health enemy
+    enemy = build_character(CharacterData(ChassisData(
+        attribute_modifiers={Attributes.MAX_HEALTH: 1}
+    )))
+    scene = CombatScene(enemy, win_resolution=BasicResolution(dummy_scene))
+    event_utils.post_scene_change(scene)
+
+    # give player ability to fire laser
+    player = get_player()
+    shoot_laser = FireLaser(1)
+    laser_mod = GenericMod(subroutines_granted=shoot_laser,
+                           valid_slots=Slots.HEAD)
+    assert player.inventory.can_store(laser_mod)
+    player.inventory.attempt_store(laser_mod)
+
+    assert laser_mod in player.inventory.all_active_mods()
+
+    # click on enemy
+    enemy_pos = scene.layout.get_rects(enemy)[0].center
+    event_utils.simulate_mouse_click(*enemy_pos)
+
+    assert enemy is scene.selected_char
+
+    assert isinstance(_get_active_controller(), CombatSceneController)
+
+    # select the fire laser ability
+    laser_ind = [ind for ind, move in enumerate(scene.available_moves())
+                 if move.subroutine is shoot_laser][0]
+    event_utils.simulate_key_press(str(laser_ind + 1))
+
+    # check that scene has ended
+    assert IsDead().check(enemy)
+    assert scene.is_resolved()
+
+    # update the scene by waiting a tick, confirm that we've switched to a
+    # Decision scene
+    EventManager.post(EventTypes.TICK)
+    assert isinstance(_get_active_controller(), DecisionSceneController)

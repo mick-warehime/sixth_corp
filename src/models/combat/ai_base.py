@@ -8,10 +8,8 @@ class AI(object):
     """AI for selecting enemy moves during combat."""
 
     @abstractmethod
-    def select_move(self) -> Optional[Move]:
+    def select_move(self) -> Move:
         """Select the next move for the AI's user.
-
-        If no move is possible, then return None.
         """
 
     @abstractmethod

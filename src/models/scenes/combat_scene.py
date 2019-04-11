@@ -9,6 +9,7 @@ from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character
 from models.characters.conditions import IsDead
 from models.characters.player import get_player
+from models.characters.subroutine_examples import DoNothing
 from models.combat.combat_manager_base import CombatManager, valid_moves
 from models.combat.moves_base import Move
 from models.scenes import scene_examples
@@ -19,6 +20,7 @@ from views.layouts import Layout
 class CombatScene(EventListener, Scene):
 
     def __init__(self, enemy: Character = None,
+                 win_resolution: Resolution = None,
                  background_image: str = None) -> None:
         if enemy is None:
             enemy = build_character(CharacterTypes.DRONE.data)
@@ -27,6 +29,10 @@ class CombatScene(EventListener, Scene):
         self._player = get_player()
 
         self._combat_manager = CombatManager([self._player], [self._enemy])
+
+        if win_resolution is None:
+            win_resolution = scene_examples.ResolutionTypes.RESTART.resolution
+        self._win_resolution = win_resolution
 
         self._selected_char: Character = None
 
@@ -74,7 +80,7 @@ class CombatScene(EventListener, Scene):
     def get_resolution(self) -> Resolution:
         assert self.is_resolved()
         if IsDead().check(self._enemy):
-            return scene_examples.ResolutionTypes.RESTART.resolution
+            return self._win_resolution
         assert IsDead().check(self._player)
         return scene_examples.ResolutionTypes.GAME_OVER.resolution
 
