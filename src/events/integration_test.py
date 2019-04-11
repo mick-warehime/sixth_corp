@@ -14,7 +14,7 @@ from views.view_manager import ViewManager
 # Ensure that working directory is sixth_corp
 os.chdir(dirname(dirname(dirname(abspath(__file__)))))
 
-initialize_pygame(no_UI=True)
+initialize_pygame()
 
 
 def _get_active_controller():
@@ -61,7 +61,8 @@ def test_press_debug_in_decision_scene_has_no_effect():
     game = Game()
     view_manager = ViewManager()
 
-    event_utils.post_scene_change(DecisionScene('dummy', {}))
+    event_utils.post_scene_change(
+        DecisionScene('dummy scene for test purposes', {}))
 
     assert isinstance(game.scene_machine.controller, DecisionSceneController)
     assert view_manager.current_view is not None
