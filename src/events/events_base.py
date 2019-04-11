@@ -1,7 +1,7 @@
 import abc
 import logging
 from enum import Enum
-from typing import NamedTuple, Tuple, Union, Optional
+from typing import NamedTuple, Optional, Tuple, Union
 from weakref import WeakSet
 
 from models.characters.character_base import Character
@@ -80,7 +80,7 @@ class SelectCharacterEvent(NamedTuple):
 class SelectPlayerMoveEvent(NamedTuple):
     move: Move
 
-    def __str__(self):
+    def __str__(self) -> str:
         return 'SelectPlayerMove({})'.format(self.move)
 
 

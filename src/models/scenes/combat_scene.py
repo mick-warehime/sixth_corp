@@ -1,9 +1,9 @@
 from functools import reduce
-from typing import Tuple, Optional, List
+from typing import List, Optional, Tuple
 
 from data.constants import SCREEN_SIZE, BackgroundImages
-from events.events_base import EventListener, EventType, SelectCharacterEvent, \
-    SelectPlayerMoveEvent
+from events.events_base import (EventListener, EventType, SelectCharacterEvent,
+                                SelectPlayerMoveEvent)
 from models.characters.character_base import Character
 from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character

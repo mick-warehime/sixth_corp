@@ -2,7 +2,7 @@ from functools import partial
 from typing import Dict, Sequence, Union
 
 from data.constants import BackgroundImages
-from events.events_base import EventListener, EventType, DecisionEvent
+from events.events_base import DecisionEvent, EventListener, EventType
 from models.scenes.scenes_base import (Effect, Resolution, Scene,
                                        SceneConstructor)
 

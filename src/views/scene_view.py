@@ -31,7 +31,8 @@ class SceneView(object):
         for artist in self._artists:
             artist.render(self._screen, self._scene)
         if self._debug_mode and hasattr(self._scene, 'layout'):
-            for rect in self._scene.layout.get_rects(self._scene.layout):
+            layout = self._scene.layout  # type: ignore
+            for rect in layout.get_rects(layout):
                 self._screen.render_rect(rect, GREEN, 2)
 
         # VERY IMPORTANT TO CALL UPDATE ONCE

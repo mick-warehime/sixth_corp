@@ -1,14 +1,14 @@
-from os.path import dirname, abspath
 import os
+from os.path import abspath, dirname
 
 from controllers.combat_scene_controller import CombatSceneController
 from controllers.controller import Controller
 from controllers.decision_scene_controller import DecisionSceneController
-from controllers.game import initialize_pygame, Game
+from controllers.game import Game, initialize_pygame
 from events import event_utils
 from events.events_base import EventManager, EventTypes
 from models.scenes.combat_scene import CombatScene
-from models.scenes.decision_scene import DecisionScene, DecisionOption
+from models.scenes.decision_scene import DecisionOption, DecisionScene
 from views.view_manager import ViewManager
 
 # Ensure that working directory is sixth_corp
