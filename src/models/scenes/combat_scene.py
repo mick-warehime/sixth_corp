@@ -74,9 +74,9 @@ class CombatScene(EventListener, Scene):
     def get_resolution(self) -> Resolution:
         assert self.is_resolved()
         if IsDead().check(self._enemy):
-            return scene_examples.CombatResolution()
+            return scene_examples.ResolutionTypes.RESTART.resolution
         assert IsDead().check(self._player)
-        return scene_examples.EndGame()
+        return scene_examples.ResolutionTypes.GAME_OVER.resolution
 
     def __str__(self) -> str:
         return 'CombatScene(enemy = {})'.format(str(self._enemy))

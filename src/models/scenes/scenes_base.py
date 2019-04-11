@@ -1,6 +1,6 @@
 """Basic interfaces for scenes, effects, and resolutions."""
 import abc
-from typing import Callable, Sequence
+from typing import Callable, Sequence, NamedTuple, Tuple
 
 
 class Scene(metaclass=abc.ABCMeta):
@@ -37,6 +37,18 @@ class Resolution(object):
     def effects(self) -> Sequence[Effect]:
         """These are implemented when the resolution occurs."""
         raise NotImplementedError
+
+
+class BasicResolution(NamedTuple, Resolution):
+    scene_fun: Callable[[], Scene]
+    effect_seq: Tuple[Effect] = ()
+
+    def next_scene(self) -> Scene:
+        return self.scene_fun()
+
+    @property
+    def effects(self) -> Sequence[Effect]:
+        return self.effect_seq
 
 
 SceneConstructor = Callable[[], Scene]
