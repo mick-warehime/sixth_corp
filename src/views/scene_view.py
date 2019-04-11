@@ -30,11 +30,11 @@ class SceneView(object):
         self._screen.clear()
         for artist in self._artists:
             artist.render(self._screen, self._scene)
-        # VERY IMPORTANT TO CALL UPDATE ONCE
-        if self._debug_mode:
-            assert isinstance(self._scene, CombatScene)
+        if self._debug_mode and hasattr(self._scene, 'layout'):
             for rect in self._scene.layout.get_rects(self._scene.layout):
                 self._screen.render_rect(rect, GREEN, 2)
+
+        # VERY IMPORTANT TO CALL UPDATE ONCE
         self._screen.update()
 
     def toggle_debug(self) -> None:
