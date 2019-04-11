@@ -81,8 +81,8 @@ def test_press_debug_in_decision_scene_has_no_effect():
 
 
 def test_combat_scene_to_decision_scene():
-    game = Game()
-    view_manager = ViewManager()
+    game = Game()  # noqa: F841
+    view_manager = ViewManager()  # noqa: F841
 
     # dummy decision scene to which will will transision
     def dummy_scene():

@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Optional, Sequence
+from typing import Sequence
 
 from models.combat.moves_base import Move
 
