@@ -17,18 +17,16 @@ class CombatSceneController(Controller):
     def __init__(self, scene: CombatScene) -> None:
         super(CombatSceneController, self).__init__()
         self.scene = scene
-        self._update_scene()
 
     def notify(self, event: EventType) -> None:
         if not self._active:
             return
         if isinstance(event, InputEvent):
             self._handle_input(event)
-            self._update_scene()
         elif isinstance(event, MoveExecutedEvent):
-            self._handle_move_executed(event)
-        elif isinstance(event, ControllerActivatedEvent):
-            self._update_scene()
+            if event.is_attacker_move:
+                EventManager.post(SelectCharacterEvent(None))
+        self._check_for_resolution()
 
     def _handle_input(self, input_event: InputEvent) -> None:
         if input_event.event_type == EventTypes.MOUSE_CLICK:
@@ -66,12 +64,7 @@ class CombatSceneController(Controller):
                 'MOUSE: Deselected: {}'.format(self.scene.selected_char))
             EventManager.post(SelectCharacterEvent(None))
 
-    def _handle_move_executed(self, event: MoveExecutedEvent) -> None:
-        if event.is_attacker_move:
-            EventManager.post(SelectCharacterEvent(None))
-            self._update_scene()
-
-    def _update_scene(self) -> None:
+    def _check_for_resolution(self) -> None:
         if self.scene.is_resolved():
             resolution = self.scene.get_resolution()
             for effect in resolution.effects:
