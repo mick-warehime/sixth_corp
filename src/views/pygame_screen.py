@@ -1,3 +1,4 @@
+import os
 from abc import abstractmethod
 from typing import Dict, List
 
@@ -79,7 +80,14 @@ class _PygameScreen(Screen):
 
     def _initialize_screen(self) -> None:
         pygame.display.set_caption('6th Corp')
-        self._screen = pygame.display.set_mode(constants.SCREEN_SIZE)
+        try:
+            self._screen = pygame.display.set_mode(constants.SCREEN_SIZE)
+        except pygame.error:
+            # If no video device is available, use dummy device. This is only
+            # relevant in travis.
+            os.environ['SDL_VIDEODRIVER'] = 'dummy'
+            os.environ['SDL_AUDIODRIVER'] = 'dummy'
+            self._screen = pygame.display.set_mode(constants.SCREEN_SIZE)
 
     def update(self) -> None:
         """Makes sure any render/clear calls have been posted to the screen."""

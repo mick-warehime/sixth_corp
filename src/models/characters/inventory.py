@@ -57,10 +57,22 @@ class InventoryBase(metaclass=abc.ABCMeta):
         mods = self.mods(lambda m: attribute in m.attribute_modifiers())
         return sum(m.attribute_modifiers()[attribute] for m in mods)
 
-    def all_subroutines(self) -> Sequence[Subroutine]:
-        mods = self.mods(lambda m: bool(m.subroutines_granted()))
+    def all_subroutines(self, active_only: bool = True) -> Sequence[Subroutine]:
+        """All subroutines granted by all mods
+
+        Args:
+            active_only: Whether to only consider active mods (not in storage
+                slot).
+
+        Returns:
+            A sorted list of all subroutines.
+
+        """
+        mods_with_subroutines = self.mods(
+            lambda m: bool(m.subroutines_granted()),
+            active_only=active_only)
         subroutines: List[Subroutine] = []
-        for mod in mods:
+        for mod in mods_with_subroutines:
             subroutines.extend(mod.subroutines_granted())
         return sorted(subroutines)
 

@@ -1,5 +1,6 @@
 """Simple decision scene examples."""
-from typing import Sequence
+from enum import Enum
+from typing import Dict, cast
 
 from data.constants import BackgroundImages
 from models.characters.effects import IncrementAttribute, RestartGame
@@ -8,7 +9,7 @@ from models.characters.states import Attributes, Skill
 from models.scenes import combat_scene
 from models.scenes.decision_scene import (DecisionOption, DecisionScene,
                                           from_transition, transition_to)
-from models.scenes.scenes_base import Effect, Resolution, Scene
+from models.scenes.scenes_base import BasicResolution, Resolution
 from models.scenes.skill_checks import Difficulty, skill_check
 
 
@@ -86,21 +87,18 @@ def game_over_scene() -> DecisionScene:
 
 # Resolutions
 
-class EndGame(Resolution):
-
-    def next_scene(self) -> Scene:
-        return game_over_scene()
-
-    @property
-    def effects(self) -> Sequence[Effect]:
-        return ()
-
-
-class CombatResolution(Resolution):
+class ResolutionTypes(Enum):
+    GAME_OVER = 'game over'
+    RESTART = 'restart'
 
     @property
-    def effects(self) -> Sequence[Effect]:
-        return []
+    def resolution(self) -> Resolution:
+        # mypy does not recognize NamedTuples subclasses with multiple base
+        # classes
+        return cast(Resolution, _res_type_to_res[self])
 
-    def next_scene(self) -> Scene:
-        return start_scene()
+
+_res_type_to_res: Dict[ResolutionTypes, BasicResolution] = {
+    ResolutionTypes.GAME_OVER: BasicResolution(game_over_scene),
+    ResolutionTypes.RESTART: BasicResolution(start_scene)
+}

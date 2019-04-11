@@ -5,6 +5,7 @@ from random import choice
 from typing import Callable, Sequence, Set
 
 from models.characters.character_base import Character
+from models.characters.subroutine_examples import DoNothing
 from models.combat.ai_base import AI
 from models.combat.moves_base import Move
 
@@ -24,12 +25,14 @@ class _AIImpl(AI):
             select_move_fun: Function that selected the next move in a combat.
         """
         self._user: Character = None
-        self.moves: Sequence[Move] = []
+        self._moves: Sequence[Move] = []
         self._targets: Sequence[Character] = None
         self._select_move_fun = select_move_fun
 
     def select_move(self) -> Move:
-        return self._select_move_fun(self.moves)
+        if self._moves:
+            return self._select_move_fun(self._moves)
+        return Move(DoNothing(0), self._user, self._user)
 
     def set_user(self, user: Character) -> None:
         self._user = user
@@ -38,8 +41,8 @@ class _AIImpl(AI):
         assert self._user is not None, 'Must set user first.'
         self._targets = targets
 
-        self.moves = [Move(a, self._user, t) for a, t in
-                      product(self._user.inventory.all_subroutines(), targets)]
+        self._moves = [Move(a, self._user, t) for a, t in
+                       product(self._user.inventory.all_subroutines(), targets)]
 
 
 class AIType(Enum):

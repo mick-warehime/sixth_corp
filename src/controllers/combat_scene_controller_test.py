@@ -8,14 +8,12 @@ from models.characters.character_examples import CharacterData
 from models.characters.character_impl import build_character
 from models.characters.chassis_examples import ChassisData
 from models.characters.states import Attributes
-from models.characters.subroutine_examples import DoNothing
 from models.scenes.combat_scene import CombatScene
 
 
 def _create_enemy(health: int = 10) -> Character:
     char_data = CharacterData(
-        ChassisData(attribute_modifiers={Attributes.MAX_HEALTH: health},
-                    subroutines_granted=(DoNothing(2),)))
+        ChassisData(attribute_modifiers={Attributes.MAX_HEALTH: health}))
     return build_character(char_data)
 
 
