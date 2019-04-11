@@ -1,9 +1,10 @@
 import abc
 import logging
 from enum import Enum
-from typing import NamedTuple, Tuple, Union
+from typing import NamedTuple, Optional, Tuple, Union
 from weakref import WeakSet
 
+from models.characters.character_base import Character
 from models.combat.moves_base import Move
 from models.scenes.scenes_base import Scene
 
@@ -72,8 +73,26 @@ class ControllerActivatedEvent(NamedTuple):
         return '{}'.format(self.status)
 
 
+class SelectCharacterEvent(NamedTuple):
+    character: Optional[Character]
+
+
+class SelectPlayerMoveEvent(NamedTuple):
+    move: Move
+
+    def __str__(self) -> str:
+        return 'SelectPlayerMove({})'.format(self.move)
+
+
+class DecisionEvent(NamedTuple):
+    choice: str
+    # We included a scene reference in case two DecisionScenes are listening.
+    scene: Scene
+
+
 EventType = Union[EventTypes, InputEvent, NewSceneEvent, MoveExecutedEvent,
-                  ControllerActivatedEvent]
+                  ControllerActivatedEvent, SelectCharacterEvent,
+                  SelectPlayerMoveEvent, DecisionEvent]
 
 
 class EventManager(object):

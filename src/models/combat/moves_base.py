@@ -17,3 +17,8 @@ class Move(NamedTuple):
 
     def is_usable(self) -> bool:
         return self.subroutine.can_use(self.user, self.target)
+
+    def __str__(self) -> str:
+        return 'Move({} {} -> {})'.format(self.user,
+                                          self.subroutine.description(),
+                                          self.target)

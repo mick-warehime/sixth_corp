@@ -1,7 +1,9 @@
 from functools import reduce
-from typing import Sequence, Tuple
+from typing import List, Optional, Tuple
 
 from data.constants import SCREEN_SIZE, BackgroundImages
+from events.events_base import (EventListener, EventType, SelectCharacterEvent,
+                                SelectPlayerMoveEvent)
 from models.characters.character_base import Character
 from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character
@@ -14,26 +16,37 @@ from models.scenes.scenes_base import Resolution, Scene
 from views.layouts import Layout
 
 
-class CombatScene(Scene):
+class CombatScene(EventListener, Scene):
 
     def __init__(self, enemy: Character = None,
                  background_image: str = None) -> None:
-        super().__init__()
-        self._player = get_player()
         if enemy is None:
             enemy = build_character(CharacterTypes.DRONE.data)
         self._enemy: Character = enemy
-        self.combat_manager = CombatManager([self._player], [self._enemy])
+        super().__init__()
+        self._player = get_player()
 
-        self.selected_char: Character = None
-        self.current_moves: Sequence[Move] = None
-        self._set_targets()
+        self._combat_manager = CombatManager([self._player], [self._enemy])
+
+        self._selected_char: Character = None
+
+        self._enemy.ai.set_targets([self._player])
         self._layout = self._build_layout()
 
         if background_image is None:
             self._background_image = BackgroundImages.CITY.path
         else:
             self._background_image = background_image
+
+    def notify(self, event: EventType) -> None:
+        if isinstance(event, SelectCharacterEvent):
+            self._selected_char = event.character
+        if isinstance(event, SelectPlayerMoveEvent):
+            self._select_player_move(event.move)
+
+    @property
+    def selected_char(self) -> Optional[Character]:
+        return self._selected_char
 
     @property
     def layout(self) -> Layout:
@@ -44,7 +57,16 @@ class CombatScene(Scene):
         return self._background_image
 
     def characters(self) -> Tuple[Character, ...]:
+        """All characters in the scene.
+
+        The player is always returned first.
+        """
         return self._player, self._enemy
+
+    def available_moves(self) -> List[Move]:
+        if self._selected_char is None:
+            return []
+        return valid_moves(self._player, [self._selected_char])
 
     def is_resolved(self) -> bool:
         return IsDead().check(self._enemy) or IsDead().check(self._player)
@@ -59,20 +81,9 @@ class CombatScene(Scene):
     def __str__(self) -> str:
         return 'CombatScene(enemy = {})'.format(str(self._enemy))
 
-    def player_moves(self, target: Character) -> Sequence[Move]:
-        moves: Sequence[Move] = []
-        if target is not None:
-            moves = valid_moves(self._player, (target,))
-        self.current_moves = moves
-        self.selected_char = target
-        return moves
-
-    def select_player_move(self, move: Move) -> None:
+    def _select_player_move(self, move: Move) -> None:
         enemy_move = self._enemy.ai.select_move()
-        self.combat_manager.take_turn([move], [enemy_move])
-
-    def _set_targets(self) -> None:
-        self._enemy.ai.set_targets([self._player])
+        self._combat_manager.take_turn([move], [enemy_move])
 
     def _build_layout(self) -> Layout:
         characters = self.characters()

@@ -7,6 +7,5 @@ class SettingsController(Controller):
     def __init__(self) -> None:
         super(SettingsController, self).__init__()
 
-    def notify(self, event: EventType) -> None:
-        if not self._active:
-            return
+    def _notify(self, event: EventType) -> None:
+        pass
