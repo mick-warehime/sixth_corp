@@ -2,7 +2,7 @@ import logging
 
 from controllers.controller import Controller
 from events.event_utils import post_scene_change
-from events.events_base import EventType, EventTypes, InputEvent, EventManager, \
+from events.events_base import EventType, InputEvent, EventManager, \
     DecisionEvent
 from models.characters.conditions import IsDead
 from models.characters.player import get_player
@@ -16,9 +16,7 @@ class DecisionSceneController(Controller):
         super().__init__()
         self._scene = scene
 
-    def notify(self, event: EventType) -> None:
-        if not self._active:
-            return
+    def _notify(self, event: EventType) -> None:
 
         if isinstance(event, InputEvent):
             # Player chooses a choice
@@ -32,6 +30,8 @@ class DecisionSceneController(Controller):
                 logging.debug('Applying effect of type {}'.format(
                     effect.__class__.__name__))
                 effect.execute()
+
+            self.deactivate()
 
             if IsDead().check(get_player()):
                 post_scene_change(game_over_scene())

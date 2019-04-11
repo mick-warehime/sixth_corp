@@ -18,9 +18,8 @@ class CombatSceneController(Controller):
         super(CombatSceneController, self).__init__()
         self.scene = scene
 
-    def notify(self, event: EventType) -> None:
-        if not self._active:
-            return
+    def _notify(self, event: EventType) -> None:
+
         if isinstance(event, InputEvent):
             self._handle_input(event)
             self._check_for_resolution()
@@ -71,4 +70,5 @@ class CombatSceneController(Controller):
             for effect in resolution.effects:
                 effect.execute()
             logging.debug('Combat scene resolved.')
+            self.deactivate()
             post_scene_change(resolution.next_scene())

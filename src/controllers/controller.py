@@ -1,3 +1,5 @@
+import abc
+
 from events.events_base import (ControllerActivatedEvent, EventListener,
                                 EventManager, EventType)
 
@@ -18,5 +20,14 @@ class Controller(EventListener):
         self._active = False
         EventManager.post(ControllerActivatedEvent(status))
 
+    @abc.abstractmethod
+    def _notify(self, event: EventType) -> None:
+        """Subclass-specific notify method.
+
+        This extra layer ensures that all Controllers are notified only if they
+        are active.
+        """
+
     def notify(self, event: EventType) -> None:
-        raise NotImplementedError
+        if self._active:
+            self._notify(event)
