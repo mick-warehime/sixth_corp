@@ -77,8 +77,16 @@ class SelectCharacterEvent(NamedTuple):
     character: Optional[Character]
 
 
+class SelectPlayerMoveEvent(NamedTuple):
+    move: Move
+
+    def __str__(self):
+        return 'SelectPlayerMove({})'.format(self.move)
+
+
 EventType = Union[EventTypes, InputEvent, NewSceneEvent, MoveExecutedEvent,
-                  ControllerActivatedEvent, SelectCharacterEvent]
+                  ControllerActivatedEvent, SelectCharacterEvent,
+                  SelectPlayerMoveEvent]
 
 
 class EventManager(object):

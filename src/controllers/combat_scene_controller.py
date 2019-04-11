@@ -4,7 +4,8 @@ from controllers.controller import Controller
 from events.event_utils import post_scene_change
 from events.events_base import (ControllerActivatedEvent, EventType,
                                 EventTypes, InputEvent, MoveExecutedEvent,
-                                EventManager, SelectCharacterEvent)
+                                EventManager, SelectCharacterEvent,
+                                SelectPlayerMoveEvent)
 from models.scenes.combat_scene import CombatScene
 
 COMBAT_KEYBOARD_INPUTS = [str(i) for i in range(9)]
@@ -37,10 +38,10 @@ class CombatSceneController(Controller):
         if input_event.key in COMBAT_KEYBOARD_INPUTS:
             # Player move selection
             input_key = int(input_event.key)
-            moves = self.scene.player_moves(self.scene.selected_char)
+            moves = self.scene.available_moves()
             if len(moves) >= input_key > 0:
                 selected_move = moves[input_key - 1]
-                self.scene.select_player_move(selected_move)
+                EventManager.post(SelectPlayerMoveEvent(selected_move))
 
     def _handle_mouse_click(self, input_event: InputEvent) -> None:
         x = input_event.mouse[0]
@@ -71,7 +72,6 @@ class CombatSceneController(Controller):
             self._update_scene()
 
     def _update_scene(self) -> None:
-        self.scene.player_moves(self.scene.selected_char)
         if self.scene.is_resolved():
             resolution = self.scene.get_resolution()
             for effect in resolution.effects:

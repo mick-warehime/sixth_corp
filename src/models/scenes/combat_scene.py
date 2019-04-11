@@ -1,8 +1,9 @@
 from functools import reduce
-from typing import Sequence, Tuple, Optional, List
+from typing import Tuple, Optional, List
 
 from data.constants import SCREEN_SIZE, BackgroundImages
-from events.events_base import EventListener, EventType, SelectCharacterEvent
+from events.events_base import EventListener, EventType, SelectCharacterEvent, \
+    SelectPlayerMoveEvent
 from models.characters.character_base import Character
 from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character
@@ -28,7 +29,8 @@ class CombatScene(EventListener, Scene):
         self._combat_manager = CombatManager([self._player], [self._enemy])
 
         self._selected_char: Character = None
-        self._set_targets()
+
+        self._enemy.ai.set_targets([self._player])
         self._layout = self._build_layout()
 
         if background_image is None:
@@ -39,6 +41,8 @@ class CombatScene(EventListener, Scene):
     def notify(self, event: EventType) -> None:
         if isinstance(event, SelectCharacterEvent):
             self._selected_char = event.character
+        if isinstance(event, SelectPlayerMoveEvent):
+            self._select_player_move(event.move)
 
     @property
     def selected_char(self) -> Optional[Character]:
@@ -53,7 +57,16 @@ class CombatScene(EventListener, Scene):
         return self._background_image
 
     def characters(self) -> Tuple[Character, ...]:
+        """All characters in the scene.
+
+        The player is always returned first.
+        """
         return self._player, self._enemy
+
+    def available_moves(self) -> List[Move]:
+        if self._selected_char is None:
+            return []
+        return valid_moves(self._player, [self._selected_char])
 
     def is_resolved(self) -> bool:
         return IsDead().check(self._enemy) or IsDead().check(self._player)
@@ -68,24 +81,9 @@ class CombatScene(EventListener, Scene):
     def __str__(self) -> str:
         return 'CombatScene(enemy = {})'.format(str(self._enemy))
 
-    def available_moves(self) -> List[Move]:
-        if self._selected_char is None:
-            return []
-        return valid_moves(self._player, [self._selected_char])
-
-    def player_moves(self, target: Character) -> Sequence[Move]:
-        moves: Sequence[Move] = []
-        if target is not None:
-            moves = valid_moves(self._player, (target,))
-        self._selected_char = target
-        return moves
-
-    def select_player_move(self, move: Move) -> None:
+    def _select_player_move(self, move: Move) -> None:
         enemy_move = self._enemy.ai.select_move()
         self._combat_manager.take_turn([move], [enemy_move])
-
-    def _set_targets(self) -> None:
-        self._enemy.ai.set_targets([self._player])
 
     def _build_layout(self) -> Layout:
         characters = self.characters()
