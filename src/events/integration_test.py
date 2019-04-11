@@ -1,21 +1,17 @@
 from os.path import dirname, abspath
 import os
-from typing import List
 
 from controllers.combat_scene_controller import CombatSceneController
 from controllers.controller import Controller
 from controllers.decision_scene_controller import DecisionSceneController
 from controllers.game import initialize_pygame, Game
-from controllers.inputs.keybindings import Keybindings
-from controllers.inputs.keyboard import Keyboard
 from events import event_utils
 from events.events_base import EventManager, EventTypes
 from models.scenes.combat_scene import CombatScene
 from models.scenes.decision_scene import DecisionScene, DecisionOption
-
-# Ensure that working directory is sixth_corp
 from views.view_manager import ViewManager
 
+# Ensure that working directory is sixth_corp
 os.chdir(dirname(dirname(dirname(abspath(__file__)))))
 
 initialize_pygame(no_UI=True)
@@ -59,10 +55,6 @@ def test_making_choices_removes_listener():
     ctl = _get_active_controller()
     assert isinstance(ctl, CombatSceneController)
     del ctl
-
-
-def _keys_for_event(event: EventTypes, keyboard: Keyboard) -> List[str]:
-    return [k for k, v in keyboard.bindings.bindings.items() if v == event]
 
 
 def test_press_debug_in_decision_scene_has_no_effect():
