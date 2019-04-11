@@ -23,10 +23,11 @@ class CombatSceneController(Controller):
             return
         if isinstance(event, InputEvent):
             self._handle_input(event)
+            self._check_for_resolution()
         elif isinstance(event, MoveExecutedEvent):
             if event.is_attacker_move:
                 EventManager.post(SelectCharacterEvent(None))
-        self._check_for_resolution()
+            self._check_for_resolution()
 
     def _handle_input(self, input_event: InputEvent) -> None:
         if input_event.event_type == EventTypes.MOUSE_CLICK:
