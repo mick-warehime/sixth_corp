@@ -75,7 +75,7 @@ class DoNothing(Subroutine):
                             target.description())
 
     def description(self) -> str:
-        return 'DoNothing subroutine {}'.format(self.value)
+        return 'DoNothing {}'.format(self.value)
 
     def cpu_slots(self) -> int:
         return 1

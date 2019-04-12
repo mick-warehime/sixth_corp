@@ -9,6 +9,15 @@ class _TimedMove(NamedTuple):
     time_left: int
 
 
+# player clicks a character
+# player selects a move
+# move is added to the stack
+# turn completes, time moves
+# player can also advance time by 1 if they don't select anything and press
+# advance time.
+# before time is advanced, the enemies get to choose a move to add as well
+
+
 class CombatStack(object):
     """Manages the moves in a combat stack.
 

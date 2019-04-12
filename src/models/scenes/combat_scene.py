@@ -9,6 +9,8 @@ from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character
 from models.characters.conditions import IsDead
 from models.characters.player import get_player
+from models.characters.subroutine_examples import DoNothing
+from models.combat.combat_stack import CombatStack
 from simulation.combat_manager_base import CombatManager, valid_moves
 from models.combat.moves_base import Move
 from models.scenes import scene_examples
@@ -28,6 +30,17 @@ class CombatScene(EventListener, Scene):
         self._player = get_player()
 
         self._combat_manager = CombatManager([self._player], [self._enemy])
+        self._combat_stack = CombatStack()
+
+        move_0 = Move(DoNothing(0), self._player, self._enemy)
+        move_1 = Move(DoNothing(1), self._enemy, self._player)
+        move_2 = Move(DoNothing(2), self._player, self._player)
+        move_3 = Move(DoNothing(3), self._enemy, self._enemy)
+
+        self._combat_stack.add_move(move_0, 1)
+        self._combat_stack.add_move(move_1, 3)
+        self._combat_stack.add_move(move_2, 2)
+        self._combat_stack.add_move(move_3, 1)
 
         if win_resolution is None:
             win_resolution = scene_examples.ResolutionTypes.RESTART.resolution
@@ -48,6 +61,10 @@ class CombatScene(EventListener, Scene):
             self._selected_char = event.character
         if isinstance(event, SelectPlayerMoveEvent):
             self._select_player_move(event.move)
+
+    @property
+    def combat_stack(self) -> CombatStack:
+        return self._combat_stack
 
     @property
     def selected_char(self) -> Optional[Character]:
@@ -96,19 +113,29 @@ class CombatScene(EventListener, Scene):
         player = characters[0]
 
         player_layout = Layout([(None, 2), (player, 1), (None, 2)], 'vertical')
-        player_layout = Layout([(None, 1), (player_layout, 1), (None, 1)],
-                               'horizontal')
+        left_column = Layout([(None, 1), (player_layout, 1), (None, 1)],
+                             'horizontal')
 
         # stack layout
-        stack_layout = Layout()
+        moves_with_time = self.combat_stack.moves_times_remaining()[::-1]
+        num_moves = len(moves_with_time)
+        stack_weight = max(num_moves, 1)
+        elements = []
+        for move_and_time in moves_with_time:
+            elements.append((move_and_time, 1))
+        stack_layout = Layout(elements, 'vertical')
+        stack_layout = Layout([(None, 1), (stack_layout, 5), (None, 1)],
+                              'horizontal')
+        middle_column = Layout([(None, 6), (stack_layout, stack_weight),
+                                (None, 10)])
 
         # enemies layout
         assert len(characters) > 1
         elements = reduce(lambda a, b: a + b,
                           ([(None, 1), (e, 1)] for e in characters[1:]))
         elements.append((None, 1))
-        enemies_layout = Layout(elements, 'vertical')
+        right_column = Layout(elements, 'vertical')
 
         return Layout(
-            [(player_layout, 1), (stack_layout, 1), (enemies_layout, 1)],
+            [(left_column, 1), (middle_column, 1), (right_column, 1)],
             'horizontal', SCREEN_SIZE)

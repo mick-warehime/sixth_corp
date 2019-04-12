@@ -18,39 +18,38 @@ class CombatStackArtist(SceneArtist):
 
     def render(self, screen: Screen, scene: Scene) -> None:
         assert isinstance(scene, CombatScene)
-        player, enemy = scene.characters()
-        stack = [
-            Move(FireLaser(2), player, enemy),
-            Move(FireLaser(1), enemy, player), Move(Repair(1), player, player)]
-        for i, move in enumerate(stack):
-            rect = stack_rect(i)
 
-            # Stack Ability + timer
-            fake_time = len(stack) - i
-            screen.render_rect(rect, DARK_GRAY, 0)
-            screen.render_rect(rect, LIGHT_GRAY, _STACK_OUTLINE)
-            screen.render_text(
-                move.subroutine.description(),
-                _FONT_SIZE,
-                rect.x + _TEXT_SPACE,
-                rect.y + _TEXT_SPACE,
-                WHITE)
-            screen.render_text(
-                'T: {}'.format(fake_time),
-                _FONT_SIZE,
-                rect.x + rect.w - 5 * _TEXT_SPACE,
-                rect.y + _TEXT_SPACE, RED)
+        moves_with_time = scene.combat_stack.moves_times_remaining()
 
-            # USER + TARGET
-            screen.render_image(
-                move.user.image_path,
-                rect.x - _TARGET_SIZE,
-                rect.y,
-                _TARGET_SIZE,
-                _TARGET_SIZE)
-            screen.render_image(
-                move.target.image_path,
-                rect.x + rect.w,
-                rect.y,
-                _TARGET_SIZE,
-                _TARGET_SIZE)
+        for move, time in moves_with_time:
+            rects = scene.layout.get_rects((move, time))
+
+            for rect in rects:
+                # Stack Ability + timer
+                screen.render_rect(rect, DARK_GRAY, 0)
+                screen.render_rect(rect, LIGHT_GRAY, _STACK_OUTLINE)
+                screen.render_text(
+                    move.subroutine.description(),
+                    _FONT_SIZE,
+                    rect.x + _TEXT_SPACE,
+                    rect.y + _TEXT_SPACE,
+                    WHITE)
+                screen.render_text(
+                    'T: {}'.format(time),
+                    _FONT_SIZE,
+                    rect.x + rect.w - 7 * _TEXT_SPACE,
+                    rect.y + _TEXT_SPACE, RED)
+
+                # USER + TARGET
+                screen.render_image(
+                    move.user.image_path,
+                    rect.x - _TARGET_SIZE,
+                    rect.y,
+                    _TARGET_SIZE,
+                    _TARGET_SIZE)
+                screen.render_image(
+                    move.target.image_path,
+                    rect.x + rect.w,
+                    rect.y,
+                    _TARGET_SIZE,
+                    _TARGET_SIZE)
