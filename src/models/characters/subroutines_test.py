@@ -16,7 +16,7 @@ def character():
 
 def test_repair_subroutine(character: Character):
     repair = Repair(3)
-    assert not repair.can_use(character, character)
+    assert repair.can_use(character, character)
     character.status.increment_attribute(Attributes.HEALTH, -1)
     assert repair.can_use(character, character)
     repair.use(character, character)
