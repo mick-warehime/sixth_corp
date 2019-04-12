@@ -2,22 +2,22 @@
 import abc
 from typing import Any, Tuple
 
-from models.characters.states import Stateful
+from models.characters.character_base import Character
 
 
 class Subroutine(metaclass=abc.ABCMeta):
-    """An action that can be taken by a Stateful object on a Stateful object.
+    """An action that can be taken by a Character object on a Character object.
     """
 
     @abc.abstractmethod
-    def _use(self, user: Stateful, target: Stateful) -> None:
+    def _use(self, user: Character, target: Character) -> None:
         """Internal implementation of use method, must be overridden."""
 
     @abc.abstractmethod
-    def can_use(self, user: Stateful, target: Stateful) -> bool:
+    def can_use(self, user: Character, target: Character) -> bool:
         """Whether the subroutine can be used."""
 
-    def use(self, user: Stateful, target: Stateful) -> None:
+    def use(self, user: Character, target: Character) -> None:
         assert self.can_use(user, target)
         self._use(user, target)
 
@@ -30,7 +30,7 @@ class Subroutine(metaclass=abc.ABCMeta):
         """Number of time slots required before subroutine takes effect."""
 
     @abc.abstractmethod
-    def describe_use(self, user: Stateful, target: Stateful) -> str:
+    def describe_use(self, user: Character, target: Character) -> str:
         """Description of the subroutine as it was last used."""
 
     @abc.abstractmethod
@@ -58,3 +58,26 @@ class Subroutine(metaclass=abc.ABCMeta):
         if not isinstance(other, self.__class__):
             return self.__class__.__name__ < other.__class__.__name__
         return self._attrs < other._attrs  # type: ignore
+
+# class _SubroutineImpl(NamedTuple, Subroutine):  # type :ignore
+#     """Concrete generic implementation of Subroutine."""
+#     use_fun: Callable[[Character, Character], None]
+#     can_use_fun: Callable[[Character, Character], bool]
+#
+#     def _use(self, user: Character, target: Character) -> None:
+#         self.use_fun(user, target)
+#
+#     def can_use(self, user: Character, target: Character) -> bool:
+#         return self.can_use_fun(user,target)
+#
+#     def cpu_slots(self) -> int:
+#         pass
+#
+#     def time_slots(self) -> int:
+#         pass
+#
+#     def describe_use(self, user: Character, target: Character) -> str:
+#         pass
+#
+#     def description(self) -> str:
+#         pass

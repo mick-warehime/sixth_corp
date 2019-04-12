@@ -1,7 +1,6 @@
 """Basic class for player and enemies."""
 from abc import abstractmethod
 
-from models.characters.inventory import InventoryBase
 from models.characters.states import Stateful
 
 
@@ -20,5 +19,5 @@ class Character(Stateful):
 
     @property
     @abstractmethod
-    def inventory(self) -> InventoryBase:
+    def inventory(self) -> 'InventoryBase':
         """All characters have an inventory."""
