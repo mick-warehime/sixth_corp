@@ -13,7 +13,8 @@ class Move(NamedTuple):
         self.subroutine.use(self.user, self.target)
 
     def description(self) -> str:
-        return self.subroutine.describe_use(self.user, self.target)
+        return '{} {} --> {}'.format(self.user, self.subroutine.description(),
+                                     self.target)
 
     def is_usable(self) -> bool:
         return self.subroutine.can_use(self.user, self.target)
