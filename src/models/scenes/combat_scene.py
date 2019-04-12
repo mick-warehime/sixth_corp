@@ -136,17 +136,28 @@ class CombatScene(EventListener, Scene):
                              'horizontal')
 
         # stack layout
+        # unresolved moves
         moves_with_time = self.combat_stack.moves_times_remaining()[::-1]
         num_moves = len(moves_with_time)
-        stack_weight = max(num_moves, 1)
+        unresolved_wgt = max(num_moves, 1)
         elements = []
         for move_and_time in moves_with_time:
             elements.append((move_and_time, 1))
-        stack_layout = Layout(elements, 'vertical')
-        stack_layout = Layout([(None, 1), (stack_layout, 5), (None, 1)],
-                              'horizontal')
-        middle_column = Layout([(None, 6), (stack_layout, stack_weight),
-                                (None, 10)])
+        unresolved = Layout(elements, 'vertical')
+        unresolved = Layout([(None, 1), (unresolved, 5), (None, 1)],
+                            'horizontal')
+
+        # resolved moves
+        resolved_moves = self.combat_stack.extract_resolved_moves()
+        resolved_wgt = len(resolved_moves)
+        elements = [(mv, 1) for mv in resolved_moves]
+
+        resolved = Layout(elements, 'vertical')
+        resolved = Layout([(None, 1), (resolved, 5), (None, 1)], 'horizontal')
+
+        middle_column = Layout([(None, 6), (unresolved, unresolved_wgt),
+                                (None, 1), (resolved, resolved_wgt),
+                                (None, 6)])
 
         # enemies layout
         assert len(characters) > 1

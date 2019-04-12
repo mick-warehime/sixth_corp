@@ -51,3 +51,31 @@ class CombatStackArtist(SceneArtist):
                     rect.y,
                     _TARGET_SIZE,
                     _TARGET_SIZE)
+
+        for move in scene.combat_stack.extract_resolved_moves():
+            rects = scene.layout.get_rects(move)
+
+            for rect in rects:
+                # Stack Ability
+                screen.render_rect(rect, DARK_GRAY, 0)
+                screen.render_rect(rect, LIGHT_GRAY, _STACK_OUTLINE)
+                screen.render_text(
+                    move.subroutine.description(),
+                    _FONT_SIZE,
+                    rect.x + _TEXT_SPACE,
+                    rect.y + _TEXT_SPACE,
+                    WHITE)
+
+                # USER + TARGET
+                screen.render_image(
+                    move.user.image_path,
+                    rect.x - _TARGET_SIZE,
+                    rect.y,
+                    _TARGET_SIZE,
+                    _TARGET_SIZE)
+                screen.render_image(
+                    move.target.image_path,
+                    rect.x + rect.w,
+                    rect.y,
+                    _TARGET_SIZE,
+                    _TARGET_SIZE)
