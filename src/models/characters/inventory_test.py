@@ -87,8 +87,10 @@ def test_inventory_all_subroutines():
 
     assert not inventory.all_subroutines()
 
-    inventory.attempt_store(GenericMod(subroutines_granted=FireLaser(1)))
-    assert (FireLaser(1),) == tuple(inventory.all_subroutines())
+    fire_laser = FireLaser(1)
+    inventory.attempt_store(GenericMod(subroutines_granted=fire_laser))
+    assert (fire_laser,) == tuple(inventory.all_subroutines())
 
-    inventory.attempt_store(GenericMod(subroutines_granted=Repair(1)))
-    assert tuple(inventory.all_subroutines()) == (FireLaser(1), Repair(1))
+    repair = Repair(1)
+    inventory.attempt_store(GenericMod(subroutines_granted=repair))
+    assert tuple(inventory.all_subroutines()) == (fire_laser, repair)

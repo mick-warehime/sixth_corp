@@ -49,35 +49,6 @@ class FireLaser(Subroutine):
         return max(1, self._damage // 2)
 
 
-class DoNothing(Subroutine):
-
-    def __init__(self, harmless_value: int) -> None:
-        self.value = harmless_value
-
-    def _use(self, user: Character, target: Character) -> None:
-        pass
-
-    def can_use(self, user: Character, target: Character) -> bool:
-        return True
-
-    def description(self) -> str:
-        return 'DoNothing {}'.format(self.value)
-
-    def cpu_slots(self) -> int:
-        return 1
-
-    def time_slots(self) -> int:
-        return 2
-
-    def __eq__(self, other: Any) -> bool:
-        if not isinstance(other, DoNothing):
-            return False
-        return self.value == other.value
-
-    def __hash__(self) -> int:
-        return hash(('do_nothing', self.value))
-
-
 class Unusable(Subroutine):
 
     def __init__(self, useless_value: int) -> None:

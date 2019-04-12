@@ -76,7 +76,7 @@ def build_subroutine(
         can_use: Union[bool, Callable[[Character, Character], bool]] = True,
         num_cpu: Union[int, Callable[[], int]] = 1,
         time_to_resolve: Union[int, Callable[[], int]] = 1,
-        basic_description: Union[str, Callable[[], str]] = 'unnamed subroutine',
+        description: Union[str, Callable[[], str]] = 'unnamed subroutine',
 ) -> Subroutine:
     """Factory function for Subroutines.
 
@@ -92,7 +92,7 @@ def build_subroutine(
         time_to_resolve: Rounds required to resolve the subroutine. This may be
             a non-negative integer or a no-argument function that returns an
             integer.
-        basic_description: A short string description of the subroutine. This
+        description: A short string description of the subroutine. This
             may be a string or a no-argument function that returns a string.
     """
 
@@ -111,8 +111,8 @@ def build_subroutine(
             raise ValueError('non-negative num_cpu only.')
         time_to_resolve = partial(_constant, value=time_to_resolve)
 
-    if isinstance(basic_description, str):
-        basic_description = partial(_constant, value=basic_description)
+    if isinstance(description, str):
+        description = partial(_constant, value=description)
 
     return _SubroutineImpl(use_fun, can_use, num_cpu, time_to_resolve,
-                           basic_description)
+                           description)
