@@ -1,15 +1,23 @@
 """Basic interfaces for scenes, effects, and resolutions."""
-from typing import Callable, Sequence
+import abc
+from typing import Callable, NamedTuple, Sequence, Tuple
 
 
-class Scene(object):
+class Scene(metaclass=abc.ABCMeta):
     """Basic representation of a game scene."""
 
+    @abc.abstractmethod
     def is_resolved(self) -> bool:
-        raise NotImplementedError
+        """Whether the scene is resolved."""
 
+    @abc.abstractmethod
     def get_resolution(self) -> 'Resolution':
-        raise NotImplementedError
+        """The resolution to the scene (if is_resolved is True)."""
+
+    @property
+    @abc.abstractmethod
+    def background_image(self) -> str:
+        """The path to the background image."""
 
 
 class Effect(object):
@@ -29,6 +37,18 @@ class Resolution(object):
     def effects(self) -> Sequence[Effect]:
         """These are implemented when the resolution occurs."""
         raise NotImplementedError
+
+
+class BasicResolution(NamedTuple, Resolution):  # type: ignore
+    scene_fun: Callable[[], Scene]
+    effect_seq: Tuple[Effect, ...] = ()
+
+    def next_scene(self) -> Scene:
+        return self.scene_fun()
+
+    @property
+    def effects(self) -> Sequence[Effect]:
+        return self.effect_seq
 
 
 SceneConstructor = Callable[[], Scene]

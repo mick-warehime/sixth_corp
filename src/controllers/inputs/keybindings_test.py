@@ -4,15 +4,15 @@ from typing import Dict
 from unittest import TestCase
 
 from controllers.inputs.keybindings import Keybindings
-from events.events_base import Event
+from events.events_base import EventTypes
 
 
 class KeybindingsTest(TestCase):
 
-    def default_binding(self) -> Dict[str, Event]:
-        return {'y': Event.SETTINGS}
+    def default_binding(self) -> Dict[str, EventTypes]:
+        return {'y': EventTypes.SETTINGS}
 
-    def load_bindings(self, bindings: Dict[str, Event]) -> None:
+    def load_bindings(self, bindings: Dict[str, EventTypes]) -> None:
         self.preference_file = tempfile.NamedTemporaryFile(mode='w')
         self.keybindings = Keybindings()
         self.keybindings.preference_file = self.preference_file.name
@@ -32,7 +32,7 @@ class KeybindingsTest(TestCase):
 
         self.assertEqual(
             self.keybindings.get_binding('y'),
-            Event.SETTINGS)
+            EventTypes.SETTINGS)
 
     def test_save_settings(self) -> None:
         self.load_bindings(self.default_binding())
@@ -45,20 +45,20 @@ class KeybindingsTest(TestCase):
         self.keybindings = Keybindings()
         self.keybindings.preference_file = new_prefs_file.name
         self.keybindings.load()
-        self.assertEqual(self.keybindings.get_binding('y'), Event.SETTINGS)
+        self.assertEqual(self.keybindings.get_binding('y'), EventTypes.SETTINGS)
 
     def test_update_settings(self) -> None:
         self.load_bindings(self.default_binding())
-        self.keybindings.update_binding('y', Event.NONE)
+        self.keybindings.update_binding('y', EventTypes.NONE)
 
-        self.assertEqual(self.keybindings.get_binding('y'), Event.NONE)
+        self.assertEqual(self.keybindings.get_binding('y'), EventTypes.NONE)
 
     def test_update_settings_are_saved(self) -> None:
         self.load_bindings(self.default_binding())
-        self.keybindings.update_binding('y', Event.NONE)
+        self.keybindings.update_binding('y', EventTypes.NONE)
 
         # ensure key change persists through saving
         self.keybindings = Keybindings()
         self.keybindings.preference_file = self.preference_file.name
         self.keybindings.load()
-        self.assertEqual(self.keybindings.get_binding('y'), Event.NONE)
+        self.assertEqual(self.keybindings.get_binding('y'), EventTypes.NONE)

@@ -4,6 +4,7 @@ import sys
 
 from controllers.game import Game, initialize_pygame
 from data.constants import LOG_LEVEL, LOGGING_FILE, VERSION
+from views.view_manager import ViewManager
 
 
 def clear_log(log_file: str) -> None:
@@ -44,6 +45,8 @@ if __name__ == '__main__':
     logging.info('Start Application')
 
     initialize_pygame()
+    view_manager = ViewManager()  # This instantiates the singleton class
     g = Game()
+
     g.run()
     sys.exit()

@@ -2,14 +2,11 @@ from models.characters.mods_base import Mod
 from models.characters.player import get_player, reset_player
 from models.characters.states import AttributeType, Stateful
 from models.scenes.scenes_base import Effect
-from models.world.location_base import Location
-from models.world.world import reset_location, set_location
 
 
 class RestartGame(Effect):
 
     def execute(self) -> None:
-        reset_location()
         reset_player()
 
 
@@ -32,12 +29,3 @@ class AcquireMod(Effect):
 
     def execute(self) -> None:
         get_player().inventory.attempt_store(self._mod)
-
-
-class ChangeLocation(Effect):
-
-    def __init__(self, location: Location) -> None:
-        self._location = location
-
-    def execute(self) -> None:
-        set_location(self._location)
