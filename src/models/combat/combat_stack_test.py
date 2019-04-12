@@ -26,8 +26,8 @@ def test_moves_remaining_correct_order():
     stack.add_move(move_D, 3)
     stack.add_move(move_A, 1)
 
-    actual = tuple(tuple(l) for l in stack.moves_remaining())
-    expected = ((), (move_A,), (move_B,), (move_C, move_D))
+    actual = tuple(stack.moves_times_remaining())
+    expected = ((move_A, 1), (move_B, 2), (move_C, 3), (move_D, 3))
     assert actual == expected
     assert stack.extract_resolved_moves() == ()
 
@@ -41,22 +41,22 @@ def test_advance_time_correct_stack():
     stack.add_move(move_A, 1)
 
     stack.advance_time()
-    actual = tuple(tuple(l) for l in stack.moves_remaining())
-    expected = ((), (move_B,), (move_C, move_D))
+    actual = tuple(stack.moves_times_remaining())
+    expected = ((move_B, 1), (move_C, 2), (move_D, 2))
 
     assert actual == expected
     assert stack.extract_resolved_moves() == (move_A,)
 
     stack.advance_time()
-    actual = tuple(tuple(l) for l in stack.moves_remaining())
-    expected = ((), (move_C, move_D))
+    actual = tuple(stack.moves_times_remaining())
+    expected = ((move_C, 1), (move_D, 1))
 
     assert actual == expected
     assert stack.extract_resolved_moves() == (move_B,)
 
     stack.advance_time()
-    actual = tuple(tuple(l) for l in stack.moves_remaining())
-    expected = ((),)
+    actual = tuple(stack.moves_times_remaining())
+    expected = ()
 
     assert actual == expected
     assert stack.extract_resolved_moves() == (move_C, move_D)

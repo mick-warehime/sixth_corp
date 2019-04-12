@@ -30,21 +30,15 @@ class CombatStack(object):
         self._just_resolved: Tuple[Move] = ()
         self._extract_resolved_called = True
 
-    def moves_remaining(self) -> List[List[Move]]:
-        """Moves on the stack that have not yet resolved.
+    def moves_times_remaining(self) -> List[Tuple[Move, int]]:
+        """Moves on the stack (and time left) that have not yet resolved.
 
-        Returns a list of lists. moves_remaining()[k] is the list of moves (in
-        resolution order, first in first resolved) that have k time left before
-        resolving.
+        Returns a list of tuples of the form (move, time_left) in resolution
+        order (first in first resolved).
+
         """
-        out: List[List[Move]] = [[]]
 
-        for row in self._stack:
-            assert row.time_left > 0
-            while row.time_left > len(out) - 1:
-                out.append([])
-            out[row.time_left].append(row.move)
-        return out
+        return [(tm.move, tm.time_left) for tm in self._stack]
 
     def advance_time(self) -> None:
         """Advance time by one unit, updating the stack accordingly.
@@ -83,8 +77,18 @@ class CombatStack(object):
         behind it (nearer the end).
         """
 
-        # internally the stack is just a list of move, time pairs.
-        self._stack.append(_TimedMove(move, time_left))
+        index = -1
+        for index, _ in enumerate(tm for tm in self._stack
+                                  if tm.time_left <= time_left):
+            pass
+
+        new_stack = []
+        if index >= 0:
+            new_stack.extend(self._stack[:(index + 1)])
+        new_stack.append(_TimedMove(move, time_left))
+        new_stack.extend(self._stack[(index + 1):])
+
+        self._stack = new_stack
 
     def extract_resolved_moves(self) -> Tuple[Move]:
         """Moves that have resolved since the last time advance_time was called.
