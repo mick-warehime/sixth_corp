@@ -19,9 +19,7 @@ class CombatStackArtist(SceneArtist):
     def render(self, screen: Screen, scene: Scene) -> None:
         assert isinstance(scene, CombatScene)
 
-        moves_with_time = scene.combat_stack.moves_times_remaining()
-
-        for move, time in moves_with_time:
+        for move, time in scene.combat_stack.moves_times_remaining():
             rects = scene.layout.get_rects((move, time))
 
             for rect in rects:

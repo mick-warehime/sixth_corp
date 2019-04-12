@@ -9,7 +9,6 @@ from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character
 from models.characters.conditions import IsDead
 from models.characters.player import get_player
-from models.characters.subroutine_examples import DoNothing
 from models.combat.combat_stack import CombatStack
 from simulation.combat_manager_base import CombatManager, valid_moves
 from models.combat.moves_base import Move
@@ -32,16 +31,6 @@ class CombatScene(EventListener, Scene):
         self._combat_manager = CombatManager([self._player], [self._enemy])
         self._combat_stack = CombatStack()
 
-        move_0 = Move(DoNothing(0), self._player, self._enemy)
-        move_1 = Move(DoNothing(1), self._enemy, self._player)
-        move_2 = Move(DoNothing(2), self._player, self._player)
-        move_3 = Move(DoNothing(3), self._enemy, self._enemy)
-
-        self._combat_stack.add_move(move_0, 1)
-        self._combat_stack.add_move(move_1, 3)
-        self._combat_stack.add_move(move_2, 2)
-        self._combat_stack.add_move(move_3, 1)
-
         if win_resolution is None:
             win_resolution = scene_examples.ResolutionTypes.RESTART.resolution
         self._win_resolution = win_resolution
@@ -49,7 +38,8 @@ class CombatScene(EventListener, Scene):
         self._selected_char: Character = None
 
         self._enemy.ai.set_targets([self._player])
-        self._layout = self._build_layout()
+        self._layout: Layout = None
+        self._update_layout()
 
         if background_image is None:
             self._background_image = BackgroundImages.CITY.path
@@ -60,7 +50,7 @@ class CombatScene(EventListener, Scene):
         if isinstance(event, SelectCharacterEvent):
             self._selected_char = event.character
         if isinstance(event, SelectPlayerMoveEvent):
-            self._select_player_move(event.move)
+            self._update_stack(event.move)
 
     @property
     def combat_stack(self) -> CombatStack:
@@ -103,11 +93,28 @@ class CombatScene(EventListener, Scene):
     def __str__(self) -> str:
         return 'CombatScene(enemy = {})'.format(str(self._enemy))
 
-    def _select_player_move(self, move: Move) -> None:
-        enemy_move = self._enemy.ai.select_move()
-        self._combat_manager.take_turn([move], [enemy_move])
+    def _update_stack(self, player_move: Move) -> Tuple[Move]:
+        """Update the combat stack according to character actions.
 
-    def _build_layout(self) -> Layout:
+        Time is advanced prior to putting new moves on the stack
+
+        Args:
+            player_move:
+        """
+        self._combat_stack.advance_time()
+
+        enemy_move = self._enemy.ai.select_move()
+        self._combat_manager.take_turn([player_move], [enemy_move])
+
+        self._combat_stack.add_move(player_move,
+                                    player_move.subroutine.time_slots())
+        self._combat_stack.add_move(enemy_move,
+                                    enemy_move.subroutine.time_slots())
+        self._update_layout()
+
+        return self._combat_stack.extract_resolved_moves()
+
+    def _update_layout(self) -> None:
         characters = self.characters()
         # player side layout
         player = characters[0]
@@ -136,6 +143,6 @@ class CombatScene(EventListener, Scene):
         elements.append((None, 1))
         right_column = Layout(elements, 'vertical')
 
-        return Layout(
+        self._layout = Layout(
             [(left_column, 1), (middle_column, 1), (right_column, 1)],
             'horizontal', SCREEN_SIZE)
