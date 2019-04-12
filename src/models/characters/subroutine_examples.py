@@ -15,7 +15,7 @@ class Repair(Subroutine):
         target.status.increment_attribute(Attributes.HEALTH, self._amount)
 
     def can_use(self, user: Stateful, target: Stateful) -> bool:
-        return user == target and not FullHealth().check(target)
+        return user == target
 
     def describe_use(self, user: Stateful, target: Stateful) -> str:
         style = '{} repairs itself for {} damage.'
