@@ -3,7 +3,7 @@ from unittest import TestCase
 from models.characters.mods_base import GenericMod, Slots
 from models.characters.states import Attributes
 from models.characters.subroutine_examples import FireLaser, Repair
-from models.combat.combat_manager_base import CombatManager
+from simulation.combat_manager_base import CombatManager
 from models.combat.combat_test_utils import create_combat_group
 
 
