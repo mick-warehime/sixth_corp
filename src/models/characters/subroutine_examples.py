@@ -17,10 +17,6 @@ class Repair(Subroutine):
     def can_use(self, user: Character, target: Character) -> bool:
         return user == target
 
-    def describe_use(self, user: Character, target: Character) -> str:
-        style = '{} repairs itself for {} damage.'
-        return style.format(user.description(), self._amount)
-
     def description(self) -> str:
         return 'Repair {} damage.'.format(self._amount)
 
@@ -43,11 +39,6 @@ class FireLaser(Subroutine):
     def can_use(self, user: Character, target: Character) -> bool:
         return user is not target
 
-    def describe_use(self, user: Character, target: Character) -> str:
-        style = '{} fires a laser at {} for {} damage!'
-        return style.format(user.description(),
-                            target.description(), self._damage)
-
     def description(self) -> str:
         return 'Fire laser! ({} damage)'.format(self._damage)
 
@@ -68,11 +59,6 @@ class DoNothing(Subroutine):
 
     def can_use(self, user: Character, target: Character) -> bool:
         return True
-
-    def describe_use(self, user: Character, target: Character) -> str:
-        style = '{} from {} does nothing to {}'
-        return style.format(self.description(), user.description(),
-                            target.description())
 
     def description(self) -> str:
         return 'DoNothing {}'.format(self.value)
@@ -102,11 +88,6 @@ class Unusable(Subroutine):
 
     def can_use(self, user: Character, target: Character) -> bool:
         return False
-
-    def describe_use(self, user: Character, target: Character) -> str:
-        style = '{} cant use this useless subroutine against {}'
-        return style.format(user.description(),
-                            target.description())
 
     def description(self) -> str:
         return 'Unusable subroutine {}'.format(self.value)
