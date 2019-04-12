@@ -1,70 +1,46 @@
 """Character subroutines."""
-import abc
-from typing import Any, Tuple
+from functools import partial
+from typing import Any, NamedTuple, Callable, Union
 
 from models.characters.character_base import Character
 
 
-class Subroutine(metaclass=abc.ABCMeta):
+class Subroutine(object):
     """An action that can be taken by a Character object on a Character object.
     """
 
-    @abc.abstractmethod
     def _use(self, user: Character, target: Character) -> None:
         """Internal implementation of use method, must be overridden."""
+        raise NotImplementedError
 
-    @abc.abstractmethod
     def can_use(self, user: Character, target: Character) -> bool:
         """Whether the subroutine can be used."""
+        raise NotImplementedError
 
     def use(self, user: Character, target: Character) -> None:
         assert self.can_use(user, target)
         self._use(user, target)
 
-    @abc.abstractmethod
     def cpu_slots(self) -> int:
         """Number of CPU slots required for use."""
+        raise NotImplementedError
 
-    @abc.abstractmethod
     def time_slots(self) -> int:
         """Number of time slots required before subroutine takes effect."""
+        raise NotImplementedError
 
-    @abc.abstractmethod
     def description(self) -> str:
         """"Description of the subroutine."""
-
-    @property
-    def _attrs(self) -> Tuple:
-        """Pull out the fields of the concrete class, in alphabetical order.
-
-        This is used for checking (in)equalities below.
-        """
-        fields = sorted(set(dir(self)) - set(dir(Subroutine)))
-        return tuple(self.__getattribute__(f) for f in fields)
-
-    def __eq__(self, other: Any) -> bool:
-        if not isinstance(other, self.__class__):
-            return False
-
-        return self._attrs == other._attrs  # type: ignore
-
-    def __lt__(self, other: Any) -> bool:
-        if not isinstance(other, Subroutine):
-            return NotImplemented
-        if not isinstance(other, self.__class__):
-            return self.__class__.__name__ < other.__class__.__name__
-        return self._attrs < other._attrs  # type: ignore
+        raise NotImplementedError
 
 
-class _SubroutineImpl(Subroutine):
+class _SubroutineImpl(NamedTuple, Subroutine):
+    use_fun: Callable[[Character, Character], None]
+    can_use_fun: Callable[[Character, Character], bool]
+    cpu_slot_fun: Callable[[Character, Character], int]
+    time_slot_fun: Callable[[Character, Character], int]
+    description_fun: Callable[[Character, Character], str]
     """Concrete generic implementation of Subroutine."""
-
-    # def __init__(self):
-    #     use_fun: Callable[[Character, Character], None]
-    #     can_use_fun: Callable[[Character, Character], bool]
-    #     num_cpu_slots: int
-    #     time_to_resolve: int
-    #     basic_description: str
 
     def _use(self, user: Character, target: Character) -> None:
         self.use_fun(user, target)
@@ -73,32 +49,69 @@ class _SubroutineImpl(Subroutine):
         return self.can_use_fun(user, target)
 
     def cpu_slots(self) -> int:
-        return self.num_cpu_slots
+        return self.cpu_slot_fun()
 
     def time_slots(self) -> int:
-        return self.time_to_resolve
+        return self.time_slot_fun()
 
     def description(self) -> str:
-        return self.basic_description
-#
-#
-# def build_subroutine(use_fun: Callable[[Character, Character], None] = None,
-#                      can_use_fun: Callable[[Character, Character], bool] = None,
-#                      num_cpu_slots: int = 1,
-#                      time_to_resolve: int = 1,
-#                      basic_description: str = 'unnamed subroutine',
-#                      describe_fun: Callable[[Character, Character], str] = None,
-#                      ) -> Subroutine:
-#     """Factory method for Subroutines
-#
-#     Args:
-#         use_fun: Function to implement when subroutine is used. If not provided,
-#             then the subroutine does nothing.
-#         can_use_fun: Function to determine whether the subroutine can be used
-#             once it has resolved. If not provided, default is True.
-#         num_cpu_slots: Number of CPU slots required to load the subroutine onto
-#             the stack.
-#         time_to_resolve: Time required to resolve the subroutine.
-#         basic_description: A short string description of the subroutine.
-#         describe_fun:
-#     """
+        return self.description_fun()
+
+
+def _do_nothing(user: Character, target: Character) -> None:
+    pass
+
+
+def _can_use_constant(user: Character, target: Character, value: bool) -> bool:
+    return value
+
+
+def _constant(value: Any) -> Any:
+    return value
+
+
+def build_subroutine(
+        use_fun: Callable[[Character, Character], None] = None,
+        can_use: Union[bool, Callable[[Character, Character], bool]] = True,
+        num_cpu: Union[int, Callable[[], int]] = 1,
+        time_to_resolve: Union[int, Callable[[], int]] = 1,
+        basic_description: Union[str, Callable[[], str]] = 'unnamed subroutine',
+) -> Subroutine:
+    """Factory function for Subroutines.
+
+    Args:
+        use_fun: Function to implement when subroutine is used. If not provided,
+            then the subroutine does nothing.
+        can_use: Function that determines whether the subroutine can be used
+            once it has resolved. A boolean value (True/False) may also be
+            specified.
+        num_cpu: Number of CPU slots required to load the subroutine onto
+            the stack. This may be a non-negative integer or a no-argument
+            function that returns an integer.
+        time_to_resolve: Rounds required to resolve the subroutine. This may be
+            a non-negative integer or a no-argument function that returns an
+            integer.
+        basic_description: A short string description of the subroutine. This
+            may be a string or a no-argument function that returns a string.
+    """
+
+    use_fun = _do_nothing if use_fun is None else use_fun
+
+    if isinstance(can_use, bool):
+        can_use = partial(_can_use_constant, value=can_use)
+
+    if isinstance(num_cpu, int):
+        if num_cpu < 0:
+            raise ValueError('non-negative num_cpu only.')
+        num_cpu = partial(_constant, value=num_cpu)
+
+    if isinstance(time_to_resolve, int):
+        if time_to_resolve < 0:
+            raise ValueError('non-negative num_cpu only.')
+        time_to_resolve = partial(_constant, value=time_to_resolve)
+
+    if isinstance(basic_description, str):
+        basic_description = partial(_constant, value=basic_description)
+
+    return _SubroutineImpl(use_fun, can_use, num_cpu, time_to_resolve,
+                           basic_description)
