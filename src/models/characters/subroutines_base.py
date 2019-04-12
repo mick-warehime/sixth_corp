@@ -11,7 +11,7 @@ class Subroutine(object):
 
     def _use(self, user: Character, target: Character) -> None:
         """Internal implementation of use method, must be overridden."""
-        raise NotImplementedError
+        pass
 
     def can_use(self, user: Character, target: Character) -> bool:
         """Whether the subroutine can be used."""
@@ -34,7 +34,7 @@ class Subroutine(object):
         raise NotImplementedError
 
 
-class _SubroutineImpl(NamedTuple, Subroutine):
+class _SubroutineImpl(Subroutine, NamedTuple):
     use_fun: Callable[[Character, Character], None]
     can_use_fun: Callable[[Character, Character], bool]
     cpu_slot_fun: Callable[[Character, Character], int]
@@ -42,7 +42,8 @@ class _SubroutineImpl(NamedTuple, Subroutine):
     description_fun: Callable[[Character, Character], str]
     """Concrete generic implementation of Subroutine."""
 
-    def _use(self, user: Character, target: Character) -> None:
+    def use(self, user: Character, target: Character) -> None:
+        assert self.can_use(user, target)
         self.use_fun(user, target)
 
     def can_use(self, user: Character, target: Character) -> bool:
