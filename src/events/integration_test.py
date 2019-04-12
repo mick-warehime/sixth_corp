@@ -95,6 +95,8 @@ def test_combat_scene_to_decision_scene():
     scene = CombatScene(enemy, win_resolution=BasicResolution(dummy_scene))
     event_utils.post_scene_change(scene)
 
+    assert isinstance(_get_active_controller(), CombatSceneController)
+
     # give player ability to fire laser
     player = get_player()
     shoot_laser = FireLaser(1)
@@ -105,18 +107,19 @@ def test_combat_scene_to_decision_scene():
 
     assert laser_mod in player.inventory.all_active_mods()
 
-    # click on enemy
-    enemy_pos = scene.layout.get_rects(enemy)[0].center
-    event_utils.simulate_mouse_click(*enemy_pos)
+    for _ in range(2):
+        # we must do this twice because it takes a round for the first move to
+        # resolve.
+        # click on enemy
+        enemy_pos = scene.layout.get_rects(enemy)[0].center
+        event_utils.simulate_mouse_click(*enemy_pos)
 
-    assert enemy is scene.selected_char
+        assert enemy is scene.selected_char
 
-    assert isinstance(_get_active_controller(), CombatSceneController)
-
-    # select the fire laser ability
-    laser_ind = [ind for ind, move in enumerate(scene.available_moves())
-                 if move.subroutine is shoot_laser][0]
-    event_utils.simulate_key_press(str(laser_ind + 1))
+        # select the fire laser ability
+        laser_ind = [ind for ind, move in enumerate(scene.available_moves())
+                     if move.subroutine is shoot_laser][0]
+        event_utils.simulate_key_press(str(laser_ind + 1))
 
     # check that scene has ended
     assert IsDead().check(enemy)
