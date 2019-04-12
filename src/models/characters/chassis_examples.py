@@ -3,7 +3,7 @@ from typing import Dict, NamedTuple, Tuple
 
 from models.characters.mods_base import Slots
 from models.characters.states import Attributes, AttributeType, Skill, State
-from models.characters.subroutine_examples import (FireLaser, Repair, Unusable)
+from models.characters.subroutine_examples import (FireLaser, Repair)
 from models.characters.subroutines_base import Subroutine, build_subroutine
 
 
@@ -41,7 +41,7 @@ _HARMLESS = ChassisData(
 
 _USELESS = ChassisData(
     attribute_modifiers={Attributes.MAX_HEALTH: 1, Attributes.CPU_SLOTS: 1},
-    subroutines_granted=(Unusable(1), Unusable(2))
+    subroutines_granted=(_unusable,)
 )
 
 

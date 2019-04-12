@@ -5,7 +5,7 @@ from parameterized import parameterized
 from models.characters.character_examples import CharacterData
 from models.characters.character_impl import build_character
 from models.characters.chassis_examples import ChassisData
-from models.characters.subroutine_examples import Unusable
+from models.characters.subroutines_base import build_subroutine
 from models.combat.ai_impl import AIType, build_ai
 
 AI_TYPES = [[AIType.Random], [AIType.Shuffle]]
@@ -16,7 +16,8 @@ class AITest(TestCase):
 
     @parameterized.expand(AI_TYPES)
     def test_no_valid_moves_raises(self, ai_type):
-        data = CharacterData(ChassisData(subroutines_granted=(Unusable(1),)))
+        unusable = build_subroutine(can_use=False)
+        data = CharacterData(ChassisData(subroutines_granted=(unusable,)))
         user = build_character(data)
         ai = build_ai(ai_type)
         ai.set_user(user)
@@ -27,7 +28,8 @@ class AITest(TestCase):
             ai.select_move()
 
     def test_human_ai_raises_error(self):
-        data = CharacterData(ChassisData(subroutines_granted=(Unusable(1),)))
+        unusable = build_subroutine(can_use=False)
+        data = CharacterData(ChassisData(subroutines_granted=(unusable,)))
         user = build_character(data)
         ai = build_ai(AIType.Human)
         ai.set_user(user)

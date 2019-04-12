@@ -47,24 +47,3 @@ class FireLaser(Subroutine):
 
     def time_slots(self) -> int:
         return max(1, self._damage // 2)
-
-
-class Unusable(Subroutine):
-
-    def __init__(self, useless_value: int) -> None:
-        self.value = useless_value
-
-    def _use(self, user: Character, target: Character) -> None:
-        pass
-
-    def can_use(self, user: Character, target: Character) -> bool:
-        return False
-
-    def description(self) -> str:
-        return 'Unusable subroutine {}'.format(self.value)
-
-    def cpu_slots(self) -> int:
-        return 1
-
-    def time_slots(self) -> int:
-        return 2
