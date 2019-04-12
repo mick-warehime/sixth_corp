@@ -1,5 +1,6 @@
 from functools import reduce
-from typing import List, Optional, Tuple
+from itertools import product
+from typing import List, Optional, Tuple, Sequence
 
 from data.constants import SCREEN_SIZE, BackgroundImages
 from events.events_base import (EventListener, EventType, SelectCharacterEvent,
@@ -10,11 +11,18 @@ from models.characters.character_impl import build_character
 from models.characters.conditions import IsDead
 from models.characters.player import get_player
 from models.combat.combat_stack import CombatStack
-from simulation.combat_manager_base import CombatManager, valid_moves
 from models.combat.moves_base import Move
 from models.scenes import scene_examples
 from models.scenes.scenes_base import Resolution, Scene
 from views.layouts import Layout
+
+
+def _valid_moves(user: Character, targets: Sequence[Character]) -> List[Move]:
+    """All valid moves from a user to a sequence of targets"""
+    return [Move(sub, user, target)
+            for sub, target in
+            product(user.inventory.all_subroutines(), targets)
+            if sub.can_use(user, target)]
 
 
 class CombatScene(EventListener, Scene):
@@ -28,7 +36,6 @@ class CombatScene(EventListener, Scene):
         super().__init__()
         self._player = get_player()
 
-        self._combat_manager = CombatManager([self._player], [self._enemy])
         self._combat_stack = CombatStack()
 
         if win_resolution is None:
@@ -50,7 +57,9 @@ class CombatScene(EventListener, Scene):
         if isinstance(event, SelectCharacterEvent):
             self._selected_char = event.character
         if isinstance(event, SelectPlayerMoveEvent):
-            self._update_stack(event.move)
+            resolved_moves = self._update_stack(event.move)
+            for move in resolved_moves:
+                move.execute()
 
     @property
     def combat_stack(self) -> CombatStack:
@@ -78,7 +87,7 @@ class CombatScene(EventListener, Scene):
     def available_moves(self) -> List[Move]:
         if self._selected_char is None:
             return []
-        return valid_moves(self._player, [self._selected_char])
+        return _valid_moves(self._player, [self._selected_char])
 
     def is_resolved(self) -> bool:
         return IsDead().check(self._enemy) or IsDead().check(self._player)
@@ -99,12 +108,14 @@ class CombatScene(EventListener, Scene):
         Time is advanced prior to putting new moves on the stack
 
         Args:
-            player_move:
+            player_move: The player's chosen move.
+
+        Returns:
+            Tuple of moves that have just resolved, in resolution order.
         """
         self._combat_stack.advance_time()
 
         enemy_move = self._enemy.ai.select_move()
-        self._combat_manager.take_turn([player_move], [enemy_move])
 
         self._combat_stack.add_move(player_move,
                                     player_move.subroutine.time_slots())
@@ -112,6 +123,7 @@ class CombatScene(EventListener, Scene):
                                     enemy_move.subroutine.time_slots())
         self._update_layout()
 
+        self._selected_char = None
         return self._combat_stack.extract_resolved_moves()
 
     def _update_layout(self) -> None:
