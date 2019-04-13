@@ -1,7 +1,7 @@
 import logging
 import os
 import sys
-from os.path import dirname, abspath
+from os.path import abspath, dirname
 
 from controllers.game import Game, initialize_pygame
 from data.constants import LOG_LEVEL, LOGGING_FILE, VERSION
