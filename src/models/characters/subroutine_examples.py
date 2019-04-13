@@ -1,28 +1,30 @@
 from models.characters.character_base import Character
 from models.characters.states import Attributes
-from models.characters.subroutines_base import Subroutine
+from models.characters.subroutines_base import Subroutine, build_subroutine
 
 
-class Repair(Subroutine):
+def repair(amount: int) -> Subroutine:
+    """Self repair subroutine.
 
-    def __init__(self, amount: int) -> None:
-        assert amount > 0
-        self._amount = amount
+    Args:
+        amount: Amount to repair. Must be positive.
 
-    def _use(self, user: Character, target: Character) -> None:
-        target.status.increment_attribute(Attributes.HEALTH, self._amount)
+    """
+    assert amount > 0
 
-    def can_use(self, user: Character, target: Character) -> bool:
-        return user == target
+    def use_fun(user: Character, target: Character) -> None:
+        target.status.increment_attribute(Attributes.HEALTH, amount)
 
-    def description(self) -> str:
-        return 'Repair {} damage.'.format(self._amount)
+    def can_use_fun(user: Character, target: Character) -> bool:
+        return user is target
 
-    def cpu_slots(self) -> int:
-        return max(1, self._amount // 2)
+    cpu_slots = max(1, amount // 2)
+    time_slots = max(1, amount // 2)
 
-    def time_slots(self) -> int:
-        return max(1, self._amount // 2)
+    description = 'Repair {} damage.'.format(amount)
+
+    return build_subroutine(use_fun, can_use_fun, cpu_slots, time_slots,
+                            description)
 
 
 class FireLaser(Subroutine):
