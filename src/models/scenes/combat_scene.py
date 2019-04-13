@@ -1,6 +1,6 @@
 from functools import reduce
 from itertools import product
-from typing import List, Optional, Tuple, Sequence
+from typing import List, Optional, Sequence, Tuple
 
 from data.constants import SCREEN_SIZE, BackgroundImages
 from events.events_base import (EventListener, EventType, SelectCharacterEvent,

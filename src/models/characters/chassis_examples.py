@@ -3,7 +3,7 @@ from typing import Dict, NamedTuple, Tuple
 
 from models.characters.mods_base import Slots
 from models.characters.states import Attributes, AttributeType, Skill, State
-from models.characters.subroutine_examples import (FireLaser, Repair)
+from models.characters.subroutine_examples import FireLaser, Repair
 from models.characters.subroutines_base import Subroutine, build_subroutine
 
 

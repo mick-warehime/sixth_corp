@@ -1,5 +1,5 @@
 """Implementation of the combat stack."""
-from typing import NamedTuple, List, Tuple
+from typing import List, NamedTuple, Tuple
 
 from models.combat.moves_base import Move
 

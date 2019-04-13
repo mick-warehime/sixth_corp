@@ -1,7 +1,7 @@
 """Character subroutines."""
 import abc
 from functools import partial
-from typing import Any, NamedTuple, Callable, Union, cast
+from typing import Any, Callable, NamedTuple, Union, cast
 
 from models.characters.character_base import Character
 

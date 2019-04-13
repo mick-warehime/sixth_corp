@@ -1,14 +1,13 @@
 """Basic class for player and enemies."""
 
-from typing import TYPE_CHECKING
-
 from abc import abstractmethod
+from typing import TYPE_CHECKING
 
 from models.characters.states import Stateful
 
 if TYPE_CHECKING:
-    from models.combat.ai_base import AI
-    from models.characters.inventory import InventoryBase
+    from models.combat.ai_base import AI  # noqa: F401
+    from models.characters.inventory import InventoryBase  # noqa: F401
 
 
 class Character(Stateful):
