@@ -1,7 +1,14 @@
 """Basic class for player and enemies."""
+
+from typing import TYPE_CHECKING
+
 from abc import abstractmethod
 
 from models.characters.states import Stateful
+
+if TYPE_CHECKING:
+    from models.combat.ai_base import AI
+    from models.characters.inventory import InventoryBase
 
 
 class Character(Stateful):
@@ -9,7 +16,7 @@ class Character(Stateful):
 
     @property
     @abstractmethod
-    def ai(self) -> 'AI':  # type: ignore
+    def ai(self) -> 'AI':
         """AI used to determine in-game actions."""
 
     @property

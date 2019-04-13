@@ -26,25 +26,23 @@ class Subroutine(object):
     @abc.abstractmethod
     def cpu_slots(self) -> int:
         """Number of CPU slots required for use."""
-        raise NotImplementedError
 
     @abc.abstractmethod
     def time_slots(self) -> int:
         """Number of time slots required before subroutine takes effect."""
-        raise NotImplementedError
 
     @abc.abstractmethod
     def description(self) -> str:
         """"Description of the subroutine."""
-        raise NotImplementedError
 
 
-class _SubroutineImpl(NamedTuple, Subroutine):
+# mypy complains when we use two parent classes, one being NamedTuple.
+class _SubroutineImpl(NamedTuple, Subroutine):  # type: ignore
     use_fun: Callable[[Character, Character], None]
     can_use_fun: Callable[[Character, Character], bool]
-    cpu_slot_fun: Callable[[Character, Character], int]
-    time_slot_fun: Callable[[Character, Character], int]
-    description_fun: Callable[[Character, Character], str]
+    cpu_slot_fun: Callable[[], int]
+    time_slot_fun: Callable[[], int]
+    description_fun: Callable[[], str]
     """Concrete generic implementation of Subroutine."""
 
     def use(self, user: Character, target: Character) -> None:
@@ -76,17 +74,12 @@ def _constant(value: Any) -> Any:
     return value
 
 
-_UseFunType = Union[partial, Callable[[Character, Character], None]]
-_CanUseFunType = Union[bool, Callable[[Character, Character], bool], partial]
-_DescriptionType = Union[str, Callable[[], str], partial]
-
-
 def build_subroutine(
-        use_fun: _UseFunType = None,
-        can_use: _CanUseFunType = True,
+        use_fun: Union[Callable[[Character, Character], None]] = None,
+        can_use: Union[bool, Callable[[Character, Character], bool]] = True,
         num_cpu: Union[int, Callable[[], int], partial] = 1,
         time_to_resolve: Union[int, Callable[[], int], partial] = 1,
-        description: _DescriptionType = 'unnamed subroutine',
+        description: Union[str, Callable[[], str]] = 'unnamed subroutine',
 ) -> Subroutine:
     """Factory function for Subroutines.
 
@@ -124,5 +117,5 @@ def build_subroutine(
     if isinstance(description, str):
         description = partial(_constant, value=description)
 
-    return _SubroutineImpl(use_fun, can_use, num_cpu, time_to_resolve,
-                           description)
+    return cast(Subroutine, _SubroutineImpl(use_fun, can_use, num_cpu,
+                                            time_to_resolve, description))
