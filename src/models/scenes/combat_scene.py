@@ -148,7 +148,7 @@ class CombatScene(EventListener, Scene):
                             'horizontal')
 
         # resolved moves
-        resolved_moves = self.combat_stack.extract_resolved_moves()
+        resolved_moves = self.combat_stack.extract_resolved_moves()[::-1]
         resolved_wgt = len(resolved_moves)
         move_elements = [(mv, 1) for mv in resolved_moves]
 

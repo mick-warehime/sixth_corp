@@ -7,6 +7,8 @@ from models.characters.subroutines_base import build_subroutine
 from models.combat.ai_impl import AIType, build_ai
 
 # To ensure deterministic tests
+from models.combat.moves_base import Move
+
 random.seed(11)
 
 
@@ -62,6 +64,7 @@ def test_no_valid_moves_means_do_nothing():
     ai.set_user(user)
     ai.set_targets([target])
 
+    # If no valid move exists, a null move is passed.
     move = ai.select_move()
 
-    print(move)
+    assert isinstance(move, Move)
