@@ -9,8 +9,8 @@ from models.characters.subroutines_base import Subroutine
 
 
 def _subroutine_stats(subroutine: Subroutine) -> Tuple[int, int, str]:
-    return (
-    subroutine.cpu_slots(), subroutine.time_slots(), subroutine.description())
+    return (subroutine.cpu_slots(), subroutine.time_slots(),
+            subroutine.description())
 
 
 class InventoryBase(metaclass=abc.ABCMeta):

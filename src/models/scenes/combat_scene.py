@@ -102,7 +102,7 @@ class CombatScene(EventListener, Scene):
     def __str__(self) -> str:
         return 'CombatScene(enemy = {})'.format(str(self._enemy))
 
-    def _update_stack(self, player_move: Move) -> Tuple[Move]:
+    def _update_stack(self, player_move: Move) -> Tuple[Move, ...]:
         """Update the combat stack according to character actions.
 
         Time is advanced prior to putting new moves on the stack
@@ -140,19 +140,19 @@ class CombatScene(EventListener, Scene):
         moves_with_time = self.combat_stack.moves_times_remaining()[::-1]
         num_moves = len(moves_with_time)
         unresolved_wgt = max(num_moves, 1)
-        elements = []
+        move_time_elements = []
         for move_and_time in moves_with_time:
-            elements.append((move_and_time, 1))
-        unresolved = Layout(elements, 'vertical')
+            move_time_elements.append((move_and_time, 1))
+        unresolved = Layout(move_time_elements, 'vertical')
         unresolved = Layout([(None, 1), (unresolved, 5), (None, 1)],
                             'horizontal')
 
         # resolved moves
         resolved_moves = self.combat_stack.extract_resolved_moves()
         resolved_wgt = len(resolved_moves)
-        elements = [(mv, 1) for mv in resolved_moves]
+        move_elements = [(mv, 1) for mv in resolved_moves]
 
-        resolved = Layout(elements, 'vertical')
+        resolved = Layout(move_elements, 'vertical')
         resolved = Layout([(None, 1), (resolved, 5), (None, 1)], 'horizontal')
 
         middle_column = Layout([(None, 6), (unresolved, unresolved_wgt),

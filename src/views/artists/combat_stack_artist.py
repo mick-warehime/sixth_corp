@@ -1,12 +1,9 @@
 from data.colors import DARK_GRAY, LIGHT_GRAY, RED, WHITE
-from models.characters.subroutine_examples import FireLaser, Repair
-from models.combat.moves_base import Move
 from models.scenes.combat_scene import CombatScene
 from models.scenes.scenes_base import Scene
 from views.artists.drawing_utils import rescale_horizontal
 from views.artists.scene_artist_base import SceneArtist
 from views.pygame_screen import Screen
-from views.stack_utils import stack_rect
 
 _TEXT_SPACE, = rescale_horizontal(10)
 _STACK_OUTLINE, = rescale_horizontal(2)

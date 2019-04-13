@@ -1,5 +1,4 @@
 import random
-from unittest import TestCase
 
 from models.characters.character_examples import CharacterData
 from models.characters.character_impl import build_character

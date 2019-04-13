@@ -34,9 +34,9 @@ class CombatStack(object):
 
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._stack: List[_TimedMove] = []
-        self._just_resolved: Tuple[Move] = ()
+        self._just_resolved: Tuple[Move, ...] = ()
         self._extract_resolved_called = True
 
     def moves_times_remaining(self) -> List[Tuple[Move, int]]:
@@ -99,7 +99,7 @@ class CombatStack(object):
 
         self._stack = new_stack
 
-    def extract_resolved_moves(self) -> Tuple[Move]:
+    def extract_resolved_moves(self) -> Tuple[Move, ...]:
         """Moves that have resolved since the last time advance_time was called.
 
         This method must be called at least once before each call to

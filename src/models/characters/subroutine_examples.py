@@ -1,5 +1,3 @@
-from typing import Any
-
 from models.characters.character_base import Character
 from models.characters.states import Attributes
 from models.characters.subroutines_base import Subroutine

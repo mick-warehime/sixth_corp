@@ -1,6 +1,7 @@
 """Character subroutines."""
+import abc
 from functools import partial
-from typing import Any, NamedTuple, Callable, Union
+from typing import Any, NamedTuple, Callable, Union, cast
 
 from models.characters.character_base import Character
 
@@ -13,6 +14,7 @@ class Subroutine(object):
         """Internal implementation of use method, must be overridden."""
         pass
 
+    @abc.abstractmethod
     def can_use(self, user: Character, target: Character) -> bool:
         """Whether the subroutine can be used."""
         raise NotImplementedError
@@ -21,20 +23,23 @@ class Subroutine(object):
         assert self.can_use(user, target)
         self._use(user, target)
 
+    @abc.abstractmethod
     def cpu_slots(self) -> int:
         """Number of CPU slots required for use."""
         raise NotImplementedError
 
+    @abc.abstractmethod
     def time_slots(self) -> int:
         """Number of time slots required before subroutine takes effect."""
         raise NotImplementedError
 
+    @abc.abstractmethod
     def description(self) -> str:
         """"Description of the subroutine."""
         raise NotImplementedError
 
 
-class _SubroutineImpl(Subroutine, NamedTuple):
+class _SubroutineImpl(NamedTuple, Subroutine):
     use_fun: Callable[[Character, Character], None]
     can_use_fun: Callable[[Character, Character], bool]
     cpu_slot_fun: Callable[[Character, Character], int]
@@ -71,12 +76,17 @@ def _constant(value: Any) -> Any:
     return value
 
 
+_UseFunType = Union[partial, Callable[[Character, Character], None]]
+_CanUseFunType = Union[bool, Callable[[Character, Character], bool], partial]
+_DescriptionType = Union[str, Callable[[], str], partial]
+
+
 def build_subroutine(
-        use_fun: Callable[[Character, Character], None] = None,
-        can_use: Union[bool, Callable[[Character, Character], bool]] = True,
-        num_cpu: Union[int, Callable[[], int]] = 1,
-        time_to_resolve: Union[int, Callable[[], int]] = 1,
-        description: Union[str, Callable[[], str]] = 'unnamed subroutine',
+        use_fun: _UseFunType = None,
+        can_use: _CanUseFunType = True,
+        num_cpu: Union[int, Callable[[], int], partial] = 1,
+        time_to_resolve: Union[int, Callable[[], int], partial] = 1,
+        description: _DescriptionType = 'unnamed subroutine',
 ) -> Subroutine:
     """Factory function for Subroutines.
 
