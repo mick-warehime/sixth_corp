@@ -1,10 +1,14 @@
 import logging
 import os
 import sys
+from os.path import abspath, dirname
 
 from controllers.game import Game, initialize_pygame
 from data.constants import LOG_LEVEL, LOGGING_FILE, VERSION
 from views.view_manager import ViewManager
+
+# Ensure that working directory is sixth_corp
+os.chdir((dirname(dirname(abspath(__file__)))))
 
 
 def clear_log(log_file: str) -> None:

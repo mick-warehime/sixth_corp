@@ -1,5 +1,6 @@
 from functools import reduce
-from typing import List, Optional, Tuple
+from itertools import product
+from typing import List, Optional, Sequence, Tuple
 
 from data.constants import SCREEN_SIZE, BackgroundImages
 from events.events_base import (EventListener, EventType, SelectCharacterEvent,
@@ -9,11 +10,19 @@ from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character
 from models.characters.conditions import IsDead
 from models.characters.player import get_player
-from models.combat.combat_manager_base import CombatManager, valid_moves
+from models.combat.combat_stack import CombatStack
 from models.combat.moves_base import Move
 from models.scenes import scene_examples
 from models.scenes.scenes_base import Resolution, Scene
 from views.layouts import Layout
+
+
+def _valid_moves(user: Character, targets: Sequence[Character]) -> List[Move]:
+    """All valid moves from a user to a sequence of targets"""
+    return [Move(sub, user, target)
+            for sub, target in
+            product(user.inventory.all_subroutines(), targets)
+            if sub.can_use(user, target)]
 
 
 class CombatScene(EventListener, Scene):
@@ -27,7 +36,7 @@ class CombatScene(EventListener, Scene):
         super().__init__()
         self._player = get_player()
 
-        self._combat_manager = CombatManager([self._player], [self._enemy])
+        self._combat_stack = CombatStack()
 
         if win_resolution is None:
             win_resolution = scene_examples.ResolutionTypes.RESTART.resolution
@@ -36,7 +45,8 @@ class CombatScene(EventListener, Scene):
         self._selected_char: Character = None
 
         self._enemy.ai.set_targets([self._player])
-        self._layout = self._build_layout()
+        self._layout: Layout = None
+        self._update_layout()
 
         if background_image is None:
             self._background_image = BackgroundImages.CITY.path
@@ -47,7 +57,13 @@ class CombatScene(EventListener, Scene):
         if isinstance(event, SelectCharacterEvent):
             self._selected_char = event.character
         if isinstance(event, SelectPlayerMoveEvent):
-            self._select_player_move(event.move)
+            resolved_moves = self._update_stack(event.move)
+            for move in resolved_moves:
+                move.execute()
+
+    @property
+    def combat_stack(self) -> CombatStack:
+        return self._combat_stack
 
     @property
     def selected_char(self) -> Optional[Character]:
@@ -71,7 +87,7 @@ class CombatScene(EventListener, Scene):
     def available_moves(self) -> List[Move]:
         if self._selected_char is None:
             return []
-        return valid_moves(self._player, [self._selected_char])
+        return _valid_moves(self._player, [self._selected_char])
 
     def is_resolved(self) -> bool:
         return IsDead().check(self._enemy) or IsDead().check(self._player)
@@ -86,29 +102,70 @@ class CombatScene(EventListener, Scene):
     def __str__(self) -> str:
         return 'CombatScene(enemy = {})'.format(str(self._enemy))
 
-    def _select_player_move(self, move: Move) -> None:
-        enemy_move = self._enemy.ai.select_move()
-        self._combat_manager.take_turn([move], [enemy_move])
+    def _update_stack(self, player_move: Move) -> Tuple[Move, ...]:
+        """Update the combat stack according to character actions.
 
-    def _build_layout(self) -> Layout:
+        Time is advanced prior to putting new moves on the stack
+
+        Args:
+            player_move: The player's chosen move.
+
+        Returns:
+            Tuple of moves that have just resolved, in resolution order.
+        """
+        self._combat_stack.advance_time()
+
+        enemy_move = self._enemy.ai.select_move()
+
+        self._combat_stack.add_move(player_move,
+                                    player_move.subroutine.time_slots())
+        self._combat_stack.add_move(enemy_move,
+                                    enemy_move.subroutine.time_slots())
+        self._update_layout()
+
+        self._selected_char = None
+        return self._combat_stack.extract_resolved_moves()
+
+    def _update_layout(self) -> None:
         characters = self.characters()
         # player side layout
         player = characters[0]
 
         player_layout = Layout([(None, 2), (player, 1), (None, 2)], 'vertical')
-        player_layout = Layout([(None, 1), (player_layout, 1), (None, 1)],
-                               'horizontal')
+        left_column = Layout([(None, 1), (player_layout, 1), (None, 1)],
+                             'horizontal')
 
         # stack layout
-        stack_layout = Layout()
+        # unresolved moves
+        moves_with_time = self.combat_stack.moves_times_remaining()[::-1]
+        num_moves = len(moves_with_time)
+        unresolved_wgt = max(num_moves, 1)
+        move_time_elements = []
+        for move_and_time in moves_with_time:
+            move_time_elements.append((move_and_time, 1))
+        unresolved = Layout(move_time_elements, 'vertical')
+        unresolved = Layout([(None, 1), (unresolved, 5), (None, 1)],
+                            'horizontal')
+
+        # resolved moves
+        resolved_moves = self.combat_stack.extract_resolved_moves()[::-1]
+        resolved_wgt = len(resolved_moves)
+        move_elements = [(mv, 1) for mv in resolved_moves]
+
+        resolved = Layout(move_elements, 'vertical')
+        resolved = Layout([(None, 1), (resolved, 5), (None, 1)], 'horizontal')
+
+        middle_column = Layout([(None, 6), (unresolved, unresolved_wgt),
+                                (None, 1), (resolved, resolved_wgt),
+                                (None, 6)])
 
         # enemies layout
         assert len(characters) > 1
         elements = reduce(lambda a, b: a + b,
                           ([(None, 1), (e, 1)] for e in characters[1:]))
         elements.append((None, 1))
-        enemies_layout = Layout(elements, 'vertical')
+        right_column = Layout(elements, 'vertical')
 
-        return Layout(
-            [(player_layout, 1), (stack_layout, 1), (enemies_layout, 1)],
+        self._layout = Layout(
+            [(left_column, 1), (middle_column, 1), (right_column, 1)],
             'horizontal', SCREEN_SIZE)

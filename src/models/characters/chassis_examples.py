@@ -3,9 +3,8 @@ from typing import Dict, NamedTuple, Tuple
 
 from models.characters.mods_base import Slots
 from models.characters.states import Attributes, AttributeType, Skill, State
-from models.characters.subroutine_examples import (DoNothing, FireLaser,
-                                                   Repair, Unusable)
-from models.characters.subroutines_base import Subroutine
+from models.characters.subroutine_examples import FireLaser, Repair
+from models.characters.subroutines_base import Subroutine, build_subroutine
 
 
 class ChassisData(NamedTuple):
@@ -29,14 +28,20 @@ _SINGLE_LASER = ChassisData(
     subroutines_granted=(FireLaser(2),)
 )
 
+_do_nothing_1 = build_subroutine(can_use=True, description='Do nothing',
+                                 time_to_resolve=1, num_cpu=0)
+_do_nothing_2 = build_subroutine(can_use=True, description='Do nothing',
+                                 time_to_resolve=2, num_cpu=0)
+_unusable = build_subroutine(can_use=False)
+
 _HARMLESS = ChassisData(
     attribute_modifiers={Attributes.MAX_HEALTH: 1, Attributes.CPU_SLOTS: 1},
-    subroutines_granted=(DoNothing(1), DoNothing(2), Unusable(1), Unusable(2))
+    subroutines_granted=(_do_nothing_1, _do_nothing_2, _unusable)
 )
 
 _USELESS = ChassisData(
     attribute_modifiers={Attributes.MAX_HEALTH: 1, Attributes.CPU_SLOTS: 1},
-    subroutines_granted=(Unusable(1), Unusable(2))
+    subroutines_granted=(_unusable,)
 )
 
 

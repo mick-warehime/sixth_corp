@@ -5,7 +5,7 @@ from random import choice
 from typing import Callable, Sequence, Set
 
 from models.characters.character_base import Character
-from models.characters.subroutine_examples import DoNothing
+from models.characters.subroutines_base import build_subroutine
 from models.combat.ai_base import AI
 from models.combat.moves_base import Move
 
@@ -32,7 +32,8 @@ class _AIImpl(AI):
     def select_move(self) -> Move:
         if self._moves:
             return self._select_move_fun(self._moves)
-        return Move(DoNothing(0), self._user, self._user)
+        return Move(build_subroutine(description='do nothing'),
+                    self._user, self._user)
 
     def set_user(self, user: Character) -> None:
         self._user = user

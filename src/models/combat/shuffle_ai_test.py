@@ -1,53 +1,69 @@
-from unittest import TestCase
+import random
 
-from models.characters.character_examples import CharacterTypes
+from models.characters.character_examples import CharacterData
 from models.characters.character_impl import build_character
-from models.characters.subroutine_examples import DoNothing
+from models.characters.chassis_examples import ChassisData
+from models.characters.subroutines_base import build_subroutine
 from models.combat.ai_impl import AIType, build_ai
+# To ensure deterministic tests
+from models.combat.moves_base import Move
+
+random.seed(11)
 
 
-class ShuffleAITest(TestCase):
+def test_shuffle_ai_only_provides_usable_moves():
+    usable = build_subroutine(can_use=True)
+    unusable = build_subroutine(can_use=False)
+    char_data = CharacterData(
+        ChassisData(subroutines_granted=(usable, unusable)))
+    user = build_character(char_data)
+    target = build_character(char_data)
+    ai = build_ai(AIType.Shuffle)
+    ai.set_user(user)
+    ai.set_targets([target])
 
-    def test_shuffle_ai_only_provides_usable_moves(self):
-        user = build_character(CharacterTypes.HARMLESS.data)
-        target = build_character(CharacterTypes.HARMLESS.data)
-        ai = build_ai(AIType.Shuffle)
-        ai.set_user(user)
-        ai.set_targets([target])
+    for _ in range(1000):
+        move = ai.select_move()
+        assert move.subroutine == usable
 
-        for _ in range(1000):
-            move = ai.select_move()
-            self.assertIsInstance(move.subroutine, DoNothing)
 
-    def test_shuffle_ai_moves_dont_repeat(self):
-        user = build_character(CharacterTypes.HARMLESS.data)
-        target = build_character(CharacterTypes.HARMLESS.data)
-        ai = build_ai(AIType.Shuffle)
-        ai.set_user(user)
-        ai.set_targets([target])
+def test_shuffle_ai_moves_dont_repeat():
+    do_nothing_0 = build_subroutine(description='0')
+    do_nothing_1 = build_subroutine(description='1')
+    unusable = build_subroutine(can_use=False, description='unusable')
+    char_data = CharacterData(ChassisData(
+        subroutines_granted=(do_nothing_0, do_nothing_1, unusable)))
 
-        prev_move_description = ''
-        move_repeat_count = 0
-        for _ in range(10000):
-            move = ai.select_move()
-            move_description = move.description()
-            if move_description == prev_move_description:
-                move_repeat_count += 1
-            else:
-                move_repeat_count = 0
-            prev_move_description = move_description
+    user = build_character(char_data)
+    target = build_character(char_data)
+    ai = build_ai(AIType.Shuffle)
+    ai.set_user(user)
+    ai.set_targets([target])
 
-            # the most a move can repeat is 2 times - assuming unique moves
-            # and all moves get played before reshuffle
-            # [1,2] -> [2, 1] -> [1, 2]
-            self.assertLess(move_repeat_count, 3)
+    prev_move_description = ''
+    move_repeat_count = 0
+    for _ in range(1000):
+        move = ai.select_move()
+        move_description = move.description()
+        if move_description == prev_move_description:
+            move_repeat_count += 1
+        else:
+            move_repeat_count = 0
+        prev_move_description = move_description
 
-    def test_no_valid_moves_raises(self):
-        user = build_character(CharacterTypes.USELESS.data)
-        target = build_character(CharacterTypes.USELESS.data)
-        ai = build_ai(AIType.Shuffle)
-        ai.set_user(user)
-        ai.set_targets([target])
+        assert move_repeat_count <= 1
 
-        with self.assertRaises(ValueError):
-            ai.select_move()
+
+def test_no_valid_moves_means_do_nothing():
+    no_subroutines = CharacterData(ChassisData())
+
+    user = build_character(no_subroutines)
+    target = build_character(no_subroutines)
+    ai = build_ai(AIType.Shuffle)
+    ai.set_user(user)
+    ai.set_targets([target])
+
+    # If no valid move exists, a null move is passed.
+    move = ai.select_move()
+
+    assert isinstance(move, Move)

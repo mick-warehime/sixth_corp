@@ -7,6 +7,7 @@ from models.characters.chassis_examples import ChassisTypes
 from models.characters.conditions import FullHealth
 from models.characters.states import Attributes
 from models.characters.subroutine_examples import FireLaser, Repair
+from models.characters.subroutines_base import build_subroutine
 
 
 @pytest.fixture()
@@ -16,7 +17,7 @@ def character():
 
 def test_repair_subroutine(character: Character):
     repair = Repair(3)
-    assert not repair.can_use(character, character)
+    assert repair.can_use(character, character)
     character.status.increment_attribute(Attributes.HEALTH, -1)
     assert repair.can_use(character, character)
     repair.use(character, character)
@@ -35,11 +36,5 @@ def test_fire_laser(character):
     assert value(Attributes.HEALTH) == value(Attributes.MAX_HEALTH) - damage
 
 
-def test_subroutine_order():
-    assert FireLaser(3) < Repair(1)
-    assert FireLaser(1) < FireLaser(2)
-
-
 def test_subroutine_eq():
-    assert FireLaser(1) == FireLaser(1)
-    assert FireLaser(1) != 31
+    assert build_subroutine() != build_subroutine()

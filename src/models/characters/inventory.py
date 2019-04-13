@@ -1,11 +1,16 @@
 """Basic implementation of character inventory."""
 import abc
 import logging
-from typing import Callable, Iterable, List, Sequence
+from typing import Callable, Iterable, List, Sequence, Tuple
 
 from models.characters.mods_base import Mod
 from models.characters.states import AttributeType, State
 from models.characters.subroutines_base import Subroutine
+
+
+def _subroutine_stats(subroutine: Subroutine) -> Tuple[int, int, str]:
+    return (subroutine.cpu_slots(), subroutine.time_slots(),
+            subroutine.description())
 
 
 class InventoryBase(metaclass=abc.ABCMeta):
@@ -65,7 +70,8 @@ class InventoryBase(metaclass=abc.ABCMeta):
                 slot).
 
         Returns:
-            A sorted list of all subroutines.
+            A list of all subroutines sorted by description, cpu slots, and
+            time slots.
 
         """
         mods_with_subroutines = self.mods(
@@ -74,7 +80,7 @@ class InventoryBase(metaclass=abc.ABCMeta):
         subroutines: List[Subroutine] = []
         for mod in mods_with_subroutines:
             subroutines.extend(mod.subroutines_granted())
-        return sorted(subroutines)
+        return sorted(subroutines, key=_subroutine_stats)
 
 
 class BasicInventory(InventoryBase):
