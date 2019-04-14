@@ -10,11 +10,15 @@ from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character
 from models.characters.conditions import IsDead
 from models.characters.player import get_player
+from models.characters.subroutines_base import build_subroutine
 from models.combat.combat_stack import CombatStack
 from models.combat.moves_base import Move
 from models.scenes import scene_examples
 from models.scenes.scenes_base import Resolution, Scene
 from views.layouts import Layout
+
+_wait_one_round = build_subroutine(can_use=True, num_cpu=0, time_to_resolve=0,
+                                   description='wait 1 round')
 
 
 def _valid_moves(user: Character, targets: Sequence[Character]) -> List[Move]:
@@ -86,7 +90,7 @@ class CombatScene(EventListener, Scene):
 
     def available_moves(self) -> List[Move]:
         if self._selected_char is None:
-            return []
+            return [Move(_wait_one_round, self._player, self._player)]
         return _valid_moves(self._player, [self._selected_char])
 
     def is_resolved(self) -> bool:

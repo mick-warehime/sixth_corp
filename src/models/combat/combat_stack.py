@@ -75,7 +75,19 @@ class CombatStack(object):
         that resolve sooner are at the beginning of the stack. If a move already
         exists with the same time to resolve, the current move is placed
         behind it (resolves later).
+
+        Args:
+            move: Move to add.
+            time_left: Number of times advance_time() must be called before the
+                move is resolved. Must be non-negative. If zero, then the move
+                is instantly resolved.
         """
+
+        if time_left < 0:
+            raise ValueError('time_left must be non-negative.')
+        if time_left == 0:
+            self._just_resolved = self._just_resolved + (move,)
+            return
 
         index = -1
         for index, _ in enumerate(tm for tm in self._stack
