@@ -14,7 +14,7 @@ from models.characters.conditions import IsDead
 from models.characters.mods_base import GenericMod, Slots
 from models.characters.player import get_player
 from models.characters.states import Attributes
-from models.characters.subroutine_examples import FireLaser
+from models.characters.subroutine_examples import direct_damage
 from models.scenes.combat_scene import CombatScene
 from models.scenes.decision_scene import DecisionOption, DecisionScene
 from models.scenes.scenes_base import BasicResolution
@@ -99,7 +99,8 @@ def test_combat_scene_to_decision_scene():
 
     # give player ability to fire laser
     player = get_player()
-    shoot_laser = FireLaser(1)
+    shoot_laser = direct_damage(1, label='laser', time_to_resolve=1,
+                                cpu_slots=0)
     laser_mod = GenericMod(subroutines_granted=shoot_laser,
                            valid_slots=Slots.HEAD)
     assert player.inventory.can_store(laser_mod)

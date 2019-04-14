@@ -6,7 +6,7 @@ from models.characters.character_impl import build_character
 from models.characters.chassis_examples import ChassisTypes
 from models.characters.conditions import FullHealth
 from models.characters.states import Attributes
-from models.characters.subroutine_examples import FireLaser, repair
+from models.characters.subroutine_examples import repair, direct_damage
 from models.characters.subroutines_base import build_subroutine
 
 
@@ -26,7 +26,7 @@ def test_repair_subroutine(character: Character):
 
 def test_fire_laser(character):
     damage = 3
-    fire_laser = FireLaser(damage)
+    fire_laser = direct_damage(damage)
     other_char = build_character(CharacterData(ChassisTypes.NO_LEGS.data))
 
     assert not fire_laser.can_use(character, character)

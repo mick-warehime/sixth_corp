@@ -6,7 +6,7 @@ from models.characters.chassis_examples import ChassisData
 from models.characters.conditions import IsDead
 from models.characters.mods_base import GenericMod, Slots
 from models.characters.states import Attributes, State
-from models.characters.subroutine_examples import FireLaser
+from models.characters.subroutine_examples import direct_damage
 
 _ACTIVE_SLOT = Slots.ARMS
 
@@ -44,7 +44,8 @@ class CharacterTest(TestCase):
             GenericMod(attribute_modifiers={Attributes.MAX_HEALTH: bonus},
                        valid_slots=_ACTIVE_SLOT))
 
-        assert char.status.get_attribute(Attributes.MAX_HEALTH) == max_health + bonus
+        assert char.status.get_attribute(
+            Attributes.MAX_HEALTH) == max_health + bonus
 
     def test_max_attributes_determine_bounds(self):
         char = self._character()
@@ -58,7 +59,7 @@ class CharacterTest(TestCase):
     def test_mods_add_subroutines(self):
         char = self._character()
 
-        subroutine = FireLaser(12)
+        subroutine = direct_damage(12)
         assert subroutine not in char.inventory.all_subroutines()
 
         char.inventory.attempt_store(
