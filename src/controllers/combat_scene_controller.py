@@ -11,7 +11,7 @@ COMBAT_KEYBOARD_INPUTS = [str(i) for i in range(9)]
 
 
 class CombatSceneController(Controller):
-    """Controls updates for objects in a Combat Scene."""
+    """Processes player input in a Combat Scene."""
 
     def __init__(self, scene: CombatScene) -> None:
         super(CombatSceneController, self).__init__()
