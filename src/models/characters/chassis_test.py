@@ -4,7 +4,7 @@ from models.characters.chassis_examples import ChassisData
 from models.characters.chassis_factory import build_chassis
 from models.characters.mods_base import GenericMod, Slots
 from models.characters.states import Attributes, State
-from models.characters.subroutine_examples import FireLaser
+from models.characters.subroutine_examples import direct_damage
 
 
 def test_chassis_can_store_in_storage_by_default():
@@ -37,7 +37,7 @@ def test_chassis_cannot_store_same_mod_twice():
 def test_chassis_base_mod_included():
     base_mod = GenericMod(states_granted=State.ON_FIRE,
                           attribute_modifiers={Attributes.CREDITS: 3},
-                          subroutines_granted=FireLaser(3))
+                          subroutines_granted=direct_damage(3))
     chassis = Chassis({}, base_mod=base_mod)
 
     assert len(list(chassis.all_mods())) == 1

@@ -3,7 +3,7 @@ from typing import Dict, NamedTuple, Tuple
 
 from models.characters.mods_base import Slots
 from models.characters.states import Attributes, AttributeType, Skill, State
-from models.characters.subroutine_examples import FireLaser, Repair
+from models.characters.subroutine_examples import direct_damage, repair
 from models.characters.subroutines_base import Subroutine, build_subroutine
 
 
@@ -19,13 +19,15 @@ _NO_LEGS = ChassisData(
                      Slots.STORAGE: 10},
     attribute_modifiers={Attributes.MAX_HEALTH: 10, Skill.STEALTH: 1,
                          Skill.MECHANICS: 1, Attributes.CPU_SLOTS: 3},
-    subroutines_granted=(Repair(5),))
+    subroutines_granted=(repair(5),))
+
+_shoot_laser = direct_damage(2, label='small laser')
 
 _SINGLE_LASER = ChassisData(
     slot_capacities={Slots.HEAD: 1, Slots.STORAGE: 1},
     states_granted=(State.ON_FIRE,),
     attribute_modifiers={Attributes.MAX_HEALTH: 5, Attributes.CPU_SLOTS: 1},
-    subroutines_granted=(FireLaser(2),)
+    subroutines_granted=(_shoot_laser,)
 )
 
 _do_nothing_1 = build_subroutine(can_use=True, description='Do nothing',

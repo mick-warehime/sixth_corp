@@ -1,7 +1,7 @@
 """Character subroutines."""
 import abc
 from functools import partial
-from typing import Any, Callable, NamedTuple, Union, cast
+from typing import Any, Callable, Union, cast
 
 from models.characters.character_base import Character
 
@@ -36,30 +36,35 @@ class Subroutine(object):
         """"Description of the subroutine."""
 
 
-# mypy complains when we use two parent classes, one being NamedTuple.
-class _SubroutineImpl(NamedTuple, Subroutine):  # type: ignore
-    use_fun: Callable[[Character, Character], None]
-    can_use_fun: Callable[[Character, Character], bool]
-    cpu_slot_fun: Callable[[], int]
-    time_slot_fun: Callable[[], int]
-    description_fun: Callable[[], str]
+class _SubroutineImpl(Subroutine):
     """Concrete generic implementation of Subroutine."""
+
+    def __init__(self, use_fun: Callable[[Character, Character], None],
+                 can_use_fun: Callable[[Character, Character], bool],
+                 cpu_slot_fun: Callable[[], int],
+                 time_slot_fun: Callable[[], int],
+                 description_fun: Callable[[], str]) -> None:
+        self._use_fun = use_fun
+        self._can_use_fun = can_use_fun
+        self._cpu_slot_fun = cpu_slot_fun
+        self._time_slot_fun = time_slot_fun
+        self._description_fun = description_fun
 
     def use(self, user: Character, target: Character) -> None:
         assert self.can_use(user, target)
-        self.use_fun(user, target)
+        self._use_fun(user, target)
 
     def can_use(self, user: Character, target: Character) -> bool:
-        return self.can_use_fun(user, target)
+        return self._can_use_fun(user, target)
 
     def cpu_slots(self) -> int:
-        return self.cpu_slot_fun()
+        return self._cpu_slot_fun()
 
     def time_slots(self) -> int:
-        return self.time_slot_fun()
+        return self._time_slot_fun()
 
     def description(self) -> str:
-        return self.description_fun()
+        return self._description_fun()
 
 
 def _do_nothing(user: Character, target: Character) -> None:

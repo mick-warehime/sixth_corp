@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from models.characters.mods_base import GenericMod, Slots
 from models.characters.states import Attributes
-from models.characters.subroutine_examples import FireLaser, Repair
+from models.characters.subroutine_examples import direct_damage, repair
 from models.combat.combat_test_utils import create_combat_group
 from simulation.combat_manager_base import CombatManager
 
@@ -10,8 +10,13 @@ from simulation.combat_manager_base import CombatManager
 class CombatManagerTest(TestCase):
 
     def test_enumerates_attacks(self):
-        attacker = create_combat_group(1, base_name='attacker ')
-        two_defenders = create_combat_group(2, base_name='defender ')
+
+        laser_sub = direct_damage(2)
+
+        attacker = create_combat_group(1, base_name='attacker ',
+                                       subroutine=laser_sub)
+        two_defenders = create_combat_group(2, base_name='defender ',
+                                            subroutine=laser_sub)
         manager = CombatManager(attackers=attacker, defenders=two_defenders)
 
         attack_moves = manager.attackers_moves
@@ -26,7 +31,7 @@ class CombatManagerTest(TestCase):
         # each attack move is just the laser subroutine
         for attacker_moveset in attack_moves:
             for move in attacker_moveset:
-                self.assertIsInstance(move.subroutine, FireLaser)
+                assert move.subroutine is laser_sub
 
         defense_moves = manager.defenders_moves
 
@@ -39,13 +44,20 @@ class CombatManagerTest(TestCase):
         # each defense move is just the laser subroutine
         for defender_moveset in defense_moves:
             for move in defender_moveset:
-                self.assertIsInstance(move.subroutine, FireLaser)
+                assert move.subroutine is laser_sub
 
     def test_enumerates_attack_and_defense(self):
-        attacker = create_combat_group(1, base_name='attacker')
-        defender = create_combat_group(1, base_name='defender')
+
+        laser_sub = direct_damage(2)
+
+        attacker = create_combat_group(1, subroutine=laser_sub,
+                                       base_name='attacker')
+        defender = create_combat_group(1, subroutine=laser_sub,
+                                       base_name='defender')
+
+        repair_sub = repair(5)
         defender[0].inventory.attempt_store(
-            GenericMod(subroutines_granted=(Repair(5)), valid_slots=Slots.ARMS))
+            GenericMod(subroutines_granted=repair_sub, valid_slots=Slots.ARMS))
         defender[0].status.increment_attribute(Attributes.HEALTH, -5)
         manager = CombatManager(attackers=attacker, defenders=defender)
 
@@ -60,7 +72,7 @@ class CombatManagerTest(TestCase):
         # each attack move is just the laser subroutine
         for attacker_moveset in attack_moves:
             for move in attacker_moveset:
-                self.assertIsInstance(move.subroutine, FireLaser)
+                assert move.subroutine is laser_sub
 
         defense_moves = manager.defenders_moves
 
@@ -72,10 +84,12 @@ class CombatManagerTest(TestCase):
         self.assertEqual(len(defense_moves[1]), 1)
 
         # each defense move is just the laser subroutine
-        for expected_move, defender_moveset in zip([FireLaser, Repair],
-                                                   defense_moves):
+        for expected_sub, defender_moveset in zip([laser_sub, repair_sub],
+                                                  defense_moves):
             for move in defender_moveset:
-                self.assertIsInstance(move.subroutine, expected_move)
+                actual = move.subroutine.description()
+                expected = expected_sub.description()
+                assert actual == expected
 
     def test_step_applies_moves(self):
         health = 10
