@@ -1,7 +1,7 @@
 """Character subroutines."""
 import abc
 from functools import partial
-from typing import Any, Callable, NamedTuple, Union, cast
+from typing import Any, Callable, Union, cast
 
 from models.characters.character_base import Character
 
@@ -43,7 +43,7 @@ class _SubroutineImpl(Subroutine):
                  can_use_fun: Callable[[Character, Character], bool],
                  cpu_slot_fun: Callable[[], int],
                  time_slot_fun: Callable[[], int],
-                 description_fun: Callable[[], str]):
+                 description_fun: Callable[[], str]) -> None:
         self._use_fun = use_fun
         self._can_use_fun = can_use_fun
         self._cpu_slot_fun = cpu_slot_fun

@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from models.characters.mods_base import GenericMod, Slots
 from models.characters.states import Attributes
-from models.characters.subroutine_examples import repair, direct_damage
+from models.characters.subroutine_examples import direct_damage, repair
 from models.combat.combat_test_utils import create_combat_group
 from simulation.combat_manager_base import CombatManager
 

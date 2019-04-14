@@ -6,7 +6,7 @@ from models.characters.character_impl import build_character
 from models.characters.chassis_examples import ChassisTypes
 from models.characters.conditions import FullHealth
 from models.characters.states import Attributes
-from models.characters.subroutine_examples import repair, direct_damage
+from models.characters.subroutine_examples import direct_damage, repair
 from models.characters.subroutines_base import build_subroutine
 
 
