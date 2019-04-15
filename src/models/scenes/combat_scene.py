@@ -17,8 +17,8 @@ from models.scenes import scene_examples
 from models.scenes.scenes_base import Resolution, Scene
 from views.layouts import Layout
 
-_wait_one_round = build_subroutine(can_use=True, num_cpu=0, time_to_resolve=0,
-                                   description='wait 1 round')
+_wait_one_round = build_subroutine(can_use=True, num_cpu=0, time_to_resolve=1,
+                                   description='wait one round')
 
 _ANIMATION_TIME_SECONDS = 2.0
 _ticks_per_animation = FRAMES_PER_SECOND * _ANIMATION_TIME_SECONDS
@@ -62,6 +62,7 @@ class CombatScene(EventListener, Scene):
             self._background_image = background_image
 
         self._animation_progress: float = None
+        self._first_turn = True
 
     def notify(self, event: EventType) -> None:
         if isinstance(event, SelectCharacterEvent):
@@ -70,11 +71,12 @@ class CombatScene(EventListener, Scene):
             self._update_stack(event.move)
 
             # If animation enabled, start progress. Otherwise execute moves.
-            if ANIMATION:
+            if ANIMATION and not self._first_turn:
                 self._animation_progress = 0.0
             else:
                 for move in self.combat_stack.extract_resolved_moves():
                     move.execute()
+            self._first_turn = False
 
         # Animation in progress
         if event == BasicEvents.TICK and self.animation_progress is not None:
