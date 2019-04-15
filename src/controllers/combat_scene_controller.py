@@ -2,7 +2,7 @@ import logging
 
 from controllers.controller import Controller
 from events.event_utils import post_scene_change
-from events.events_base import (EventManager, EventType, EventTypes,
+from events.events_base import (BasicEvents, EventManager, EventType,
                                 InputEvent, MoveExecutedEvent,
                                 SelectCharacterEvent, SelectPlayerMoveEvent)
 from models.scenes.combat_scene import CombatScene
@@ -11,13 +11,17 @@ COMBAT_KEYBOARD_INPUTS = [str(i) for i in range(9)]
 
 
 class CombatSceneController(Controller):
-    """Controls updates for objects in a Combat Scene."""
+    """Processes player input in a Combat Scene."""
 
     def __init__(self, scene: CombatScene) -> None:
         super(CombatSceneController, self).__init__()
         self.scene = scene
 
     def _notify(self, event: EventType) -> None:
+
+        # Do not handle inputs while animation is in progress
+        if self.scene.animation_progress is not None:
+            return
 
         if isinstance(event, InputEvent):
             self._handle_input(event)
@@ -28,7 +32,7 @@ class CombatSceneController(Controller):
             self._check_for_resolution()
 
     def _handle_input(self, input_event: InputEvent) -> None:
-        if input_event.event_type == EventTypes.MOUSE_CLICK:
+        if input_event.event_type == BasicEvents.MOUSE_CLICK:
             self._handle_mouse_click(input_event)
             return
 

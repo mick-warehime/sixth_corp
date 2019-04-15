@@ -19,6 +19,7 @@ from views.pygame_screen import get_screen
 
 
 class SceneView(object):
+    """Manages all drawing on the screen for a given scene."""
 
     def __init__(self, scene: Scene) -> None:
         self._scene = scene

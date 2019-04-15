@@ -9,7 +9,7 @@ from models.combat.moves_base import Move
 from models.scenes.scenes_base import Scene
 
 
-class EventTypes(Enum):
+class BasicEvents(Enum):
     NONE = 'NONE'  # Null event, signifies nothing.
     QUIT = 'QUIT'  # signals to quit the game.
     TICK = 'TICK'  # single tick of the game clock.
@@ -27,7 +27,7 @@ class EventTypes(Enum):
     # has to do with this file being imported twice
     # but i can't for the life of me figure out why/how/where
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, EventTypes):
+        if isinstance(other, BasicEvents):
             return self.value == other.value
         return False
 
@@ -45,7 +45,7 @@ class NewSceneEvent(object):
 
 
 class InputEvent(NamedTuple):
-    event_type: EventTypes
+    event_type: BasicEvents
     key: str = ''
     pressed: bool = False
     mouse: Tuple[int, int] = (-1, -1)
@@ -90,7 +90,7 @@ class DecisionEvent(NamedTuple):
     scene: Scene
 
 
-EventType = Union[EventTypes, InputEvent, NewSceneEvent, MoveExecutedEvent,
+EventType = Union[BasicEvents, InputEvent, NewSceneEvent, MoveExecutedEvent,
                   ControllerActivatedEvent, SelectCharacterEvent,
                   SelectPlayerMoveEvent, DecisionEvent]
 
@@ -106,7 +106,7 @@ class EventManager(object):
 
     @classmethod
     def post(cls, event: EventType) -> None:
-        if not event == EventTypes.TICK:
+        if not event == BasicEvents.TICK:
             logging.debug('EVENT: {}'.format(str(event)))
 
         for l in cls.listeners.copy():

@@ -7,8 +7,8 @@ import pygame
 from controllers.inputs.keyboard import Keyboard
 from controllers.scene_machine import SceneMachine
 from data import constants
-from events.events_base import (EventListener, EventManager, EventType,
-                                EventTypes, NewSceneEvent)
+from events.events_base import (BasicEvents, EventListener, EventManager,
+                                EventType, NewSceneEvent)
 from models.scenes.scene_examples import loading_scene
 
 
@@ -40,10 +40,10 @@ class Game(EventListener):
         self.scene_machine = SceneMachine()
 
     def notify(self, event: EventType) -> None:
-        if event == EventTypes.QUIT:
+        if event == BasicEvents.QUIT:
             pygame.quit()
             sys.exit()
-        elif event == EventTypes.TICK:
+        elif event == BasicEvents.TICK:
             # limits the redraw speed
             self.clock.tick(constants.FRAMES_PER_SECOND)
 
@@ -52,4 +52,4 @@ class Game(EventListener):
         EventManager.post(NewSceneEvent(loading_scene()))
 
         while True:
-            EventManager.post(EventTypes.TICK)
+            EventManager.post(BasicEvents.TICK)

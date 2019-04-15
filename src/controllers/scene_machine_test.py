@@ -4,11 +4,11 @@ from controllers.controller_factory import build_controller
 from controllers.inventory_controller import InventoryController
 from controllers.scene_machine import SceneMachine
 from controllers.settings_controller import SettingsController
-from events.events_base import EventTypes, NewSceneEvent
+from events.events_base import BasicEvents, NewSceneEvent
 from models.scenes.scene_examples import loading_scene
 
-cases = [(EventTypes.SETTINGS, SettingsController),
-         (EventTypes.INVENTORY, InventoryController)]
+cases = [(BasicEvents.SETTINGS, SettingsController),
+         (BasicEvents.INVENTORY, InventoryController)]
 
 
 @pytest.mark.parametrize('event_type,controller_type', cases)
@@ -38,8 +38,8 @@ def test_toggler_settings_then_inventory_stays_settings():
     machine.notify(NewSceneEvent(initial_scene))
 
     assert not isinstance(machine.controller, SettingsController)
-    machine.notify(EventTypes.SETTINGS)
+    machine.notify(BasicEvents.SETTINGS)
     assert isinstance(machine.controller, SettingsController)
 
-    machine.notify(EventTypes.INVENTORY)
+    machine.notify(BasicEvents.INVENTORY)
     assert isinstance(machine.controller, SettingsController)

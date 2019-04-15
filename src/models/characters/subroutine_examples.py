@@ -57,7 +57,7 @@ def direct_damage(damage: int, cpu_slots: int = None,
     def can_use_fun(user: Character, target: Character) -> bool:
         return user is not target
 
-    description = '({} damage in {} rounds)'.format(damage, time_to_resolve)
+    description = '({} damage)'.format(damage, time_to_resolve)
     if label:
         description = label + ' ' + description
     return build_subroutine(use_fun, can_use_fun, cpu_slots, time_to_resolve,

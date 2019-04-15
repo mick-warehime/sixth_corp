@@ -1,7 +1,7 @@
 """Implementation of ViewManager."""
 import logging
 
-from events.events_base import (EventListener, EventType, EventTypes,
+from events.events_base import (BasicEvents, EventListener, EventType,
                                 NewSceneEvent)
 from views.scene_view import SceneView
 
@@ -19,8 +19,8 @@ class ViewManager(EventListener):
         if isinstance(event, NewSceneEvent):
             logging.debug('Updating view to new scene: {}'.format(event.scene))
             cls.current_view = SceneView(event.scene)
-        elif event == EventTypes.TICK:
+        elif event == BasicEvents.TICK:
             cls.current_view.update()
-        elif event == EventTypes.DEBUG:
+        elif event == BasicEvents.DEBUG:
             logging.debug('Toggling debug mode.')
             cls.current_view.toggle_debug()
