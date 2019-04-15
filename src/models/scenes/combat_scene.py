@@ -158,7 +158,6 @@ class CombatScene(EventListener, Scene):
         self._update_layout()
 
         self._selected_char = None
-        # return self._combat_stack.extract_resolved_moves()
 
     def _update_layout(self) -> None:
         characters = self.characters()
