@@ -2,7 +2,7 @@ import logging
 
 from controllers.controller import Controller
 from events.event_utils import post_scene_change
-from events.events_base import (EventManager, EventType, BasicEvents,
+from events.events_base import (BasicEvents, EventManager, EventType,
                                 InputEvent, MoveExecutedEvent,
                                 SelectCharacterEvent, SelectPlayerMoveEvent)
 from models.scenes.combat_scene import CombatScene

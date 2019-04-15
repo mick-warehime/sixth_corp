@@ -3,7 +3,7 @@ from typing import cast
 from controllers.controller import Controller
 from controllers.controller_factory import build_controller
 from events.event_utils import post_scene_change
-from events.events_base import (EventListener, EventType, BasicEvents,
+from events.events_base import (BasicEvents, EventListener, EventType,
                                 NewSceneEvent)
 from models.scenes.inventory_scene import InventoryScene
 from models.scenes.scenes_base import Scene

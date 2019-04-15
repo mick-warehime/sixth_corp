@@ -2,9 +2,9 @@ from functools import reduce
 from itertools import product
 from typing import List, Optional, Sequence, Tuple
 
-from data.constants import SCREEN_SIZE, BackgroundImages, FRAMES_PER_SECOND
-from events.events_base import (EventListener, EventType, SelectCharacterEvent,
-                                SelectPlayerMoveEvent, BasicEvents)
+from data.constants import FRAMES_PER_SECOND, SCREEN_SIZE, BackgroundImages
+from events.events_base import (BasicEvents, EventListener, EventType,
+                                SelectCharacterEvent, SelectPlayerMoveEvent)
 from models.characters.character_base import Character
 from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character

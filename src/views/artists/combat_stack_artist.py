@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Optional, Tuple
 
 from pygame.rect import Rect
 
@@ -62,7 +62,7 @@ def _interpolate(progress: float, rect_prev: Rect,
 
 class CombatStackArtist(SceneArtist):
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._prev_move_rects: Dict[Tuple[Move, int], List[Rect]] = {}
         self._new_move_rects: Dict[Tuple[Move, int], List[Rect]] = {}
         self._animation_start = True
@@ -82,8 +82,8 @@ class CombatStackArtist(SceneArtist):
             resolved = scene.combat_stack.extract_resolved_moves()
             self._new_move_rects.update({(m, 1): scene.layout.get_rects(m)
                                          for m in resolved})
-            move_time_rects = list(m_t + (rects,) for m_t, rects in
-                                   self._prev_move_rects.items())
+            move_time_rects = [m_t + (rects,)  # type: ignore
+                               for m_t, rects in self._prev_move_rects.items()]
             show_resolved = False
 
         # Middle of animation
@@ -97,7 +97,7 @@ class CombatStackArtist(SceneArtist):
 
                 interp_rects = [_interpolate(scene.animation_progress, *p_n)
                                 for p_n in zip(prev_rects, new_rects)]
-                move_time_rects.append(m_t + (interp_rects,))
+                move_time_rects.append(m_t + (interp_rects,))  # type: ignore
 
             show_resolved = False
 
@@ -109,8 +109,8 @@ class CombatStackArtist(SceneArtist):
             self._prev_move_rects = {m_t: scene.layout.get_rects(m_t)
                                      for m_t in
                                      scene.combat_stack.moves_times_remaining()}
-            move_time_rects = list(m_t + (rects,) for m_t, rects in
-                                   self._prev_move_rects.items())
+            move_time_rects = [m_t + (rects,)  # type: ignore
+                               for m_t, rects in self._prev_move_rects.items()]
             show_resolved = True
 
         for move, time, rects in move_time_rects:

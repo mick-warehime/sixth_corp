@@ -6,7 +6,7 @@ from controllers.controller import Controller
 from controllers.decision_scene_controller import DecisionSceneController
 from controllers.game import Game, initialize_pygame
 from events import event_utils
-from events.events_base import EventManager, BasicEvents
+from events.events_base import BasicEvents, EventManager
 from models.characters.character_examples import CharacterData
 from models.characters.character_impl import build_character
 from models.characters.chassis_examples import ChassisData
