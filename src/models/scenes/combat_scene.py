@@ -20,9 +20,9 @@ from views.layouts import Layout
 _wait_one_round = build_subroutine(can_use=True, num_cpu=0, time_to_resolve=1,
                                    description='wait one round')
 
-_ANIMATION_TIME_SECONDS = 2.0
+_ANIMATION_TIME_SECONDS = 1.0
 _ticks_per_animation = FRAMES_PER_SECOND * _ANIMATION_TIME_SECONDS
-ANIMATION = True
+ANIMATION = True  # Set to False during integration tests
 
 
 def _valid_moves(user: Character, targets: Sequence[Character]) -> List[Move]:
