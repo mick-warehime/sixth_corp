@@ -2,7 +2,7 @@ import logging
 
 from controllers.controller import Controller
 from events.event_utils import post_scene_change
-from events.events_base import (EventManager, EventType, EventTypes,
+from events.events_base import (EventManager, EventType, BasicEvents,
                                 InputEvent, MoveExecutedEvent,
                                 SelectCharacterEvent, SelectPlayerMoveEvent)
 from models.scenes.combat_scene import CombatScene
@@ -28,7 +28,7 @@ class CombatSceneController(Controller):
             self._check_for_resolution()
 
     def _handle_input(self, input_event: InputEvent) -> None:
-        if input_event.event_type == EventTypes.MOUSE_CLICK:
+        if input_event.event_type == BasicEvents.MOUSE_CLICK:
             self._handle_mouse_click(input_event)
             return
 

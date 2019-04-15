@@ -6,7 +6,7 @@ from controllers.controller import Controller
 from controllers.decision_scene_controller import DecisionSceneController
 from controllers.game import Game, initialize_pygame
 from events import event_utils
-from events.events_base import EventManager, EventTypes
+from events.events_base import EventManager, BasicEvents
 from models.characters.character_examples import CharacterData
 from models.characters.character_impl import build_character
 from models.characters.chassis_examples import ChassisData
@@ -76,8 +76,8 @@ def test_press_debug_in_decision_scene_has_no_effect():
     assert isinstance(game.scene_machine.controller, DecisionSceneController)
     assert view_manager.current_view is not None
 
-    EventManager.post(EventTypes.DEBUG)
-    EventManager.post(EventTypes.TICK)
+    EventManager.post(BasicEvents.DEBUG)
+    EventManager.post(BasicEvents.TICK)
 
 
 def test_combat_scene_to_decision_scene():
@@ -128,5 +128,5 @@ def test_combat_scene_to_decision_scene():
 
     # update the scene by waiting a tick, confirm that we've switched to a
     # Decision scene
-    EventManager.post(EventTypes.TICK)
+    EventManager.post(BasicEvents.TICK)
     assert isinstance(_get_active_controller(), DecisionSceneController)
