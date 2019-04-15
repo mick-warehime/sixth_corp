@@ -19,6 +19,10 @@ class CombatSceneController(Controller):
 
     def _notify(self, event: EventType) -> None:
 
+        # Do not handle inputs while animation is in progress
+        if self.scene.animation_progress is not None:
+            return
+
         if isinstance(event, InputEvent):
             self._handle_input(event)
             self._check_for_resolution()

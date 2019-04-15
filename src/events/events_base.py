@@ -18,6 +18,8 @@ class BasicEvents(Enum):
     MOUSE_CLICK = 'MOUSE_CLICK'
     KEYPRESS = 'KEYPRESS'
     DEBUG = 'DEBUG'  # Toggle debug mode
+    ANIMATION_START = 'ANIMATION_START'  # Start of an animation
+    ANIMATION_END = 'ANIMATION_END'  # End of an animation
 
     # bindable events
     SETTINGS = 'SETTINGS'

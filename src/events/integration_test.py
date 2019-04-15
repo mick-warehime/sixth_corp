@@ -15,7 +15,7 @@ from models.characters.mods_base import GenericMod, Slots
 from models.characters.player import get_player
 from models.characters.states import Attributes
 from models.characters.subroutine_examples import direct_damage
-from models.scenes.combat_scene import CombatScene
+from models.scenes import combat_scene
 from models.scenes.decision_scene import DecisionOption, DecisionScene
 from models.scenes.scenes_base import BasicResolution
 from views.view_manager import ViewManager
@@ -24,6 +24,9 @@ from views.view_manager import ViewManager
 os.chdir(dirname(dirname(dirname(abspath(__file__)))))
 
 initialize_pygame()
+
+# Turn off game animations
+combat_scene.ANIMATION = False
 
 
 def _get_active_controller():
@@ -36,7 +39,7 @@ def test_making_choices_removes_listener():
     game = Game()  # noqa: F841
 
     def second_scene() -> DecisionScene:
-        options = {'1': DecisionOption('third scene', CombatScene)}
+        options = {'1': DecisionOption('third scene', combat_scene.CombatScene)}
         return DecisionScene('second scene', options)
 
     options_0 = {'s': DecisionOption('load next scene', second_scene)}
@@ -92,7 +95,8 @@ def test_combat_scene_to_decision_scene():
     enemy = build_character(CharacterData(ChassisData(
         attribute_modifiers={Attributes.MAX_HEALTH: 1}
     )))
-    scene = CombatScene(enemy, win_resolution=BasicResolution(dummy_scene))
+    scene = combat_scene.CombatScene(
+        enemy, win_resolution=BasicResolution(dummy_scene))
     event_utils.post_scene_change(scene)
 
     assert isinstance(_get_active_controller(), CombatSceneController)

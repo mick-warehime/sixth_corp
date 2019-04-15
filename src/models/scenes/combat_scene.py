@@ -2,9 +2,9 @@ from functools import reduce
 from itertools import product
 from typing import List, Optional, Sequence, Tuple
 
-from data.constants import SCREEN_SIZE, BackgroundImages
+from data.constants import SCREEN_SIZE, BackgroundImages, FRAMES_PER_SECOND
 from events.events_base import (EventListener, EventType, SelectCharacterEvent,
-                                SelectPlayerMoveEvent)
+                                SelectPlayerMoveEvent, BasicEvents)
 from models.characters.character_base import Character
 from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character
@@ -19,6 +19,10 @@ from views.layouts import Layout
 
 _wait_one_round = build_subroutine(can_use=True, num_cpu=0, time_to_resolve=0,
                                    description='wait 1 round')
+
+_ANIMATION_TIME_SECONDS = 2.0
+_ticks_per_animation = FRAMES_PER_SECOND * _ANIMATION_TIME_SECONDS
+ANIMATION = True
 
 
 def _valid_moves(user: Character, targets: Sequence[Character]) -> List[Move]:
@@ -57,13 +61,37 @@ class CombatScene(EventListener, Scene):
         else:
             self._background_image = background_image
 
+        self._animation_progress: float = None
+
     def notify(self, event: EventType) -> None:
         if isinstance(event, SelectCharacterEvent):
             self._selected_char = event.character
         if isinstance(event, SelectPlayerMoveEvent):
-            resolved_moves = self._update_stack(event.move)
-            for move in resolved_moves:
-                move.execute()
+            self._update_stack(event.move)
+
+            # If animation enabled, start progress. Otherwise execute moves.
+            if ANIMATION:
+                self._animation_progress = 0.0
+            else:
+                for move in self.combat_stack.extract_resolved_moves():
+                    move.execute()
+
+        # Animation in progress
+        if event == BasicEvents.TICK and self.animation_progress is not None:
+            self._animation_progress += 1.0 / _ticks_per_animation
+            # Execute moves once animation is finished
+            if self._animation_progress >= 1.0:
+                self._animation_progress = None
+                for move in self.combat_stack.extract_resolved_moves():
+                    move.execute()
+
+    @property
+    def animation_progress(self) -> Optional[float]:
+        """Progress of a combat scene animation.
+
+        This variable is None if no animation is in progress.
+        """
+        return self._animation_progress
 
     @property
     def combat_stack(self) -> CombatStack:
@@ -106,7 +134,7 @@ class CombatScene(EventListener, Scene):
     def __str__(self) -> str:
         return 'CombatScene(enemy = {})'.format(str(self._enemy))
 
-    def _update_stack(self, player_move: Move) -> Tuple[Move, ...]:
+    def _update_stack(self, player_move: Move) -> None:
         """Update the combat stack according to character actions.
 
         Time is advanced prior to putting new moves on the stack
@@ -128,7 +156,7 @@ class CombatScene(EventListener, Scene):
         self._update_layout()
 
         self._selected_char = None
-        return self._combat_stack.extract_resolved_moves()
+        # return self._combat_stack.extract_resolved_moves()
 
     def _update_layout(self) -> None:
         characters = self.characters()
@@ -143,24 +171,29 @@ class CombatScene(EventListener, Scene):
         # unresolved moves
         moves_with_time = self.combat_stack.moves_times_remaining()[::-1]
         num_moves = len(moves_with_time)
-        unresolved_wgt = max(num_moves, 1)
+        stack_size = 6
         move_time_elements = []
         for move_and_time in moves_with_time:
             move_time_elements.append((move_and_time, 1))
+        if num_moves <= stack_size:
+            move_time_elements.append((None, stack_size - num_moves))
+
         unresolved = Layout(move_time_elements, 'vertical')
         unresolved = Layout([(None, 1), (unresolved, 5), (None, 1)],
                             'horizontal')
 
         # resolved moves
+        resolved_size = 4
         resolved_moves = self.combat_stack.extract_resolved_moves()[::-1]
-        resolved_wgt = len(resolved_moves)
         move_elements = [(mv, 1) for mv in resolved_moves]
+        if len(resolved_moves) < resolved_size:
+            move_elements.append((None, resolved_size - len(resolved_moves)))
 
         resolved = Layout(move_elements, 'vertical')
         resolved = Layout([(None, 1), (resolved, 5), (None, 1)], 'horizontal')
 
-        middle_column = Layout([(None, 6), (unresolved, unresolved_wgt),
-                                (None, 1), (resolved, resolved_wgt),
+        middle_column = Layout([(None, 4), (unresolved, stack_size),
+                                (None, 2), (resolved, resolved_size),
                                 (None, 6)])
 
         # enemies layout
