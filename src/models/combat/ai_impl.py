@@ -11,6 +11,8 @@ from models.combat.moves_base import Move
 
 SelectionFun = Callable[[Sequence[Move]], Move]
 
+_do_nothing = build_subroutine(num_cpu=0, time_to_resolve=1, description='wait')
+
 
 class _AIImpl(AI):
     """AI for selecting enemy moves during combat."""
@@ -23,27 +25,27 @@ class _AIImpl(AI):
 
         Args:
             select_move_fun: Function that selected the next move in a combat.
+                Takes a sequence of (valid) moves as input.
         """
         self._user: Character = None
-        self._moves: Sequence[Move] = []
-        self._targets: Sequence[Character] = None
         self._select_move_fun = select_move_fun
 
-    def select_move(self) -> Move:
-        if self._moves:
-            return self._select_move_fun(self._moves)
-        return Move(build_subroutine(description='do nothing'),
-                    self._user, self._user)
+    def select_move(self, targets: Sequence[Character]) -> Move:
+        # Valid moves are those which can be used immediately and do not cost
+        # more cpu_slots than available.
+
+        all_subs = self._user.inventory.all_subroutines()
+        moves = [Move(sub, self._user, target)
+                 for sub, target in product(all_subs, targets)
+                 if sub.can_use(self._user, target)]
+
+        if moves:
+            return self._select_move_fun(moves)
+
+        return Move(_do_nothing, self._user, self._user)
 
     def set_user(self, user: Character) -> None:
         self._user = user
-
-    def set_targets(self, targets: Sequence[Character]) -> None:
-        assert self._user is not None, 'Must set user first.'
-        self._targets = targets
-
-        self._moves = [Move(a, self._user, t) for a, t in
-                       product(self._user.inventory.all_subroutines(), targets)]
 
 
 class AIType(Enum):
@@ -64,14 +66,13 @@ def _raise_error(moves: Sequence[Move]) -> Move:
 
 
 def _random_choice(moves: Sequence[Move]) -> Move:
-    usable_moves = [move for move in moves if move.is_usable()]
-    if not usable_moves:
+    if not moves:
         raise ValueError('No moves available.')
-    return choice(usable_moves)
+    return choice(moves)
 
 
 class _MoveIterator(object):
-    """Runs through all usable moves once before repeating."""
+    """Runs through all moves once before repeating."""
 
     def __init__(self) -> None:
         self._used_moves: Set[Move] = set()
@@ -82,7 +83,7 @@ class _MoveIterator(object):
         random.shuffle(unchecked_moves)
         while unchecked_moves:
             move = unchecked_moves.pop()
-            if move.is_usable() and move not in self._used_moves:
+            if move not in self._used_moves:
                 self._used_moves.add(move)
                 return move
         if not self._used_moves:

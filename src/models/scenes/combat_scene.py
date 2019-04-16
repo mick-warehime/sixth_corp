@@ -61,12 +61,10 @@ class CombatScene(EventListener, Scene):
 
         self._selected_char: Character = None
 
-        self._enemy.ai.set_targets([self._player])
-
-        # Rect positions
         self._layout: Layout = None
         self._update_layout()
 
+        # Rect positions
         if background_image is None:
             self._background_image = BackgroundImages.CITY.path
         else:
@@ -171,7 +169,7 @@ class CombatScene(EventListener, Scene):
         """
         self._combat_stack.advance_time()
 
-        enemy_move = self._enemy.ai.select_move()
+        enemy_move = self._enemy.ai.select_move([self._player])
         for move in (player_move, enemy_move):
             cpu_slots = move.subroutine.cpu_slots()
             assert cpu_slots <= move.user.status.get_attribute(
