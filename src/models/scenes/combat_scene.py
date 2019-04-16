@@ -10,6 +10,7 @@ from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character
 from models.characters.conditions import IsDead
 from models.characters.player import get_player
+from models.characters.states import Attributes
 from models.characters.subroutines_base import build_subroutine
 from models.combat.combat_stack import CombatStack
 from models.combat.moves_base import Move
@@ -26,11 +27,14 @@ ANIMATION = True  # Set to False during integration tests
 
 
 def _valid_moves(user: Character, targets: Sequence[Character]) -> List[Move]:
-    """All valid moves from a user to a sequence of targets"""
+    """All valid moves from a user to a sequence of targets, ignoring CPU slots.
+    """
     return [Move(sub, user, target)
             for sub, target in
             product(user.inventory.all_subroutines(), targets)
-            if sub.can_use(user, target)]
+            if sub.can_use(user, target)
+            and sub.cpu_slots() < user.status.get_attribute(
+            Attributes.CPU_AVAILABLE)]
 
 
 class CombatScene(EventListener, Scene):
@@ -44,6 +48,11 @@ class CombatScene(EventListener, Scene):
         super().__init__()
         self._player = get_player()
 
+        # initialize CPU slots
+        for char in self.characters():
+            max_cpu = char.status.get_attribute(Attributes.MAX_CPU)
+            char.status.increment_attribute(Attributes.CPU_AVAILABLE, max_cpu)
+
         self._combat_stack = CombatStack()
 
         if win_resolution is None:
@@ -53,6 +62,8 @@ class CombatScene(EventListener, Scene):
         self._selected_char: Character = None
 
         self._enemy.ai.set_targets([self._player])
+
+        # Rect positions
         self._layout: Layout = None
         self._update_layout()
 
@@ -61,31 +72,9 @@ class CombatScene(EventListener, Scene):
         else:
             self._background_image = background_image
 
+        # Animation data
         self._animation_progress: float = None
         self._first_turn = True
-
-    def notify(self, event: EventType) -> None:
-        if isinstance(event, SelectCharacterEvent):
-            self._selected_char = event.character
-        if isinstance(event, SelectPlayerMoveEvent):
-            self._update_stack(event.move)
-
-            # If animation enabled, start progress. Otherwise execute moves.
-            if ANIMATION and not self._first_turn:
-                self._animation_progress = 0.0
-            else:
-                for move in self.combat_stack.extract_resolved_moves():
-                    move.execute()
-            self._first_turn = False
-
-        # Animation in progress
-        if event == BasicEvents.TICK and self.animation_progress is not None:
-            self._animation_progress += 1.0 / _ticks_per_animation
-            # Execute moves once animation is finished
-            if self._animation_progress >= 1.0:
-                self._animation_progress = None
-                for move in self.combat_stack.extract_resolved_moves():
-                    move.execute()
 
     @property
     def animation_progress(self) -> Optional[float]:
@@ -119,6 +108,11 @@ class CombatScene(EventListener, Scene):
         return self._player, self._enemy
 
     def available_moves(self) -> List[Move]:
+        """All moves that may be added to the combat stack.
+
+        Returns all moves that may be added to the stack, accounting for the
+        current target and available CPU slots.
+        """
         if self._selected_char is None:
             return [Move(_wait_one_round, self._player, self._player)]
         return _valid_moves(self._player, [self._selected_char])
@@ -133,13 +127,41 @@ class CombatScene(EventListener, Scene):
         assert IsDead().check(self._player)
         return scene_examples.ResolutionTypes.GAME_OVER.resolution
 
+    def notify(self, event: EventType) -> None:
+        if isinstance(event, SelectCharacterEvent):
+            self._selected_char = event.character
+        if isinstance(event, SelectPlayerMoveEvent):
+            self._update_stack(event.move)
+
+            # If animation enabled, start progress. Otherwise execute moves.
+            if ANIMATION and not self._first_turn:
+                self._animation_progress = 0.0
+            else:
+                for move in self.combat_stack.extract_resolved_moves():
+                    move.execute()
+                    cpu_slots = move.subroutine.cpu_slots()
+                    move.user.status.increment_attribute(
+                        Attributes.CPU_AVAILABLE, cpu_slots)
+            self._first_turn = False
+
+        # Animation in progress
+        if event == BasicEvents.TICK and self.animation_progress is not None:
+            self._animation_progress += 1.0 / _ticks_per_animation
+            # Execute moves once animation is finished
+            if self._animation_progress >= 1.0:
+                self._animation_progress = None
+                for move in self.combat_stack.extract_resolved_moves():
+                    move.execute()
+
     def __str__(self) -> str:
         return 'CombatScene(enemy = {})'.format(str(self._enemy))
 
     def _update_stack(self, player_move: Move) -> None:
         """Update the combat stack according to character actions.
 
-        Time is advanced prior to putting new moves on the stack
+        Time is advanced prior to putting new moves on the stack. Whenever a
+        move is put on the stack its subroutine's CPU slots are decremented
+        from the user.
 
         Args:
             player_move: The player's chosen move.
@@ -150,6 +172,12 @@ class CombatScene(EventListener, Scene):
         self._combat_stack.advance_time()
 
         enemy_move = self._enemy.ai.select_move()
+        for move in (player_move, enemy_move):
+            cpu_slots = move.subroutine.cpu_slots()
+            assert cpu_slots <= move.user.status.get_attribute(
+                Attributes.CPU_AVAILABLE)
+            move.user.status.increment_attribute(Attributes.CPU_AVAILABLE,
+                                                 -cpu_slots)
 
         self._combat_stack.add_move(player_move,
                                     player_move.subroutine.time_slots())
