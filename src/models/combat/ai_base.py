@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Sequence, TYPE_CHECKING
+from typing import TYPE_CHECKING, Sequence
 
 from models.combat.moves_base import Move
 
