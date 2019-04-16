@@ -1,5 +1,5 @@
 """Implementation of the combat stack."""
-from typing import List, NamedTuple, Tuple, Callable, Sequence
+from typing import Callable, List, NamedTuple, Sequence, Tuple
 
 from models.combat.moves_base import Move
 
@@ -92,7 +92,7 @@ class CombatStack(object):
         for move in moves:
             self._add_move(move)
 
-    def execute_resolved_moves(self):
+    def execute_resolved_moves(self) -> None:
         """Execute all resolved moves.
 
         The poststack method (if specified in __init__) is invoked on each move
