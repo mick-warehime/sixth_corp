@@ -23,7 +23,8 @@ def repair(amount: int) -> Subroutine:
     cpu_slots = max(1, amount // 2)
     time_slots = max(1, amount // 2)
 
-    description = 'Repair {} damage.'.format(amount)
+    description = 'Repair {} ({} turns {} slots).'.format(amount, time_slots,
+                                                          cpu_slots)
 
     return build_subroutine(use_fun, can_use_fun, cpu_slots, time_slots,
                             description)

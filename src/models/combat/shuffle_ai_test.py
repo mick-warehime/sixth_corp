@@ -12,7 +12,7 @@ random.seed(11)
 
 
 def test_shuffle_ai_only_provides_usable_moves():
-    usable = build_subroutine(can_use=True)
+    usable = build_subroutine(can_use=True, num_cpu=0)
     unusable = build_subroutine(can_use=False)
     char_data = CharacterData(
         ChassisData(subroutines_granted=(usable, unusable)))
@@ -27,8 +27,8 @@ def test_shuffle_ai_only_provides_usable_moves():
 
 
 def test_shuffle_ai_moves_dont_repeat():
-    do_nothing_0 = build_subroutine(description='0')
-    do_nothing_1 = build_subroutine(description='1')
+    do_nothing_0 = build_subroutine(description='0', num_cpu=0)
+    do_nothing_1 = build_subroutine(description='1', num_cpu=0)
     unusable = build_subroutine(can_use=False, description='unusable')
     char_data = CharacterData(ChassisData(
         subroutines_granted=(do_nothing_0, do_nothing_1, unusable)))

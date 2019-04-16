@@ -23,7 +23,8 @@ class Attributes(Enum):
     HEALTH = 'health'
     MAX_HEALTH = 'maximum health'
     CREDITS = 'credits'
-    CPU_SLOTS = 'CPU slots'
+    MAX_CPU = 'maximum CPU slots'
+    CPU_AVAILABLE = 'CPU slots available'
 
     def __str__(self) -> str:
         return self.value

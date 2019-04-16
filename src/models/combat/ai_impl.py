@@ -5,6 +5,7 @@ from random import choice
 from typing import Callable, Sequence, Set
 
 from models.characters.character_base import Character
+from models.characters.states import Attributes
 from models.characters.subroutines_base import build_subroutine
 from models.combat.ai_base import AI
 from models.combat.moves_base import Move
@@ -33,10 +34,12 @@ class _AIImpl(AI):
     def select_move(self, targets: Sequence[Character]) -> Move:
         # Valid moves are those which can be used immediately and do not cost
         # more cpu_slots than available.
+        slots = self._user.status.get_attribute(Attributes.CPU_AVAILABLE)
+        valid_subs = (sub for sub in self._user.inventory.all_subroutines()
+                      if sub.cpu_slots() <= slots)
 
-        all_subs = self._user.inventory.all_subroutines()
         moves = [Move(sub, self._user, target)
-                 for sub, target in product(all_subs, targets)
+                 for sub, target in product(valid_subs, targets)
                  if sub.can_use(self._user, target)]
 
         if moves:

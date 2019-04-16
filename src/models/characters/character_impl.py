@@ -64,9 +64,14 @@ class _CombinedStatus(Status):
         self._base_status = BasicStatus()
         self._inventory = inventory
 
+        # We use attribute getters for the composite object to set health and
+        # CPU bounds.
         self._base_status.set_attribute_bounds(
             Attributes.HEALTH, 0,
             partial(self.get_attribute, Attributes.MAX_HEALTH))
+        self._base_status.set_attribute_bounds(
+            Attributes.CPU_AVAILABLE, 0,
+            partial(self.get_attribute, Attributes.MAX_CPU))
 
     def has_state(self, state: State) -> bool:
         return (self._base_status.has_state(state)
@@ -96,5 +101,7 @@ def build_character(data: CharacterData) -> _CharacterImpl:
 
     health = char.status.get_attribute(Attributes.MAX_HEALTH)
     char.status.increment_attribute(Attributes.HEALTH, health)
+    CPU = char.status.get_attribute(Attributes.MAX_CPU)
+    char.status.increment_attribute(Attributes.CPU_AVAILABLE, CPU)
 
     return char
