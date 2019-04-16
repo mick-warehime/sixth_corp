@@ -19,7 +19,7 @@ class CombatStack(object):
 
     resolved_moves: Moves that have just resolved since the last stack update.
 
-    update_stack: Increments time unit by one and adds new moves to the stack.
+    update_stack: Increments time by one unit and adds new moves to the stack.
 
     execute_resolved_moves: Execute and post-process all resolved moves.
 
