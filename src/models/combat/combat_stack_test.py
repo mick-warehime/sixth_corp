@@ -20,7 +20,7 @@ move_3_B = Mock(Move, name='3 turns B', subroutine=time_3_sub)
 def test_resolved_moves_after_init():
     stack = CombatStack()
 
-    assert stack.resolved_moves() == ()
+    assert stack.resolved_moves == ()
 
 
 def test_moves_remaining_correct_order():
@@ -31,7 +31,7 @@ def test_moves_remaining_correct_order():
     actual = tuple(stack.moves_times_remaining())
     expected = ((move_1, 1), (move_2, 2), (move_3_A, 3), (move_3_B, 3))
     assert actual == expected
-    assert stack.resolved_moves() == ()
+    assert stack.resolved_moves == ()
 
 
 def test_update_multiple_times_correct_stack():
@@ -46,7 +46,7 @@ def test_update_multiple_times_correct_stack():
     stack.execute_resolved_moves()
 
     assert actual == expected
-    assert stack.resolved_moves() == (move_1,)
+    assert stack.resolved_moves == (move_1,)
 
     stack.update_stack([])
     stack.execute_resolved_moves()
@@ -54,7 +54,7 @@ def test_update_multiple_times_correct_stack():
     expected = ((move_3_A, 1), (move_3_B, 1))
 
     assert actual == expected
-    assert stack.resolved_moves() == (move_2,)
+    assert stack.resolved_moves == (move_2,)
 
     stack.update_stack([])
     actual = tuple(stack.moves_times_remaining())
@@ -62,7 +62,7 @@ def test_update_multiple_times_correct_stack():
     stack.execute_resolved_moves()
 
     assert actual == expected
-    assert stack.resolved_moves() == (move_3_A, move_3_B)
+    assert stack.resolved_moves == (move_3_A, move_3_B)
 
 
 def test_update_stack_called_before_execute_resolved():
@@ -120,5 +120,5 @@ def test_poststack_method_called_on_each_move():
         stack.update_stack([])
         stack.execute_resolved_moves()
         actual = tuple(moves_invoked)
-        expected = expected + tuple(stack.resolved_moves())
+        expected = expected + tuple(stack.resolved_moves)
         assert actual == expected

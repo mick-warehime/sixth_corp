@@ -79,7 +79,7 @@ class CombatStackArtist(SceneArtist):
             self._new_move_rects = {
                 m_t: scene.layout.get_rects((m_t[0], m_t[1] - 1))
                 for m_t in self._prev_move_rects}
-            resolved = scene.combat_stack.resolved_moves()
+            resolved = scene.combat_stack.resolved_moves
             self._new_move_rects.update({(m, 1): scene.layout.get_rects(m)
                                          for m in resolved})
             move_time_rects = [m_t + (rects,)  # type: ignore
@@ -118,7 +118,7 @@ class CombatStackArtist(SceneArtist):
                 _render_move(move, time, rect, screen)
 
         if show_resolved:
-            for move in scene.combat_stack.resolved_moves():
+            for move in scene.combat_stack.resolved_moves:
                 rects = scene.layout.get_rects(move)
 
                 for rect in rects:

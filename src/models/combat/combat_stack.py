@@ -33,6 +33,7 @@ class CombatStack(object):
         self._prestack_fun: Callable[[Move], None] = prestack_fun
         self._poststack_fun: Callable[[Move], None] = poststack_fun
 
+    @property
     def resolved_moves(self) -> Tuple[Move, ...]:
         """Moves that have resolved since the last time update_stack was called.
         """

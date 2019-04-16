@@ -192,7 +192,7 @@ class CombatScene(EventListener, Scene):
 
         # resolved moves
         resolved_size = 4
-        resolved_moves = self.combat_stack.resolved_moves()[::-1]
+        resolved_moves = self.combat_stack.resolved_moves[::-1]
         move_elements = [(mv, 1) for mv in resolved_moves]
         if len(resolved_moves) < resolved_size:
             move_elements.append((None, resolved_size - len(resolved_moves)))
