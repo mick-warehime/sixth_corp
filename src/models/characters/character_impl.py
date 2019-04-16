@@ -101,5 +101,7 @@ def build_character(data: CharacterData) -> _CharacterImpl:
 
     health = char.status.get_attribute(Attributes.MAX_HEALTH)
     char.status.increment_attribute(Attributes.HEALTH, health)
+    CPU = char.status.get_attribute(Attributes.MAX_CPU)
+    char.status.increment_attribute(Attributes.CPU_AVAILABLE, CPU)
 
     return char

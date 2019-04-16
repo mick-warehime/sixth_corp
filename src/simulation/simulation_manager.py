@@ -1,11 +1,26 @@
 from models.characters.character_base import Character
 from models.characters.character_examples import CharacterData
 from models.characters.character_impl import build_character
-from simulation.combat_manager_base import CombatManager
+from models.characters.conditions import IsDead
+from models.characters.states import Attributes
+from models.combat.combat_stack import CombatStack
+from models.combat.moves_base import Move
 
 
 class SimulationError(Exception):
     pass
+
+
+def _remove_user_cpu(move: Move) -> None:
+    cpu_slots = move.subroutine.cpu_slots()
+    assert cpu_slots <= move.user.status.get_attribute(
+        Attributes.CPU_AVAILABLE)
+    move.user.status.increment_attribute(Attributes.CPU_AVAILABLE, -cpu_slots)
+
+
+def _return_user_cpu(move: Move) -> None:
+    cpu_slots = move.subroutine.cpu_slots()
+    move.user.status.increment_attribute(Attributes.CPU_AVAILABLE, cpu_slots)
 
 
 class SimulationManager(object):
@@ -16,7 +31,8 @@ class SimulationManager(object):
             attacker_data: CharacterData,
             defender_data: CharacterData,
             n_runs: int = 1) -> float:
-        """Runs {n_runs} combat simulations and reports attackers win frequency."""
+        """Runs {n_runs} combat simulations and reports attackers win frequency.
+        """
 
         attacker_wins = 0
         for _ in range(n_runs):
@@ -31,19 +47,21 @@ class SimulationManager(object):
 
     def _simulate_combat(self, attacker: Character,
                          defender: Character) -> bool:
-        """Simulates combat between two enemies and returns True if the attacker wins."""
+        """Simulates combat between two enemies.
+
+        Returns True if the attacker wins."""
 
         max_turns = 1000
-        manager = CombatManager([attacker], [defender])
+        combat_stack = CombatStack(_remove_user_cpu, _return_user_cpu)
+        is_dead = IsDead()
         for _ in range(max_turns):
             attack_move = attacker.ai.select_move([defender])
             defense_move = defender.ai.select_move([attacker])
-            manager.take_turn([attack_move], [defense_move])
-            if manager.is_done():
-                break
+            combat_stack.update_stack([attack_move, defense_move])
+            combat_stack.execute_resolved_moves()
 
-        if manager.is_done():
-            return manager.winners() == [attacker]
+            if is_dead.check(attacker) or is_dead.check(defender):
+                return is_dead.check(defender)
 
         raise SimulationError(
             'Combat between {} and {} took more than {} turns'.format(
