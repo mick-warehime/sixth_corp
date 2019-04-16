@@ -33,7 +33,7 @@ def _valid_moves(user: Character, targets: Sequence[Character]) -> List[Move]:
             for sub, target in
             product(user.inventory.all_subroutines(), targets)
             if sub.can_use(user, target)
-            and sub.cpu_slots() < user.status.get_attribute(
+            and sub.cpu_slots() <= user.status.get_attribute(
             Attributes.CPU_AVAILABLE)]
 
 
@@ -52,6 +52,7 @@ class CombatScene(EventListener, Scene):
         for char in self.characters():
             max_cpu = char.status.get_attribute(Attributes.MAX_CPU)
             char.status.increment_attribute(Attributes.CPU_AVAILABLE, max_cpu)
+            print('{} - {} slots'.format(char, max_cpu))
 
         self._combat_stack = CombatStack()
 
@@ -135,11 +136,7 @@ class CombatScene(EventListener, Scene):
             if ANIMATION and not self._first_turn:
                 self._animation_progress = 0.0
             else:
-                for move in self.combat_stack.extract_resolved_moves():
-                    move.execute()
-                    cpu_slots = move.subroutine.cpu_slots()
-                    move.user.status.increment_attribute(
-                        Attributes.CPU_AVAILABLE, cpu_slots)
+                self._execute_resolved_moves()
             self._first_turn = False
 
         # Animation in progress
@@ -148,8 +145,14 @@ class CombatScene(EventListener, Scene):
             # Execute moves once animation is finished
             if self._animation_progress >= 1.0:
                 self._animation_progress = None
-                for move in self.combat_stack.extract_resolved_moves():
-                    move.execute()
+                self._execute_resolved_moves()
+
+    def _execute_resolved_moves(self) -> None:
+        for move in self.combat_stack.extract_resolved_moves():
+            move.execute()
+            cpu_slots = move.subroutine.cpu_slots()
+            move.user.status.increment_attribute(
+                Attributes.CPU_AVAILABLE, cpu_slots)
 
     def __str__(self) -> str:
         return 'CombatScene(enemy = {})'.format(str(self._enemy))
