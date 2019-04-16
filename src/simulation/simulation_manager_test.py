@@ -24,10 +24,3 @@ class TestSimulationManager(TestCase):
         with self.assertRaises(SimulationError):
             manager.simulate(CharacterTypes.HARMLESS.data,
                              CharacterTypes.HARMLESS.data, n_runs=100)
-
-    def test_combatants_without_moves_raises(self):
-        manager = SimulationManager()
-        with self.assertRaises(ValueError):
-            manager.simulate(CharacterTypes.USELESS.data,
-                             CharacterTypes.USELESS.data,
-                             n_runs=100)

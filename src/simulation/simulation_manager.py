@@ -22,8 +22,6 @@ class SimulationManager(object):
         for _ in range(n_runs):
             attacker = build_character(attacker_data)
             defender = build_character(defender_data)
-            attacker.ai.set_targets([defender])  # type: ignore
-            defender.ai.set_targets([attacker])  # type: ignore
             attacker_won = self._simulate_combat(attacker,  # type: ignore
                                                  defender)
             if attacker_won:
@@ -38,8 +36,8 @@ class SimulationManager(object):
         max_turns = 1000
         manager = CombatManager([attacker], [defender])
         for _ in range(max_turns):
-            attack_move = attacker.ai.select_move()
-            defense_move = defender.ai.select_move()
+            attack_move = attacker.ai.select_move([defender])
+            defense_move = defender.ai.select_move([attacker])
             manager.take_turn([attack_move], [defense_move])
             if manager.is_done():
                 break

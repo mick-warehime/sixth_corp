@@ -20,10 +20,9 @@ def test_shuffle_ai_only_provides_usable_moves():
     target = build_character(char_data)
     ai = build_ai(AIType.Shuffle)
     ai.set_user(user)
-    ai.set_targets([target])
 
     for _ in range(1000):
-        move = ai.select_move()
+        move = ai.select_move([target])
         assert move.subroutine == usable
 
 
@@ -38,12 +37,11 @@ def test_shuffle_ai_moves_dont_repeat():
     target = build_character(char_data)
     ai = build_ai(AIType.Shuffle)
     ai.set_user(user)
-    ai.set_targets([target])
 
     prev_move_description = ''
     move_repeat_count = 0
     for _ in range(1000):
-        move = ai.select_move()
+        move = ai.select_move([target])
         move_description = move.description()
         if move_description == prev_move_description:
             move_repeat_count += 1
@@ -61,9 +59,8 @@ def test_no_valid_moves_means_do_nothing():
     target = build_character(no_subroutines)
     ai = build_ai(AIType.Shuffle)
     ai.set_user(user)
-    ai.set_targets([target])
 
     # If no valid move exists, a null move is passed.
-    move = ai.select_move()
+    move = ai.select_move([target])
 
     assert isinstance(move, Move)
