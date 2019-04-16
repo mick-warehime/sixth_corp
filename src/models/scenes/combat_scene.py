@@ -52,7 +52,6 @@ class CombatScene(EventListener, Scene):
 
         self._selected_char: Character = None
 
-        self._enemy.ai.set_targets([self._player])
         self._layout: Layout = None
         self._update_layout()
 
@@ -149,7 +148,7 @@ class CombatScene(EventListener, Scene):
         """
         self._combat_stack.advance_time()
 
-        enemy_move = self._enemy.ai.select_move()
+        enemy_move = self._enemy.ai.select_move([self._player, self._enemy])
 
         self._combat_stack.add_move(player_move,
                                     player_move.subroutine.time_slots())
