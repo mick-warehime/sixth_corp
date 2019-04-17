@@ -3,7 +3,7 @@ from typing import Dict, List, Optional, Tuple
 
 from pygame.rect import Rect
 
-from data.colors import DARK_GRAY, LIGHT_GRAY, RED, WHITE
+from data.colors import DARK_GRAY, LIGHT_GRAY, RED, WHITE, YELLOW
 from models.combat.moves_base import Move
 from models.scenes.combat_scene import CombatScene
 from models.scenes.scenes_base import Scene
@@ -19,20 +19,31 @@ _TARGET_SIZE, = rescale_horizontal(50)
 
 def _render_move(move: Move, time: Optional[int], rect: Rect,
                  screen: Screen) -> None:
-    # Stack Ability + timer
+    # Background
     screen.render_rect(rect, DARK_GRAY, 0)
     screen.render_rect(rect, LIGHT_GRAY, _STACK_OUTLINE)
+
+    # Description
     screen.render_text(
         move.subroutine.description(),
         _FONT_SIZE,
         rect.x + _TEXT_SPACE,
         rect.y + _TEXT_SPACE,
         WHITE)
+
+    # CPU slots
+    screen.render_text(
+        'CPU: {}'.format(move.subroutine.cpu_slots()),
+        _FONT_SIZE,
+        rect.x + rect.w - 12 * _TEXT_SPACE,
+        rect.y + _TEXT_SPACE, YELLOW)
+
+    # Time to resolve
     if time is not None:
         screen.render_text(
-            'T: {}'.format(time),
+            'T: {}/{}'.format(time, move.subroutine.time_slots()),
             _FONT_SIZE,
-            rect.x + rect.w - 7 * _TEXT_SPACE,
+            rect.x + rect.w - 5 * _TEXT_SPACE,
             rect.y + _TEXT_SPACE, RED)
     # USER + TARGET
     screen.render_image(

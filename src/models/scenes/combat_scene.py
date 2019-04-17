@@ -212,5 +212,5 @@ class CombatScene(EventListener, Scene):
         right_column = Layout(elements, 'vertical')
 
         self._layout = Layout(
-            [(left_column, 1), (middle_column, 1), (right_column, 1)],
+            [(left_column, 2), (middle_column, 3), (right_column, 2)],
             'horizontal', SCREEN_SIZE)
