@@ -7,7 +7,7 @@ from models.characters.states import Stateful
 
 if TYPE_CHECKING:
     from models.combat.ai_base import AI  # noqa: F401
-    from models.characters.inventory import InventoryBase  # noqa: F401
+    from models.characters.chassis import Chassis  # noqa: F401
 
 
 class Character(Stateful):
@@ -25,5 +25,5 @@ class Character(Stateful):
 
     @property
     @abstractmethod
-    def inventory(self) -> 'InventoryBase':
+    def chassis(self) -> 'Chassis':
         """All characters have an inventory."""

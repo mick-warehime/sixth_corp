@@ -107,10 +107,10 @@ def test_combat_scene_to_decision_scene():
                                 cpu_slots=0)
     laser_mod = GenericMod(subroutines_granted=shoot_laser,
                            valid_slots=Slots.HEAD)
-    assert player.inventory.can_store(laser_mod)
-    player.inventory.attempt_store(laser_mod)
+    assert player.chassis.can_store(laser_mod)
+    player.chassis.attempt_store(laser_mod)
 
-    assert laser_mod in player.inventory.all_active_mods()
+    assert laser_mod in player.chassis.all_active_mods()
 
     for _ in range(2):
         # we must do this twice because it takes a round for the first move to

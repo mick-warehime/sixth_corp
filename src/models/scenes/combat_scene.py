@@ -31,7 +31,7 @@ def _valid_moves(user: Character, targets: Sequence[Character]) -> List[Move]:
     """
     return [Move(sub, user, target)
             for sub, target in
-            product(user.inventory.all_subroutines(), targets)
+            product(user.chassis.all_subroutines(), targets)
             if sub.can_use(user, target)
             and sub.cpu_slots() <= user.status.get_attribute(
             Attributes.CPU_AVAILABLE)]

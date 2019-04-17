@@ -56,7 +56,7 @@ class CombatManagerTest(TestCase):
                                        base_name='defender')
 
         repair_sub = repair(5)
-        defender[0].inventory.attempt_store(
+        defender[0].chassis.attempt_store(
             GenericMod(subroutines_granted=repair_sub, valid_slots=Slots.ARMS))
         defender[0].status.increment_attribute(Attributes.HEALTH, -5)
         manager = CombatManager(attackers=attacker, defenders=defender)

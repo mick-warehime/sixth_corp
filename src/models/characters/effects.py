@@ -28,4 +28,4 @@ class AcquireMod(Effect):
         self._mod = mod
 
     def execute(self) -> None:
-        get_player().inventory.attempt_store(self._mod)
+        get_player().chassis.attempt_store(self._mod)

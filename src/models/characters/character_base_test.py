@@ -32,7 +32,7 @@ class CharacterTest(TestCase):
         char = self._character()
 
         assert not char.status.has_state(State.ON_FIRE)
-        char.inventory.attempt_store(
+        char.chassis.attempt_store(
             GenericMod(states_granted=State.ON_FIRE, valid_slots=_ACTIVE_SLOT))
         assert char.status.has_state(State.ON_FIRE)
 
@@ -40,7 +40,7 @@ class CharacterTest(TestCase):
         char = self._character()
         max_health = char.status.get_attribute(Attributes.MAX_HEALTH)
         bonus = 5
-        char.inventory.attempt_store(
+        char.chassis.attempt_store(
             GenericMod(attribute_modifiers={Attributes.MAX_HEALTH: bonus},
                        valid_slots=_ACTIVE_SLOT))
 
@@ -60,9 +60,9 @@ class CharacterTest(TestCase):
         char = self._character()
 
         subroutine = direct_damage(12)
-        assert subroutine not in char.inventory.all_subroutines()
+        assert subroutine not in char.chassis.all_subroutines()
 
-        char.inventory.attempt_store(
+        char.chassis.attempt_store(
             GenericMod(subroutines_granted=subroutine,
                        valid_slots=_ACTIVE_SLOT))
-        assert subroutine in char.inventory.all_subroutines()
+        assert subroutine in char.chassis.all_subroutines()

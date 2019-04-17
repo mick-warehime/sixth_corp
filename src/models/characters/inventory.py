@@ -84,7 +84,7 @@ class InventoryBase(metaclass=abc.ABCMeta):
 
 
 class BasicInventory(InventoryBase):
-    """Basic inventory that cans store infinite mods.
+    """Basic inventory that can store infinite mods.
 
     A mod can be stored more than once.
     """

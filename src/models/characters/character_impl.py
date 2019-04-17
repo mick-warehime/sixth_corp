@@ -23,7 +23,7 @@ class _CharacterImpl(Character):
                  name: str = 'unnamed Character') -> None:
         super().__init__()
 
-        self._inventory: InventoryBase = chassis
+        self._inventory: Chassis = chassis
         self._status = _CombinedStatus(self._inventory)
         self._image_path = image_path
         self._rect: Rect = None
@@ -35,7 +35,7 @@ class _CharacterImpl(Character):
         return self._status
 
     @property
-    def inventory(self) -> InventoryBase:
+    def chassis(self) -> Chassis:
         return self._inventory
 
     @property
@@ -96,8 +96,8 @@ def build_character(data: CharacterData) -> _CharacterImpl:
     for mod_data in data.mods:
         mod = GenericMod(mod_data.states_granted, mod_data.attribute_modifiers,
                          mod_data.subroutines_granted, mod_data.valid_slots)
-        assert char.inventory.can_store(mod), 'Mod cannot be picked up.'
-        char.inventory.attempt_store(mod)
+        assert char.chassis.can_store(mod), 'Mod cannot be picked up.'
+        char.chassis.attempt_store(mod)
 
     health = char.status.get_attribute(Attributes.MAX_HEALTH)
     char.status.increment_attribute(Attributes.HEALTH, health)
