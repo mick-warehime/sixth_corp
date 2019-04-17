@@ -23,8 +23,8 @@ class _CharacterImpl(Character):
                  name: str = 'unnamed Character') -> None:
         super().__init__()
 
-        self._inventory: Chassis = chassis
-        self._status = _CombinedStatus(self._inventory)
+        self._chassis: Chassis = chassis
+        self._status = _CombinedStatus(self._chassis)
         self._image_path = image_path
         self._rect: Rect = None
         self._ai: AI = ai
@@ -36,7 +36,7 @@ class _CharacterImpl(Character):
 
     @property
     def chassis(self) -> Chassis:
-        return self._inventory
+        return self._chassis
 
     @property
     def image_path(self) -> str:
