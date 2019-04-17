@@ -1,4 +1,4 @@
-from typing import Sequence
+from typing import List, Sequence
 
 from data.colors import GREEN
 from models.combat.moves_base import Move
@@ -13,13 +13,14 @@ class CombatOptionsArtist(SceneArtist):
 
     def render(self, screen: Screen, scene: Scene) -> None:
         assert isinstance(scene, CombatScene)
-        options = self._combat_options(scene.available_moves())
+
         x, font_size, spacing = rescale_horizontal(450, 35, 50)
         y, = rescale_vertical(700)
-        screen.render_texts(list(options), font_size=font_size, x=x, y=y,
+        screen.render_texts(self._combat_options(scene.available_moves()),
+                            font_size=font_size, x=x, y=y,
                             color=GREEN, spacing=spacing)
 
-    def _combat_options(self, moves: Sequence[Move]) -> Sequence[str]:
+    def _combat_options(self, moves: Sequence[Move]) -> List[str]:
         return ['{} - {} ({} rounds, {} CPU)'.format(
             i + 1, m.subroutine.description(), m.subroutine.time_slots(),
             m.subroutine.cpu_slots())
