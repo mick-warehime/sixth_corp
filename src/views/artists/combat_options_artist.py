@@ -20,5 +20,7 @@ class CombatOptionsArtist(SceneArtist):
                             color=GREEN, spacing=spacing)
 
     def _combat_options(self, moves: Sequence[Move]) -> Sequence[str]:
-        return ['{} - {}'.format(i + 1, m.subroutine.description())
-                for i, m in enumerate(moves)]
+        return ['{} - {} ({} rounds, {} CPU)'.format(
+            i + 1, m.subroutine.description(), m.subroutine.time_slots(),
+            m.subroutine.cpu_slots())
+            for i, m in enumerate(moves)]

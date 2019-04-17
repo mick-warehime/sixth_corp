@@ -23,8 +23,7 @@ def repair(amount: int) -> Subroutine:
     cpu_slots = max(1, amount // 2)
     time_slots = max(1, amount // 2)
 
-    description = 'Repair {} ({} turns {} slots).'.format(amount, time_slots,
-                                                          cpu_slots)
+    description = 'Repair {}'.format(amount)
 
     return build_subroutine(use_fun, can_use_fun, cpu_slots, time_slots,
                             description)
@@ -58,7 +57,7 @@ def direct_damage(damage: int, cpu_slots: int = None,
     def can_use_fun(user: Character, target: Character) -> bool:
         return user is not target
 
-    description = '({} damage)'.format(damage, time_to_resolve)
+    description = '{} damage'.format(damage, time_to_resolve)
     if label:
         description = label + ' ' + description
     return build_subroutine(use_fun, can_use_fun, cpu_slots, time_to_resolve,
