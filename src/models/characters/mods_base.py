@@ -43,6 +43,27 @@ class Mod(metaclass=abc.ABCMeta):
         slots.add(Slots.STORAGE)
         return slots
 
+    def __str__(self):
+        text = 'Mod('
+        text += 'slots: (' + ','.join(s.value for s in self.valid_slots()) + ')'
+
+        if self.states_granted():
+            text += ', states: ('
+            text += ', '.join(s.value for s in self.states_granted()) + '),'
+        if self.attribute_modifiers():
+            text += ', attributes: ('
+            text += ','.join('{} ({})'.format(att.value, val)
+                             for att, val in
+                             self.attribute_modifiers().items()) + '),'
+        if self.subroutines_granted():
+            text += ', subroutines: ('
+            text += ','.join(
+                sub.description() for sub in self.subroutines_granted())
+            text += ')'
+        text += ')'
+
+        return text
+
 
 class GenericMod(Mod):
 
