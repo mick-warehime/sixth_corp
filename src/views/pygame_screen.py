@@ -22,7 +22,7 @@ class Screen(object):
             y: int,
             color: Color,
             spacing: int) -> None:
-        """Adds text to the screen with a font_size, position and color."""
+        """Render a sequence of texts to the screen with vertical spacing."""
         pass
 
     @abstractmethod
@@ -102,8 +102,8 @@ class _PygameScreen(Screen):
             color: Color,
             spacing: int) -> None:
         for text in texts:
-            y += spacing
             self.render_text(text, font_size, x, y, color)
+            y += spacing
 
     def render_text(self, text: str, font_size: int, x: int, y: int,
                     color: Color) -> None:
