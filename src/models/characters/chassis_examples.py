@@ -1,22 +1,22 @@
 from enum import Enum
 from typing import Dict, NamedTuple, Tuple
 
-from models.characters.mods_base import Slots
+from models.characters.mods_base import SlotTypes
 from models.characters.states import Attributes, AttributeType, Skill, State
 from models.characters.subroutine_examples import direct_damage, repair
 from models.characters.subroutines_base import Subroutine, build_subroutine
 
 
 class ChassisData(NamedTuple):
-    slot_capacities: Dict[Slots, int] = {}
+    slot_capacities: Dict[SlotTypes, int] = {}
     states_granted: Tuple[State, ...] = ()
     attribute_modifiers: Dict[AttributeType, int] = {}
     subroutines_granted: Tuple[Subroutine, ...] = ()
 
 
 _NO_LEGS = ChassisData(
-    slot_capacities={Slots.HEAD: 1, Slots.CHEST: 1, Slots.ARMS: 2,
-                     Slots.STORAGE: 10},
+    slot_capacities={SlotTypes.HEAD: 1, SlotTypes.CHEST: 1, SlotTypes.ARMS: 2,
+                     SlotTypes.STORAGE: 10},
     attribute_modifiers={Attributes.MAX_HEALTH: 10, Skill.STEALTH: 1,
                          Skill.MECHANICS: 1, Attributes.MAX_CPU: 4},
     subroutines_granted=(repair(5),))
@@ -24,7 +24,7 @@ _NO_LEGS = ChassisData(
 _shoot_laser = direct_damage(2, label='small laser')
 
 _SINGLE_LASER = ChassisData(
-    slot_capacities={Slots.HEAD: 1, Slots.STORAGE: 1},
+    slot_capacities={SlotTypes.HEAD: 1, SlotTypes.STORAGE: 1},
     states_granted=(State.ON_FIRE,),
     attribute_modifiers={Attributes.MAX_HEALTH: 5, Attributes.MAX_CPU: 2},
     subroutines_granted=(_shoot_laser,)

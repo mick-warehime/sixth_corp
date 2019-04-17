@@ -7,7 +7,7 @@ from models.characters.states import AttributeType, State
 from models.characters.subroutines_base import Subroutine
 
 
-class Slots(Enum):
+class SlotTypes(Enum):
     HEAD = 'head'
     CHEST = 'chest'
     LEGS = 'legs'
@@ -31,16 +31,16 @@ class Mod(metaclass=abc.ABCMeta):
         """Abilities granted by this mod."""
 
     @abc.abstractmethod
-    def _valid_slots(self) -> Set[Slots]:
+    def _valid_slots(self) -> Set[SlotTypes]:
         """Slots in which this mod may be stored, excluding STORAGE."""
 
-    def valid_slots(self) -> Set[Slots]:
+    def valid_slots(self) -> Set[SlotTypes]:
         """Slots in which this mod may be stored.
 
         By default, all mods can be stored in the STORAGE slot.
         """
         slots = self._valid_slots().copy()
-        slots.add(Slots.STORAGE)
+        slots.add(SlotTypes.STORAGE)
         return slots
 
     def __str__(self):
@@ -64,6 +64,8 @@ class Mod(metaclass=abc.ABCMeta):
 
         return text
 
+    __repr__ = __str__
+
 
 class GenericMod(Mod):
 
@@ -71,14 +73,15 @@ class GenericMod(Mod):
             self, states_granted: Union[State, Sequence[State]] = (),
             attribute_modifiers: Dict[AttributeType, int] = None,
             subroutines_granted: Union[Subroutine, Sequence[Subroutine]] = (),
-            valid_slots: Union[Slots, Sequence[Slots]] = Slots.STORAGE) -> None:
+            valid_slots: Union[
+                SlotTypes, Sequence[SlotTypes]] = SlotTypes.STORAGE) -> None:
         if isinstance(states_granted, State):
             states_granted = states_granted,
         if attribute_modifiers is None:
             attribute_modifiers = {}
         if isinstance(subroutines_granted, Subroutine):
             subroutines_granted = subroutines_granted,
-        if isinstance(valid_slots, Slots):
+        if isinstance(valid_slots, SlotTypes):
             valid_slots = (valid_slots,)
 
         self._slots = set(valid_slots)
@@ -95,7 +98,7 @@ class GenericMod(Mod):
     def subroutines_granted(self) -> Sequence[Subroutine]:
         return self._subroutines
 
-    def _valid_slots(self) -> Set[Slots]:
+    def _valid_slots(self) -> Set[SlotTypes]:
         return self._slots
 
 
@@ -103,4 +106,4 @@ class ModData(NamedTuple):
     states_granted: Tuple[State, ...] = ()
     attribute_modifiers: Dict[AttributeType, int] = {}
     subroutines_granted: Tuple[Subroutine, ...] = ()
-    valid_slots: Tuple[Slots, ...] = (Slots.STORAGE,)
+    valid_slots: Tuple[SlotTypes, ...] = (SlotTypes.STORAGE,)

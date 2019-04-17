@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from models.characters.mods_base import GenericMod, Slots
+from models.characters.mods_base import GenericMod, SlotTypes
 from models.characters.states import Attributes
 from models.characters.subroutine_examples import direct_damage, repair
 from models.combat.combat_test_utils import create_combat_group
@@ -57,7 +57,7 @@ class CombatManagerTest(TestCase):
 
         repair_sub = repair(5)
         defender[0].chassis.attempt_store(
-            GenericMod(subroutines_granted=repair_sub, valid_slots=Slots.ARMS))
+            GenericMod(subroutines_granted=repair_sub, valid_slots=SlotTypes.ARMS))
         defender[0].status.increment_attribute(Attributes.HEALTH, -5)
         manager = CombatManager(attackers=attacker, defenders=defender)
 

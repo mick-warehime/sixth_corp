@@ -4,13 +4,13 @@ from functools import reduce
 from typing import Dict, Iterable, List, Tuple
 
 from models.characters.inventory import InventoryBase
-from models.characters.mods_base import Mod, Slots
+from models.characters.mods_base import Mod, SlotTypes
 
 
 class Chassis(InventoryBase):
     """An inventory which determines storage based on slots."""
 
-    def __init__(self, slot_capacities: Dict[Slots, int],
+    def __init__(self, slot_capacities: Dict[SlotTypes, int],
                  base_mod: Mod = None) -> None:
         """
 
@@ -19,17 +19,17 @@ class Chassis(InventoryBase):
                 unspecified it is assumed to have zero capacity.
             base_mod: Fixed mod that is granted by the chassis.
         """
-        self._slot_capacities: Dict[Slots, int] = slot_capacities.copy()
-        self._slot_capacities.update({slot: 0 for slot in Slots
+        self._slot_capacities: Dict[SlotTypes, int] = slot_capacities.copy()
+        self._slot_capacities.update({slot: 0 for slot in SlotTypes
                                       if slot not in slot_capacities})
-        self._stored_mods: Dict[Slots, List[Mod]] = {slot: [] for slot in Slots}
+        self._stored_mods: Dict[SlotTypes, List[Mod]] = {slot: [] for slot in SlotTypes}
         self._base_mod = base_mod
 
     @property
-    def slot_capacities(self) -> Dict[Slots, int]:
+    def slot_capacities(self) -> Dict[SlotTypes, int]:
         return self._slot_capacities.copy()
 
-    def mods_in_slot(self, slot: Slots) -> Tuple[Mod, ...]:
+    def mods_in_slot(self, slot: SlotTypes) -> Tuple[Mod, ...]:
         return tuple(self._stored_mods[slot])
 
     def can_store(self, mod: Mod) -> bool:
@@ -57,7 +57,7 @@ class Chassis(InventoryBase):
         # noinspection PyTypeChecker
         checked_slots = set(self._stored_mods.keys())
         if active_only:
-            checked_slots.remove(Slots.STORAGE)
+            checked_slots.remove(SlotTypes.STORAGE)
         mods = reduce(set.union,  # type: ignore
                       (set(self._stored_mods[slot])
                        for slot in checked_slots))  # type: ignore
@@ -65,19 +65,19 @@ class Chassis(InventoryBase):
             mods.add(self._base_mod)
         return mods
 
-    def _open_slots(self, slots: Iterable[Slots]) -> List[Slots]:
+    def _open_slots(self, slots: Iterable[SlotTypes]) -> List[SlotTypes]:
         return [s for s in slots if self._slot_vacant(s)]
 
-    def _slot_vacant(self, slot: Slots) -> bool:
+    def _slot_vacant(self, slot: SlotTypes) -> bool:
         return len(self._stored_mods[slot]) < self._slot_capacities[slot]
 
     def _store(self, mod: Mod) -> None:
         slots_available = self._open_slots(mod.valid_slots())
-        active_slots_available = set(slots_available) - {Slots.STORAGE}
+        active_slots_available = set(slots_available) - {SlotTypes.STORAGE}
         if active_slots_available:
             slot = active_slots_available.pop()
         else:
-            slot = Slots.STORAGE
+            slot = SlotTypes.STORAGE
 
         self._stored_mods[slot].append(mod)
         logging.debug('INVENTORY: Storing mod in slot {}.'.format(slot.value))

@@ -20,5 +20,5 @@ def build_controller(scene: Scene) -> Controller:
     elif isinstance(scene, SettingsScene):
         return SettingsController()
     elif isinstance(scene, InventoryScene):
-        return InventoryController()
+        return InventoryController(scene)
     raise NotImplementedError('Unrecognized scene type {}'.format(type(scene)))

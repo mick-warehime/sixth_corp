@@ -11,7 +11,7 @@ from models.characters.character_examples import CharacterData
 from models.characters.character_impl import build_character
 from models.characters.chassis_examples import ChassisData
 from models.characters.conditions import IsDead
-from models.characters.mods_base import GenericMod, Slots
+from models.characters.mods_base import GenericMod, SlotTypes
 from models.characters.player import get_player
 from models.characters.states import Attributes
 from models.characters.subroutine_examples import direct_damage
@@ -106,7 +106,7 @@ def test_combat_scene_to_decision_scene():
     shoot_laser = direct_damage(1, label='laser', time_to_resolve=1,
                                 cpu_slots=0)
     laser_mod = GenericMod(subroutines_granted=shoot_laser,
-                           valid_slots=Slots.HEAD)
+                           valid_slots=SlotTypes.HEAD)
     assert player.chassis.can_store(laser_mod)
     player.chassis.attempt_store(laser_mod)
 

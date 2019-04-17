@@ -1,7 +1,7 @@
 """Simple example mods."""
 from enum import Enum
 
-from models.characters.mods_base import ModData, Slots
+from models.characters.mods_base import ModData, SlotTypes
 from models.characters.states import Attributes, Skill, State
 from models.characters.subroutine_examples import direct_damage
 
@@ -24,14 +24,14 @@ _shoot_big = direct_damage(5, label='big laser')
 _mod_types_to_data = {
     ModTypes.BASIC_HULL_PLATING: ModData(
         attribute_modifiers={Attributes.MAX_HEALTH: 3},
-        valid_slots=(Slots.CHEST,)),
+        valid_slots=(SlotTypes.CHEST,)),
     ModTypes.FIRE_HELM: ModData(states_granted=(State.ON_FIRE,),
-                                valid_slots=(Slots.HEAD,)),
+                                valid_slots=(SlotTypes.HEAD,)),
     ModTypes.CAMOUFLAGE_PAINT: ModData(attribute_modifiers={Skill.STEALTH: 1},
-                                       valid_slots=(Slots.CHEST,)),
+                                       valid_slots=(SlotTypes.CHEST,)),
     ModTypes.SMALL_LASER: ModData(subroutines_granted=(_shoot_small,),
-                                  valid_slots=(Slots.ARMS,)),
+                                  valid_slots=(SlotTypes.ARMS,)),
     ModTypes.BIG_LASER: ModData(subroutines_granted=(_shoot_big,),
-                                valid_slots=(Slots.ARMS,))
+                                valid_slots=(SlotTypes.ARMS,))
 
 }
