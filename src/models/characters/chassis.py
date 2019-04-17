@@ -1,13 +1,14 @@
 """Implementation of the Chassis"""
 import logging
 from functools import reduce
-from typing import Dict, Iterable, List
+from typing import Dict, Iterable, List, Tuple
 
 from models.characters.inventory import InventoryBase
 from models.characters.mods_base import Mod, Slots
 
 
 class Chassis(InventoryBase):
+    """An inventory which determines storage based on slots."""
 
     def __init__(self, slot_capacities: Dict[Slots, int],
                  base_mod: Mod = None) -> None:
@@ -23,6 +24,13 @@ class Chassis(InventoryBase):
                                       if slot not in slot_capacities})
         self._stored_mods: Dict[Slots, List[Mod]] = {slot: [] for slot in Slots}
         self._base_mod = base_mod
+
+    @property
+    def slot_capacities(self) -> Dict[Slots, int]:
+        return self._slot_capacities.copy()
+
+    def mods_in_slot(self, slot: Slots) -> Tuple[Mod, ...]:
+        return tuple(self._stored_mods[slot])
 
     def can_store(self, mod: Mod) -> bool:
         available_slots = self._open_slots(mod.valid_slots())
