@@ -9,7 +9,7 @@ from events import event_utils
 from events.events_base import BasicEvents, EventManager
 from models.characters.character_examples import CharacterData
 from models.characters.character_impl import build_character
-from models.characters.chassis_examples import ChassisData
+from models.characters.chassis import ChassisData
 from models.characters.conditions import IsDead
 from models.characters.mods_base import GenericMod, SlotTypes
 from models.characters.player import get_player

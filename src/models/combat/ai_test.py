@@ -4,7 +4,7 @@ from parameterized import parameterized
 
 from models.characters.character_examples import CharacterData
 from models.characters.character_impl import build_character
-from models.characters.chassis_examples import ChassisData
+from models.characters.chassis import ChassisData
 from models.characters.subroutines_base import build_subroutine
 from models.combat.ai_impl import AIType, build_ai
 

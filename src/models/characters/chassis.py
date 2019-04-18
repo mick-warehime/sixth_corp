@@ -1,10 +1,12 @@
 """Implementation of the Chassis"""
 import logging
 from functools import reduce
-from typing import Dict, Iterable, List, Tuple
+from typing import Dict, Iterable, List, Tuple, NamedTuple
 
 from models.characters.inventory import InventoryBase
-from models.characters.mods_base import Mod, SlotTypes
+from models.characters.mods_base import Mod, SlotTypes, GenericMod
+from models.characters.states import State, AttributeType
+from models.characters.subroutines_base import Subroutine
 
 
 class Chassis(InventoryBase):
@@ -25,6 +27,12 @@ class Chassis(InventoryBase):
         self._stored_mods: Dict[SlotTypes, List[Mod]] = {slot: [] for slot in
                                                          SlotTypes}
         self._base_mod = base_mod
+
+    @classmethod
+    def from_data(cls, data: 'ChassisData') -> 'Chassis':
+        base_mod = GenericMod(data.states_granted, data.attribute_modifiers,
+                              data.subroutines_granted, description='base mod')
+        return Chassis(data.slot_capacities, base_mod)
 
     @property
     def slot_capacities(self) -> Dict[SlotTypes, int]:
@@ -82,3 +90,10 @@ class Chassis(InventoryBase):
 
         self._stored_mods[slot].append(mod)
         logging.debug('INVENTORY: Storing mod in slot {}.'.format(slot.value))
+
+
+class ChassisData(NamedTuple):
+    slot_capacities: Dict[SlotTypes, int] = {}
+    states_granted: Tuple[State, ...] = ()
+    attribute_modifiers: Dict[AttributeType, int] = {}
+    subroutines_granted: Tuple[Subroutine, ...] = ()

@@ -1,18 +1,11 @@
 from enum import Enum
-from typing import Dict, NamedTuple, Tuple
+from typing import Dict
 
+from models.characters.chassis import ChassisData
 from models.characters.mods_base import SlotTypes
-from models.characters.states import Attributes, AttributeType, Skill, State
-from models.characters.subroutine_examples import direct_damage, repair
-from models.characters.subroutines_base import Subroutine, build_subroutine
-
-
-class ChassisData(NamedTuple):
-    slot_capacities: Dict[SlotTypes, int] = {}
-    states_granted: Tuple[State, ...] = ()
-    attribute_modifiers: Dict[AttributeType, int] = {}
-    subroutines_granted: Tuple[Subroutine, ...] = ()
-
+from models.characters.states import Attributes, Skill, State
+from models.characters.subroutine_examples import direct_damage
+from models.characters.subroutines_base import build_subroutine
 
 _NO_LEGS = ChassisData(
     slot_capacities={SlotTypes.HEAD: 1, SlotTypes.CHEST: 3, SlotTypes.ARMS: 2,

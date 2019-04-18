@@ -19,6 +19,10 @@ class Mod(metaclass=abc.ABCMeta):
     """Grants state(s) or modifies character attributes."""
 
     @abc.abstractmethod
+    def description(self) -> str:
+        """Short text description of mod."""
+
+    @abc.abstractmethod
     def states_granted(self) -> Sequence[State]:
         """The States granted by this mod. """
 
@@ -44,7 +48,7 @@ class Mod(metaclass=abc.ABCMeta):
         return slots
 
     def __str__(self):
-        text = 'Mod('
+        text = 'Mod({}, '.format(self.description())
         text += 'slots: (' + ','.join(s.value for s in self.valid_slots()) + ')'
 
         if self.states_granted():
@@ -69,18 +73,25 @@ class Mod(metaclass=abc.ABCMeta):
 
 class GenericMod(Mod):
 
+    @classmethod
+    def from_data(cls, mod_data: 'ModData') -> 'GenericMod':
+        return GenericMod(mod_data.states_granted, mod_data.attribute_modifiers,
+                          mod_data.subroutines_granted, mod_data.valid_slots,
+                          mod_data.description)
+
     def __init__(
             self, states_granted: Union[State, Sequence[State]] = (),
             attribute_modifiers: Dict[AttributeType, int] = None,
             subroutines_granted: Union[Subroutine, Sequence[Subroutine]] = (),
             valid_slots: Union[
-                SlotTypes, Sequence[SlotTypes]] = SlotTypes.STORAGE) -> None:
+                SlotTypes, Sequence[SlotTypes]] = SlotTypes.STORAGE,
+            description='unnamed mod') -> None:
         if isinstance(states_granted, State):
             states_granted = states_granted,
         if attribute_modifiers is None:
             attribute_modifiers = {}
         if isinstance(subroutines_granted, Subroutine):
-            subroutines_granted = subroutines_granted,
+            subroutines_granted = (subroutines_granted,)
         if isinstance(valid_slots, SlotTypes):
             valid_slots = (valid_slots,)
 
@@ -88,6 +99,7 @@ class GenericMod(Mod):
         self._states = states_granted
         self._attr_mods = attribute_modifiers.copy()
         self._subroutines = subroutines_granted
+        self._description = description
 
     def states_granted(self) -> Sequence[State]:
         return self._states
@@ -98,6 +110,9 @@ class GenericMod(Mod):
     def subroutines_granted(self) -> Sequence[Subroutine]:
         return self._subroutines
 
+    def description(self):
+        return self._description
+
     def _valid_slots(self) -> Set[SlotTypes]:
         return self._slots
 
@@ -107,3 +122,4 @@ class ModData(NamedTuple):
     attribute_modifiers: Dict[AttributeType, int] = {}
     subroutines_granted: Tuple[Subroutine, ...] = ()
     valid_slots: Tuple[SlotTypes, ...] = (SlotTypes.STORAGE,)
+    description: str = 'unnamed mod'

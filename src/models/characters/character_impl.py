@@ -7,7 +7,6 @@ from pygame.rect import Rect
 from models.characters.character_base import Character
 from models.characters.character_examples import CharacterData
 from models.characters.chassis import Chassis
-from models.characters.chassis_factory import build_chassis
 from models.characters.inventory import InventoryBase
 from models.characters.mods_base import GenericMod
 from models.characters.states import Attributes, AttributeType, State, Status
@@ -87,7 +86,7 @@ class _CombinedStatus(Status):
 
 
 def build_character(data: CharacterData) -> _CharacterImpl:
-    chassis = build_chassis(data.chassis_data)
+    chassis = Chassis.from_data(data.chassis_data)
 
     ai = build_ai(data.ai_type)
     char = _CharacterImpl(chassis, ai, data.image_path, name=data.name)

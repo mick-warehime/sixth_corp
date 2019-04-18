@@ -6,7 +6,7 @@ from events.event_utils import simulate_key_press, simulate_mouse_click
 from models.characters.character_base import Character
 from models.characters.character_examples import CharacterData
 from models.characters.character_impl import build_character
-from models.characters.chassis_examples import ChassisData
+from models.characters.chassis import ChassisData
 from models.characters.states import Attributes
 from models.scenes.combat_scene import CombatScene
 

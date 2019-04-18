@@ -1,7 +1,7 @@
 from models.characters.character_base import Character
 from models.characters.character_examples import CharacterData
 from models.characters.character_impl import build_character
-from models.characters.chassis_examples import ChassisData
+from models.characters.chassis import ChassisData
 from models.characters.mods_base import ModData, SlotTypes
 from models.characters.states import Attributes
 from models.characters.subroutine_examples import direct_damage
