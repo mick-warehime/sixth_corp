@@ -22,7 +22,8 @@ class Chassis(InventoryBase):
         self._slot_capacities: Dict[SlotTypes, int] = slot_capacities.copy()
         self._slot_capacities.update({slot: 0 for slot in SlotTypes
                                       if slot not in slot_capacities})
-        self._stored_mods: Dict[SlotTypes, List[Mod]] = {slot: [] for slot in SlotTypes}
+        self._stored_mods: Dict[SlotTypes, List[Mod]] = {slot: [] for slot in
+                                                         SlotTypes}
         self._base_mod = base_mod
 
     @property
