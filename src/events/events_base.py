@@ -5,6 +5,7 @@ from typing import NamedTuple, Optional, Tuple, Union
 from weakref import WeakSet
 
 from models.characters.character_base import Character
+from models.characters.mods_base import Mod
 from models.combat.moves_base import Move
 from models.scenes.scenes_base import Scene
 
@@ -90,9 +91,13 @@ class DecisionEvent(NamedTuple):
     scene: Scene
 
 
+class InventorySelectionEvent(NamedTuple):
+    mod: Optional[Mod]
+
+
 EventType = Union[BasicEvents, InputEvent, NewSceneEvent, MoveExecutedEvent,
                   ControllerActivatedEvent, SelectCharacterEvent,
-                  SelectPlayerMoveEvent, DecisionEvent]
+                  SelectPlayerMoveEvent, DecisionEvent, InventorySelectionEvent]
 
 
 class EventManager(object):

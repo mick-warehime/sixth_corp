@@ -1,6 +1,7 @@
 from controllers.controller import Controller
-from events.events_base import EventType, InputEvent, BasicEvents
-from models.scenes.inventory_scene import InventoryScene
+from events.events_base import EventType, InputEvent, BasicEvents, EventManager, \
+    InventorySelectionEvent
+from models.scenes.inventory_scene import InventoryScene, SlotData
 
 
 class InventoryController(Controller):
@@ -20,5 +21,9 @@ class InventoryController(Controller):
         x = event.mouse[0]
         y = event.mouse[1]
 
+        # Handle clicks on mod slots
         clicked_obj = self._scene.layout.object_at(x, y)
-        print(str(clicked_obj))
+        if isinstance(clicked_obj, SlotData):
+            EventManager.post(InventorySelectionEvent(clicked_obj.mod))
+        else:
+            EventManager.post(InventorySelectionEvent(None))

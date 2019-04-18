@@ -1,6 +1,6 @@
 from pygame.rect import Rect
 
-from data.colors import WHITE, LIGHT_GRAY, DARK_GRAY, BLUE
+from data.colors import WHITE, LIGHT_GRAY, DARK_GRAY, BLUE, RED
 from models.scenes.inventory_scene import InventoryScene, SlotHeader, SlotData
 from models.scenes.scenes_base import Scene
 from views.artists.scene_artist_base import SceneArtist
@@ -22,7 +22,8 @@ def _render_slot_header(slot_data: SlotHeader, rect: Rect,
 
 def _render_mod_slot(slot_data: SlotData, rect: Rect, screen: Screen) -> None:
     screen.render_rect(rect, LIGHT_GRAY, 0)
-    screen.render_rect(rect, DARK_GRAY, 4)
+    border = RED if slot_data.is_selected else DARK_GRAY
+    screen.render_rect(rect, border, 4)
 
     screen.render_text(slot_data.mod.description(), _FONT_SIZE, rect.x + 10,
                        rect.center[1] - 10, BLUE)
