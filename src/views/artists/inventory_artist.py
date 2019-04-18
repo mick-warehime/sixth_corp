@@ -1,8 +1,7 @@
 from pygame.rect import Rect
 
-from data.colors import WHITE, YELLOW, LIGHT_GRAY, DARK_GRAY, BLUE
-from models.characters.mods_base import Mod
-from models.scenes.inventory_scene import InventoryScene, SlotHeader
+from data.colors import WHITE, LIGHT_GRAY, DARK_GRAY, BLUE
+from models.scenes.inventory_scene import InventoryScene, SlotHeader, SlotData
 from models.scenes.scenes_base import Scene
 from views.artists.scene_artist_base import SceneArtist
 from views.pygame_screen import Screen
@@ -13,7 +12,7 @@ _FONT_SIZE = 40
 def _render_slot_header(slot_data: SlotHeader, rect: Rect,
                         screen: Screen) -> None:
     screen.render_rect(rect, LIGHT_GRAY, 0)
-    screen.render_rect(rect, DARK_GRAY, 2)
+    screen.render_rect(rect, DARK_GRAY, 4)
 
     text = '{} - {} / {}'.format(slot_data.slot.value, slot_data.num_filled,
                                  slot_data.capacity)
@@ -21,8 +20,12 @@ def _render_slot_header(slot_data: SlotHeader, rect: Rect,
     screen.render_text(text, _FONT_SIZE, rect.x + 10, rect.center[1] - 10, BLUE)
 
 
-def _render_mod_slot(mod: Mod, rect: Rect, screen: Screen) -> None:
-    pass
+def _render_mod_slot(slot_data: SlotData, rect: Rect, screen: Screen) -> None:
+    screen.render_rect(rect, LIGHT_GRAY, 0)
+    screen.render_rect(rect, DARK_GRAY, 4)
+
+    screen.render_text(slot_data.mod.description(), _FONT_SIZE, rect.x + 10,
+                       rect.center[1] - 10, BLUE)
 
 
 class InventoryArtist(SceneArtist):
@@ -46,6 +49,6 @@ class InventoryArtist(SceneArtist):
             if isinstance(obj, SlotHeader):
                 assert len(rects) == 1
                 _render_slot_header(obj, rects[0], screen)
-            elif isinstance(obj, Mod):
+            elif isinstance(obj, SlotData):
                 assert len(rects) == 1
                 _render_mod_slot(obj, rects[0], screen)

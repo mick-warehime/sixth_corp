@@ -93,8 +93,7 @@ def build_character(data: CharacterData) -> _CharacterImpl:
     ai.set_user(char)
 
     for mod_data in data.mods:
-        mod = GenericMod(mod_data.states_granted, mod_data.attribute_modifiers,
-                         mod_data.subroutines_granted, mod_data.valid_slots)
+        mod = GenericMod.from_data(mod_data)
         assert char.chassis.can_store(mod), 'Mod cannot be picked up.'
         char.chassis.attempt_store(mod)
 

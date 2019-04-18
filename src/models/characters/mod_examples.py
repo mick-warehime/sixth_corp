@@ -16,7 +16,7 @@ class ModTypes(Enum):
 
     @property
     def data(self) -> ModData:
-        return _mod_types_to_data[self]
+        return _mod_types_to_data[self]._replace(description=self.value)
 
 
 _shoot_small = direct_damage(2, label='small laser')
