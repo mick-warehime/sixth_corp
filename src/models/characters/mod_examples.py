@@ -3,7 +3,7 @@ from enum import Enum
 
 from models.characters.mods_base import ModData, SlotTypes
 from models.characters.states import Attributes, Skill, State
-from models.characters.subroutine_examples import direct_damage
+from models.characters.subroutine_examples import direct_damage, repair
 
 
 class ModTypes(Enum):
@@ -12,6 +12,7 @@ class ModTypes(Enum):
     CAMOUFLAGE_PAINT = 'camo paint'
     SMALL_LASER = 'small laser'
     BIG_LASER = 'big laser'
+    REPAIR_NANITES = 'self-repair nanites'
 
     @property
     def data(self) -> ModData:
@@ -32,6 +33,8 @@ _mod_types_to_data = {
     ModTypes.SMALL_LASER: ModData(subroutines_granted=(_shoot_small,),
                                   valid_slots=(SlotTypes.ARMS,)),
     ModTypes.BIG_LASER: ModData(subroutines_granted=(_shoot_big,),
-                                valid_slots=(SlotTypes.ARMS,))
+                                valid_slots=(SlotTypes.ARMS,)),
+    ModTypes.REPAIR_NANITES: ModData(subroutines_granted=(repair(5),),
+                                     valid_slots=(SlotTypes.CHEST,))
 
 }

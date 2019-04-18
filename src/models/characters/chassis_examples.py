@@ -15,11 +15,10 @@ class ChassisData(NamedTuple):
 
 
 _NO_LEGS = ChassisData(
-    slot_capacities={SlotTypes.HEAD: 1, SlotTypes.CHEST: 1, SlotTypes.ARMS: 2,
+    slot_capacities={SlotTypes.HEAD: 1, SlotTypes.CHEST: 3, SlotTypes.ARMS: 2,
                      SlotTypes.STORAGE: 10},
     attribute_modifiers={Attributes.MAX_HEALTH: 10, Skill.STEALTH: 1,
-                         Skill.MECHANICS: 1, Attributes.MAX_CPU: 4},
-    subroutines_granted=(repair(5),))
+                         Skill.MECHANICS: 1, Attributes.MAX_CPU: 4})
 
 _shoot_laser = direct_damage(2, label='small laser')
 
