@@ -12,10 +12,14 @@ class Keybindings(object):
     preference_file = PREFERENCES_FILE
     binding_field = 'binding'
     key_field = 'key'
+    _keys_loaded: bool = False
+    _bindings: Dict[str, BasicEvents] = dict()
+    _bindings_inverse: Dict[str, List[str]] = dict()
 
     def __init__(self) -> None:
-        self._bindings: Dict[str, BasicEvents] = dict()
-        self._bindings_inverse: Dict[str, List[str]] = dict()
+        if not Keybindings._keys_loaded:
+            self.load()
+            Keybindings._keys_loaded = True
 
     def load(self) -> None:
         bindings: Dict[str, BasicEvents] = dict()
@@ -33,8 +37,8 @@ class Keybindings(object):
                         'Binding <{}> does not exist. Add BasicEvents.'
                         '{}?'.format(bound_event, bound_event))
 
-        self._bindings = bindings
-        self._bindings_inverse = bindings_inv
+        Keybindings._bindings = bindings
+        Keybindings._bindings_inverse = bindings_inv
 
         logging.debug('Loaded keybindings')
         logging.debug(str(self))
@@ -51,8 +55,8 @@ class Keybindings(object):
     def update_binding(self, key: str, event: BasicEvents) -> None:
         if key in self._bindings_inverse[event.value]:
             self._bindings_inverse[event.value].remove(key)
-        self._bindings[key] = event
-        self._bindings_inverse[event.value].append(key)
+        Keybindings._bindings[key] = event
+        Keybindings._bindings_inverse[event.value].append(key)
 
         self.save()
 

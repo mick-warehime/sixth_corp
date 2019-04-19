@@ -1,10 +1,15 @@
 import csv
+import os
 import tempfile
+from os.path import dirname
 from typing import Dict
 from unittest import TestCase
 
 from data.keybindings import Keybindings
 from events.events_base import BasicEvents
+
+# Ensure that working directory is sixth_corp
+os.chdir(dirname(dirname(dirname(os.path.abspath(__file__)))))
 
 
 class KeybindingsTest(TestCase):
