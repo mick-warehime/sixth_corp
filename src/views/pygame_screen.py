@@ -28,8 +28,23 @@ class Screen(object):
     @abstractmethod
     def render_text(
             self, text: str, font_size: int, x: int, y: int,
-            color: Color) -> None:
-        """Adds text to the screen with a font_size, position and color."""
+            color: Color, w: int = None, h: int = None) -> Rect:
+        """Adds text to the screen with a font_size, position and color.
+
+        Args:
+            text: Text to be rendered.
+            font_size: Size of text.
+            x: x coordinate of top left of text box.
+            y: y coordinate of top left of text box.
+            color: text color (RGB).
+            w: (Optional) If passed text is centered horizontally assuming a
+                rectangle with left edge at x and width w.
+            h: (Optional) If passed text is centered vertically assuming a
+                rectangle with top edge at y and height h.
+
+        Returns:
+            The Rect of the rendered text.
+        """
         pass
 
     @abstractmethod
@@ -72,7 +87,7 @@ class _PygameScreen(Screen):
 
     def _font(self, size: int) -> pygame.font.Font:
         if size not in self._fonts:
-            font = pygame.font.Font(None, size)
+            font = pygame.font.SysFont('courier', size)
             self._fonts[size] = font
         else:
             font = self._fonts[size]
@@ -106,10 +121,25 @@ class _PygameScreen(Screen):
             y += spacing
 
     def render_text(self, text: str, font_size: int, x: int, y: int,
-                    color: Color) -> None:
+                    color: Color, w: int = None, h: int = None) -> Rect:
         font = self._font(font_size)
         rasterized = font.render(text, True, color)
-        self._screen.blit(rasterized, (x, y))
+
+        kwargs = {}
+        if w is None:
+            kwargs['x'] = x
+        else:
+            kwargs['centerx'] = x + w // 2
+
+        if h is None:
+            kwargs['y'] = y
+        else:
+            kwargs['centery'] = y + h // 2
+
+        rect = rasterized.get_rect(**kwargs)
+
+        self._screen.blit(rasterized, rect)
+        return rect
 
     def render_image(self, image_path: str, x: int, y: int, w: int,
                      h: int) -> None:
