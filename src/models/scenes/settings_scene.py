@@ -18,3 +18,7 @@ class SettingsScene(Scene):
 
     def get_resolution(self) -> Resolution:
         return None
+
+    @property
+    def inventory_available(self) -> bool:
+        return False

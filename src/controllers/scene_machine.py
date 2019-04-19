@@ -32,6 +32,11 @@ class SceneMachine(EventListener):
 
         # toggle between settings/inventory scene and game scene
         if event in (BasicEvents.SETTINGS, BasicEvents.INVENTORY):
+
+            if event == BasicEvents.INVENTORY:
+                if not self._current_scene.inventory_available:
+                    return
+
             new_scene: Scene = None
             # go to temp scene
             if self._current_scene is self._current_game_scene:

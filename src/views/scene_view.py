@@ -50,9 +50,9 @@ def _build_scene_artists(scene: Scene) -> List[SceneArtist]:
                    CharacterArtist(), CombatOptionsArtist(),
                    CombatStackArtist()]
     elif isinstance(scene, DecisionScene):
-        artists = [BackgroundArtist(scene), DecisionArtist()]
+        artists = [BackgroundArtist(scene), OverlayArtist(), DecisionArtist()]
     elif isinstance(scene, SettingsScene):
-        artists = [BackgroundArtist(scene), SettingsArtist()]
+        artists = [BackgroundArtist(scene), OverlayArtist(), SettingsArtist()]
     elif isinstance(scene, InventoryScene):
         artists = [BackgroundArtist(scene), InventoryArtist()]
     else:
