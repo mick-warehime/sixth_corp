@@ -7,10 +7,11 @@ from models.characters.mods_base import SlotTypes
 from models.scenes.inventory_scene import (InventoryScene, ModInformation,
                                            SlotData, SlotHeader)
 from models.scenes.scenes_base import Scene
+from views.artists.drawing_utils import rescale_horizontal
 from views.artists.scene_artist_base import SceneArtist
 from views.pygame_screen import Screen
 
-_FONT_SIZE = 40
+_FONT_SIZE, = rescale_horizontal(28)
 _TEXT_COLOR = BLUE
 
 

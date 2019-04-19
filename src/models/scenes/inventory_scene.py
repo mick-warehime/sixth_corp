@@ -60,6 +60,10 @@ class InventoryScene(Scene, EventListener):
                                               event.new_slot)
 
     @property
+    def inventory_available(self) -> bool:
+        return True
+
+    @property
     def layout(self) -> Layout:
         return self._layout
 

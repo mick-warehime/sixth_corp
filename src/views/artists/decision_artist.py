@@ -33,6 +33,7 @@ def _parse_text_fun(main_text: _TextOrFun) -> _TextFun:
 
 
 class DecisionArtist(SceneArtist):
+    """Render the components of the decision scene."""
 
     def render(self, screen: Screen, scene: Scene) -> None:
         assert isinstance(scene, DecisionScene)

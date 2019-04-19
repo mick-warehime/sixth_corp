@@ -30,7 +30,8 @@ class DecisionScene(EventListener, Scene):
     """A Scene that is resolved by the player making a choice."""
 
     def __init__(self, prompt: str, choices: Dict[str, DecisionOption],
-                 background_image: str = None) -> None:
+                 background_image: str = None,
+                 inventory_available: bool = True) -> None:
         self.prompt = prompt
         super().__init__()
         self.choices = choices
@@ -39,11 +40,16 @@ class DecisionScene(EventListener, Scene):
             self._background_image: str = BackgroundImages.CITY.path
         else:
             self._background_image = background_image
+        self._inventory_available = inventory_available
 
     def notify(self, event: EventType) -> None:
         if isinstance(event, DecisionEvent) and self is event.scene:
             assert event.choice in self.choices
             self._choice = self.choices[event.choice]
+
+    @property
+    def inventory_available(self) -> bool:
+        return self._inventory_available
 
     @property
     def background_image(self) -> str:
@@ -68,7 +74,8 @@ def transition_to(
     def scene_fun() -> DecisionScene:
         return DecisionScene(description,
                              {'1': DecisionOption('Continue', next_scene_fun,
-                                                  effects)})
+                                                  effects)},
+                             inventory_available=False)
 
     return scene_fun
 

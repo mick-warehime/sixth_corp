@@ -18,7 +18,8 @@ def loading_scene() -> DecisionScene:
         's': DecisionOption('Start Game', swamp_scene),
         'x': DecisionOption('Settings', example_combat_scene)}
     return DecisionScene('6TH Corp', options,
-                         background_image=BackgroundImages.LOADING.path)
+                         background_image=BackgroundImages.LOADING.path,
+                         inventory_available=False)
 
 
 def start_scene() -> DecisionScene:
