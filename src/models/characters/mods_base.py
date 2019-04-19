@@ -1,7 +1,7 @@
 """Base implementation of mods and inventory."""
 import abc
 from enum import Enum
-from typing import Dict, NamedTuple, Sequence, Set, Tuple, Union
+from typing import Dict, NamedTuple, Sequence, Set, Tuple, Union, List
 
 from models.characters.states import AttributeType, State
 from models.characters.subroutines_base import Subroutine
@@ -38,13 +38,13 @@ class Mod(metaclass=abc.ABCMeta):
     def _valid_slots(self) -> Set[SlotTypes]:
         """Slots in which this mod may be stored, excluding STORAGE."""
 
-    def valid_slots(self) -> Set[SlotTypes]:
+    def valid_slots(self) -> List[SlotTypes]:
         """Slots in which this mod may be stored.
 
         By default, all mods can be stored in the STORAGE slot.
         """
-        slots = self._valid_slots().copy()
-        slots.add(SlotTypes.STORAGE)
+        slots = [s for s in SlotTypes if s in self._valid_slots()]
+        slots.append(SlotTypes.STORAGE)
         return slots
 
     def __str__(self):
