@@ -36,7 +36,6 @@ class InventoryScene(Scene, EventListener):
 
     def __init__(self) -> None:
         super().__init__()
-        self.options = ('Inventory', 'i: Return')
         self._background_image = BackgroundImages.INVENTORY.path
         self._player = get_player()
         self._layout: Layout = None

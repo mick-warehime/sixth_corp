@@ -3,6 +3,8 @@ from typing import List, Sequence
 from pygame.rect import Rect
 
 from data.colors import BLUE, DARK_GRAY, GREEN, LIGHT_GRAY, RED, WHITE
+from data.keybindings import Keybindings
+from events.events_base import BasicEvents
 from models.characters.mods_base import SlotTypes
 from models.scenes.inventory_scene import (InventoryScene, ModInformation,
                                            SlotData, SlotHeader)
@@ -106,7 +108,8 @@ class InventoryArtist(SceneArtist):
         assert isinstance(scene, InventoryScene)
 
         # Scene title and exit key
-        screen.render_texts(list(scene.options),
+        inv_key = Keybindings().keys_for_event(BasicEvents.INVENTORY)[0]
+        screen.render_texts(['Inventory', '{} - Return'.format(inv_key)],
                             font_size=35, x=20, y=10, color=WHITE, spacing=30)
 
         # All other boxes with text
