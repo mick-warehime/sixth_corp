@@ -41,6 +41,19 @@ class Chassis(InventoryBase):
     def mods_in_slot(self, slot: SlotTypes) -> Tuple[Mod, ...]:
         return tuple(self._stored_mods[slot])
 
+    def transfer_mod(self, mod: Mod, target_slot: SlotTypes) -> None:
+        """Moves a mod to a specify slot.
+
+        The slot must have sufficient space and be a valid slot for the Mod.
+        """
+        assert target_slot in mod.valid_slots()
+        assert self._slot_vacant(target_slot)
+
+        self.remove_mod(mod)
+        logging.debug(
+            'Transferring mod {} to {}'.format(mod, target_slot.value))
+        self._stored_mods[target_slot].append(mod)
+
     def can_store(self, mod: Mod) -> bool:
         available_slots = self._open_slots(mod.valid_slots())
         if not available_slots:

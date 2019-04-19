@@ -1,7 +1,8 @@
 from typing import NamedTuple, Tuple
 
 from data.constants import BackgroundImages, SCREEN_SIZE
-from events.events_base import EventListener, EventType, InventorySelectionEvent
+from events.events_base import EventListener, EventType, \
+    InventorySelectionEvent, InventoryTransferEvent
 from models.characters.chassis import Chassis
 from models.characters.mods_base import SlotTypes, Mod
 from models.characters.player import get_player
@@ -48,6 +49,14 @@ class InventoryScene(Scene, EventListener):
             else:
                 self._selected_mod = event.mod
             self._update_layout()
+        if isinstance(event, InventoryTransferEvent):
+            if self._selected_mod is None:
+                return
+            if event.new_slot not in self._selected_mod.valid_slots():
+                return
+            # Carry out valid transfer of slot
+            self._player.chassis.transfer_mod(self._selected_mod,
+                                              event.new_slot)
 
     @property
     def layout(self) -> Layout:
