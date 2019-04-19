@@ -1,6 +1,7 @@
 import csv
 import logging
-from typing import Dict
+from collections import defaultdict
+from typing import Dict, List, Tuple
 
 from data.constants import PREFERENCES_FILE
 from events.events_base import BasicEvents, EventType
@@ -13,23 +14,27 @@ class Keybindings(object):
     key_field = 'key'
 
     def __init__(self) -> None:
-        self.bindings: Dict[str, BasicEvents] = dict()
+        self._bindings: Dict[str, BasicEvents] = dict()
+        self._bindings_inverse: Dict[str, List[str]] = dict()
 
     def load(self) -> None:
         bindings: Dict[str, BasicEvents] = dict()
+        bindings_inv: Dict[BasicEvents, List[str]] = defaultdict(lambda: [])
         with open(self.preference_file) as bindings_file:
             reader = csv.DictReader(bindings_file)
             for row in reader:
                 key = row[self.key_field]
-                binding = row[self.binding_field]
+                bound_event = row[self.binding_field]
                 try:
-                    bindings[key] = BasicEvents[binding]
+                    bindings[key] = BasicEvents[bound_event]
+                    bindings_inv[bound_event].append(key)
                 except KeyError:
                     raise NotImplementedError(
-                        'Binding <{}> does not exist. Add Event.{}?'.format(
-                            binding, binding))
+                        'Binding <{}> does not exist. Add BasicEvents.'
+                        '{}?'.format(bound_event, bound_event))
 
-        self.bindings = bindings
+        self._bindings = bindings
+        self._bindings_inverse = bindings_inv
 
         logging.debug('Loaded keybindings')
         logging.debug(str(self))
@@ -39,24 +44,30 @@ class Keybindings(object):
             writer = csv.DictWriter(
                 bindings_file, fieldnames=[self.binding_field, self.key_field])
             writer.writeheader()
-            for key, binding in self.bindings.items():
+            for key, binding in self._bindings.items():
                 writer.writerow(
                     {self.binding_field: binding, self.key_field: key})
 
     def update_binding(self, key: str, event: BasicEvents) -> None:
-        self.bindings[key] = event
+        if key in self._bindings_inverse[event.value]:
+            self._bindings_inverse[event.value].remove(key)
+        self._bindings[key] = event
+        self._bindings_inverse[event.value].append(key)
 
         self.save()
 
         logging.debug('Updated keybindings')
         logging.debug(str(self))
 
-    def get_binding(self, key: str) -> EventType:
-        return self.bindings.get(key, BasicEvents.NONE)
+    def event_for_key(self, key: str) -> EventType:
+        return self._bindings.get(key, BasicEvents.NONE)
+
+    def keys_for_event(self, event: BasicEvents) -> Tuple[str, ...]:
+        return tuple(self._bindings_inverse[event.value])
 
     def __str__(self) -> str:
         keys = ["\nKEY BINDINGS", "--------------------"]
-        for key, value in self.bindings.items():
+        for key, value in self._bindings.items():
             keys.append("{}: {}".format(key, value))
         keys.append("--------------------")
         return '\n'.join(keys)

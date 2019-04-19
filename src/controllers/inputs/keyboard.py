@@ -50,7 +50,7 @@ class Keyboard(EventListener):
         return pygame.mouse.get_pos()
 
     def get_binding(self, key: str) -> EventType:
-        return self.bindings.get_binding(key)
+        return self.bindings.event_for_key(key)
 
     def post_bound_event(self, key: str) -> None:
         binding = self.get_binding(key)
