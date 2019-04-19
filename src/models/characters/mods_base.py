@@ -1,7 +1,7 @@
 """Base implementation of mods and inventory."""
 import abc
 from enum import Enum
-from typing import Dict, NamedTuple, Sequence, Set, Tuple, Union, List
+from typing import Dict, List, NamedTuple, Sequence, Set, Tuple, Union
 
 from models.characters.states import AttributeType, State
 from models.characters.subroutines_base import Subroutine
@@ -47,7 +47,7 @@ class Mod(metaclass=abc.ABCMeta):
         slots.append(SlotTypes.STORAGE)
         return slots
 
-    def __str__(self):
+    def __str__(self) -> str:
         text = 'Mod({}, '.format(self.description())
         text += 'slots: (' + ','.join(s.value for s in self.valid_slots()) + ')'
 
@@ -85,7 +85,7 @@ class GenericMod(Mod):
             subroutines_granted: Union[Subroutine, Sequence[Subroutine]] = (),
             valid_slots: Union[
                 SlotTypes, Sequence[SlotTypes]] = SlotTypes.STORAGE,
-            description='unnamed mod') -> None:
+            description: str = 'unnamed mod') -> None:
         if isinstance(states_granted, State):
             states_granted = states_granted,
         if attribute_modifiers is None:
@@ -110,7 +110,7 @@ class GenericMod(Mod):
     def subroutines_granted(self) -> Sequence[Subroutine]:
         return self._subroutines
 
-    def description(self):
+    def description(self) -> str:
         return self._description
 
     def _valid_slots(self) -> Set[SlotTypes]:

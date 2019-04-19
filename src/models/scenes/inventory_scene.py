@@ -1,10 +1,11 @@
-from typing import NamedTuple, Tuple
+from typing import List, NamedTuple, Tuple, Union
 
-from data.constants import BackgroundImages, SCREEN_SIZE
-from events.events_base import EventListener, EventType, \
-    InventorySelectionEvent, InventoryTransferEvent
+from data.constants import SCREEN_SIZE, BackgroundImages
+from events.events_base import (EventListener, EventType,
+                                InventorySelectionEvent,
+                                InventoryTransferEvent)
 from models.characters.chassis import Chassis
-from models.characters.mods_base import SlotTypes, Mod
+from models.characters.mods_base import Mod, SlotTypes
 from models.characters.player import get_player
 from models.scenes.scenes_base import Resolution, Scene
 from views.layouts import Layout
@@ -77,7 +78,7 @@ class InventoryScene(Scene, EventListener):
     def get_resolution(self) -> Resolution:
         return None
 
-    def _update_layout(self):
+    def _update_layout(self) -> None:
         chassis = self._player.chassis
 
         # Left half of screen, composed of chassis slots
@@ -159,7 +160,8 @@ class InventoryScene(Scene, EventListener):
         """Vertical layout storing a single slot's data."""
 
         # First row is just basic slot information
-        elements = [(slot_data, 1)]
+        elements: List[Tuple[Union[SlotHeader, SlotData], int]] = []
+        elements.append((slot_data, 1))
         for mod in slot_data.mods:
             elements.append((SlotData(mod, mod is self._selected_mod), 1))
 

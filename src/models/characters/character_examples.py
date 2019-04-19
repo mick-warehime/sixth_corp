@@ -2,8 +2,8 @@
 from enum import Enum
 from typing import NamedTuple, Tuple
 
-from models.characters.chassis_examples import ChassisTypes
 from models.characters.chassis import ChassisData
+from models.characters.chassis_examples import ChassisTypes
 from models.characters.mod_examples import ModTypes
 from models.characters.mods_base import ModData
 from models.combat.ai_impl import AIType

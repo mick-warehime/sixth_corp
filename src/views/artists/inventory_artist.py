@@ -1,11 +1,11 @@
-from typing import List
+from typing import List, Sequence
 
 from pygame.rect import Rect
 
-from data.colors import WHITE, LIGHT_GRAY, DARK_GRAY, BLUE, RED, GREEN
+from data.colors import BLUE, DARK_GRAY, GREEN, LIGHT_GRAY, RED, WHITE
 from models.characters.mods_base import SlotTypes
-from models.scenes.inventory_scene import InventoryScene, SlotHeader, SlotData, \
-    ModInformation
+from models.scenes.inventory_scene import (InventoryScene, ModInformation,
+                                           SlotData, SlotHeader)
 from models.scenes.scenes_base import Scene
 from views.artists.scene_artist_base import SceneArtist
 from views.pygame_screen import Screen
@@ -17,6 +17,9 @@ _TEXT_COLOR = BLUE
 def _render_slot_header(slot_data: SlotHeader, rect: Rect,
                         selected_mod_slots: List[SlotTypes],
                         screen: Screen) -> None:
+    # Render the header for a given slot category, including storage capacity.
+    # If the slot is a valid transfer slot, use a different border.
+
     screen.render_rect(rect, LIGHT_GRAY, 0)
 
     border = GREEN if slot_data.slot in selected_mod_slots else DARK_GRAY
@@ -31,6 +34,8 @@ def _render_slot_header(slot_data: SlotHeader, rect: Rect,
 
 
 def _render_mod_slot(slot_data: SlotData, rect: Rect, screen: Screen) -> None:
+    # Render a row representing a given equipped or stored mod.
+
     screen.render_rect(rect, LIGHT_GRAY, 0)
     border = RED if slot_data.is_selected else DARK_GRAY
     screen.render_rect(rect, border, 4)
@@ -41,6 +46,7 @@ def _render_mod_slot(slot_data: SlotData, rect: Rect, screen: Screen) -> None:
 
 def _render_selected_mod_info(info: ModInformation, rect: Rect,
                               screen: Screen) -> None:
+    # Render relevant information about a mod.
     screen.render_rect(rect, LIGHT_GRAY, 0)
     screen.render_rect(rect, RED, 4)
 
@@ -82,7 +88,8 @@ def _render_selected_mod_info(info: ModInformation, rect: Rect,
                              text_rect, screen)
 
 
-def _render_mod_property(x, spacing, label, lines, text_rect, screen):
+def _render_mod_property(x: int, spacing: int, label: str, lines: Sequence[str],
+                         text_rect: Rect, screen: Screen) -> Rect:
     y = text_rect.y + text_rect.h + spacing
     text_rect = screen.render_text(label, _FONT_SIZE, x, y,
                                    _TEXT_COLOR)

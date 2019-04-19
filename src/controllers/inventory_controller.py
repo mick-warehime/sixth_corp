@@ -1,6 +1,7 @@
 from controllers.controller import Controller
-from events.events_base import EventType, InputEvent, BasicEvents, EventManager, \
-    InventorySelectionEvent, InventoryTransferEvent
+from events.events_base import (BasicEvents, EventManager, EventType,
+                                InputEvent, InventorySelectionEvent,
+                                InventoryTransferEvent)
 from models.scenes.inventory_scene import InventoryScene, SlotData, SlotHeader
 
 
@@ -17,7 +18,7 @@ class InventoryController(Controller):
                 self._handle_mouse_click(event)
                 return
 
-    def _handle_mouse_click(self, event: InputEvent):
+    def _handle_mouse_click(self, event: InputEvent) -> None:
         x = event.mouse[0]
         y = event.mouse[1]
 

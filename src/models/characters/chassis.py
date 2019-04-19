@@ -1,11 +1,11 @@
 """Implementation of the Chassis"""
 import logging
 from functools import reduce
-from typing import Dict, Iterable, List, Tuple, NamedTuple
+from typing import Dict, Iterable, List, NamedTuple, Tuple
 
 from models.characters.inventory import InventoryBase
-from models.characters.mods_base import Mod, SlotTypes, GenericMod
-from models.characters.states import State, AttributeType
+from models.characters.mods_base import GenericMod, Mod, SlotTypes
+from models.characters.states import AttributeType, State
 from models.characters.subroutines_base import Subroutine
 
 
