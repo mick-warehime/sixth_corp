@@ -54,6 +54,10 @@ class InventoryScene(Scene, EventListener):
         return self._layout
 
     @property
+    def selected_mod(self) -> Mod:
+        return self._selected_mod
+
+    @property
     def background_image(self) -> str:
         return self._background_image
 
