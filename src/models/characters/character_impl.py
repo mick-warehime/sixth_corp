@@ -7,7 +7,6 @@ from pygame.rect import Rect
 from models.characters.character_base import Character
 from models.characters.character_examples import CharacterData
 from models.characters.chassis import Chassis
-from models.characters.chassis_factory import build_chassis
 from models.characters.inventory import InventoryBase
 from models.characters.mods_base import GenericMod
 from models.characters.states import Attributes, AttributeType, State, Status
@@ -23,8 +22,8 @@ class _CharacterImpl(Character):
                  name: str = 'unnamed Character') -> None:
         super().__init__()
 
-        self._inventory: InventoryBase = chassis
-        self._status = _CombinedStatus(self._inventory)
+        self._chassis: Chassis = chassis
+        self._status = _CombinedStatus(self._chassis)
         self._image_path = image_path
         self._rect: Rect = None
         self._ai: AI = ai
@@ -35,8 +34,8 @@ class _CharacterImpl(Character):
         return self._status
 
     @property
-    def inventory(self) -> InventoryBase:
-        return self._inventory
+    def chassis(self) -> Chassis:
+        return self._chassis
 
     @property
     def image_path(self) -> str:
@@ -87,17 +86,16 @@ class _CombinedStatus(Status):
 
 
 def build_character(data: CharacterData) -> _CharacterImpl:
-    chassis = build_chassis(data.chassis_data)
+    chassis = Chassis.from_data(data.chassis_data)
 
     ai = build_ai(data.ai_type)
     char = _CharacterImpl(chassis, ai, data.image_path, name=data.name)
     ai.set_user(char)
 
     for mod_data in data.mods:
-        mod = GenericMod(mod_data.states_granted, mod_data.attribute_modifiers,
-                         mod_data.subroutines_granted, mod_data.valid_slots)
-        assert char.inventory.can_store(mod), 'Mod cannot be picked up.'
-        char.inventory.attempt_store(mod)
+        mod = GenericMod.from_data(mod_data)
+        assert char.chassis.can_store(mod), 'Mod cannot be picked up.'
+        char.chassis.attempt_store(mod)
 
     health = char.status.get_attribute(Attributes.MAX_HEALTH)
     char.status.increment_attribute(Attributes.HEALTH, health)

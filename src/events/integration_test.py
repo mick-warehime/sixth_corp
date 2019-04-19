@@ -9,9 +9,9 @@ from events import event_utils
 from events.events_base import BasicEvents, EventManager
 from models.characters.character_examples import CharacterData
 from models.characters.character_impl import build_character
-from models.characters.chassis_examples import ChassisData
+from models.characters.chassis import ChassisData
 from models.characters.conditions import IsDead
-from models.characters.mods_base import GenericMod, Slots
+from models.characters.mods_base import GenericMod, SlotTypes
 from models.characters.player import get_player
 from models.characters.states import Attributes
 from models.characters.subroutine_examples import direct_damage
@@ -106,11 +106,12 @@ def test_combat_scene_to_decision_scene():
     shoot_laser = direct_damage(1, label='laser', time_to_resolve=1,
                                 cpu_slots=0)
     laser_mod = GenericMod(subroutines_granted=shoot_laser,
-                           valid_slots=Slots.HEAD)
-    assert player.inventory.can_store(laser_mod)
-    player.inventory.attempt_store(laser_mod)
+                           valid_slots=tuple(
+                               s for s in SlotTypes if s != SlotTypes.STORAGE))
+    assert player.chassis.can_store(laser_mod)
+    player.chassis.attempt_store(laser_mod)
 
-    assert laser_mod in player.inventory.all_active_mods()
+    assert laser_mod in player.chassis.all_active_mods()
 
     for _ in range(2):
         # we must do this twice because it takes a round for the first move to

@@ -43,6 +43,6 @@ def test_increment_attribute():
 
 def test_acquire_mod(player):
     mod = GenericMod()
-    assert mod not in player.inventory.all_mods()
+    assert mod not in player.chassis.all_mods()
     AcquireMod(mod).execute()
-    assert mod in player.inventory.all_mods()
+    assert mod in player.chassis.all_mods()

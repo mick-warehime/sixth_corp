@@ -2,19 +2,19 @@ from unittest import TestCase
 
 from models.characters.character_examples import CharacterData
 from models.characters.character_impl import build_character
-from models.characters.chassis_examples import ChassisData
+from models.characters.chassis import ChassisData
 from models.characters.conditions import IsDead
-from models.characters.mods_base import GenericMod, Slots
+from models.characters.mods_base import GenericMod, SlotTypes
 from models.characters.states import Attributes, State
 from models.characters.subroutine_examples import direct_damage
 
-_ACTIVE_SLOT = Slots.ARMS
+_ACTIVE_SLOT = SlotTypes.ARMS
 
 
 class CharacterTest(TestCase):
 
     def _character(self):
-        chassis = ChassisData({Slots.STORAGE: 10, _ACTIVE_SLOT: 10},
+        chassis = ChassisData({SlotTypes.STORAGE: 10, _ACTIVE_SLOT: 10},
                               attribute_modifiers={Attributes.MAX_HEALTH: 10})
         return build_character(CharacterData(chassis))
 
@@ -32,7 +32,7 @@ class CharacterTest(TestCase):
         char = self._character()
 
         assert not char.status.has_state(State.ON_FIRE)
-        char.inventory.attempt_store(
+        char.chassis.attempt_store(
             GenericMod(states_granted=State.ON_FIRE, valid_slots=_ACTIVE_SLOT))
         assert char.status.has_state(State.ON_FIRE)
 
@@ -40,7 +40,7 @@ class CharacterTest(TestCase):
         char = self._character()
         max_health = char.status.get_attribute(Attributes.MAX_HEALTH)
         bonus = 5
-        char.inventory.attempt_store(
+        char.chassis.attempt_store(
             GenericMod(attribute_modifiers={Attributes.MAX_HEALTH: bonus},
                        valid_slots=_ACTIVE_SLOT))
 
@@ -60,9 +60,9 @@ class CharacterTest(TestCase):
         char = self._character()
 
         subroutine = direct_damage(12)
-        assert subroutine not in char.inventory.all_subroutines()
+        assert subroutine not in char.chassis.all_subroutines()
 
-        char.inventory.attempt_store(
+        char.chassis.attempt_store(
             GenericMod(subroutines_granted=subroutine,
                        valid_slots=_ACTIVE_SLOT))
-        assert subroutine in char.inventory.all_subroutines()
+        assert subroutine in char.chassis.all_subroutines()

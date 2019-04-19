@@ -1,8 +1,8 @@
 from models.characters.character_base import Character
 from models.characters.character_examples import CharacterData
 from models.characters.character_impl import build_character
-from models.characters.chassis_examples import ChassisData
-from models.characters.mods_base import ModData, Slots
+from models.characters.chassis import ChassisData
+from models.characters.mods_base import ModData, SlotTypes
 from models.characters.states import Attributes
 from models.characters.subroutine_examples import direct_damage
 from models.combat.ai_impl import AIType
@@ -11,8 +11,8 @@ from models.combat.ai_impl import AIType
 def get_combatant(health, subroutines, name, ai_type=AIType.Human) -> Character:
     mod_data = ModData(attribute_modifiers={Attributes.MAX_HEALTH: health},
                        subroutines_granted=subroutines,
-                       valid_slots=(Slots.ARMS,))
-    chassis_data = ChassisData({Slots.ARMS: 10})
+                       valid_slots=(SlotTypes.ARMS,))
+    chassis_data = ChassisData({SlotTypes.ARMS: 10})
     char_data = CharacterData(chassis_data, name, (mod_data,), '', ai_type)
 
     return build_character(char_data)

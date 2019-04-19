@@ -35,7 +35,7 @@ class _AIImpl(AI):
         # Valid moves are those which can be used immediately and do not cost
         # more cpu_slots than available.
         slots = self._user.status.get_attribute(Attributes.CPU_AVAILABLE)
-        valid_subs = (sub for sub in self._user.inventory.all_subroutines()
+        valid_subs = (sub for sub in self._user.chassis.all_subroutines()
                       if sub.cpu_slots() <= slots)
 
         moves = [Move(sub, self._user, target)

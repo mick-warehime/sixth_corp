@@ -2,7 +2,8 @@
 from enum import Enum
 from typing import NamedTuple, Tuple
 
-from models.characters.chassis_examples import ChassisData, ChassisTypes
+from models.characters.chassis import ChassisData
+from models.characters.chassis_examples import ChassisTypes
 from models.characters.mod_examples import ModTypes
 from models.characters.mods_base import ModData
 from models.combat.ai_impl import AIType
@@ -23,7 +24,9 @@ _USELESS = CharacterData(ChassisTypes.USELESS.data, 'useless enemy')
 _HUMAN_PLAYER = CharacterData(ChassisTypes.NO_LEGS.data, 'Player 1',
                               (ModTypes.SMALL_LASER.data,
                                ModTypes.BIG_LASER.data,
-                               ModTypes.BASIC_HULL_PLATING.data),
+                               ModTypes.BASIC_HULL_PLATING.data,
+                               ModTypes.REPAIR_NANITES.data,
+                               ModTypes.FIRE_HELM.data),
                               'src/data/images/walle.png', AIType.Human)
 
 

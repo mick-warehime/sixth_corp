@@ -20,7 +20,7 @@ def valid_moves(user: Character, targets: Sequence[Character]) -> List[Move]:
     """All valid moves from a user to a sequence of targets"""
     return [Move(sub, user, target)
             for sub, target in
-            product(user.inventory.all_subroutines(), targets)
+            product(user.chassis.all_subroutines(), targets)
             if sub.can_use(user, target)]
 
 
