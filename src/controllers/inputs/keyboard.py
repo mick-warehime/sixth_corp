@@ -2,7 +2,7 @@ from typing import List, Tuple
 
 import pygame
 
-from controllers.inputs.keybindings import Keybindings
+from data.keybindings import Keybindings
 from events.events_base import (BasicEvents, EventListener, EventManager,
                                 EventType, InputEvent)
 

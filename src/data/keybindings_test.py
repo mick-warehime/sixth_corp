@@ -3,7 +3,7 @@ import tempfile
 from typing import Dict
 from unittest import TestCase
 
-from controllers.inputs.keybindings import Keybindings
+from data.keybindings import Keybindings
 from events.events_base import BasicEvents
 
 
