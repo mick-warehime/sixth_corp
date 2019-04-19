@@ -26,6 +26,10 @@ class SlotData(NamedTuple):
     is_selected: bool
 
 
+class ModInformation(NamedTuple):
+    mod: Mod
+
+
 class InventoryScene(Scene, EventListener):
 
     def __init__(self) -> None:
@@ -39,7 +43,10 @@ class InventoryScene(Scene, EventListener):
 
     def notify(self, event: EventType) -> None:
         if isinstance(event, InventorySelectionEvent):
-            self._selected_mod = event.mod
+            if self._selected_mod is event.mod:
+                self._selected_mod = None
+            else:
+                self._selected_mod = event.mod
             self._update_layout()
 
     @property
@@ -60,7 +67,8 @@ class InventoryScene(Scene, EventListener):
     def _update_layout(self):
         chassis = self._player.chassis
 
-        # Left half composed of chassis slots
+        # Left half of screen, composed of chassis slots
+
         capacities = chassis.slot_capacities
 
         fillable_slots = [slot for slot in SlotTypes
@@ -106,11 +114,29 @@ class InventoryScene(Scene, EventListener):
             slot_elems_1.append((None, rows_per_column - num_rows))
         chassis_col_1 = Layout(slot_elems_1)
 
-        chassis_half = Layout([(None, 1), (chassis_col_0, 10), (None, 1),
-                               (chassis_col_1, 10), (None, 1)], 'horizontal')
+        left_half = Layout([(None, 1), (chassis_col_0, 10), (None, 1),
+                            (chassis_col_1, 10), (None, 1)], 'horizontal')
+
+        # Right half of screen, containing mod information (if present) and
+        # loot slots (if present)
+
+        # selected mod information
+
+        if self._selected_mod is not None:
+            info = ModInformation(self._selected_mod)
+            mod_info_layout = Layout([(None, 1), (info, 3), (None, 1)],
+                                     'horizontal')
+            mod_info_layout = Layout([(None, 1), (mod_info_layout, 5),
+                                      (None, 1)])
+        else:
+            mod_info_layout = Layout()  # nothing to display
+
+        loot_layout = Layout()  # Keep blank for now
+
+        right_half = Layout([(mod_info_layout, 1), (loot_layout, 1)])
 
         # combined halves
-        layout = Layout([(chassis_half, 1), (None, 1)], 'horizontal')
+        layout = Layout([(left_half, 1), (right_half, 1)], 'horizontal')
 
         # Gap at top for information display.
         self._layout = Layout([(None, 1), (layout, 14)], dimensions=SCREEN_SIZE)
