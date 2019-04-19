@@ -42,7 +42,7 @@ class Chassis(InventoryBase):
         return tuple(self._stored_mods[slot])
 
     def transfer_mod(self, mod: Mod, target_slot: SlotTypes) -> None:
-        """Moves a mod to a specify slot.
+        """Moves a mod to a specified slot.
 
         The slot must have sufficient space and be a valid slot for the Mod.
         """
