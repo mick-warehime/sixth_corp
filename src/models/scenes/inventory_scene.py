@@ -54,11 +54,14 @@ class InventoryScene(Scene, EventListener):
         if isinstance(event, InventoryTransferEvent):
             if self._selected_mod is None:
                 return
-            if event.new_slot not in self._selected_mod.valid_slots():
+            new_slot = event.new_slot
+            if new_slot not in self._selected_mod.valid_slots():
                 return
+            chassis = self._player.chassis
+            if self._selected_mod in chassis.mods_in_slot(new_slot):
+                return  # Mod already in the specified slot.
             # Carry out valid transfer of slot
-            self._player.chassis.transfer_mod(self._selected_mod,
-                                              event.new_slot)
+            chassis.transfer_mod(self._selected_mod, new_slot)
         if event == BasicEvents.INVENTORY:
             self._is_resolved = True
 
