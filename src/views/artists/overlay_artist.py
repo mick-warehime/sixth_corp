@@ -20,7 +20,7 @@ class OverlayArtist(SceneArtist):
         rect = screen.render_text('x: Settings', _FONT_SIZE, x, y, WHITE)
         y += rect.h + line_spacing
 
-        if scene.inventory_available:
+        if hasattr(scene, 'inventory_available') and scene.inventory_available:
             rect = screen.render_text('i: Inventory', _FONT_SIZE, x, y, WHITE)
             y += rect.h + line_spacing
 

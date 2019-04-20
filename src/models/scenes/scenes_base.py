@@ -19,11 +19,6 @@ class Scene(metaclass=abc.ABCMeta):
     def background_image(self) -> str:
         """The path to the background image."""
 
-    @property
-    @abc.abstractmethod
-    def inventory_available(self) -> bool:
-        """Whether the inventory scene is accessible from this one."""
-
 
 class Effect(object):
     """Implements some action on the game world."""

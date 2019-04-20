@@ -3,11 +3,11 @@ from typing import List, NamedTuple, Tuple, Union
 from data.constants import SCREEN_SIZE, BackgroundImages
 from events.events_base import (EventListener, EventType,
                                 InventorySelectionEvent,
-                                InventoryTransferEvent)
+                                InventoryTransferEvent, BasicEvents)
 from models.characters.chassis import Chassis
 from models.characters.mods_base import Mod, SlotTypes
 from models.characters.player import get_player
-from models.scenes.scenes_base import Resolution, Scene
+from models.scenes.scenes_base import Resolution, Scene, BasicResolution
 from views.layouts import Layout
 
 
@@ -34,13 +34,15 @@ class ModInformation(NamedTuple):
 
 class InventoryScene(Scene, EventListener):
 
-    def __init__(self) -> None:
+    def __init__(self, previous_scene: Scene) -> None:
         super().__init__()
         self._background_image = BackgroundImages.INVENTORY.path
         self._player = get_player()
         self._layout: Layout = None
         self._selected_mod: Mod = None
         self._update_layout()
+        self._resolution = BasicResolution(lambda: previous_scene)
+        self._is_resolved = False
 
     def notify(self, event: EventType) -> None:
         if isinstance(event, InventorySelectionEvent):
@@ -57,10 +59,8 @@ class InventoryScene(Scene, EventListener):
             # Carry out valid transfer of slot
             self._player.chassis.transfer_mod(self._selected_mod,
                                               event.new_slot)
-
-    @property
-    def inventory_available(self) -> bool:
-        return True
+        if event == BasicEvents.INVENTORY:
+            self._is_resolved = True
 
     @property
     def layout(self) -> Layout:
@@ -74,12 +74,14 @@ class InventoryScene(Scene, EventListener):
     def background_image(self) -> str:
         return self._background_image
 
-    # TODO(mick) - move settings, combat, decision scene -> model classes
     def is_resolved(self) -> bool:
-        return False
+        return self._is_resolved
 
     def get_resolution(self) -> Resolution:
-        return None
+        assert self.is_resolved()
+        res = self._resolution
+        del self._resolution
+        return res
 
     def _update_layout(self) -> None:
         chassis = self._player.chassis

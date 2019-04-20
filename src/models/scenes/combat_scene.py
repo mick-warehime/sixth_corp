@@ -95,10 +95,6 @@ class CombatScene(EventListener, Scene):
         return self._animation_progress
 
     @property
-    def inventory_available(self) -> bool:
-        return False
-
-    @property
     def combat_stack(self) -> CombatStack:
         return self._combat_stack
 
