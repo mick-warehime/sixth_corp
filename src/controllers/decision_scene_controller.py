@@ -26,7 +26,7 @@ class DecisionSceneController(Controller):
 
         elif event == BasicEvents.INVENTORY:
             if self._scene.inventory_available:
-                post_scene_change(InventoryScene(self._scene))
+                post_scene_change(InventoryScene(lambda: self._scene))
 
         # handle scene resolution
         # Note: this is called upon EVERY notification event. If we were to

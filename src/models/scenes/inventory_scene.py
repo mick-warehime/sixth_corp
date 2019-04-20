@@ -1,4 +1,4 @@
-from typing import List, NamedTuple, Tuple, Union
+from typing import List, NamedTuple, Tuple, Union, Callable
 
 from data.constants import SCREEN_SIZE, BackgroundImages
 from events.events_base import (EventListener, EventType,
@@ -34,14 +34,14 @@ class ModInformation(NamedTuple):
 
 class InventoryScene(Scene, EventListener):
 
-    def __init__(self, previous_scene: Scene) -> None:
+    def __init__(self, prev_scene_loader: Callable[[], Scene]) -> None:
         super().__init__()
         self._background_image = BackgroundImages.INVENTORY.path
         self._player = get_player()
         self._layout: Layout = None
         self._selected_mod: Mod = None
         self._update_layout()
-        self._resolution = BasicResolution(lambda: previous_scene)
+        self._resolution = BasicResolution(prev_scene_loader)
         self._is_resolved = False
 
     def notify(self, event: EventType) -> None:
