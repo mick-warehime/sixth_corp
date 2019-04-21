@@ -3,15 +3,19 @@ from typing import List, Sequence
 from pygame.rect import Rect
 
 from data.colors import BLUE, DARK_GRAY, GREEN, LIGHT_GRAY, RED, WHITE
+from data.keybindings import Keybindings
+from events.events_base import BasicEvents
 from models.characters.mods_base import SlotTypes
-from models.scenes.inventory_scene import (InventoryScene, ModInformation,
-                                           SlotData, SlotHeader)
+from models.scenes.inventory_scene import (InventoryScene, SelectedModInfo,
+                                           SlotHeader, SlotRow)
 from models.scenes.scenes_base import Scene
-from views.artists.drawing_utils import rescale_horizontal
+from views.artists.drawing_utils import rescale_horizontal, rescale_vertical
 from views.artists.scene_artist_base import SceneArtist
 from views.pygame_screen import Screen
 
-_FONT_SIZE, = rescale_horizontal(28)
+_SLOT_FONT_SIZE, = rescale_horizontal(28)
+_OVERLAY_FONT_SIZE, = rescale_horizontal(28)
+_ERROR_FONT_SIZE, = rescale_horizontal(40)
 _TEXT_COLOR = BLUE
 
 
@@ -27,25 +31,30 @@ def _render_slot_header(slot_data: SlotHeader, rect: Rect,
 
     screen.render_rect(rect, border, 4)
 
-    text = '{} - {} / {}'.format(slot_data.slot.value, slot_data.num_filled,
-                                 slot_data.capacity)
+    if slot_data.slot != SlotTypes.GROUND:
+        text = '{} - {} / {}'.format(slot_data.slot.value, slot_data.num_filled,
+                                     slot_data.capacity)
+    else:
+        text = slot_data.slot.value
 
-    screen.render_text(text, _FONT_SIZE, rect.x, rect.y, _TEXT_COLOR, rect.w,
+    screen.render_text(text, _SLOT_FONT_SIZE, rect.x, rect.y, _TEXT_COLOR,
+                       rect.w,
                        rect.h)
 
 
-def _render_mod_slot(slot_data: SlotData, rect: Rect, screen: Screen) -> None:
+def _render_mod_slot(slot_data: SlotRow, rect: Rect, screen: Screen) -> None:
     # Render a row representing a given equipped or stored mod.
 
     screen.render_rect(rect, LIGHT_GRAY, 0)
     border = RED if slot_data.is_selected else DARK_GRAY
     screen.render_rect(rect, border, 4)
 
-    screen.render_text(slot_data.mod.description(), _FONT_SIZE, rect.x + 10,
+    screen.render_text(slot_data.mod.description(), _SLOT_FONT_SIZE,
+                       rect.x + 10,
                        rect.y, _TEXT_COLOR, h=rect.h)
 
 
-def _render_selected_mod_info(info: ModInformation, rect: Rect,
+def _render_selected_mod_info(info: SelectedModInfo, rect: Rect,
                               screen: Screen) -> None:
     # Render relevant information about a mod.
     screen.render_rect(rect, LIGHT_GRAY, 0)
@@ -58,7 +67,7 @@ def _render_selected_mod_info(info: ModInformation, rect: Rect,
     y = rect.y + 10
 
     mod = info.mod
-    text_rect = screen.render_text(mod.description(), _FONT_SIZE, x, y,
+    text_rect = screen.render_text(mod.description(), _SLOT_FONT_SIZE, x, y,
                                    _TEXT_COLOR, rect.w)
     y = text_rect.y + text_rect.h + spacing
 
@@ -66,7 +75,7 @@ def _render_selected_mod_info(info: ModInformation, rect: Rect,
     x = rect.x + 10
     valid_slots = [slot.value for slot in mod.valid_slots()]
     slots = 'Slots: ' + ', '.join(valid_slots)
-    text_rect = screen.render_text(slots, _FONT_SIZE, x, y, _TEXT_COLOR)
+    text_rect = screen.render_text(slots, _SLOT_FONT_SIZE, x, y, _TEXT_COLOR)
     y = text_rect.y + text_rect.h + spacing
 
     if mod.states_granted():
@@ -92,11 +101,12 @@ def _render_selected_mod_info(info: ModInformation, rect: Rect,
 def _render_mod_property(x: int, spacing: int, label: str, lines: Sequence[str],
                          text_rect: Rect, screen: Screen) -> Rect:
     y = text_rect.y + text_rect.h + spacing
-    text_rect = screen.render_text(label, _FONT_SIZE, x, y,
+    text_rect = screen.render_text(label, _SLOT_FONT_SIZE, x, y,
                                    _TEXT_COLOR)
     y = text_rect.y + text_rect.h
     text = '\n'.join(lines)
-    text_rect = screen.render_text(text, _FONT_SIZE, x + 40, y, _TEXT_COLOR)
+    text_rect = screen.render_text(text, _SLOT_FONT_SIZE, x + 40, y,
+                                   _TEXT_COLOR)
     return text_rect
 
 
@@ -105,17 +115,31 @@ class InventoryArtist(SceneArtist):
     def render(self, screen: Screen, scene: Scene) -> None:
         assert isinstance(scene, InventoryScene)
 
-        # Scene title and exit key
-        screen.render_texts(list(scene.options),
-                            font_size=35, x=20, y=10, color=WHITE, spacing=30)
+        # Scene title, exit key, and error message
+        inv_key = Keybindings().keys_for_event(BasicEvents.INVENTORY)[0]
+        x, = rescale_horizontal(20)
+        y_shift, = rescale_vertical(10)
+        y = y_shift
+        rect = screen.render_text('Inventory', _OVERLAY_FONT_SIZE, x, y, WHITE)
+        y = rect.y + rect.h
+        rect = screen.render_text('{} - Return'.format(inv_key),
+                                  _OVERLAY_FONT_SIZE, x, y, WHITE)
 
-        # All other boxes with text
+        if scene.UI_error_message:
+            x = rect.x + rect.w + 50
+            h = y + rect.h - y_shift
+            y = y_shift
+            screen.render_text(scene.UI_error_message, _ERROR_FONT_SIZE, x, y,
+                               RED, h=h)
+
+        # Inventory slots, mods, and mod information
         layout = scene.layout
         all_rects = layout.get_rects(layout)
         scene_objects = {layout.object_at(*rect.center) for rect in all_rects}
 
         if scene.selected_mod is not None:
             selected_mod_slots = scene.selected_mod.valid_slots()
+            selected_mod_slots.append(SlotTypes.GROUND)  # ground always valid
         else:
             selected_mod_slots = []
 
@@ -127,9 +151,9 @@ class InventoryArtist(SceneArtist):
             if isinstance(obj, SlotHeader):
                 assert len(rects) == 1
                 _render_slot_header(obj, rects[0], selected_mod_slots, screen)
-            elif isinstance(obj, SlotData):
+            elif isinstance(obj, SlotRow):
                 assert len(rects) == 1
                 _render_mod_slot(obj, rects[0], screen)
-            elif isinstance(obj, ModInformation):
+            elif isinstance(obj, SelectedModInfo):
                 assert len(rects) == 1
                 _render_selected_mod_info(obj, rects[0], screen)

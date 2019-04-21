@@ -6,11 +6,16 @@ from unittest.mock import MagicMock
 import pygame
 
 from controllers.inputs.keyboard import Keyboard
-from events.events_base import (BasicEvents, EventListener, EventType,
-                                InputEvent)
+from events.events_base import (BasicEvents, EventListener, EventManager,
+                                EventType, InputEvent)
 
 # Ensure that working directory is sixth_corp
 os.chdir(dirname(dirname(dirname(dirname(os.path.abspath(__file__))))))
+
+
+# Errors in other test modules may cause the EventManager to not be empty.
+def setup_module(module):
+    EventManager.listeners.clear()
 
 
 class BasicListener(EventListener):

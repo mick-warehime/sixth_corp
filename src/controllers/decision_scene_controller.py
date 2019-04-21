@@ -2,11 +2,12 @@ import logging
 
 from controllers.controller import Controller
 from events.event_utils import post_scene_change
-from events.events_base import (DecisionEvent, EventManager, EventType,
-                                InputEvent)
+from events.events_base import (BasicEvents, DecisionEvent, EventManager,
+                                EventType, InputEvent)
 from models.characters.conditions import IsDead
 from models.characters.player import get_player
 from models.scenes.decision_scene import DecisionScene
+from models.scenes.inventory_scene import InventoryScene
 from models.scenes.scene_examples import game_over_scene
 
 
@@ -23,7 +24,14 @@ class DecisionSceneController(Controller):
             if event.key in self._scene.choices:
                 EventManager.post(DecisionEvent(event.key, self._scene))
 
+        elif event == BasicEvents.INVENTORY:
+            if self._scene.inventory_available:
+                post_scene_change(InventoryScene(lambda: self._scene))
+
         # handle scene resolution
+        # Note: this is called upon EVERY notification event. If we were to
+        # change if to elif, we would encounter errors with circular references
+        # preventing listeneres in EventManager from disappearing
         if self._scene.is_resolved():
             resolution = self._scene.get_resolution()
             for effect in resolution.effects:

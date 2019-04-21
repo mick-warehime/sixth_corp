@@ -1,6 +1,6 @@
 """Basic interfaces for scenes, effects, and resolutions."""
 import abc
-from typing import Callable, NamedTuple, Sequence, Tuple
+from typing import Callable, Sequence, Tuple
 
 
 class Scene(metaclass=abc.ABCMeta):
@@ -18,11 +18,6 @@ class Scene(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def background_image(self) -> str:
         """The path to the background image."""
-
-    @property
-    @abc.abstractmethod
-    def inventory_available(self) -> bool:
-        """Whether the inventory scene is accessible from this one."""
 
 
 class Effect(object):
@@ -44,16 +39,19 @@ class Resolution(object):
         raise NotImplementedError
 
 
-class BasicResolution(NamedTuple, Resolution):  # type: ignore
-    scene_fun: Callable[[], Scene]
-    effect_seq: Tuple[Effect, ...] = ()
+class BasicResolution(Resolution):
+
+    def __init__(self, scene_fun: Callable[[], Scene],
+                 effect_seq: Tuple[Effect, ...] = ()) -> None:
+        self._scene_fun = scene_fun
+        self._effect_seq = effect_seq
 
     def next_scene(self) -> Scene:
-        return self.scene_fun()
+        return self._scene_fun()
 
     @property
     def effects(self) -> Sequence[Effect]:
-        return self.effect_seq
+        return self._effect_seq
 
 
 SceneConstructor = Callable[[], Scene]

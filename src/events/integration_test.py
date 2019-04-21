@@ -29,6 +29,11 @@ initialize_pygame()
 combat_scene.ANIMATION = False
 
 
+# Errors in other test modules may cause the EventManager to not be empty.
+def setup_module(module):
+    EventManager.listeners.clear()
+
+
 def _get_active_controller():
     listeners = [l for l in EventManager.listeners if isinstance(l, Controller)]
     assert len(listeners) == 1
@@ -51,9 +56,8 @@ def test_making_choices_removes_listener():
     assert isinstance(ctl, DecisionSceneController)
     # we must remove references otherwise EventManager will keep this listener
     del ctl
-
-    event_utils.simulate_key_press('s')
     del scene_0
+    event_utils.simulate_key_press('s')
 
     assert len(EventManager.listeners) == num_listeners
 

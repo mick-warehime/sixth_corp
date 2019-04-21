@@ -1,13 +1,14 @@
-from typing import List, NamedTuple, Tuple, Union
+import logging
+from typing import Callable, Iterable, List, NamedTuple, Tuple, Union
 
 from data.constants import SCREEN_SIZE, BackgroundImages
-from events.events_base import (EventListener, EventType,
+from events.events_base import (BasicEvents, EventListener, EventType,
                                 InventorySelectionEvent,
                                 InventoryTransferEvent)
 from models.characters.chassis import Chassis
 from models.characters.mods_base import Mod, SlotTypes
 from models.characters.player import get_player
-from models.scenes.scenes_base import Resolution, Scene
+from models.scenes.scenes_base import BasicResolution, Resolution, Scene
 from views.layouts import Layout
 
 
@@ -22,26 +23,31 @@ class SlotHeader(NamedTuple):
         return len(self.mods)
 
 
-class SlotData(NamedTuple):
+class SlotRow(NamedTuple):
     """Data represented by single row of an inventory slot."""
     mod: Mod
     is_selected: bool
 
 
-class ModInformation(NamedTuple):
+class SelectedModInfo(NamedTuple):
+    """Data representing information about the selected Mod."""
     mod: Mod
 
 
 class InventoryScene(Scene, EventListener):
 
-    def __init__(self) -> None:
+    def __init__(self, prev_scene_loader: Callable[[], Scene],
+                 loot_mods: Iterable[Mod] = ()) -> None:
         super().__init__()
-        self.options = ('Inventory', 'i: Return')
         self._background_image = BackgroundImages.INVENTORY.path
         self._player = get_player()
         self._layout: Layout = None
         self._selected_mod: Mod = None
+        self._mods_on_ground = list(loot_mods)
         self._update_layout()
+        self._resolution = BasicResolution(prev_scene_loader)
+        self._is_resolved = False
+        self._UI_error_message: str = ''
 
     def notify(self, event: EventType) -> None:
         if isinstance(event, InventorySelectionEvent):
@@ -51,17 +57,33 @@ class InventoryScene(Scene, EventListener):
                 self._selected_mod = event.mod
             self._update_layout()
         if isinstance(event, InventoryTransferEvent):
+            # Check that transfer is valid
             if self._selected_mod is None:
                 return
-            if event.new_slot not in self._selected_mod.valid_slots():
+            new_slot = event.new_slot
+            valid_slots = self._selected_mod.valid_slots() + [SlotTypes.GROUND]
+            if new_slot not in valid_slots:
+                self._UI_error_message = 'Invalid slot'
                 return
-            # Carry out valid transfer of slot
-            self._player.chassis.transfer_mod(self._selected_mod,
-                                              event.new_slot)
+            chassis = self._player.chassis
+            if self._selected_mod in chassis.mods_in_slot(new_slot):
+                return  # Mod already in the specified slot.
+            if chassis.slot_full(new_slot) and new_slot != SlotTypes.GROUND:
+                self._UI_error_message = 'Slot full'
+                return
 
-    @property
-    def inventory_available(self) -> bool:
-        return True
+            # Carry out valid transfer, accounting for GROUND slot which is not
+            # actually a chassis slot.
+            if new_slot == SlotTypes.GROUND:
+                chassis.remove_mod(self._selected_mod)
+                self._mods_on_ground.append(self._selected_mod)
+                logging.debug('Moving {} to ground.'.format(self._selected_mod))
+            else:
+                if self._selected_mod in self._mods_on_ground:
+                    self._mods_on_ground.remove(self._selected_mod)
+                chassis.transfer_mod(self._selected_mod, new_slot)
+        if event == BasicEvents.INVENTORY:
+            self._is_resolved = True
 
     @property
     def layout(self) -> Layout:
@@ -72,17 +94,29 @@ class InventoryScene(Scene, EventListener):
         return self._selected_mod
 
     @property
+    def UI_error_message(self) -> str:
+        return self._UI_error_message
+
+    @property
     def background_image(self) -> str:
         return self._background_image
 
-    # TODO(mick) - move settings, combat, decision scene -> model classes
     def is_resolved(self) -> bool:
-        return False
+        return self._is_resolved
 
     def get_resolution(self) -> Resolution:
-        return None
+        assert self.is_resolved()
+        res = self._resolution
+        del self._resolution
+        return res
 
     def _update_layout(self) -> None:
+
+        # The layout associates scene data with different rects on the screen.
+        # These rects are used to process mouse clicks and to determine how to
+        # draw the scene. For example, a given mod stored in one of the slot
+        # categories is associated with the rect where it will show up on the
+        # screen.
         chassis = self._player.chassis
 
         # Left half of screen, composed of chassis slots
@@ -141,7 +175,7 @@ class InventoryScene(Scene, EventListener):
         # selected mod information
 
         if self._selected_mod is not None:
-            info = ModInformation(self._selected_mod)
+            info = SelectedModInfo(self._selected_mod)
             mod_info_layout = Layout([(None, 1), (info, 3), (None, 1)],
                                      'horizontal')
             mod_info_layout = Layout([(None, 1), (mod_info_layout, 5),
@@ -149,9 +183,15 @@ class InventoryScene(Scene, EventListener):
         else:
             mod_info_layout = Layout()  # nothing to display
 
-        loot_layout = Layout()  # Keep blank for now
+        # Ground inventory
+        header = SlotHeader(SlotTypes.GROUND, 0, tuple(self._mods_on_ground))
 
-        right_half = Layout([(mod_info_layout, 1), (loot_layout, 1)])
+        loot_layout = self._slot_layout(header, num_rows=6)
+        loot_layout = Layout([(None, 1), (loot_layout, 3), (None, 1)],
+                             'horizontal')
+        loot_layout = Layout([(None, 1), (loot_layout, 6), (None, 1)])
+
+        right_half = Layout([(mod_info_layout, 7), (loot_layout, 8)])
 
         # combined halves
         layout = Layout([(left_half, 1), (right_half, 1)], 'horizontal')
@@ -164,10 +204,10 @@ class InventoryScene(Scene, EventListener):
         """Vertical layout storing a single slot's data."""
 
         # First row is just basic slot information
-        elements: List[Tuple[Union[SlotHeader, SlotData], int]] = []
+        elements: List[Tuple[Union[SlotHeader, SlotRow], int]] = []
         elements.append((slot_data, 1))
         for mod in slot_data.mods:
-            elements.append((SlotData(mod, mod is self._selected_mod), 1))
+            elements.append((SlotRow(mod, mod is self._selected_mod), 1))
 
         # Add padding to ensure consistent row sizes
         num_rows = _DEFAULT_ROWS_PER_SLOT if num_rows is None else num_rows
