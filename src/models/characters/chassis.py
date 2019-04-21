@@ -61,7 +61,7 @@ class Chassis(InventoryBase):
         return all(
             mod not in self._stored_mods[slot] for slot in available_slots)
 
-    def slot_full(self, slot: SlotTypes)->bool:
+    def slot_full(self, slot: SlotTypes) -> bool:
         return len(self._stored_mods[slot]) == self._slot_capacities[slot]
 
     def remove_mod(self, mod: Mod) -> None:
@@ -71,6 +71,9 @@ class Chassis(InventoryBase):
                 self._stored_mods[slot].remove(mod)
                 logging.debug(
                     'INVENTORY: Mod removed from slot {}'.format(slot.value))
+
+        if mod is self._base_mod:
+            self._base_mod = None
 
     def all_mods(self) -> Iterable[Mod]:
         return self._all_mods(active_only=False)
