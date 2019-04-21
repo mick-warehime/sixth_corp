@@ -65,15 +65,19 @@ class Chassis(InventoryBase):
         return len(self._stored_mods[slot]) == self._slot_capacities[slot]
 
     def remove_mod(self, mod: Mod) -> None:
+        """Remove a mod from the chassis.
+
+        If the mod is not in the chassis or is the base mod, nothing happens.
+        """
+
+        # We don't remove the base mod because it can cause the player's health
+        # to go to zero.
 
         for slot in mod.valid_slots():
             if mod in self._stored_mods[slot]:
                 self._stored_mods[slot].remove(mod)
                 logging.debug(
                     'INVENTORY: Mod removed from slot {}'.format(slot.value))
-
-        if mod is self._base_mod:
-            self._base_mod = None
 
     def all_mods(self) -> Iterable[Mod]:
         return self._all_mods(active_only=False)
