@@ -1,23 +1,28 @@
 import os
+from collections import defaultdict
+from functools import partial
 from os.path import abspath, dirname
+from typing import Iterable, List, Tuple
 
 from controllers.combat_scene_controller import CombatSceneController
 from controllers.controller import Controller
 from controllers.decision_scene_controller import DecisionSceneController
 from controllers.game import Game, initialize_pygame
+from controllers.inventory_controller import InventoryController
 from events import event_utils
 from events.events_base import BasicEvents, EventManager
 from models.characters.character_examples import CharacterData
 from models.characters.character_impl import build_character
 from models.characters.chassis import ChassisData
 from models.characters.conditions import IsDead
-from models.characters.mods_base import GenericMod, SlotTypes
-from models.characters.player import get_player
+from models.characters.mods_base import GenericMod, Mod, SlotTypes
+from models.characters.player import get_player, reset_player
 from models.characters.states import Attributes
 from models.characters.subroutine_examples import direct_damage
 from models.scenes import combat_scene
 from models.scenes.decision_scene import DecisionOption, DecisionScene
-from models.scenes.scenes_base import BasicResolution
+from models.scenes.inventory_scene import InventoryScene, SlotHeader, SlotRow
+from models.scenes.scenes_base import BasicResolution, Scene
 from views.view_manager import ViewManager
 
 # Ensure that working directory is sixth_corp
@@ -32,6 +37,11 @@ combat_scene.ANIMATION = False
 # Errors in other test modules may cause the EventManager to not be empty.
 def setup_module(module):
     EventManager.listeners.clear()
+
+
+def teardown_module(module):
+    EventManager.listeners.clear()
+    reset_player()
 
 
 def _get_active_controller():
@@ -139,3 +149,130 @@ def test_combat_scene_to_decision_scene():
     # Decision scene
     EventManager.post(BasicEvents.TICK)
     assert isinstance(_get_active_controller(), DecisionSceneController)
+
+
+def _typical_mods(locations: Iterable[SlotTypes]) -> List[Mod]:
+    # Loot on the ground
+    out = []
+    counts = defaultdict(lambda: 0)
+    for loc in locations:
+        counts[loc] += 1
+        description = '{} mod {}'.format(loc.value, counts[loc])
+        out.append(GenericMod(valid_slots=loc, description=description))
+
+    return out
+
+
+def _get_current_scene() -> Scene:
+    listeners = [l for l in EventManager.listeners if isinstance(l, Scene)]
+    assert len(listeners) == 1
+    return listeners[0]
+
+
+def _slot_header_position(slot: SlotTypes, scene: InventoryScene
+                          ) -> Tuple[int, int]:
+    chassis = get_player().chassis
+
+    capacity = chassis.slot_capacities[slot]
+    mods = chassis.mods_in_slot(slot)
+    header = SlotHeader(slot, capacity, mods)
+
+    rects = scene.layout.get_rects(header)
+    assert len(rects) == 1
+
+    return rects[0].center
+
+
+def _mod_slot_position(mod: Mod, scene: InventoryScene) -> Tuple[int, int]:
+    rects = scene.layout.get_rects(SlotRow(mod, False))
+    if not rects:
+        rects = scene.layout.get_rects(SlotRow(mod, True))
+
+    assert len(rects) == 1
+    return rects[0].center
+
+
+def test_inventory_scene_control_flow():
+    game = Game()  # noqa: F841
+    view_manager = ViewManager()  # noqa: F841
+
+    # Start with player holding nothing
+    chassis = get_player().chassis
+
+    [chassis.remove_mod(mod) for mod in chassis.all_mods()]
+    assert len(list(chassis.all_mods())) == 1  # Base mod only
+
+    # Setup start scene that loads the loot scene
+    mod_locs = [SlotTypes.HEAD, SlotTypes.HEAD, SlotTypes.CHEST, SlotTypes.LEGS]
+    ground_mods = _typical_mods(mod_locs)
+
+    def start_scene() -> DecisionScene:
+        loot_scene = partial(InventoryScene, start_scene, ground_mods)
+        return DecisionScene('dummy scene for testing purposes',
+                             {'1': DecisionOption('Loot', loot_scene)})
+
+    # Load loot scene
+    event_utils.post_scene_change(start_scene())
+    event_utils.simulate_key_press('1')
+
+    assert isinstance(_get_active_controller(), InventoryController)
+    inv_scene = _get_current_scene()
+    assert isinstance(inv_scene, InventoryScene)
+
+    # Player selectes head 1 and moves it to head slot
+    head_mod_1 = ground_mods[0]
+    event_utils.simulate_mouse_click(*_mod_slot_position(head_mod_1, inv_scene))
+
+    assert head_mod_1 is inv_scene.selected_mod
+
+    head_slot_position = _slot_header_position(SlotTypes.HEAD, inv_scene)
+    event_utils.simulate_mouse_click(*(head_slot_position))
+
+    assert inv_scene.selected_mod is None
+    assert head_mod_1 in chassis.all_mods()
+
+    # Player selects head_mod_2 and tries to move it to head slot, but it is
+    # full so it remains on the ground.
+    assert chassis.slot_capacities[SlotTypes.HEAD] == 1
+    head_mod_2 = ground_mods[1]
+
+    head_2_slot_pos = _mod_slot_position(head_mod_2, inv_scene)
+    event_utils.simulate_mouse_click(*head_2_slot_pos)
+
+    assert head_mod_2 is inv_scene.selected_mod
+
+    head_slot_position = _slot_header_position(SlotTypes.HEAD, inv_scene)
+    event_utils.simulate_mouse_click(*(head_slot_position))
+
+    assert inv_scene.selected_mod is None
+    assert head_mod_2 not in chassis.all_mods()
+    assert head_2_slot_pos == _mod_slot_position(head_mod_2, inv_scene)
+
+    # Player moves leg mod to storage
+    leg_mod = ground_mods[3]
+    assert leg_mod not in chassis.all_mods()
+
+    event_utils.simulate_mouse_click(*_mod_slot_position(leg_mod, inv_scene))
+    assert leg_mod is inv_scene.selected_mod
+
+    storage_slot_pos = _slot_header_position(SlotTypes.STORAGE, inv_scene)
+    event_utils.simulate_mouse_click(*storage_slot_pos)
+
+    assert inv_scene.selected_mod is None
+    assert leg_mod in chassis.all_mods()
+    assert leg_mod in chassis.mods_in_slot(SlotTypes.STORAGE)
+
+    # Player tries to move chest mod to arms slot, so nothing happens
+    chest_mod = ground_mods[2]
+    assert SlotTypes.CHEST in chest_mod.valid_slots()
+    assert chest_mod not in chassis.all_mods()
+
+    event_utils.simulate_mouse_click(*_mod_slot_position(chest_mod, inv_scene))
+
+    assert inv_scene.selected_mod is chest_mod
+
+    arms_slot_pos = _slot_header_position(SlotTypes.ARMS, inv_scene)
+    event_utils.simulate_mouse_click(*arms_slot_pos)
+
+    assert inv_scene.selected_mod is None
+    assert chest_mod not in chassis.all_mods()
