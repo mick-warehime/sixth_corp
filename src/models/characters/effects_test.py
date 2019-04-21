@@ -29,7 +29,7 @@ def test_restart_game(player):
 def test_increment_player_attribute(player):
     health = player.status.get_attribute(Attributes.HEALTH)
     delta = -2
-    IncrementAttribute(player, Attributes.HEALTH, delta).execute()
+    IncrementAttribute(Attributes.HEALTH, delta, player).execute()
     assert player.status.get_attribute(Attributes.HEALTH) == health + delta
 
 
@@ -37,7 +37,7 @@ def test_increment_attribute():
     char = build_character(CharacterTypes.DRONE.data)
     health = char.status.get_attribute(Attributes.HEALTH)
     delta = -3
-    IncrementAttribute(char, Attributes.HEALTH, delta).execute()
+    IncrementAttribute(Attributes.HEALTH, delta, char).execute()
     assert char.status.get_attribute(Attributes.HEALTH) == health + delta
 
 

@@ -11,15 +11,24 @@ class RestartGame(Effect):
 
 
 class IncrementAttribute(Effect):
+    """Increment an attribute of some Stateful object."""
 
-    def __init__(self, target: Stateful, attribute: AttributeType,
-                 amount: int) -> None:
+    def __init__(self, attribute: AttributeType, amount: int,
+                 target: Stateful = None) -> None:
+        """
+
+        Args:
+            attribute: Attribute to increment.
+            amount: Amount.
+            target: Stateful target. By default this is the player character.
+        """
         self._target = target
         self._attribute = attribute
         self._amount = amount
 
     def execute(self) -> None:
-        self._target.status.increment_attribute(self._attribute, self._amount)
+        target = self._target if self._target is not None else get_player()
+        target.status.increment_attribute(self._attribute, self._amount)
 
 
 class AcquireMod(Effect):
