@@ -1,6 +1,7 @@
 import os
 import sys
 from enum import Enum
+from typing import Callable
 
 import pygame
 
@@ -10,6 +11,7 @@ from data import constants
 from events.events_base import (BasicEvents, EventListener, EventManager,
                                 EventType, NewSceneEvent)
 from models.scenes.scene_examples import loading_scene
+from models.scenes.scenes_base import Scene
 
 
 class GameState(Enum):
@@ -47,9 +49,10 @@ class Game(EventListener):
             # limits the redraw speed
             self.clock.tick(constants.FRAMES_PER_SECOND)
 
-    def run(self) -> None:
+    def run(self, scene_loader: Callable[[], Scene] = None) -> None:
 
-        EventManager.post(NewSceneEvent(loading_scene()))
+        scene = loading_scene() if scene_loader is None else scene_loader()
+        EventManager.post(NewSceneEvent(scene))
 
         while True:
             EventManager.post(BasicEvents.TICK)
