@@ -122,18 +122,16 @@ class InventoryArtist(SceneArtist):
         y_shift, = rescale_vertical(10)
         y = y_shift
         rect = screen.render_text('Inventory', _OVERLAY_FONT_SIZE, x, y, WHITE)
-        y = rect.y + rect.h + rescale_vertical(30)[0]
+        y = rect.y + rect.h
         rect = screen.render_text('{} - Return'.format(inv_key),
-                                  _ERROR_FONT_SIZE, x,
-                                  y, WHITE)
+                                  _OVERLAY_FONT_SIZE, x, y, WHITE)
 
         if scene.UI_error_message:
             x = rect.x + rect.w + 50
-            h = y - y_shift
+            h = y + rect.h - y_shift
             y = y_shift
-            screen.render_text(scene.UI_error_message, _SLOT_FONT_SIZE, x, y,
-                               RED,
-                               h=h)
+            screen.render_text(scene.UI_error_message, _ERROR_FONT_SIZE, x, y,
+                               RED, h=h)
 
         # Inventory slots, mods, and mod information
         layout = scene.layout
