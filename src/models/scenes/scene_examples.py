@@ -37,6 +37,11 @@ def start_scene() -> DecisionScene:
     return DecisionScene(main_text, options)
 
 
+_mini_laser_mod = GenericMod(
+    subroutines_granted=direct_damage(1, 0, 1, 'Mini laser'),
+    valid_slots=SlotTypes.HEAD, description='Mini laser')
+
+
 @from_transition('This transition was defined using a decorator.')
 def swamp_scene() -> DecisionScene:
     main_text = ('You walk into the swamp. The foliage overhead blocks most of'
@@ -45,12 +50,8 @@ def swamp_scene() -> DecisionScene:
                  'the curving form of a rogue drone. It is currently in '
                  'hibernation mode.')
 
-    weapon = GenericMod(
-        subroutines_granted=direct_damage(1, 0, 1, 'mini laser'),
-        valid_slots=SlotTypes.HEAD, description='Drone laser')
-
     def success():
-        load_loot_scene = partial(InventoryScene, success, (weapon,))
+        load_loot_scene = partial(InventoryScene, success, (_mini_laser_mod,))
         return DecisionScene(
             'After deactivating the drone, you pick up 3 credits and '
             'dismantle it.',
@@ -89,7 +90,14 @@ def second_scene() -> DecisionScene:
 
 
 def example_combat_scene() -> 'combat_scene.CombatScene':
-    return combat_scene.CombatScene()
+    restart = transition_to(start_scene, 'Back to beginning!')
+
+    loot_scene = partial(InventoryScene, prev_scene_loader=restart,
+                         loot_mods=(_mini_laser_mod,))
+    victory = BasicResolution(transition_to(loot_scene,
+                                            'Victory! You loot the body.'))
+
+    return combat_scene.CombatScene(win_resolution=victory)
 
 
 def game_over_scene() -> DecisionScene:
