@@ -12,7 +12,8 @@ class SlotTypes(Enum):
     CHEST = 'chest'
     LEGS = 'legs'
     ARMS = 'arms'
-    STORAGE = 'storage'
+    STORAGE = 'storage'  # A default slot for storing inactive mods.
+    GROUND = 'ground'  # A default slot that should not be in a Chassis.
 
 
 class Mod(metaclass=abc.ABCMeta):

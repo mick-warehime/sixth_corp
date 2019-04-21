@@ -1,14 +1,18 @@
 """Simple decision scene examples."""
 from enum import Enum
-from typing import Dict, cast
+from functools import partial
+from typing import Dict, cast, Sequence
 
 from data.constants import BackgroundImages
 from models.characters.effects import IncrementAttribute, RestartGame
+from models.characters.mods_base import Mod, GenericMod, SlotTypes
 from models.characters.player import get_player
 from models.characters.states import Attributes, Skill
+from models.characters.subroutine_examples import direct_damage
 from models.scenes import combat_scene
 from models.scenes.decision_scene import (DecisionOption, DecisionScene,
                                           from_transition, transition_to)
+from models.scenes.inventory_scene import InventoryScene
 from models.scenes.scenes_base import BasicResolution, Resolution
 from models.scenes.skill_checks import Difficulty, skill_check
 
@@ -40,13 +44,21 @@ def swamp_scene() -> DecisionScene:
                  ' olfactory sensors detect the smell of sulfur. Ahead you see '
                  'the curving form of a rogue drone. It is currently in '
                  'hibernation mode.')
+
+    weapon = GenericMod(
+        subroutines_granted=direct_damage(1, 0, 1, 'mini laser'),
+        valid_slots=SlotTypes.HEAD, description='Drone laser')
+
+    def success():
+        load_loot_scene = partial(InventoryScene, success, (weapon,))
+        return DecisionScene(
+            'After deactivating the drone, you pick up 3 credits and '
+            'dismantle it.',
+            {'1': DecisionOption('Loot the body.', load_loot_scene),
+             '2': DecisionOption('Back to start.', loading_scene)})
+
     deactivate = skill_check(
-        Difficulty.VERY_EASY,
-        transition_to(start_scene,
-                      'You expertly sneak up on the drone and deactivate it.'
-                      ' You upload its credit 3 keys into your storage.'
-                      ' Back to beginning.',
-                      IncrementAttribute(get_player(), Attributes.CREDITS, 3)),
+        Difficulty.VERY_EASY, success,
         transition_to(example_combat_scene,
                       'The drone awakens. Prepare to fight!'),
         Skill.STEALTH)

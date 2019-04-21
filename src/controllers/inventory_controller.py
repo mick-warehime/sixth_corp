@@ -5,7 +5,7 @@ from events.event_utils import post_scene_change
 from events.events_base import (BasicEvents, EventManager, EventType,
                                 InputEvent, InventorySelectionEvent,
                                 InventoryTransferEvent)
-from models.scenes.inventory_scene import InventoryScene, SlotData, SlotHeader
+from models.scenes.inventory_scene import InventoryScene, SlotRow, SlotHeader
 
 
 class InventoryController(Controller):
@@ -35,7 +35,7 @@ class InventoryController(Controller):
         # Handle clicks on mod slots
         clicked_obj = self._scene.layout.object_at(x, y)
         # Player clicks on a mod.
-        if isinstance(clicked_obj, SlotData):
+        if isinstance(clicked_obj, SlotRow):
             EventManager.post(InventorySelectionEvent(clicked_obj.mod))
         # Player clicks on a slot category -> attempt mod transfer.
         elif isinstance(clicked_obj, SlotHeader):
