@@ -53,8 +53,10 @@ class Keybindings(object):
                     {self.binding_field: binding, self.key_field: key})
 
     def update_binding(self, key: str, event: BasicEvents) -> None:
-        if key in self._bindings_inverse[event.value]:
-            self._bindings_inverse[event.value].remove(key)
+        previously_bound = [event_str for event_str in self._bindings_inverse
+                            if self._bindings_inverse[event_str] == key]
+        for event_str in previously_bound:
+            self._bindings_inverse[event_str].remove(key)
         Keybindings._bindings[key] = event
         Keybindings._bindings_inverse[event.value].append(key)
 
