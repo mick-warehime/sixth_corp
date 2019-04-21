@@ -1,14 +1,14 @@
 import logging
-from typing import List, NamedTuple, Tuple, Union, Callable, Iterable
+from typing import Callable, Iterable, List, NamedTuple, Tuple, Union
 
 from data.constants import SCREEN_SIZE, BackgroundImages
-from events.events_base import (EventListener, EventType,
+from events.events_base import (BasicEvents, EventListener, EventType,
                                 InventorySelectionEvent,
-                                InventoryTransferEvent, BasicEvents)
+                                InventoryTransferEvent)
 from models.characters.chassis import Chassis
 from models.characters.mods_base import Mod, SlotTypes
 from models.characters.player import get_player
-from models.scenes.scenes_base import Resolution, Scene, BasicResolution
+from models.scenes.scenes_base import BasicResolution, Resolution, Scene
 from views.layouts import Layout
 
 

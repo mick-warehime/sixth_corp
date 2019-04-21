@@ -1,11 +1,11 @@
 """Simple decision scene examples."""
 from enum import Enum
 from functools import partial
-from typing import Dict, cast, Sequence
+from typing import Dict, cast
 
 from data.constants import BackgroundImages
 from models.characters.effects import IncrementAttribute, RestartGame
-from models.characters.mods_base import Mod, GenericMod, SlotTypes
+from models.characters.mods_base import GenericMod, SlotTypes
 from models.characters.player import get_player
 from models.characters.states import Attributes, Skill
 from models.characters.subroutine_examples import direct_damage
@@ -13,7 +13,7 @@ from models.scenes import combat_scene
 from models.scenes.decision_scene import (DecisionOption, DecisionScene,
                                           from_transition, transition_to)
 from models.scenes.inventory_scene import InventoryScene
-from models.scenes.scenes_base import BasicResolution, Resolution
+from models.scenes.scenes_base import BasicResolution, Resolution, Scene
 from models.scenes.skill_checks import Difficulty, skill_check
 
 
@@ -50,7 +50,7 @@ def swamp_scene() -> DecisionScene:
                  'the curving form of a rogue drone. It is currently in '
                  'hibernation mode.')
 
-    def success():
+    def success() -> Scene:
         load_loot_scene = partial(InventoryScene, success, (_mini_laser_mod,))
         return DecisionScene(
             'After deactivating the drone, you pick up 3 credits and '

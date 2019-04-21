@@ -5,7 +5,7 @@ from events.event_utils import post_scene_change
 from events.events_base import (BasicEvents, EventManager, EventType,
                                 InputEvent, InventorySelectionEvent,
                                 InventoryTransferEvent)
-from models.scenes.inventory_scene import InventoryScene, SlotRow, SlotHeader
+from models.scenes.inventory_scene import InventoryScene, SlotHeader, SlotRow
 
 
 class InventoryController(Controller):

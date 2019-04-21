@@ -3,12 +3,11 @@ from typing import List, Sequence
 from pygame.rect import Rect
 
 from data.colors import BLUE, DARK_GRAY, GREEN, LIGHT_GRAY, RED, WHITE
-from data.constants import SCREEN_SIZE
 from data.keybindings import Keybindings
 from events.events_base import BasicEvents
 from models.characters.mods_base import SlotTypes
 from models.scenes.inventory_scene import (InventoryScene, SelectedModInfo,
-                                           SlotRow, SlotHeader)
+                                           SlotHeader, SlotRow)
 from models.scenes.scenes_base import Scene
 from views.artists.drawing_utils import rescale_horizontal, rescale_vertical
 from views.artists.scene_artist_base import SceneArtist

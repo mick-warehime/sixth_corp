@@ -2,8 +2,8 @@ import logging
 
 from controllers.controller import Controller
 from events.event_utils import post_scene_change
-from events.events_base import (DecisionEvent, EventManager, EventType,
-                                InputEvent, BasicEvents)
+from events.events_base import (BasicEvents, DecisionEvent, EventManager,
+                                EventType, InputEvent)
 from models.characters.conditions import IsDead
 from models.characters.player import get_player
 from models.scenes.decision_scene import DecisionScene

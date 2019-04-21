@@ -23,7 +23,7 @@ class Keybindings(object):
 
     def load(self) -> None:
         bindings: Dict[str, BasicEvents] = dict()
-        bindings_inv: Dict[BasicEvents, List[str]] = defaultdict(lambda: [])
+        bindings_inv: Dict[str, List[str]] = defaultdict(lambda: [])
         with open(self.preference_file) as bindings_file:
             reader = csv.DictReader(bindings_file)
             for row in reader:
