@@ -52,11 +52,12 @@ def swamp_scene() -> DecisionScene:
 
     def success() -> Scene:
         load_loot_scene = partial(InventoryScene, success, (_mini_laser_mod,))
+        gain_3 = IncrementAttribute(Attributes.CREDITS, 3)
         return DecisionScene(
             'After deactivating the drone, you pick up 3 credits and '
             'dismantle it.',
             {'1': DecisionOption('Loot the body.', load_loot_scene),
-             '2': DecisionOption('Back to start.', loading_scene)})
+             '2': DecisionOption('Back to start.', loading_scene, gain_3)})
 
     deactivate = skill_check(
         Difficulty.VERY_EASY, success,
@@ -80,11 +81,9 @@ def second_scene() -> DecisionScene:
 
     options = {
         '0': DecisionOption('Gain 1 HP', second_scene,
-                            IncrementAttribute(get_player(), Attributes.HEALTH,
-                                               1)),
+                            IncrementAttribute(Attributes.HEALTH, 1)),
         '1': DecisionOption('Lose 1 HP', second_scene,
-                            IncrementAttribute(get_player(), Attributes.HEALTH,
-                                               -1))
+                            IncrementAttribute(Attributes.HEALTH, -1))
     }
     return DecisionScene(main_text, options)
 
