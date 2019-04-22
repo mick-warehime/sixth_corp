@@ -207,7 +207,7 @@ def test_inventory_scene_control_flow():
     ground_mods = _typical_mods(mod_locs)
 
     def start_scene() -> DecisionScene:
-        loot_scene = partial(InventoryScene, start_scene, ground_mods)
+        loot_scene = partial(InventoryScene, start_scene, lambda: ground_mods)
         return DecisionScene('dummy scene for testing purposes',
                              {'1': DecisionOption('Loot', loot_scene)})
 

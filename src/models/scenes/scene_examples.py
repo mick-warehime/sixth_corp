@@ -1,11 +1,11 @@
 """Simple decision scene examples."""
 from enum import Enum
 from functools import partial
-from typing import Dict, cast
+from typing import Dict, Tuple, cast
 
 from data.constants import BackgroundImages
 from models.characters.effects import IncrementAttribute, RestartGame
-from models.characters.mods_base import GenericMod, SlotTypes
+from models.characters.mods_base import GenericMod, Mod, SlotTypes
 from models.characters.player import get_player
 from models.characters.states import Attributes, Skill
 from models.characters.subroutine_examples import direct_damage
@@ -37,9 +37,10 @@ def start_scene() -> DecisionScene:
     return DecisionScene(main_text, options)
 
 
-_mini_laser_mod = GenericMod(
-    subroutines_granted=direct_damage(1, 0, 1, 'Mini laser'),
-    valid_slots=SlotTypes.HEAD, description='Mini laser')
+def _mini_laser() -> Tuple[Mod]:
+    return GenericMod(
+        subroutines_granted=direct_damage(1, 0, 1, 'Mini laser'),
+        valid_slots=SlotTypes.HEAD, description='Mini laser'),
 
 
 @from_transition('This transition was defined using a decorator.')
@@ -51,7 +52,7 @@ def swamp_scene() -> DecisionScene:
                  'hibernation mode.')
 
     def success() -> Scene:
-        load_loot_scene = partial(InventoryScene, success, (_mini_laser_mod,))
+        load_loot_scene = partial(InventoryScene, success, _mini_laser)
         gain_3 = IncrementAttribute(Attributes.CREDITS, 3)
         return DecisionScene(
             'After deactivating the drone, you pick up 3 credits and '
@@ -92,7 +93,7 @@ def example_combat_scene() -> 'combat_scene.CombatScene':
     restart = transition_to(start_scene, 'Back to beginning!')
 
     loot_scene = partial(InventoryScene, prev_scene_loader=restart,
-                         loot_mods=(_mini_laser_mod,))
+                         loot_mods=_mini_laser)
     victory = BasicResolution(transition_to(loot_scene,
                                             'Victory! You loot the body.'))
 

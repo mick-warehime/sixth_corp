@@ -37,13 +37,24 @@ class SelectedModInfo(NamedTuple):
 class InventoryScene(Scene, EventListener):
 
     def __init__(self, prev_scene_loader: Callable[[], Scene],
-                 loot_mods: Iterable[Mod] = ()) -> None:
+                 loot_mods: Callable[[], Iterable[Mod]] = None) -> None:
+        """
+
+        Args:
+            prev_scene_loader: Zero-argument function that returns the previous
+                scene.
+            loot_mods: Zero-argument function that returns the mods on the
+                ground.
+        """
         super().__init__()
         self._background_image = BackgroundImages.INVENTORY.path
         self._player = get_player()
         self._layout: Layout = None
         self._selected_mod: Mod = None
-        self._mods_on_ground = list(loot_mods)
+        if loot_mods is not None:
+            self._mods_on_ground = list(loot_mods())
+        else:
+            self._mods_on_ground = []
         self._update_layout()
         self._resolution = BasicResolution(prev_scene_loader)
         self._is_resolved = False
