@@ -115,8 +115,13 @@ def test_combat_scene_to_decision_scene():
 
     assert isinstance(_get_active_controller(), CombatSceneController)
 
-    # give player ability to fire laser
+    # Start with player holding nothing
     player = get_player()
+    [player.chassis.remove_mod(mod) for mod in player.chassis.all_mods()]
+    assert len(list(player.chassis.all_mods())) == 1  # Base mod only
+
+    # give player ability to fire laser
+
     shoot_laser = direct_damage(1, label='laser', time_to_resolve=1,
                                 cpu_slots=0)
     laser_mod = build_mod(subroutines_granted=shoot_laser,
