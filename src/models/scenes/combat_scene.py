@@ -79,6 +79,7 @@ def _make_unique(move: Move) -> Move:
 
 
 class CombatScene(EventListener, Scene):
+    """Represents and updates all model data involved during a combat."""
 
     def __init__(self, enemy: Character = None,
                  win_resolution: Resolution = None,
