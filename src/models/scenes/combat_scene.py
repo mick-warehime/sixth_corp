@@ -1,5 +1,6 @@
 from itertools import product
-from typing import Any, Dict, List, NamedTuple, Optional, Sequence, Tuple
+from typing import Any, Dict, List, NamedTuple, Optional, Sequence, Tuple, \
+    Iterable
 
 from data.constants import FRAMES_PER_SECOND, SCREEN_SIZE, BackgroundImages
 from events.events_base import (BasicEvents, EventListener, EventType,
@@ -78,6 +79,17 @@ def _make_unique(move: Move) -> Move:
     return move_copy
 
 
+def _initialize_characters(characters: Iterable[Character]) -> None:
+    """Initialize character statuses for combat."""
+    for char in characters:
+        # CPU -> MAX_CPU
+        max_cpu = char.status.get_attribute(Attributes.MAX_CPU)
+        char.status.increment_attribute(Attributes.CPU_AVAILABLE, max_cpu)
+        # SHIELD -> 0
+        shield = char.status.get_attribute(Attributes.SHIELD)
+        char.status.increment_attribute(Attributes.SHIELD, -shield)
+
+
 class CombatScene(EventListener, Scene):
     """Represents and updates all model data involved during a combat."""
 
@@ -91,9 +103,8 @@ class CombatScene(EventListener, Scene):
         self._player = get_player()
 
         # initialize CPU slots
-        for char in self.characters():
-            max_cpu = char.status.get_attribute(Attributes.MAX_CPU)
-            char.status.increment_attribute(Attributes.CPU_AVAILABLE, max_cpu)
+        characters = self.characters()
+        _initialize_characters(characters)
 
         self._combat_stack = CombatStack(_remove_user_cpu, _return_user_cpu)
 
