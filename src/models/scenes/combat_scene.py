@@ -1,6 +1,5 @@
-from functools import reduce
 from itertools import product
-from typing import List, Optional, Sequence, Tuple
+from typing import List, Optional, Sequence, Tuple, NamedTuple
 
 from data.constants import FRAMES_PER_SECOND, SCREEN_SIZE, BackgroundImages
 from events.events_base import (BasicEvents, EventListener, EventType,
@@ -47,6 +46,12 @@ def _remove_user_cpu(move: Move) -> None:
 def _return_user_cpu(move: Move) -> None:
     cpu_slots = move.subroutine.cpu_slots()
     move.user.status.increment_attribute(Attributes.CPU_AVAILABLE, cpu_slots)
+
+
+class CombatMoveData(NamedTuple):
+    move: Move
+    time_left: int
+    under_char: bool
 
 
 class CombatScene(EventListener, Scene):
@@ -168,16 +173,18 @@ class CombatScene(EventListener, Scene):
 
     def _update_layout(self) -> None:
         characters = self.characters()
+        moves_with_time = self.combat_stack.moves_times_remaining()[::-1]
+
         # player side layout
         player = characters[0]
 
-        player_layout = Layout([(None, 2), (player, 1), (None, 2)], 'vertical')
+        player_layout = _character_layout(player, moves_with_time)
         left_column = Layout([(None, 1), (player_layout, 1), (None, 1)],
-                             'horizontal')
+                             'vertical')
 
         # stack layout
         # unresolved moves
-        moves_with_time = self.combat_stack.moves_times_remaining()[::-1]
+
         num_moves = len(moves_with_time)
         stack_size = 6
         move_time_elements = []
@@ -206,11 +213,32 @@ class CombatScene(EventListener, Scene):
 
         # enemies layout
         assert len(characters) > 1
-        elements = reduce(lambda a, b: a + b,
-                          ([(None, 1), (e, 1)] for e in characters[1:]))
-        elements.append((None, 1))
-        right_column = Layout(elements, 'vertical')
+
+        right_elements = [(None, 1)]
+        for enemy in characters[1:]:
+            enemy_layout = _character_layout(enemy, moves_with_time)
+
+            right_elements.extend([(enemy_layout, 2), (None, 1)])
+
+        right_column = Layout(right_elements, 'vertical')
 
         self._layout = Layout(
             [(left_column, 2), (middle_column, 3), (right_column, 2)],
             'horizontal', SCREEN_SIZE)
+
+
+def _character_layout(char: Character,
+                      moves_with_time: List[Tuple[Move, int]]) -> Layout:
+    move_space = 3
+    moves = [CombatMoveData(m, t, True) for m, t in moves_with_time
+             if m.user is char]
+    char_layout = Layout([(None, 1), (char, 2), (None, 1)], 'horizontal')
+    move_layout = Layout([(m, 1) for m in moves])
+    move_layout = Layout([(None, 1), (move_layout, 4), (None, 1)],
+                         'horizontal')
+    full_elements = [(None, 1), (char_layout, 5), (None, 1),
+                     (move_layout, min(move_space, len(moves)))]
+    if len(moves) < move_space:
+        full_elements.append((None, move_space - len(moves)))
+
+    return Layout(full_elements)
