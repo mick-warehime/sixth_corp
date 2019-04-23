@@ -16,7 +16,7 @@ from models.combat.combat_stack import CombatStack
 from models.combat.moves_base import Move
 from models.scenes import scene_examples
 from models.scenes.scenes_base import Resolution, Scene
-from views.layouts import Layout
+from models.scenes.layouts import Layout
 
 _wait_one_round = build_subroutine(can_use=True, num_cpu=0, time_to_resolve=1,
                                    description='wait one round')
