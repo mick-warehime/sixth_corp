@@ -198,24 +198,33 @@ class CombatScene(EventListener, Scene):
         return 'CombatScene(enemy = {})'.format(str(self._enemy))
 
     def _update_layout(self) -> None:
+        """Update the screen layout according to moves and characters in scene.
+        """
+
+        # The layout is broken up into 3 columns:
+        # 1. Player column, which shows player stats.
+        # 2. Stack column, which shows moves on the stack and those which have
+        # just resolved.
+        # 3. Enemy column, which shows enemy stats.
+        # We populate these columns with objects whose attributes (data) are
+        # required to render the scene.
         characters = self.characters()
-        moves_with_time = self.combat_stack.moves_times_remaining()[::-1]
+        moves_times = self.combat_stack.moves_times_remaining()[::-1]
 
         # player side layout
         player = characters[0]
 
-        player_layout = _character_layout(player, moves_with_time)
+        player_layout = _character_layout(player, moves_times)
         left_column = Layout([(None, 1), (player_layout, 1), (None, 1)],
                              'vertical')
 
         # stack layout
-        # unresolved moves
-
-        num_moves = len(moves_with_time)
+        # unresolved moves (and time to resolve)
+        num_moves = len(moves_times)
         stack_size = 6
-        move_time_elements = []
-        for move_and_time in moves_with_time:
-            move_time_elements.append((move_and_time, 1))
+        move_time_elements = [(m_t, 1) for m_t in moves_times]
+        # Add a gap rect so that rects are always scaled to the same size by
+        # the layout.
         if num_moves <= stack_size:
             move_time_elements.append((None, stack_size - num_moves))
 
@@ -227,6 +236,7 @@ class CombatScene(EventListener, Scene):
         resolved_size = 4
         resolved_moves = self.combat_stack.resolved_moves[::-1]
         move_elements = [(mv, 1) for mv in resolved_moves]
+        # Add a gap to ensure consistent rect sizes.
         if len(resolved_moves) < resolved_size:
             move_elements.append((None, resolved_size - len(resolved_moves)))
 
@@ -242,7 +252,7 @@ class CombatScene(EventListener, Scene):
 
         right_elements: List[Tuple[Any, int]] = [(None, 1)]
         for enemy in characters[1:]:
-            enemy_layout = _character_layout(enemy, moves_with_time)
+            enemy_layout = _character_layout(enemy, moves_times)
 
             right_elements.extend([(enemy_layout, 2), (None, 1)])
 
