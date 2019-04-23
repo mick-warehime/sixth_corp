@@ -106,7 +106,7 @@ class ModData(NamedTuple):
     states_granted: Tuple[State, ...] = ()
     attribute_modifiers: Dict[AttributeType, int] = {}
     subroutines_granted: Tuple[Subroutine, ...] = ()
-    valid_slots: Tuple[SlotTypes, ...] = (SlotTypes.STORAGE,)
+    valid_slots: Tuple[SlotTypes, ...] = ()
     description: str = 'unnamed mod'
 
 
@@ -152,7 +152,6 @@ def build_mod(states_granted: Union[State, Sequence[State]] = (),
         subroutines_granted = (subroutines_granted,)
     if isinstance(valid_slots, SlotTypes):
         valid_slots = (valid_slots,)
-    valid_slots = tuple(valid_slots) + (SlotTypes.STORAGE,)
 
     return _ModImpl(tuple(states_granted), attribute_modifiers,
-                    tuple(subroutines_granted), valid_slots, description)
+                    tuple(subroutines_granted), tuple(valid_slots), description)

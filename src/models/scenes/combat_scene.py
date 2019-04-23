@@ -1,5 +1,5 @@
 from itertools import product
-from typing import Any, List, NamedTuple, Optional, Sequence, Tuple, Dict
+from typing import Any, Dict, List, NamedTuple, Optional, Sequence, Tuple
 
 from data.constants import FRAMES_PER_SECOND, SCREEN_SIZE, BackgroundImages
 from events.events_base import (BasicEvents, EventListener, EventType,
@@ -267,8 +267,8 @@ def _character_layout(char: Character,
                       moves_with_time: List[Tuple[Move, int]]) -> Layout:
     move_space = 3
     # Pull out all unique moves by the character
-    moves = {m for m, t in moves_with_time if m.user is char}
-    moves = [CombatMoveData(m, 0, True) for m in moves]
+    moves_set = {m for m, t in moves_with_time if m.user is char}
+    moves = [CombatMoveData(m, 0, True) for m in moves_set]
     char_layout = Layout([(None, 1), (char, 2), (None, 1)], 'horizontal')
     move_layout = Layout([(m, 1) for m in moves])
     move_layout = Layout([(None, 1), (move_layout, 4), (None, 1)],
