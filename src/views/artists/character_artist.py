@@ -29,8 +29,8 @@ class CharacterArtist(SceneArtist):
 def _render_character(character: Character, screen: Screen, rect: Rect) -> None:
     screen.render_image(character.image_path, rect.x, rect.y, rect.w, rect.h)
 
-    font_size = 30
-    vert_spacing = rescale_vertical(font_size)[0]
+    font_size = rescale_vertical(30)[0]
+    vert_spacing = font_size
     x = rect.x
     # Draw shields if they exist above image
     shields = character.status.get_attribute(Attributes.SHIELD)

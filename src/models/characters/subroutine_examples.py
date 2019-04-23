@@ -70,6 +70,7 @@ def shield_buff(amount: int, duration: int = 1, cpu_slots: int = None,
         return user is target
 
     def use_fun(user: Character, target: Character) -> None:
+        # Shield cannot decrease nor can it be made larger than amount.
         current_shield = user.status.get_attribute(Attributes.SHIELD)
         inc = min(max(0, amount - current_shield), amount)
         user.status.increment_attribute(Attributes.SHIELD, inc)

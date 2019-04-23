@@ -104,8 +104,7 @@ class CombatScene(EventListener, Scene):
         self._player = get_player()
 
         # initialize CPU slots
-        characters = self.characters()
-        _initialize_characters(characters)
+        _initialize_characters(self.characters())
 
         self._combat_stack = CombatStack(_remove_user_cpu, _return_user_cpu)
 

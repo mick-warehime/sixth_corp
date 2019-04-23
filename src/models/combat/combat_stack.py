@@ -134,7 +134,7 @@ class CombatStack(object):
         assert time_left >= 0
 
         if time_left == 0:
-            self._just_resolved = self._just_resolved + (move,)
+            self._just_resolved = (move,) + self._just_resolved
             return
 
         index = -1
