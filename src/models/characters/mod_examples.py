@@ -4,7 +4,8 @@ from enum import Enum
 from models.characters.mods_base import ModData, SlotTypes
 from models.characters.states import Attributes, Skill, State
 from models.characters.subroutine_examples import (damage_over_time,
-                                                   direct_damage, repair)
+                                                   direct_damage, repair,
+                                                   shield_buff)
 
 
 class ModTypes(Enum):
@@ -15,6 +16,7 @@ class ModTypes(Enum):
     BIG_LASER = 'big laser'
     LASER_REPEATER = 'laser repeater'
     REPAIR_NANITES = 'self-repair nanites'
+    SHIELD_GENERATOR = 'shield generator'
 
     @property
     def data(self) -> ModData:
@@ -25,6 +27,7 @@ _shoot_small = direct_damage(2, label='small laser')
 _shoot_big = direct_damage(5, label='big laser')
 _shoot_many = damage_over_time(1, duration=3, time_to_resolve=1,
                                label='laser barrage')
+_shield_3_rounds = shield_buff(amount=1, duration=3, cpu_slots=1)
 
 _mod_types_to_data = {
     ModTypes.BASIC_HULL_PLATING: ModData(
@@ -41,6 +44,8 @@ _mod_types_to_data = {
     ModTypes.LASER_REPEATER: ModData(subroutines_granted=(_shoot_many,),
                                      valid_slots=(SlotTypes.ARMS,)),
     ModTypes.REPAIR_NANITES: ModData(subroutines_granted=(repair(5),),
-                                     valid_slots=(SlotTypes.CHEST,))
+                                     valid_slots=(SlotTypes.CHEST,)),
+    ModTypes.SHIELD_GENERATOR: ModData(subroutines_granted=(_shield_3_rounds,),
+                                       valid_slots=(SlotTypes.CHEST,))
 
 }

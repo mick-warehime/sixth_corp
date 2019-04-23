@@ -24,9 +24,10 @@ _USELESS = CharacterData(ChassisTypes.USELESS.data, 'useless enemy')
 _HUMAN_PLAYER = CharacterData(ChassisTypes.NO_LEGS.data, 'Player 1',
                               (ModTypes.SMALL_LASER.data,
                                ModTypes.LASER_REPEATER.data,
-                               ModTypes.BASIC_HULL_PLATING.data,
+                               ModTypes.SHIELD_GENERATOR.data,
                                ModTypes.REPAIR_NANITES.data,
-                               ModTypes.FIRE_HELM.data),
+                               ModTypes.FIRE_HELM.data,
+                               ModTypes.BASIC_HULL_PLATING.data),
                               'src/data/images/walle.png', AIType.Human)
 
 

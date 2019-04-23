@@ -25,6 +25,7 @@ class Attributes(Enum):
     CREDITS = 'credits'
     MAX_CPU = 'maximum CPU slots'
     CPU_AVAILABLE = 'CPU slots available'
+    SHIELD = 'shield'
 
     def __str__(self) -> str:
         return self.value
