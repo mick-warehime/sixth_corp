@@ -120,8 +120,8 @@ def test_combat_scene_to_decision_scene():
     shoot_laser = direct_damage(1, label='laser', time_to_resolve=1,
                                 cpu_slots=0)
     laser_mod = build_mod(subroutines_granted=shoot_laser,
-                         valid_slots=tuple(
-                               s for s in SlotTypes if s != SlotTypes.STORAGE))
+                          valid_slots=tuple(
+                              s for s in SlotTypes if s != SlotTypes.STORAGE))
     assert player.chassis.can_store(laser_mod)
     player.chassis.attempt_store(laser_mod)
 
