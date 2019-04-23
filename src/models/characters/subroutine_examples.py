@@ -5,6 +5,20 @@ from models.characters.states import Attributes
 from models.characters.subroutines_base import Subroutine, build_subroutine
 
 
+def damage_target(amount: int, target: Character) -> None:
+    """Deal damage to a target.
+
+    This subroutine accounts for shields and other effects.
+    """
+    shields = target.status.get_attribute(Attributes.SHIELD)
+    # amount = shield reduction + health reduction
+    shield_reduction = min(shields, amount)  # shields can only go to zero.
+    health_reduction = amount - shield_reduction
+
+    target.status.increment_attribute(Attributes.SHIELD, -shield_reduction)
+    target.status.increment_attribute(Attributes.HEALTH, -health_reduction)
+
+
 def repair(amount: int) -> Subroutine:
     """Self repair subroutine.
 
@@ -27,6 +41,49 @@ def repair(amount: int) -> Subroutine:
 
     return build_subroutine(use_fun, can_use_fun, cpu_slots, time_slots,
                             description)
+
+
+def shield_buff(amount: int, duration: int = 1, cpu_slots: int = None,
+                time_to_resolve: int = 0) -> Subroutine:
+    """Adds a temporary damage shield buffer to the user.
+
+    The shield fizzles either at the end of combat.
+
+    Args:
+        amount: Amount of shield added in a round. Must be non-negative.
+        duration: Number of rounds the buff is invoked. The total shield value
+            does not stack and cannot be larger than amount. Must be positive.
+        cpu_slots: CPU slots required. By default this is
+            max(floor(sqrt(amount * duration) - sqrt(time_to_resolve)), 0)
+        time_to_resolve: Time before shield occurs. By default the shield is
+            instantaneous. Must be non-negative.
+    """
+
+    if amount < 0:
+        raise ValueError('shield amount must be non-negative')
+    if duration < 1:
+        raise ValueError('shield duration must be positive.')
+    if time_to_resolve < 0:
+        raise ValueError('shield time to resolve must be non-negative.')
+
+    def can_use(user: Character, target: Character) -> bool:
+        return user is target
+
+    def use_fun(user: Character, target: Character) -> None:
+        # Shield cannot decrease nor can it be made larger than amount.
+        current_shield = user.status.get_attribute(Attributes.SHIELD)
+        inc = min(max(0, amount - current_shield), amount)
+        user.status.increment_attribute(Attributes.SHIELD, inc)
+
+    if cpu_slots is None:
+        cpu = math.sqrt(amount * duration) - math.sqrt(time_to_resolve)
+        cpu_slots = max(0, int(cpu))
+
+    description = '+{} shield'.format(amount)
+    if duration > 1:
+        description += ' for {} rounds'.format(duration)
+    return build_subroutine(use_fun, can_use, cpu_slots, time_to_resolve,
+                            description, duration)
 
 
 def direct_damage(damage: int, cpu_slots: int = None,
@@ -52,7 +109,7 @@ def direct_damage(damage: int, cpu_slots: int = None,
         cpu_slots = 1 + damage // (2 * time_to_resolve + 1)
 
     def use_fun(user: Character, target: Character) -> None:
-        target.status.increment_attribute(Attributes.HEALTH, -damage)
+        damage_target(damage, target)
 
     def can_use_fun(user: Character, target: Character) -> bool:
         return user is not target
@@ -97,7 +154,7 @@ def damage_over_time(damage_per_round: int, duration: int = 2,
         cpu_slots = 1 + total_damage // (2 * total_time)
 
     def use_fun(user: Character, target: Character) -> None:
-        target.status.increment_attribute(Attributes.HEALTH, -damage_per_round)
+        damage_target(damage_per_round, target)
 
     def can_use_fun(user: Character, target: Character) -> bool:
         return user is not target

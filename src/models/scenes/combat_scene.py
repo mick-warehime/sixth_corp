@@ -1,5 +1,6 @@
 from itertools import product
-from typing import Any, Dict, List, NamedTuple, Optional, Sequence, Tuple
+from typing import (Any, Dict, Iterable, List, NamedTuple, Optional, Sequence,
+                    Tuple)
 
 from data.constants import FRAMES_PER_SECOND, SCREEN_SIZE, BackgroundImages
 from events.events_base import (BasicEvents, EventListener, EventType,
@@ -61,9 +62,10 @@ def _return_user_cpu(move: Move) -> None:
 
 
 class CombatMoveData(NamedTuple):
+    """Data required to represent a move on the screen."""
     move: Move
     time_left: int
-    under_char: bool
+    under_char: bool  # whether to put this move under the character.
 
 
 def _make_unique(move: Move) -> Move:
@@ -76,6 +78,17 @@ def _make_unique(move: Move) -> Move:
     move_copy = move._replace(subroutine=move.subroutine.copy())
     assert move != move_copy
     return move_copy
+
+
+def _initialize_characters(characters: Iterable[Character]) -> None:
+    """Initialize character statuses for combat."""
+    for char in characters:
+        # CPU -> MAX_CPU
+        max_cpu = char.status.get_attribute(Attributes.MAX_CPU)
+        char.status.increment_attribute(Attributes.CPU_AVAILABLE, max_cpu)
+        # SHIELD -> 0
+        shield = char.status.get_attribute(Attributes.SHIELD)
+        char.status.increment_attribute(Attributes.SHIELD, -shield)
 
 
 class CombatScene(EventListener, Scene):
@@ -91,9 +104,7 @@ class CombatScene(EventListener, Scene):
         self._player = get_player()
 
         # initialize CPU slots
-        for char in self.characters():
-            max_cpu = char.status.get_attribute(Attributes.MAX_CPU)
-            char.status.increment_attribute(Attributes.CPU_AVAILABLE, max_cpu)
+        _initialize_characters(self.characters())
 
         self._combat_stack = CombatStack(_remove_user_cpu, _return_user_cpu)
 

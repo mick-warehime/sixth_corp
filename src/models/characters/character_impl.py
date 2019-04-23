@@ -64,13 +64,14 @@ class _CombinedStatus(Status):
         self._inventory = inventory
 
         # We use attribute getters for the composite object to set health and
-        # CPU bounds.
+        # CPU bounds. The base status is used to compute bounds.
         self._base_status.set_attribute_bounds(
             Attributes.HEALTH, 0,
             partial(self.get_attribute, Attributes.MAX_HEALTH))
         self._base_status.set_attribute_bounds(
             Attributes.CPU_AVAILABLE, 0,
             partial(self.get_attribute, Attributes.MAX_CPU))
+        self._base_status.set_attribute_bounds(Attributes.SHIELD, 0, 1000000)
 
     def has_state(self, state: State) -> bool:
         return (self._base_status.has_state(state)
