@@ -62,9 +62,10 @@ def _return_user_cpu(move: Move) -> None:
 
 
 class CombatMoveData(NamedTuple):
+    """Data required to represent a move on the screen."""
     move: Move
     time_left: int
-    under_char: bool
+    under_char: bool  # whether to put this move under the character.
 
 
 def _make_unique(move: Move) -> Move:
