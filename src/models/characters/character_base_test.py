@@ -4,7 +4,7 @@ from models.characters.character_examples import CharacterData
 from models.characters.character_impl import build_character
 from models.characters.chassis import ChassisData
 from models.characters.conditions import IsDead
-from models.characters.mods_base import _ModImpl, SlotTypes, build_mod
+from models.characters.mods_base import SlotTypes, _ModImpl, build_mod
 from models.characters.states import Attributes, State
 from models.characters.subroutine_examples import direct_damage
 
@@ -64,5 +64,5 @@ class CharacterTest(TestCase):
 
         char.chassis.attempt_store(
             build_mod(subroutines_granted=subroutine,
-                     valid_slots=_ACTIVE_SLOT))
+                      valid_slots=_ACTIVE_SLOT))
         assert subroutine in char.chassis.all_subroutines()

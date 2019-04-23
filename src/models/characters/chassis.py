@@ -4,7 +4,7 @@ from functools import reduce
 from typing import Dict, Iterable, List, NamedTuple, Tuple
 
 from models.characters.inventory import InventoryBase
-from models.characters.mods_base import _ModImpl, Mod, SlotTypes, build_mod
+from models.characters.mods_base import Mod, SlotTypes, build_mod
 from models.characters.states import AttributeType, State
 from models.characters.subroutines_base import Subroutine
 

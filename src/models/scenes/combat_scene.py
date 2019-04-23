@@ -1,5 +1,5 @@
 from itertools import product
-from typing import List, Optional, Sequence, Tuple, NamedTuple
+from typing import Any, List, NamedTuple, Optional, Sequence, Tuple
 
 from data.constants import FRAMES_PER_SECOND, SCREEN_SIZE, BackgroundImages
 from events.events_base import (BasicEvents, EventListener, EventType,
@@ -14,8 +14,8 @@ from models.characters.subroutines_base import build_subroutine
 from models.combat.combat_stack import CombatStack
 from models.combat.moves_base import Move
 from models.scenes import scene_examples
-from models.scenes.scenes_base import Resolution, Scene
 from models.scenes.layouts import Layout
+from models.scenes.scenes_base import Resolution, Scene
 
 _wait_one_round = build_subroutine(can_use=True, num_cpu=0, time_to_resolve=1,
                                    description='wait one round')
@@ -214,7 +214,7 @@ class CombatScene(EventListener, Scene):
         # enemies layout
         assert len(characters) > 1
 
-        right_elements = [(None, 1)]
+        right_elements: List[Tuple[Any, int]] = [(None, 1)]
         for enemy in characters[1:]:
             enemy_layout = _character_layout(enemy, moves_with_time)
 

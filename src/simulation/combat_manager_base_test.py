@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from models.characters.mods_base import build_mod, SlotTypes
+from models.characters.mods_base import SlotTypes, build_mod
 from models.characters.states import Attributes
 from models.characters.subroutine_examples import direct_damage, repair
 from models.combat.combat_test_utils import create_combat_group

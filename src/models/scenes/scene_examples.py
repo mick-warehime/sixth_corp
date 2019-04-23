@@ -5,7 +5,7 @@ from typing import Dict, Tuple, cast
 
 from data.constants import BackgroundImages
 from models.characters.effects import IncrementAttribute, RestartGame
-from models.characters.mods_base import _ModImpl, Mod, SlotTypes, build_mod
+from models.characters.mods_base import Mod, SlotTypes, build_mod
 from models.characters.player import get_player
 from models.characters.states import Attributes, Skill
 from models.characters.subroutine_examples import direct_damage

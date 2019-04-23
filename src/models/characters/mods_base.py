@@ -1,7 +1,7 @@
 """Base implementation of mods and inventory."""
 import abc
 from enum import Enum
-from typing import Dict, List, NamedTuple, Sequence, Set, Tuple, Union, Callable
+from typing import Dict, List, NamedTuple, Sequence, Set, Tuple, Union
 
 from models.characters.states import AttributeType, State
 from models.characters.subroutines_base import Subroutine
@@ -78,7 +78,7 @@ class _ModImpl(Mod):
             self, states_granted: Tuple[State, ...] = (),
             attribute_modifiers: Dict[AttributeType, int] = None,
             subroutines_granted: Tuple[Subroutine, ...] = (),
-            valid_slots: Tuple[SlotTypes, ...] = SlotTypes.STORAGE,
+            valid_slots: Tuple[SlotTypes, ...] = (),
             description: str = 'unnamed mod') -> None:
         self._slots = set(valid_slots)
         self._states = states_granted
@@ -152,6 +152,7 @@ def build_mod(states_granted: Union[State, Sequence[State]] = (),
         subroutines_granted = (subroutines_granted,)
     if isinstance(valid_slots, SlotTypes):
         valid_slots = (valid_slots,)
+    valid_slots = tuple(valid_slots) + (SlotTypes.STORAGE,)
 
-    return _ModImpl(states_granted, attribute_modifiers, subroutines_granted,
-                    valid_slots, description)
+    return _ModImpl(tuple(states_granted), attribute_modifiers,
+                    tuple(subroutines_granted), valid_slots, description)

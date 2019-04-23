@@ -15,7 +15,7 @@ from models.characters.character_examples import CharacterData
 from models.characters.character_impl import build_character
 from models.characters.chassis import ChassisData
 from models.characters.conditions import IsDead
-from models.characters.mods_base import build_mod, Mod, SlotTypes
+from models.characters.mods_base import Mod, SlotTypes, build_mod
 from models.characters.player import get_player, reset_player
 from models.characters.states import Attributes
 from models.characters.subroutine_examples import direct_damage

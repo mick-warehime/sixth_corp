@@ -8,7 +8,7 @@ from models.characters.character_base import Character
 from models.characters.character_examples import CharacterData
 from models.characters.chassis import Chassis
 from models.characters.inventory import InventoryBase
-from models.characters.mods_base import _ModImpl, build_mod
+from models.characters.mods_base import build_mod
 from models.characters.states import Attributes, AttributeType, State, Status
 from models.characters.status import BasicStatus
 from models.combat.ai_base import AI

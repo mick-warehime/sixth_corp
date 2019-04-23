@@ -1,6 +1,6 @@
 """Tests for the Chassis class"""
 from models.characters.chassis import Chassis
-from models.characters.mods_base import build_mod, SlotTypes
+from models.characters.mods_base import SlotTypes, build_mod
 from models.characters.states import Attributes, State
 from models.characters.subroutine_examples import direct_damage
 
@@ -34,8 +34,8 @@ def test_chassis_cannot_store_same_mod_twice():
 
 def test_chassis_base_mod_included():
     base_mod = build_mod(states_granted=State.ON_FIRE,
-                        attribute_modifiers={Attributes.CREDITS: 3},
-                        subroutines_granted=direct_damage(3))
+                         attribute_modifiers={Attributes.CREDITS: 3},
+                         subroutines_granted=direct_damage(3))
     chassis = Chassis({}, base_mod=base_mod)
 
     assert len(list(chassis.all_mods())) == 1
@@ -45,7 +45,7 @@ def test_chassis_stores_in_active_slot_first():
     chassis = Chassis({SlotTypes.ARMS: 1, SlotTypes.STORAGE: 1})
 
     fire_mod = build_mod(states_granted=State.ON_FIRE,
-                        valid_slots=SlotTypes.ARMS)
+                         valid_slots=SlotTypes.ARMS)
     chassis.attempt_store(fire_mod)
     assert chassis.grants_state(State.ON_FIRE)
     assert fire_mod in chassis.all_active_mods()
