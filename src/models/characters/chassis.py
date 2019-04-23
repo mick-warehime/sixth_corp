@@ -4,7 +4,7 @@ from functools import reduce
 from typing import Dict, Iterable, List, NamedTuple, Tuple
 
 from models.characters.inventory import InventoryBase
-from models.characters.mods_base import GenericMod, Mod, SlotTypes
+from models.characters.mods_base import Mod, SlotTypes, build_mod
 from models.characters.states import AttributeType, State
 from models.characters.subroutines_base import Subroutine
 
@@ -30,8 +30,8 @@ class Chassis(InventoryBase):
 
     @classmethod
     def from_data(cls, data: 'ChassisData') -> 'Chassis':
-        base_mod = GenericMod(data.states_granted, data.attribute_modifiers,
-                              data.subroutines_granted, description='base mod')
+        base_mod = build_mod(data.states_granted, data.attribute_modifiers,
+                             data.subroutines_granted, description='base mod')
         return Chassis(data.slot_capacities, base_mod)
 
     @property

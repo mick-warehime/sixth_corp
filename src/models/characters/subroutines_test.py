@@ -38,3 +38,6 @@ def test_fire_laser(character):
 
 def test_subroutine_eq():
     assert build_subroutine() != build_subroutine()
+    sub = build_subroutine()
+    assert sub == sub
+    assert sub != sub.copy()

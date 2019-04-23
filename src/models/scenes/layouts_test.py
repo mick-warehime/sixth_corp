@@ -1,6 +1,6 @@
 from pygame.rect import Rect
 
-from views.layouts import Layout
+from models.scenes.layouts import Layout
 
 
 def test_vertical_layout_object_at():

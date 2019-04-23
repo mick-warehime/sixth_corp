@@ -134,8 +134,7 @@ class InventoryArtist(SceneArtist):
 
         # Inventory slots, mods, and mod information
         layout = scene.layout
-        all_rects = layout.get_rects(layout)
-        scene_objects = {layout.object_at(*rect.center) for rect in all_rects}
+        scene_objects = layout.all_objects()
 
         if scene.selected_mod is not None:
             selected_mod_slots = scene.selected_mod.valid_slots()

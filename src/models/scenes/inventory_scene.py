@@ -8,8 +8,8 @@ from events.events_base import (BasicEvents, EventListener, EventType,
 from models.characters.chassis import Chassis
 from models.characters.mods_base import Mod, SlotTypes
 from models.characters.player import get_player
+from models.scenes.layouts import Layout
 from models.scenes.scenes_base import BasicResolution, Resolution, Scene
-from views.layouts import Layout
 
 
 class SlotHeader(NamedTuple):

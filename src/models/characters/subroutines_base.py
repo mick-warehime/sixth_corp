@@ -35,6 +35,14 @@ class Subroutine(object):
     def description(self) -> str:
         """"Description of the subroutine."""
 
+    @abc.abstractmethod
+    def copy(self)->'Subroutine':
+        """Return a copy of the subroutine.
+
+        Copies are not identified as equal, i.e.
+        subroutine.copy != subroutine.
+        """
+
 
 class _SubroutineImpl(Subroutine):
     """Concrete generic implementation of Subroutine."""
@@ -65,6 +73,13 @@ class _SubroutineImpl(Subroutine):
 
     def description(self) -> str:
         return self._description_fun()
+
+    def __copy__(self) -> Subroutine:
+        return _SubroutineImpl(self._use_fun, self._can_use_fun,
+                               self._cpu_slot_fun, self._time_slot_fun,
+                               self._description_fun)
+
+    copy = __copy__
 
 
 def _do_nothing(user: Character, target: Character) -> None:

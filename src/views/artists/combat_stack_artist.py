@@ -5,7 +5,7 @@ from pygame.rect import Rect
 
 from data.colors import DARK_GRAY, LIGHT_GRAY, RED, WHITE, YELLOW
 from models.combat.moves_base import Move
-from models.scenes.combat_scene import CombatScene
+from models.scenes.combat_scene import CombatMoveData, CombatScene
 from models.scenes.scenes_base import Scene
 from views.artists.drawing_utils import rescale_horizontal
 from views.artists.scene_artist_base import SceneArtist
@@ -15,34 +15,37 @@ _TEXT_SPACE, = rescale_horizontal(10)
 _STACK_OUTLINE, = rescale_horizontal(2)
 _FONT_SIZE, = rescale_horizontal(24)
 _TARGET_SIZE, = rescale_horizontal(50)
+_SMALL_FONT_SIZE, = rescale_horizontal(18)
 
 
 def _render_move(move: Move, time: Optional[int], rect: Rect,
-                 screen: Screen) -> None:
+                 screen: Screen, small_text: bool = False,
+                 CPU_not_time: bool = False) -> None:
     # Background
     screen.render_rect(rect, DARK_GRAY, 0)
     screen.render_rect(rect, LIGHT_GRAY, _STACK_OUTLINE)
 
+    font_size = _SMALL_FONT_SIZE if small_text else _FONT_SIZE
     # Description
     screen.render_text(
         move.subroutine.description(),
-        _FONT_SIZE,
+        font_size,
         rect.x + _TEXT_SPACE,
         rect.y + _TEXT_SPACE,
         WHITE)
 
     # CPU slots
-    screen.render_text(
-        'CPU: {}'.format(move.subroutine.cpu_slots()),
-        _FONT_SIZE,
-        rect.x + rect.w - 12 * _TEXT_SPACE,
-        rect.y + _TEXT_SPACE, YELLOW)
-
+    if CPU_not_time:
+        screen.render_text(
+            'CPU: {}'.format(move.subroutine.cpu_slots()),
+            font_size,
+            rect.x + rect.w - 6 * _TEXT_SPACE,
+            rect.y + _TEXT_SPACE, YELLOW)
     # Time to resolve
-    if time is not None:
+    elif time is not None:
         screen.render_text(
             'T: {}/{}'.format(time, move.subroutine.time_slots()),
-            _FONT_SIZE,
+            font_size,
             rect.x + rect.w - 5 * _TEXT_SPACE,
             rect.y + _TEXT_SPACE, RED)
     # USER + TARGET
@@ -134,3 +137,14 @@ class CombatStackArtist(SceneArtist):
 
                 for rect in rects:
                     _render_move(move, None, rect, screen)
+
+        # Moves under characters
+        moves_under_chars = [obj for obj in scene.layout.all_objects()
+                             if isinstance(obj, CombatMoveData)
+                             and obj.under_char]
+
+        for move_data in moves_under_chars:
+            rects = scene.layout.get_rects(move_data)
+            assert len(rects) == 1
+            _render_move(move_data.move, None, rects[0], screen,
+                         small_text=True, CPU_not_time=True)
