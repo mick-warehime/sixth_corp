@@ -44,7 +44,7 @@ def repair(amount: int) -> Subroutine:
 
 
 def shield_buff(amount: int, duration: int = 1, cpu_slots: int = None,
-                time_to_resolve: int = 0):
+                time_to_resolve: int = 0) -> Subroutine:
     """Adds a temporary damage shield buffer to the user.
 
     The shield fizzles either at the end of combat.

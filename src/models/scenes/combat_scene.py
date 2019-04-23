@@ -1,6 +1,6 @@
 from itertools import product
-from typing import Any, Dict, List, NamedTuple, Optional, Sequence, Tuple, \
-    Iterable
+from typing import (Any, Dict, Iterable, List, NamedTuple, Optional, Sequence,
+                    Tuple)
 
 from data.constants import FRAMES_PER_SECOND, SCREEN_SIZE, BackgroundImages
 from events.events_base import (BasicEvents, EventListener, EventType,
