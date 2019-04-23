@@ -32,6 +32,11 @@ class Subroutine(object):
         """Number of time slots required before subroutine takes effect."""
 
     @abc.abstractmethod
+    def duration(self) -> int:
+        """The number of rounds over which the subroutine use method is invoked.
+        """
+
+    @abc.abstractmethod
     def description(self) -> str:
         """"Description of the subroutine."""
 
@@ -40,7 +45,7 @@ class Subroutine(object):
         """Return a copy of the subroutine.
 
         Copies are not identified as equal, i.e.
-        subroutine.copy != subroutine.
+        subroutine.copy() != subroutine.
         """
 
 
@@ -51,12 +56,14 @@ class _SubroutineImpl(Subroutine):
                  can_use_fun: Callable[[Character, Character], bool],
                  cpu_slot_fun: Callable[[], int],
                  time_slot_fun: Callable[[], int],
-                 description_fun: Callable[[], str]) -> None:
+                 description_fun: Callable[[], str],
+                 duration_fun: Callable[[], int]) -> None:
         self._use_fun = use_fun
         self._can_use_fun = can_use_fun
         self._cpu_slot_fun = cpu_slot_fun
         self._time_slot_fun = time_slot_fun
         self._description_fun = description_fun
+        self._duration = duration_fun
 
     def use(self, user: Character, target: Character) -> None:
         assert self.can_use(user, target)
@@ -74,10 +81,13 @@ class _SubroutineImpl(Subroutine):
     def description(self) -> str:
         return self._description_fun()
 
+    def duration(self) -> int:
+        return self._duration()
+
     def __copy__(self) -> Subroutine:
         return _SubroutineImpl(self._use_fun, self._can_use_fun,
                                self._cpu_slot_fun, self._time_slot_fun,
-                               self._description_fun)
+                               self._description_fun, self._duration)
 
     copy = __copy__
 
@@ -100,6 +110,7 @@ def build_subroutine(
         num_cpu: Union[int, Callable[[], int], partial] = 1,
         time_to_resolve: Union[int, Callable[[], int], partial] = 1,
         description: Union[str, Callable[[], str]] = 'unnamed subroutine',
+        duration: Union[int, Callable[[], int]] = 1,
 ) -> Subroutine:
     """Factory function for Subroutines.
 
@@ -117,6 +128,8 @@ def build_subroutine(
             integer.
         description: A short string description of the subroutine. This
             may be a string or a no-argument function that returns a string.
+        duration: The number of rounds over which the subroutine use method is
+            invoked.
     """
 
     use_fun = _do_nothing if use_fun is None else use_fun
@@ -137,5 +150,9 @@ def build_subroutine(
     if isinstance(description, str):
         description = partial(_constant, value=description)
 
+    if isinstance(duration, int):
+        duration = partial(_constant, value=duration)
+
     return cast(Subroutine, _SubroutineImpl(use_fun, can_use, num_cpu,
-                                            time_to_resolve, description))
+                                            time_to_resolve, description,
+                                            duration))

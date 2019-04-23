@@ -44,7 +44,7 @@ def _render_move(move: Move, time: Optional[int], rect: Rect,
     # Time to resolve
     elif time is not None:
         screen.render_text(
-            'T: {}/{}'.format(time, move.subroutine.time_slots()),
+            'T: {}'.format(time),
             font_size,
             rect.x + rect.w - 5 * _TEXT_SPACE,
             rect.y + _TEXT_SPACE, RED)

@@ -1,5 +1,5 @@
 from itertools import product
-from typing import Any, List, NamedTuple, Optional, Sequence, Tuple
+from typing import Any, List, NamedTuple, Optional, Sequence, Tuple, Dict
 
 from data.constants import FRAMES_PER_SECOND, SCREEN_SIZE, BackgroundImages
 from events.events_base import (BasicEvents, EventListener, EventType,
@@ -36,8 +36,17 @@ def _valid_moves(user: Character, targets: Sequence[Character]) -> List[Move]:
             Attributes.CPU_AVAILABLE)]
 
 
+# For moves with multi-turn durations, we need to keep track of how many times
+# they have been executed so that we can return the CPU to the user exactly
+# when the final execution has occurred.
+_move_registry: Dict[Move, List[int]] = {}
+
+
 def _remove_user_cpu(move: Move) -> None:
     cpu_slots = move.subroutine.cpu_slots()
+    duration = move.subroutine.duration()
+    _move_registry[move] = [0, duration]
+
     assert cpu_slots <= move.user.status.get_attribute(
         Attributes.CPU_AVAILABLE)
     move.user.status.increment_attribute(Attributes.CPU_AVAILABLE, -cpu_slots)
@@ -45,13 +54,28 @@ def _remove_user_cpu(move: Move) -> None:
 
 def _return_user_cpu(move: Move) -> None:
     cpu_slots = move.subroutine.cpu_slots()
-    move.user.status.increment_attribute(Attributes.CPU_AVAILABLE, cpu_slots)
+    _move_registry[move][0] += 1
+    if _move_registry[move][0] == _move_registry[move][1]:
+        move.user.status.increment_attribute(Attributes.CPU_AVAILABLE,
+                                             cpu_slots)
 
 
 class CombatMoveData(NamedTuple):
     move: Move
     time_left: int
     under_char: bool
+
+
+def _make_unique(move: Move) -> Move:
+    """Make a move distinct under equality from the input.
+
+    We do this because some moves may appear on the stack more than once with
+    the exact same time left. We must have them distinct for proper rendering.
+    """
+    # subroutine copies are distinct, so replace the move's subroutine.
+    move_copy = move._replace(subroutine=move.subroutine.copy())
+    assert move != move_copy
+    return move_copy
 
 
 class CombatScene(EventListener, Scene):
@@ -149,7 +173,8 @@ class CombatScene(EventListener, Scene):
         # Add new moves to the combat stack and start animation
         if isinstance(event, SelectPlayerMoveEvent):
             enemy_move = self._enemy.ai.select_move([self._player])
-            self._combat_stack.update_stack([event.move, enemy_move])
+            moves = [_make_unique(event.move), _make_unique(enemy_move)]
+            self._combat_stack.update_stack(moves)
             self._update_layout()
             self._selected_char = None
 
@@ -230,8 +255,9 @@ class CombatScene(EventListener, Scene):
 def _character_layout(char: Character,
                       moves_with_time: List[Tuple[Move, int]]) -> Layout:
     move_space = 3
-    moves = [CombatMoveData(m, t, True) for m, t in moves_with_time
-             if m.user is char]
+    # Pull out all unique moves by the character
+    moves = {m for m, t in moves_with_time if m.user is char}
+    moves = [CombatMoveData(m, 0, True) for m in moves]
     char_layout = Layout([(None, 1), (char, 2), (None, 1)], 'horizontal')
     move_layout = Layout([(m, 1) for m in moves])
     move_layout = Layout([(None, 1), (move_layout, 4), (None, 1)],
