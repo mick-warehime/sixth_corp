@@ -23,8 +23,8 @@ class ModTypes(Enum):
 
 _shoot_small = direct_damage(2, label='small laser')
 _shoot_big = direct_damage(5, label='big laser')
-_shoot_many = damage_over_time(1, time_to_resolve=1, label='laser barrage',
-                               duration=3)
+_shoot_many = damage_over_time(1, duration=3, time_to_resolve=1,
+                               label='laser barrage')
 
 _mod_types_to_data = {
     ModTypes.BASIC_HULL_PLATING: ModData(

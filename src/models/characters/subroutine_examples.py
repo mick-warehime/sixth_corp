@@ -64,22 +64,22 @@ def direct_damage(damage: int, cpu_slots: int = None,
                             description)
 
 
-def damage_over_time(damage_per_round: int, cpu_slots: int = None,
-                     time_to_resolve: int = None,
-                     label: str = '', duration: int = 2) -> Subroutine:
-    """Subroutine to deal direct damage.
+def damage_over_time(damage_per_round: int, duration: int = 2,
+                     cpu_slots: int = None, time_to_resolve: int = None,
+                     label: str = '') -> Subroutine:
+    """Subroutine to deal damage over multiple rounds.
 
     The subroutine's user cannot target itself.
 
     Args:
         damage_per_round: Damage dealt per round, must be non-negative.
-        cpu_slots: CPU slots required. Default is
-            1 + damage // (2 * time_to_resolve+1).
-        time_to_resolve:  Time to resolve the first damage round.
-            Default is int(sqrt(damage))
-        label: A label prepended to the subroutine description.
         duration: The number of rounds that the damage is dealt. Default is 2.
             Must be positive.
+        cpu_slots: CPU slots required. Default is
+            1 + damage // (2 * time_to_resolve+1).
+        time_to_resolve:  Number of rounds before first damage is dealt.
+            Default is int(sqrt(damage))
+        label: A label prepended to the subroutine description.
     """
 
     if damage_per_round < 0:
