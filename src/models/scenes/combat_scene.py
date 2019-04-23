@@ -1,5 +1,5 @@
 from itertools import product
-from typing import Any, List, NamedTuple, Optional, Sequence, Tuple
+from typing import Any, Dict, List, NamedTuple, Optional, Sequence, Tuple
 
 from data.constants import FRAMES_PER_SECOND, SCREEN_SIZE, BackgroundImages
 from events.events_base import (BasicEvents, EventListener, EventType,
@@ -36,8 +36,17 @@ def _valid_moves(user: Character, targets: Sequence[Character]) -> List[Move]:
             Attributes.CPU_AVAILABLE)]
 
 
+# For moves with multi-turn durations, we need to keep track of how many times
+# they have been executed so that we can return the CPU to the user exactly
+# when the final execution has occurred.
+_move_registry: Dict[Move, List[int]] = {}
+
+
 def _remove_user_cpu(move: Move) -> None:
     cpu_slots = move.subroutine.cpu_slots()
+    duration = move.subroutine.duration()
+    _move_registry[move] = [0, duration]
+
     assert cpu_slots <= move.user.status.get_attribute(
         Attributes.CPU_AVAILABLE)
     move.user.status.increment_attribute(Attributes.CPU_AVAILABLE, -cpu_slots)
@@ -45,7 +54,10 @@ def _remove_user_cpu(move: Move) -> None:
 
 def _return_user_cpu(move: Move) -> None:
     cpu_slots = move.subroutine.cpu_slots()
-    move.user.status.increment_attribute(Attributes.CPU_AVAILABLE, cpu_slots)
+    _move_registry[move][0] += 1
+    if _move_registry[move][0] == _move_registry[move][1]:
+        move.user.status.increment_attribute(Attributes.CPU_AVAILABLE,
+                                             cpu_slots)
 
 
 class CombatMoveData(NamedTuple):
@@ -54,7 +66,20 @@ class CombatMoveData(NamedTuple):
     under_char: bool
 
 
+def _make_unique(move: Move) -> Move:
+    """Make a move distinct under equality from the input.
+
+    We do this because some moves may appear on the stack more than once with
+    the exact same time left. We must have them distinct for proper rendering.
+    """
+    # subroutine copies are distinct, so replace the move's subroutine.
+    move_copy = move._replace(subroutine=move.subroutine.copy())
+    assert move != move_copy
+    return move_copy
+
+
 class CombatScene(EventListener, Scene):
+    """Represents and updates all model data involved during a combat."""
 
     def __init__(self, enemy: Character = None,
                  win_resolution: Resolution = None,
@@ -149,7 +174,8 @@ class CombatScene(EventListener, Scene):
         # Add new moves to the combat stack and start animation
         if isinstance(event, SelectPlayerMoveEvent):
             enemy_move = self._enemy.ai.select_move([self._player])
-            self._combat_stack.update_stack([event.move, enemy_move])
+            moves = [_make_unique(event.move), _make_unique(enemy_move)]
+            self._combat_stack.update_stack(moves)
             self._update_layout()
             self._selected_char = None
 
@@ -172,24 +198,33 @@ class CombatScene(EventListener, Scene):
         return 'CombatScene(enemy = {})'.format(str(self._enemy))
 
     def _update_layout(self) -> None:
+        """Update the screen layout according to moves and characters in scene.
+        """
+
+        # The layout is broken up into 3 columns:
+        # 1. Player column, which shows player stats.
+        # 2. Stack column, which shows moves on the stack and those which have
+        # just resolved.
+        # 3. Enemy column, which shows enemy stats.
+        # We populate these columns with objects whose attributes (data) are
+        # required to render the scene.
         characters = self.characters()
-        moves_with_time = self.combat_stack.moves_times_remaining()[::-1]
+        moves_times = self.combat_stack.moves_times_remaining()[::-1]
 
         # player side layout
         player = characters[0]
 
-        player_layout = _character_layout(player, moves_with_time)
+        player_layout = _character_layout(player, moves_times)
         left_column = Layout([(None, 1), (player_layout, 1), (None, 1)],
                              'vertical')
 
         # stack layout
-        # unresolved moves
-
-        num_moves = len(moves_with_time)
+        # unresolved moves (and time to resolve)
+        num_moves = len(moves_times)
         stack_size = 6
-        move_time_elements = []
-        for move_and_time in moves_with_time:
-            move_time_elements.append((move_and_time, 1))
+        move_time_elements = [(m_t, 1) for m_t in moves_times]
+        # Add a gap rect so that rects are always scaled to the same size by
+        # the layout.
         if num_moves <= stack_size:
             move_time_elements.append((None, stack_size - num_moves))
 
@@ -201,6 +236,7 @@ class CombatScene(EventListener, Scene):
         resolved_size = 4
         resolved_moves = self.combat_stack.resolved_moves[::-1]
         move_elements = [(mv, 1) for mv in resolved_moves]
+        # Add a gap to ensure consistent rect sizes.
         if len(resolved_moves) < resolved_size:
             move_elements.append((None, resolved_size - len(resolved_moves)))
 
@@ -216,7 +252,7 @@ class CombatScene(EventListener, Scene):
 
         right_elements: List[Tuple[Any, int]] = [(None, 1)]
         for enemy in characters[1:]:
-            enemy_layout = _character_layout(enemy, moves_with_time)
+            enemy_layout = _character_layout(enemy, moves_times)
 
             right_elements.extend([(enemy_layout, 2), (None, 1)])
 
@@ -230,8 +266,9 @@ class CombatScene(EventListener, Scene):
 def _character_layout(char: Character,
                       moves_with_time: List[Tuple[Move, int]]) -> Layout:
     move_space = 3
-    moves = [CombatMoveData(m, t, True) for m, t in moves_with_time
-             if m.user is char]
+    # Pull out all unique moves by the character
+    moves_set = {m for m, t in moves_with_time if m.user is char}
+    moves = [CombatMoveData(m, 0, True) for m in moves_set]
     char_layout = Layout([(None, 1), (char, 2), (None, 1)], 'horizontal')
     move_layout = Layout([(m, 1) for m in moves])
     move_layout = Layout([(None, 1), (move_layout, 4), (None, 1)],

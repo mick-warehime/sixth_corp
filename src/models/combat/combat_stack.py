@@ -53,7 +53,8 @@ class CombatStack(object):
         """Update the combat stack according to character actions.
 
         Before putting moves on the stack, time is advanced by one round and the
-        prestack method (if specified in __init__) is called on each move.
+        prestack method (if specified in __init__) is called on each move. Moves
+        with duration>1 are added at multiple spots in the stack.
 
         Args:
             moves: Moves to add to the stack after advancing time.
@@ -90,7 +91,10 @@ class CombatStack(object):
                 self._prestack_fun(move)
 
         for move in moves:
-            self._add_move(move)
+            duration = move.subroutine.duration()
+            time_left = move.subroutine.time_slots()
+            for i in range(duration):
+                self._add_move(move, time_left + i)
 
     def execute_resolved_moves(self) -> None:
         """Execute all resolved moves.
@@ -114,7 +118,7 @@ class CombatStack(object):
 
         self._resolved_moves_executed = True
 
-    def _add_move(self, move: Move) -> None:
+    def _add_move(self, move: Move, time_left: int = None) -> None:
         """Add a move to the stack.
 
         The move is placed on the stack according to its time to resolve. Moves
@@ -124,8 +128,8 @@ class CombatStack(object):
 
         Args:
             move: Move to add.
+            time_left: Time for the move to resolve.
         """
-        time_left = move.subroutine.time_slots()
 
         assert time_left >= 0
 
