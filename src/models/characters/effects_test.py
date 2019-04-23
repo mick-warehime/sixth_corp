@@ -4,7 +4,7 @@ from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character
 from models.characters.effects import (AcquireMod, IncrementAttribute,
                                        RestartGame)
-from models.characters.mods_base import GenericMod
+from models.characters.mods_base import build_mod
 from models.characters.player import get_player, reset_player
 from models.characters.states import Attributes
 
@@ -42,7 +42,7 @@ def test_increment_attribute():
 
 
 def test_acquire_mod(player):
-    mod = GenericMod()
+    mod = build_mod()
     assert mod not in player.chassis.all_mods()
     AcquireMod(mod).execute()
     assert mod in player.chassis.all_mods()

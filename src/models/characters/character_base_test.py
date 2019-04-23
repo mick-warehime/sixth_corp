@@ -4,7 +4,7 @@ from models.characters.character_examples import CharacterData
 from models.characters.character_impl import build_character
 from models.characters.chassis import ChassisData
 from models.characters.conditions import IsDead
-from models.characters.mods_base import GenericMod, SlotTypes
+from models.characters.mods_base import _ModImpl, SlotTypes, build_mod
 from models.characters.states import Attributes, State
 from models.characters.subroutine_examples import direct_damage
 
@@ -33,7 +33,7 @@ class CharacterTest(TestCase):
 
         assert not char.status.has_state(State.ON_FIRE)
         char.chassis.attempt_store(
-            GenericMod(states_granted=State.ON_FIRE, valid_slots=_ACTIVE_SLOT))
+            build_mod(states_granted=State.ON_FIRE, valid_slots=_ACTIVE_SLOT))
         assert char.status.has_state(State.ON_FIRE)
 
     def test_mods_affect_max_attribute(self):
@@ -41,8 +41,8 @@ class CharacterTest(TestCase):
         max_health = char.status.get_attribute(Attributes.MAX_HEALTH)
         bonus = 5
         char.chassis.attempt_store(
-            GenericMod(attribute_modifiers={Attributes.MAX_HEALTH: bonus},
-                       valid_slots=_ACTIVE_SLOT))
+            build_mod(attribute_modifiers={Attributes.MAX_HEALTH: bonus},
+                      valid_slots=_ACTIVE_SLOT))
 
         assert char.status.get_attribute(
             Attributes.MAX_HEALTH) == max_health + bonus
@@ -63,6 +63,6 @@ class CharacterTest(TestCase):
         assert subroutine not in char.chassis.all_subroutines()
 
         char.chassis.attempt_store(
-            GenericMod(subroutines_granted=subroutine,
-                       valid_slots=_ACTIVE_SLOT))
+            build_mod(subroutines_granted=subroutine,
+                     valid_slots=_ACTIVE_SLOT))
         assert subroutine in char.chassis.all_subroutines()

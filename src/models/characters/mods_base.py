@@ -1,7 +1,7 @@
 """Base implementation of mods and inventory."""
 import abc
 from enum import Enum
-from typing import Dict, List, NamedTuple, Sequence, Set, Tuple, Union
+from typing import Dict, List, NamedTuple, Sequence, Set, Tuple, Union, Callable
 
 from models.characters.states import AttributeType, State
 from models.characters.subroutines_base import Subroutine
@@ -33,7 +33,7 @@ class Mod(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def subroutines_granted(self) -> Sequence[Subroutine]:
-        """Abilities granted by this mod."""
+        """Subroutines granted by this mod. """
 
     @abc.abstractmethod
     def _valid_slots(self) -> Set[SlotTypes]:
@@ -72,30 +72,14 @@ class Mod(metaclass=abc.ABCMeta):
     __repr__ = __str__
 
 
-class GenericMod(Mod):
-
-    @classmethod
-    def from_data(cls, mod_data: 'ModData') -> 'GenericMod':
-        return GenericMod(mod_data.states_granted, mod_data.attribute_modifiers,
-                          mod_data.subroutines_granted, mod_data.valid_slots,
-                          mod_data.description)
+class _ModImpl(Mod):
 
     def __init__(
-            self, states_granted: Union[State, Sequence[State]] = (),
+            self, states_granted: Tuple[State, ...] = (),
             attribute_modifiers: Dict[AttributeType, int] = None,
-            subroutines_granted: Union[Subroutine, Sequence[Subroutine]] = (),
-            valid_slots: Union[
-                SlotTypes, Sequence[SlotTypes]] = SlotTypes.STORAGE,
+            subroutines_granted: Tuple[Subroutine, ...] = (),
+            valid_slots: Tuple[SlotTypes, ...] = SlotTypes.STORAGE,
             description: str = 'unnamed mod') -> None:
-        if isinstance(states_granted, State):
-            states_granted = states_granted,
-        if attribute_modifiers is None:
-            attribute_modifiers = {}
-        if isinstance(subroutines_granted, Subroutine):
-            subroutines_granted = (subroutines_granted,)
-        if isinstance(valid_slots, SlotTypes):
-            valid_slots = (valid_slots,)
-
         self._slots = set(valid_slots)
         self._states = states_granted
         self._attr_mods = attribute_modifiers.copy()
@@ -124,3 +108,50 @@ class ModData(NamedTuple):
     subroutines_granted: Tuple[Subroutine, ...] = ()
     valid_slots: Tuple[SlotTypes, ...] = (SlotTypes.STORAGE,)
     description: str = 'unnamed mod'
+
+
+_SubsType = Union[Subroutine, Sequence[Subroutine]]
+
+
+def build_mod(states_granted: Union[State, Sequence[State]] = (),
+              attribute_modifiers: Dict[AttributeType, int] = None,
+              subroutines_granted: _SubsType = (),
+              valid_slots: Union[
+                  SlotTypes, Sequence[SlotTypes]] = SlotTypes.STORAGE,
+              description: str = 'unnamed mod',
+              data: ModData = None) -> Mod:
+    """Factory function for Mods.
+
+    Args:
+        states_granted: [Optional] The states granted by the Mod, when active.
+            Can be a single state or sequence of states.
+        attribute_modifiers: [Optional] Dictionary of attribute (or skill)
+            modifiers.
+        subroutines_granted: [Optional] The subroutines granted by the Mod, when
+            active. Can be a single subroutine or sequence of subroutines.
+        valid_slots: [Optional] slot or slots where the mod can be stored. All
+            mods can be stored in the STORAGE slot so this slot need not be
+            specified.
+        description: [Optional] Short string description of the mod. This is
+            used in the inventory scene.
+        data: [Optional] A ModData object encoding the mod properties. If this
+            is passed, all other arguments are ignored.
+    """
+
+    if data is not None:
+        return build_mod(data.states_granted, data.attribute_modifiers,
+                         data.subroutines_granted, data.valid_slots,
+                         data.description)
+
+    # Parse inputs to standard form
+    if isinstance(states_granted, State):
+        states_granted = states_granted,
+    if attribute_modifiers is None:
+        attribute_modifiers = {}
+    if isinstance(subroutines_granted, Subroutine):
+        subroutines_granted = (subroutines_granted,)
+    if isinstance(valid_slots, SlotTypes):
+        valid_slots = (valid_slots,)
+
+    return _ModImpl(states_granted, attribute_modifiers, subroutines_granted,
+                    valid_slots, description)

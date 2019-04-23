@@ -5,7 +5,7 @@ from typing import Dict, Tuple, cast
 
 from data.constants import BackgroundImages
 from models.characters.effects import IncrementAttribute, RestartGame
-from models.characters.mods_base import GenericMod, Mod, SlotTypes
+from models.characters.mods_base import _ModImpl, Mod, SlotTypes, build_mod
 from models.characters.player import get_player
 from models.characters.states import Attributes, Skill
 from models.characters.subroutine_examples import direct_damage
@@ -38,7 +38,7 @@ def start_scene() -> DecisionScene:
 
 
 def _mini_laser() -> Tuple[Mod]:
-    return GenericMod(
+    return build_mod(
         subroutines_granted=direct_damage(1, 0, 1, 'Mini laser'),
         valid_slots=SlotTypes.HEAD, description='Mini laser'),
 
