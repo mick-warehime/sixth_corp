@@ -137,6 +137,22 @@ class Layout(object):
 
         return rects
 
+    def all_objects(self) -> List[Any]:
+        """All objects stored in the layout.
+
+        This includes the objects within child Layouts, but not the Layout
+        objects themselves.
+        """
+        out = []
+        for elem in self._elements:
+            if elem is None:
+                continue
+            elif isinstance(elem, Layout):
+                out.extend(elem.all_objects())
+            else:
+                out.append(elem)
+        return out
+
     def _rect_for_index(self, index: int) -> Rect:
         assert 0 <= index < len(self._elements)
         # The rect is shifted to match the container position and scaled
