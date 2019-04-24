@@ -58,7 +58,7 @@ def swamp_scene() -> DecisionScene:
             'After deactivating the drone, you pick up 3 credits and '
             'dismantle it.',
             {'1': DecisionOption('Loot the body.', load_loot_scene),
-             '2': DecisionOption('Back to start.', loading_scene, gain_3)})
+             '2': DecisionOption('Back to start.', start_scene, gain_3)})
 
     deactivate = skill_check(
         Difficulty.VERY_EASY, success,
