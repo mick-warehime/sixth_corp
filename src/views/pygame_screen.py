@@ -87,7 +87,7 @@ class _PygameScreen(Screen):
 
     def _font(self, size: int) -> pygame.font.Font:
         if size not in self._fonts:
-            font = pygame.font.SysFont('courier', size)
+            font = pygame.font.SysFont(None, size)
             self._fonts[size] = font
         else:
             font = self._fonts[size]
