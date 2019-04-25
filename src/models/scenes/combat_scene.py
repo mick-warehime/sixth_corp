@@ -1,5 +1,5 @@
 from itertools import product
-from typing import (Any, Dict, Iterable, List, NamedTuple, Optional, Sequence,
+from typing import (Any, List, NamedTuple, Optional, Sequence,
                     Tuple)
 
 from data.constants import FRAMES_PER_SECOND, SCREEN_SIZE, BackgroundImages
@@ -12,6 +12,7 @@ from models.characters.conditions import IsDead
 from models.characters.player import get_player
 from models.characters.states import Attributes
 from models.characters.subroutines_base import build_subroutine
+from models.combat.combat_logic import CombatLogic
 from models.combat.combat_stack import CombatStack
 from models.combat.moves_base import Move
 from models.scenes import scene_examples
@@ -37,30 +38,6 @@ def _valid_moves(user: Character, targets: Sequence[Character]) -> List[Move]:
             Attributes.CPU_AVAILABLE)]
 
 
-# For moves with multi-turn durations, we need to keep track of how many times
-# they have been executed so that we can return the CPU to the user exactly
-# when the final execution has occurred.
-_move_registry: Dict[Move, List[int]] = {}
-
-
-def _remove_user_cpu(move: Move) -> None:
-    cpu_slots = move.subroutine.cpu_slots()
-    duration = move.subroutine.duration()
-    _move_registry[move] = [0, duration]
-
-    assert cpu_slots <= move.user.status.get_attribute(
-        Attributes.CPU_AVAILABLE)
-    move.user.status.increment_attribute(Attributes.CPU_AVAILABLE, -cpu_slots)
-
-
-def _return_user_cpu(move: Move) -> None:
-    cpu_slots = move.subroutine.cpu_slots()
-    _move_registry[move][0] += 1
-    if _move_registry[move][0] == _move_registry[move][1]:
-        move.user.status.increment_attribute(Attributes.CPU_AVAILABLE,
-                                             cpu_slots)
-
-
 class CombatMoveData(NamedTuple):
     """Data required to represent a move on the screen."""
     move: Move
@@ -80,17 +57,6 @@ def _make_unique(move: Move) -> Move:
     return move_copy
 
 
-def _initialize_characters(characters: Iterable[Character]) -> None:
-    """Initialize character statuses for combat."""
-    for char in characters:
-        # CPU -> MAX_CPU
-        max_cpu = char.status.get_attribute(Attributes.MAX_CPU)
-        char.status.increment_attribute(Attributes.CPU_AVAILABLE, max_cpu)
-        # SHIELD -> 0
-        shield = char.status.get_attribute(Attributes.SHIELD)
-        char.status.increment_attribute(Attributes.SHIELD, -shield)
-
-
 class CombatScene(EventListener, Scene):
     """Represents and updates all model data involved during a combat."""
 
@@ -103,10 +69,7 @@ class CombatScene(EventListener, Scene):
         super().__init__()
         self._player = get_player()
 
-        # initialize CPU slots
-        _initialize_characters(self.characters())
-
-        self._combat_stack = CombatStack(_remove_user_cpu, _return_user_cpu)
+        self._combat_logic = CombatLogic(self.characters())
 
         if win_resolution is None:
             win_resolution = scene_examples.ResolutionTypes.RESTART.resolution
@@ -137,7 +100,7 @@ class CombatScene(EventListener, Scene):
 
     @property
     def combat_stack(self) -> CombatStack:
-        return self._combat_stack
+        return self._combat_logic.stack
 
     @property
     def selected_char(self) -> Optional[Character]:
@@ -186,7 +149,7 @@ class CombatScene(EventListener, Scene):
         if isinstance(event, SelectPlayerMoveEvent):
             enemy_move = self._enemy.ai.select_move([self._player])
             moves = [_make_unique(event.move), _make_unique(enemy_move)]
-            self._combat_stack.update_stack(moves)
+            self.combat_stack.update_stack(moves)
             self._update_layout()
             self._selected_char = None
 
@@ -194,7 +157,7 @@ class CombatScene(EventListener, Scene):
             if ANIMATION and not self._first_turn:
                 self._animation_progress = 0.0
             else:
-                self._combat_stack.execute_resolved_moves()
+                self.combat_stack.execute_resolved_moves()
             self._first_turn = False
 
         # Animation in progress
@@ -203,7 +166,7 @@ class CombatScene(EventListener, Scene):
             # Execute moves once animation is finished
             if self._animation_progress >= 1.0:
                 self._animation_progress = None
-                self._combat_stack.execute_resolved_moves()
+                self.combat_stack.execute_resolved_moves()
 
     def __str__(self) -> str:
         return 'CombatScene(enemy = {})'.format(str(self._enemy))
