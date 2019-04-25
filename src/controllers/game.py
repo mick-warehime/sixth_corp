@@ -14,11 +14,6 @@ from models.scenes.scene_examples import loading_scene
 from models.scenes.scenes_base import Scene
 
 
-class GameState(Enum):
-    SETTINGS = 1
-    LOAD_SCREEN = 2
-
-
 def initialize_pygame(no_UI: bool = False) -> None:
     if no_UI:
         os.environ['SDL_VIDEODRIVER'] = 'dummy'
