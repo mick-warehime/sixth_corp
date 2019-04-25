@@ -11,7 +11,6 @@ class Keyboard(EventListener):
     def __init__(self) -> None:
         super(Keyboard, self).__init__()
         self.bindings = Keybindings()
-        self.bindings.load()
 
     def notify(self, event: EventType) -> None:
         if event == BasicEvents.TICK:
