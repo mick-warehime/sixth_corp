@@ -53,15 +53,13 @@ def _get_active_controller():
 def test_making_choices_removes_listener():
     game = Game()  # noqa: F841
 
-    def second_scene() -> DecisionScene:
-        options = {'1': DecisionOption('third scene', combat_scene.CombatScene)}
-        return DecisionScene('second scene', options)
+    # scene_0 (Decision) -> combat scene
 
-    options_0 = {'s': DecisionOption('load next scene', second_scene)}
+    options_0 = {
+        's': DecisionOption('load next scene', combat_scene.CombatScene)}
     scene_0 = DecisionScene('first scene', options_0)
 
     event_utils.post_scene_change(scene_0)
-    num_listeners = len(EventManager.listeners)
     ctl = _get_active_controller()
     assert isinstance(ctl, DecisionSceneController)
     # we must remove references otherwise EventManager will keep this listener
@@ -69,18 +67,14 @@ def test_making_choices_removes_listener():
     del scene_0
     event_utils.simulate_key_press('s')
 
-    assert len(EventManager.listeners) == num_listeners
+    assert not any(isinstance(l, DecisionScene) for l in EventManager.listeners)
+    assert not any(isinstance(l, DecisionSceneController)
+                   for l in EventManager.listeners)
 
-    ctl = _get_active_controller()
-    assert isinstance(ctl, DecisionSceneController)
-    del ctl
-
-    event_utils.simulate_key_press('1')
-
-    assert len(EventManager.listeners) == num_listeners
     ctl = _get_active_controller()
     assert isinstance(ctl, CombatSceneController)
-    del ctl
+    assert any(isinstance(l, combat_scene.CombatScene)
+               for l in EventManager.listeners)
 
 
 def test_press_debug_in_decision_scene_has_no_effect():

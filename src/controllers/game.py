@@ -1,6 +1,5 @@
 import os
 import sys
-from enum import Enum
 from typing import Callable
 
 import pygame
@@ -12,11 +11,6 @@ from events.events_base import (BasicEvents, EventListener, EventManager,
                                 EventType, NewSceneEvent)
 from models.scenes.scene_examples import loading_scene
 from models.scenes.scenes_base import Scene
-
-
-class GameState(Enum):
-    SETTINGS = 1
-    LOAD_SCREEN = 2
 
 
 def initialize_pygame(no_UI: bool = False) -> None:
