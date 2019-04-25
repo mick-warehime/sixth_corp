@@ -12,7 +12,7 @@ from models.characters.conditions import IsDead
 from models.characters.player import get_player
 from models.characters.states import Attributes
 from models.characters.subroutines_base import build_subroutine
-from models.combat.combat_logic import CombatLogic
+from models.combat.combat_logic import CombatLogic, _make_unique
 from models.combat.combat_stack import CombatStack
 from models.combat.moves_base import Move
 from models.scenes import scene_examples
@@ -43,18 +43,6 @@ class CombatMoveData(NamedTuple):
     move: Move
     time_left: int
     under_char: bool  # whether to put this move under the character.
-
-
-def _make_unique(move: Move) -> Move:
-    """Make a move distinct under equality from the input.
-
-    We do this because some moves may appear on the stack more than once with
-    the exact same time left. We must have them distinct for proper rendering.
-    """
-    # subroutine copies are distinct, so replace the move's subroutine.
-    move_copy = move._replace(subroutine=move.subroutine.copy())
-    assert move != move_copy
-    return move_copy
 
 
 class CombatScene(EventListener, Scene):
@@ -147,9 +135,8 @@ class CombatScene(EventListener, Scene):
 
         # Add new moves to the combat stack and start animation
         if isinstance(event, SelectPlayerMoveEvent):
-            enemy_move = self._enemy.ai.select_move([self._player])
-            moves = [_make_unique(event.move), _make_unique(enemy_move)]
-            self.combat_stack.update_stack(moves)
+            moves = [event.move, self._enemy.ai.select_move([self._player])]
+            self._combat_logic.start_round(moves)
             self._update_layout()
             self._selected_char = None
 
@@ -157,7 +144,7 @@ class CombatScene(EventListener, Scene):
             if ANIMATION and not self._first_turn:
                 self._animation_progress = 0.0
             else:
-                self.combat_stack.execute_resolved_moves()
+                self._combat_logic.end_round()
             self._first_turn = False
 
         # Animation in progress
@@ -166,7 +153,7 @@ class CombatScene(EventListener, Scene):
             # Execute moves once animation is finished
             if self._animation_progress >= 1.0:
                 self._animation_progress = None
-                self.combat_stack.execute_resolved_moves()
+                self._combat_logic.end_round()
 
     def __str__(self) -> str:
         return 'CombatScene(enemy = {})'.format(str(self._enemy))

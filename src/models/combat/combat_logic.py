@@ -31,6 +31,15 @@ class CombatLogic(EventListener):
         # combat.
         pass
 
+    def start_round(self, moves: Sequence[Move]) -> None:
+        """Update the characters and stack to start the next round."""
+        moves = [_make_unique(m) for m in moves]  # See _make_unique docstring
+        self._combat_stack.update_stack(moves)
+
+    def end_round(self) -> None:
+        """Apply finalizing logic at the end of a combat round."""
+        self._combat_stack.execute_resolved_moves()
+
 
 # For moves with multi-turn durations, we need to keep track of how many times
 # they have been executed so that we can return the CPU to the user exactly
@@ -65,3 +74,15 @@ def _initialize_characters(characters: Iterable[Character]) -> None:
         # SHIELD -> 0
         shield = char.status.get_attribute(Attributes.SHIELD)
         char.status.increment_attribute(Attributes.SHIELD, -shield)
+
+
+def _make_unique(move: Move) -> Move:
+    """Make a move distinct under equality from the input.
+
+    We do this because some moves may appear on the stack more than once with
+    the exact same time left. We must have them distinct for proper rendering.
+    """
+    # subroutine copies are distinct, so replace the move's subroutine.
+    move_copy = move._replace(subroutine=move.subroutine.copy())
+    assert move != move_copy
+    return move_copy
