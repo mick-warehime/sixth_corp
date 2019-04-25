@@ -1,6 +1,5 @@
 from itertools import product
-from typing import (Any, List, NamedTuple, Optional, Sequence,
-                    Tuple)
+from typing import Any, List, NamedTuple, Optional, Sequence, Tuple
 
 from data.constants import FRAMES_PER_SECOND, SCREEN_SIZE, BackgroundImages
 from events.events_base import (BasicEvents, EventListener, EventType,
@@ -12,7 +11,7 @@ from models.characters.conditions import IsDead
 from models.characters.player import get_player
 from models.characters.states import Attributes
 from models.characters.subroutines_base import build_subroutine
-from models.combat.combat_logic import CombatLogic, _make_unique
+from models.combat.combat_logic import CombatLogic
 from models.combat.combat_stack import CombatStack
 from models.combat.moves_base import Move
 from models.scenes import scene_examples

@@ -1,5 +1,5 @@
 """Implementation of the CombatLogic class."""
-from typing import Dict, List, Iterable, Sequence
+from typing import Dict, Iterable, List, Sequence
 
 from events.events_base import EventListener, EventType
 from models.characters.character_base import Character
