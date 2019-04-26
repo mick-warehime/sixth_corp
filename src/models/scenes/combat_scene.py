@@ -12,7 +12,6 @@ from models.characters.player import get_player
 from models.characters.states import Attributes
 from models.characters.subroutines_base import build_subroutine
 from models.combat.combat_logic import CombatLogic
-from models.combat.combat_stack import CombatStack
 from models.combat.moves_base import Move
 from models.scenes import scene_examples
 from models.scenes.layouts import Layout
@@ -37,11 +36,14 @@ def _valid_moves(user: Character, targets: Sequence[Character]) -> List[Move]:
             Attributes.CPU_AVAILABLE)]
 
 
-class CombatMoveData(NamedTuple):
+class MoveData(NamedTuple):
     """Data required to represent a move on the screen."""
     move: Move
     time_left: int
-    under_char: bool  # whether to put this move under the character.
+    under_char: bool = False  # whether to put this move under the character.
+
+    def time_minus_one(self) -> 'MoveData':
+        return self._replace(time_left=self.time_left - 1)
 
 
 class CombatScene(EventListener, Scene):
@@ -84,10 +86,6 @@ class CombatScene(EventListener, Scene):
         This variable is None if no animation is in progress.
         """
         return self._animation_progress
-
-    @property
-    def combat_stack(self) -> CombatStack:
-        return self._combat_logic.stack
 
     @property
     def selected_char(self) -> Optional[Character]:
@@ -169,7 +167,7 @@ class CombatScene(EventListener, Scene):
         # We populate these columns with objects whose attributes (data) are
         # required to render the scene.
         characters = self.characters()
-        moves_times = self.combat_stack.moves_times_remaining()[::-1]
+        moves_times = self._combat_logic.stack.moves_times_remaining()[::-1]
 
         # player side layout
         player = characters[0]
@@ -182,25 +180,25 @@ class CombatScene(EventListener, Scene):
         # unresolved moves (and time to resolve)
         num_moves = len(moves_times)
         stack_size = 6
-        move_time_elements = [(m_t, 1) for m_t in moves_times]
+        stack_elements = [(MoveData(*m_t), 1) for m_t in moves_times]
         # Add a gap rect so that rects are always scaled to the same size by
         # the layout.
         if num_moves <= stack_size:
-            move_time_elements.append((None, stack_size - num_moves))
+            stack_elements.append((None, stack_size - num_moves))
 
-        unresolved = Layout(move_time_elements, 'vertical')
+        unresolved = Layout(stack_elements, 'vertical')
         unresolved = Layout([(None, 1), (unresolved, 5), (None, 1)],
                             'horizontal')
 
         # resolved moves
         resolved_size = 4
-        resolved_moves = self.combat_stack.resolved_moves[::-1]
-        move_elements = [(mv, 1) for mv in resolved_moves]
+        resolved_moves = self._combat_logic.stack.resolved_moves[::-1]
+        resolved_elems = [(MoveData(mv, 0), 1) for mv in resolved_moves]
         # Add a gap to ensure consistent rect sizes.
         if len(resolved_moves) < resolved_size:
-            move_elements.append((None, resolved_size - len(resolved_moves)))
+            resolved_elems.append((None, resolved_size - len(resolved_moves)))
 
-        resolved = Layout(move_elements, 'vertical')
+        resolved = Layout(resolved_elems, 'vertical')
         resolved = Layout([(None, 1), (resolved, 5), (None, 1)], 'horizontal')
 
         middle_column = Layout([(None, 4), (unresolved, stack_size),
@@ -228,7 +226,7 @@ def _character_layout(char: Character,
     move_space = 3
     # Pull out all unique moves by the character
     moves_set = {m for m, t in moves_with_time if m.user is char}
-    moves = [CombatMoveData(m, 0, True) for m in moves_set]
+    moves = [MoveData(m, 0, True) for m in moves_set]
     char_layout = Layout([(None, 1), (char, 2), (None, 1)], 'horizontal')
     move_layout = Layout([(m, 1) for m in moves])
     move_layout = Layout([(None, 1), (move_layout, 4), (None, 1)],
