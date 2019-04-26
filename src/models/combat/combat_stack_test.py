@@ -5,7 +5,7 @@ import pytest
 
 from models.characters.subroutines_base import build_subroutine
 from models.combat.combat_stack import CombatStack
-from models.combat.moves_base import Move
+from models.characters.moves_base import Move
 
 time_1_sub = build_subroutine(time_to_resolve=1)
 time_2_sub = build_subroutine(time_to_resolve=2)

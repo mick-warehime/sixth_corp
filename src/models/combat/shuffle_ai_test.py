@@ -5,7 +5,7 @@ from models.characters.character_impl import build_character
 from models.characters.chassis import ChassisData
 from models.characters.subroutines_base import build_subroutine
 from models.combat.ai_impl import AIType, build_ai
-from models.combat.moves_base import Move
+from models.characters.moves_base import Move
 
 # To ensure deterministic tests
 random.seed(11)

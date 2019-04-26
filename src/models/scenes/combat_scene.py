@@ -12,7 +12,7 @@ from models.characters.player import get_player
 from models.characters.states import Attributes
 from models.characters.subroutines_base import build_subroutine
 from models.combat.combat_logic import CombatLogic
-from models.combat.moves_base import Move
+from models.characters.moves_base import Move
 from models.scenes import scene_examples
 from models.scenes.layouts import Layout
 from models.scenes.scenes_base import Resolution, Scene

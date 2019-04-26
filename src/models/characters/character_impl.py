@@ -11,7 +11,7 @@ from models.characters.inventory import InventoryBase
 from models.characters.mods_base import build_mod
 from models.characters.states import Attributes, AttributeType, State, Status
 from models.characters.status import BasicStatus
-from models.combat.ai_base import AI
+from models.characters.ai_base import AI
 from models.combat.ai_impl import build_ai
 
 
