@@ -91,16 +91,17 @@ class CombatStackArtist(SceneArtist):
         stack_render_data: List[Tuple[MoveData, List[Rect]]] = []
 
         # Beginning of animation
-        # The scene layout is instantaneously updated to match the end of the
-        # animation. We keep track of both the current layout and the previous
-        # layout. During the animation the rects from the previous layout are
-        # matched with rects with the new layout to get an interpolated rect
-        # that is used in rendering.
+        # As soon as moves are selected, the scene layout is instantly updated
+        # to match the end of the animation. In order to animate we must keep
+        # track of both the current layout and the previous layout. During the
+        # animation the rects from the previous layout are matched with rects
+        # in the new layout to get an interpolated rect that is used in
+        # rendering.
         if scene.animation_progress is not None and self._first_animation:
             logging.debug('Animation start')
             self._first_animation = False
-            # move data and relevant rects for the new layout. We only consider
-            # moves that existed in the previous round.
+            # data and relevant rects for the new layout. We only consider moves
+            # that existed in the previous round.
             self._move_data_rects = {
                 data: scene.layout.get_rects(data.time_minus_one())
                 for data in self._prev_move_data_rects}
