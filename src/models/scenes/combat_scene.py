@@ -192,7 +192,7 @@ class CombatScene(EventListener, Scene):
 
         # resolved moves
         resolved_size = 4
-        resolved_moves = self._combat_logic.stack.resolved_moves[::-1]
+        resolved_moves = self._combat_logic.stack.resolved_moves()[::-1]
         resolved_elems = [(MoveData(mv, 0), 1) for mv in resolved_moves]
         # Add a gap to ensure consistent rect sizes.
         if len(resolved_moves) < resolved_size:

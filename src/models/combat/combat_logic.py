@@ -19,7 +19,7 @@ class CombatLogic(object):
         super().__init__()
         self._characters = tuple(characters)
         _initialize_characters(self._characters)
-        self._combat_stack = CombatStack(_remove_user_cpu, _return_user_cpu)
+        self._combat_stack = CombatStack()
 
     @property
     def stack(self) -> CombatStack:
@@ -28,11 +28,16 @@ class CombatLogic(object):
     def start_round(self, moves: Sequence[Move]) -> None:
         """Update the characters and stack to start the next round."""
         moves = [_make_unique(m) for m in moves]  # See _make_unique docstring
+        for move in moves:
+            _remove_user_cpu(move)
+
         self._combat_stack.update_stack(moves)
 
     def end_round(self) -> None:
         """Apply finalizing logic at the end of a combat round."""
-        self._combat_stack.execute_resolved_moves()
+        for move in self._combat_stack.resolved_moves():
+            move.execute()
+            _return_user_cpu(move)
 
 
 # For moves with multi-turn durations, we need to keep track of how many times
