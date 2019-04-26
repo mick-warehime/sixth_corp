@@ -31,7 +31,7 @@ class CombatStack(object):
     def resolved_moves(self) -> Tuple[Move, ...]:
         """Moves that have resolved since the last time update_stack was called.
 
-        This method must be called at exactly once before each call to
+        This method must be called at least once before each call to
         update_stack.
         """
 
