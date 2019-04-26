@@ -2,9 +2,9 @@ from models.characters.character_base import Character
 from models.characters.character_examples import CharacterData
 from models.characters.character_impl import build_character
 from models.characters.conditions import IsDead
+from models.characters.moves_base import Move
 from models.characters.states import Attributes
 from models.combat.combat_stack import CombatStack
-from models.combat.moves_base import Move
 
 
 class SimulationError(Exception):

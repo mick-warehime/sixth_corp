@@ -1,7 +1,7 @@
 """Implementation of the combat stack."""
 from typing import Callable, List, NamedTuple, Sequence, Tuple
 
-from models.combat.moves_base import Move
+from models.characters.moves_base import Move
 
 
 class _TimedMove(NamedTuple):

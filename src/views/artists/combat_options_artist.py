@@ -1,7 +1,7 @@
 from typing import List, Sequence
 
 from data.colors import GREEN
-from models.combat.moves_base import Move
+from models.characters.moves_base import Move
 from models.scenes.combat_scene import CombatScene
 from models.scenes.scenes_base import Scene
 from views.artists.drawing_utils import rescale_horizontal, rescale_vertical
