@@ -23,3 +23,5 @@ class Move(NamedTuple):
         return 'Move({} {} -> {})'.format(self.user,
                                           self.subroutine.description(),
                                           self.target)
+
+    __repr__ = __str__
