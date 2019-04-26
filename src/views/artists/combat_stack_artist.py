@@ -101,7 +101,8 @@ class CombatStackArtist(SceneArtist):
             logging.debug('Animation start')
             self._first_animation = False
             # data and relevant rects for the new layout. We only consider moves
-            # that existed in the previous round.
+            # that existed in the previous round. The time_left in the current
+            # round is thus decremented by one.
             self._move_data_rects = {
                 data: scene.layout.get_rects(data.time_minus_one())
                 for data in self._prev_move_data_rects}
