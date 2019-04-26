@@ -5,7 +5,7 @@ from pygame.rect import Rect
 
 from data.colors import DARK_GRAY, LIGHT_GRAY, RED, WHITE, YELLOW
 from models.combat.moves_base import Move
-from models.scenes.combat_scene import CombatMoveData, CombatScene
+from models.scenes.combat_scene import MoveData, CombatScene
 from models.scenes.scenes_base import Scene
 from views.artists.drawing_utils import rescale_horizontal
 from views.artists.scene_artist_base import SceneArtist
@@ -77,74 +77,86 @@ def _interpolate(progress: float, rect_prev: Rect,
 class CombatStackArtist(SceneArtist):
 
     def __init__(self) -> None:
-        self._prev_move_rects: Dict[Tuple[Move, int], List[Rect]] = {}
-        self._new_move_rects: Dict[Tuple[Move, int], List[Rect]] = {}
-        self._animation_start = True
+        self._prev_move_data_rects: Dict[MoveData, List[Rect]] = {}
+        self._move_data_rects: Dict[MoveData, List[Rect]] = {}
+        self._first_animation = True
 
     def render(self, screen: Screen, scene: Scene) -> None:
         assert isinstance(scene, CombatScene)
 
-        move_time_rects: List[Tuple[Move, int, List[Rect]]] = []
+        current_move_datas = [data for data in scene.layout.all_objects()
+                              if isinstance(data, MoveData)]
+
+        # Each element of list is passed to the render function.
+        move_data_rects: List[Tuple[MoveData, List[Rect]]] = []
 
         # Beginning of animation
-        if scene.animation_progress is not None and self._animation_start:
+        # The scene layout is instantaneously updated to match the end of the
+        # animation. We keep track of both the current layout and the previous
+        # layout. During the animation the rects from the previous layout are
+        # matched with rects with the new layout to get an interpolated rect
+        # that is used in rendering.
+        if scene.animation_progress is not None and self._first_animation:
             logging.debug('Animation start')
-            self._animation_start = False
-            self._new_move_rects = {
-                m_t: scene.layout.get_rects((m_t[0], m_t[1] - 1))
-                for m_t in self._prev_move_rects}
-            resolved = scene.combat_stack.resolved_moves
-            self._new_move_rects.update({(m, 1): scene.layout.get_rects(m)
-                                         for m in resolved})
-            move_time_rects = [m_t + (rects,)  # type: ignore
-                               for m_t, rects in self._prev_move_rects.items()]
+            self._first_animation = False
+            # move data and relevant rects for the new layout. We only consider
+            # moves that existed in the previous round.
+            self._move_data_rects = {
+                data: scene.layout.get_rects(data.time_minus_one())
+                for data in self._prev_move_data_rects}
+            # Also include the moves that have just resolved.
+            self._move_data_rects.update(
+                {data: scene.layout.get_rects(data)
+                 for data in current_move_datas if data.time_left == 0})
+            move_data_rects = list(self._prev_move_data_rects.items())
             show_resolved = False
 
-        # Middle of animation
-        elif scene.animation_progress is not None and not self._animation_start:
+        # Middle of animation. Do not animate the first animation as there is
+        # nothing to draw.
+        elif scene.animation_progress is not None and not self._first_animation:
             # interpolate prev and new rects based on animation progress
-
-            for m_t, prev_rects in self._prev_move_rects.items():
-                new_rects = self._new_move_rects[m_t]
+            for data, prev_rects in self._prev_move_data_rects.items():
+                new_rects = self._move_data_rects[data]
 
                 assert len(prev_rects) == len(new_rects)
 
-                interp_rects = [_interpolate(scene.animation_progress, *p_n)
-                                for p_n in zip(prev_rects, new_rects)]
-                move_time_rects.append(m_t + (interp_rects,))  # type: ignore
+                interp_rects = [_interpolate(scene.animation_progress, *old_new)
+                                for old_new in zip(prev_rects, new_rects)]
+                move_data_rects.append((data, interp_rects))  # type: ignore
 
             show_resolved = False
 
-        # No animation
+        # No animation, show resolved moves and current layout.
         else:
             assert scene.animation_progress is None
-            self._animation_start = True
+            self._first_animation = True
 
-            self._prev_move_rects = {m_t: scene.layout.get_rects(m_t)
-                                     for m_t in
-                                     scene.combat_stack.moves_times_remaining()}
-            move_time_rects = [m_t + (rects,)  # type: ignore
-                               for m_t, rects in self._prev_move_rects.items()]
+            self._prev_move_data_rects = {data: scene.layout.get_rects(data)
+                                          for data in current_move_datas
+                                          if data.time_left
+                                          and not data.under_char}
+
+            move_data_rects = list(self._prev_move_data_rects.items())
             show_resolved = True
 
-        for move, time, rects in move_time_rects:
+        # Moves on the stack (not yet resolved)
+        for data, rects in move_data_rects:
             for rect in rects:
-                _render_move(move, time, rect, screen)
+                _render_move(data.move, data.time_left, rect, screen)
 
+        # Resolved moves
         if show_resolved:
-            for move in scene.combat_stack.resolved_moves:
-                rects = scene.layout.get_rects(move)
-
-                for rect in rects:
-                    _render_move(move, None, rect, screen)
+            for data in current_move_datas:
+                if data.time_left:
+                    continue
+                for rect in scene.layout.get_rects(data):
+                    _render_move(data.move, None, rect, screen)
 
         # Moves under characters
-        moves_under_chars = [obj for obj in scene.layout.all_objects()
-                             if isinstance(obj, CombatMoveData)
-                             and obj.under_char]
-
-        for move_data in moves_under_chars:
-            rects = scene.layout.get_rects(move_data)
+        for data in current_move_datas:
+            if not data.under_char:
+                continue
+            rects = scene.layout.get_rects(data)
             assert len(rects) == 1
-            _render_move(move_data.move, None, rects[0], screen,
+            _render_move(data.move, None, rects[0], screen,
                          small_text=True, CPU_not_time=True)
