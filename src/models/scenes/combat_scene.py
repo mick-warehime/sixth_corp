@@ -8,11 +8,11 @@ from models.characters.character_base import Character
 from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character
 from models.characters.conditions import IsDead
+from models.characters.moves_base import Move
 from models.characters.player import get_player
 from models.characters.states import Attributes
 from models.characters.subroutines_base import build_subroutine
 from models.combat.combat_logic import CombatLogic
-from models.combat.moves_base import Move
 from models.scenes import scene_examples
 from models.scenes.layouts import Layout
 from models.scenes.scenes_base import Resolution, Scene
@@ -192,7 +192,7 @@ class CombatScene(EventListener, Scene):
 
         # resolved moves
         resolved_size = 4
-        resolved_moves = self._combat_logic.stack.resolved_moves[::-1]
+        resolved_moves = self._combat_logic.stack.resolved_moves()[::-1]
         resolved_elems = [(MoveData(mv, 0), 1) for mv in resolved_moves]
         # Add a gap to ensure consistent rect sizes.
         if len(resolved_moves) < resolved_size:

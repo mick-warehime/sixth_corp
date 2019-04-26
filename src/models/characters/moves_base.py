@@ -23,3 +23,6 @@ class Move(NamedTuple):
         return 'Move({} {} -> {})'.format(self.user,
                                           self.subroutine.description(),
                                           self.target)
+
+    def __repr__(self) -> str:
+        return str(self)

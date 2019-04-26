@@ -1,0 +1,19 @@
+Dependency hierarchy (higher levels first)
+
+controllers     views
+     \          /|
+     | \       / |
+     |   v    v  |
+     |   events  |
+      \    ^    /
+       \   |   /
+        v  v  v
+         models
+
+models.scenes  <--> events_base
+      |
+      v
+models.combat
+      |
+      V
+models.characters <-- events_base

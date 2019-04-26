@@ -2,9 +2,9 @@ from models.characters.character_base import Character
 from models.characters.character_examples import CharacterData
 from models.characters.character_impl import build_character
 from models.characters.conditions import IsDead
+from models.characters.moves_base import Move
 from models.characters.states import Attributes
-from models.combat.combat_stack import CombatStack
-from models.combat.moves_base import Move
+from models.combat.combat_logic import CombatLogic
 
 
 class SimulationError(Exception):
@@ -52,13 +52,13 @@ class SimulationManager(object):
         Returns True if the attacker wins."""
 
         max_turns = 1000
-        combat_stack = CombatStack(_remove_user_cpu, _return_user_cpu)
+        manager = CombatLogic([attacker, defender])
         is_dead = IsDead()
         for _ in range(max_turns):
             attack_move = attacker.ai.select_move([defender])
             defense_move = defender.ai.select_move([attacker])
-            combat_stack.update_stack([attack_move, defense_move])
-            combat_stack.execute_resolved_moves()
+            manager.start_round([attack_move, defense_move])
+            manager.end_round()
 
             if is_dead.check(attacker) or is_dead.check(defender):
                 return is_dead.check(defender)

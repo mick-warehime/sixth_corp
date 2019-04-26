@@ -1,14 +1,13 @@
 """Implementation of the CombatLogic class."""
 from typing import Dict, Iterable, List, Sequence
 
-from events.events_base import EventListener, EventType
 from models.characters.character_base import Character
+from models.characters.moves_base import Move
 from models.characters.states import Attributes
 from models.combat.combat_stack import CombatStack
-from models.combat.moves_base import Move
 
 
-class CombatLogic(EventListener):
+class CombatLogic(object):
     """Class that manages all the business logic involved in combat.
 
     Specifically, this class handles initialization of characters at the
@@ -20,25 +19,25 @@ class CombatLogic(EventListener):
         super().__init__()
         self._characters = tuple(characters)
         _initialize_characters(self._characters)
-        self._combat_stack = CombatStack(_remove_user_cpu, _return_user_cpu)
+        self._combat_stack = CombatStack()
 
     @property
     def stack(self) -> CombatStack:
         return self._combat_stack
 
-    def notify(self, event: EventType) -> None:
-        # Add CombatFinished event, which causes this listener to finalize
-        # combat.
-        pass
-
     def start_round(self, moves: Sequence[Move]) -> None:
         """Update the characters and stack to start the next round."""
         moves = [_make_unique(m) for m in moves]  # See _make_unique docstring
+        for move in moves:
+            _remove_user_cpu(move)
+
         self._combat_stack.update_stack(moves)
 
     def end_round(self) -> None:
         """Apply finalizing logic at the end of a combat round."""
-        self._combat_stack.execute_resolved_moves()
+        for move in self._combat_stack.resolved_moves():
+            move.execute()
+            _return_user_cpu(move)
 
 
 # For moves with multi-turn durations, we need to keep track of how many times

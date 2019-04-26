@@ -1,10 +1,10 @@
 import logging
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 from pygame.rect import Rect
 
 from data.colors import DARK_GRAY, LIGHT_GRAY, RED, WHITE, YELLOW
-from models.combat.moves_base import Move
+from models.characters.moves_base import Move
 from models.scenes.combat_scene import CombatScene, MoveData
 from models.scenes.scenes_base import Scene
 from views.artists.drawing_utils import rescale_horizontal
@@ -87,8 +87,8 @@ class CombatStackArtist(SceneArtist):
         current_move_datas = [data for data in scene.layout.all_objects()
                               if isinstance(data, MoveData)]
 
-        # Each element of this is passed to the render function.
-        stack_render_data: List[Tuple[MoveData, List[Rect]]] = []
+        # Each key_value pair is passed to the render function.
+        stack_render_data: Dict[MoveData, List[Rect]] = {}
 
         # Beginning of animation
         # As soon as moves are selected, the scene layout is instantly updated
@@ -100,18 +100,25 @@ class CombatStackArtist(SceneArtist):
         if scene.animation_progress is not None and self._first_animation:
             logging.debug('Animation start')
             self._first_animation = False
-            # data and relevant rects for the new layout. We only consider moves
-            # that existed in the previous round. The time_left in the current
-            # round is thus decremented by one.
+            # We only consider moves that existed in the previous round,
+            # excluding those that resolved.
+            to_remove = [data for data in self._prev_move_data_rects
+                         if not data.time_left]
+            for move_data in to_remove:
+                self._prev_move_data_rects.pop(move_data)
+
+            # Match data and relevant rects for the new layout. The time_left
+            # in the current round is thus decremented by one.
             self._move_data_rects = {
                 data: scene.layout.get_rects(data.time_minus_one())
                 for data in self._prev_move_data_rects}
-            # Also include the moves that have just resolved.
+
+            # Also include the moves that have just resolved (which may not
+            # have existed in the last round).
             self._move_data_rects.update(
                 {data: scene.layout.get_rects(data)
                  for data in current_move_datas if data.time_left == 0})
-            stack_render_data = list(self._prev_move_data_rects.items())
-            show_resolved = False
+            stack_render_data = self._prev_move_data_rects
 
         # Middle of animation. Do not animate the first animation as there is
         # nothing to draw.
@@ -120,13 +127,11 @@ class CombatStackArtist(SceneArtist):
             for data, prev_rects in self._prev_move_data_rects.items():
                 new_rects = self._move_data_rects[data]
 
-                assert len(prev_rects) == len(new_rects)
+                assert len(prev_rects) == len(new_rects), '{}'.format(data)
 
                 interp_rects = [_interpolate(scene.animation_progress, *old_new)
                                 for old_new in zip(prev_rects, new_rects)]
-                stack_render_data.append((data, interp_rects))  # type: ignore
-
-            show_resolved = False
+                stack_render_data[data] = interp_rects
 
         # No animation, show resolved moves and current layout.
         else:
@@ -135,24 +140,14 @@ class CombatStackArtist(SceneArtist):
 
             self._prev_move_data_rects = {data: scene.layout.get_rects(data)
                                           for data in current_move_datas
-                                          if data.time_left
-                                          and not data.under_char}
+                                          if not data.under_char}
 
-            stack_render_data = list(self._prev_move_data_rects.items())
-            show_resolved = True
+            stack_render_data = self._prev_move_data_rects
 
-        # Render moves on the stack (not yet resolved)
-        for data, rects in stack_render_data:
+        # Render moves on the stack
+        for data, rects in stack_render_data.items():
             for rect in rects:
                 _render_move(data.move, data.time_left, rect, screen)
-
-        # Render resolved moves
-        if show_resolved:
-            for data in current_move_datas:
-                if data.time_left:
-                    continue
-                for rect in scene.layout.get_rects(data):
-                    _render_move(data.move, None, rect, screen)
 
         # Render moves under characters
         for data in current_move_datas:

@@ -6,7 +6,7 @@ from weakref import WeakSet
 
 from models.characters.character_base import Character
 from models.characters.mods_base import Mod, SlotTypes
-from models.combat.moves_base import Move
+from models.characters.moves_base import Move
 from models.scenes.scenes_base import Scene
 
 

@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 from models.characters.states import Stateful
 
 if TYPE_CHECKING:
-    from models.combat.ai_base import AI  # noqa: F401
+    from models.characters.ai_base import AI  # noqa: F401
     from models.characters.chassis import Chassis  # noqa: F401
 
 

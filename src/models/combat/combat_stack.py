@@ -1,7 +1,7 @@
 """Implementation of the combat stack."""
-from typing import Callable, List, NamedTuple, Sequence, Tuple
+from typing import List, NamedTuple, Sequence, Tuple
 
-from models.combat.moves_base import Move
+from models.characters.moves_base import Move
 
 
 class _TimedMove(NamedTuple):
@@ -21,22 +21,22 @@ class CombatStack(object):
 
     update_stack: Increments time by one unit and adds new moves to the stack.
 
-    execute_resolved_moves: Execute and post-process all resolved moves.
-
     """
 
-    def __init__(self, prestack_fun: Callable[[Move], None] = None,
-                 poststack_fun: Callable[[Move], None] = None) -> None:
+    def __init__(self) -> None:
         self._stack: List[_TimedMove] = []
         self._just_resolved: Tuple[Move, ...] = ()
-        self._resolved_moves_executed = True
-        self._prestack_fun: Callable[[Move], None] = prestack_fun
-        self._poststack_fun: Callable[[Move], None] = poststack_fun
+        self._resolved_moves_called = True
 
-    @property
     def resolved_moves(self) -> Tuple[Move, ...]:
         """Moves that have resolved since the last time update_stack was called.
+
+        This method must be called at exactly once before each call to
+        update_stack.
         """
+
+        self._resolved_moves_called = True
+
         return self._just_resolved
 
     def moves_times_remaining(self) -> List[Tuple[Move, int]]:
@@ -63,13 +63,13 @@ class CombatStack(object):
         # Phases:
         # 1. Check resolved_moves for execution.
         # 2. Advance time for moves already on the stack.
-        # 3. Add new moves to the stack (after calling prestack method).
+        # 3. Add new moves to the stack.
 
-        # 1. Check resolved moves for execution.
-        if not self._resolved_moves_executed:
+        # 1. Check that we extracted the previously resolved moves.
+        if not self._resolved_moves_called:
             raise ValueError('Must call execute_resolved_moves() before'
                              'successive calls to advance_time.')
-        self._resolved_moves_executed = False
+        self._resolved_moves_called = False
 
         # 2. Update time_left for each move and separate resolved moves.
         just_resolved = []
@@ -86,37 +86,11 @@ class CombatStack(object):
         self._just_resolved = tuple(just_resolved)
 
         # 3. Process and add new moves to the stack.
-        if self._prestack_fun is not None:
-            for move in moves:
-                self._prestack_fun(move)
-
         for move in moves:
             duration = move.subroutine.duration()
             time_left = move.subroutine.time_slots()
             for i in range(duration):
                 self._add_move(move, time_left + i)
-
-    def execute_resolved_moves(self) -> None:
-        """Execute all resolved moves.
-
-        The poststack method (if specified in __init__) is invoked on each move
-        after it has been executed. This occurs prior to the next move's
-        execution.
-
-        This method must be called at exactly once before each call to
-        update_stack.
-        """
-
-        if self._resolved_moves_executed:
-            raise ValueError('This method must be called exactly once before'
-                             'update_stack.')
-
-        for move in self._just_resolved:
-            move.execute()
-            if self._poststack_fun is not None:
-                self._poststack_fun(move)
-
-        self._resolved_moves_executed = True
 
     def _add_move(self, move: Move, time_left: int = None) -> None:
         """Add a move to the stack.

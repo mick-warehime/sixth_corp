@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from typing import TYPE_CHECKING, Sequence
 
-from models.combat.moves_base import Move
+from models.characters.moves_base import Move
 
 if TYPE_CHECKING:
     from models.characters.character_base import Character  # noqa: F401
