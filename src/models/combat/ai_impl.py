@@ -4,11 +4,11 @@ from itertools import product
 from random import choice
 from typing import Callable, Sequence, Set
 
+from models.characters.ai_base import AI
 from models.characters.character_base import Character
+from models.characters.moves_base import Move
 from models.characters.states import Attributes
 from models.characters.subroutines_base import build_subroutine
-from models.characters.ai_base import AI
-from models.characters.moves_base import Move
 
 SelectionFun = Callable[[Sequence[Move]], Move]
 

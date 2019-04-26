@@ -24,4 +24,5 @@ class Move(NamedTuple):
                                           self.subroutine.description(),
                                           self.target)
 
-    __repr__ = __str__
+    def __repr__(self) -> str:
+        return str(self)

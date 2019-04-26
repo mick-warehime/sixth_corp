@@ -8,11 +8,11 @@ from models.characters.character_base import Character
 from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character
 from models.characters.conditions import IsDead
+from models.characters.moves_base import Move
 from models.characters.player import get_player
 from models.characters.states import Attributes
 from models.characters.subroutines_base import build_subroutine
 from models.combat.combat_logic import CombatLogic
-from models.characters.moves_base import Move
 from models.scenes import scene_examples
 from models.scenes.layouts import Layout
 from models.scenes.scenes_base import Resolution, Scene

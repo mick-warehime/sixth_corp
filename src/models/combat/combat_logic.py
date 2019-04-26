@@ -2,9 +2,9 @@
 from typing import Dict, Iterable, List, Sequence
 
 from models.characters.character_base import Character
+from models.characters.moves_base import Move
 from models.characters.states import Attributes
 from models.combat.combat_stack import CombatStack
-from models.characters.moves_base import Move
 
 
 class CombatLogic(object):

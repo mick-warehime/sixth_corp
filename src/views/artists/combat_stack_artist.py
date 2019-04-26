@@ -88,7 +88,7 @@ class CombatStackArtist(SceneArtist):
                               if isinstance(data, MoveData)]
 
         # Each key_value pair is passed to the render function.
-        stack_render_data: Dict[MoveData:List[Rect]] = {}
+        stack_render_data: Dict[MoveData, List[Rect]] = {}
 
         # Beginning of animation
         # As soon as moves are selected, the scene layout is instantly updated
@@ -111,8 +111,8 @@ class CombatStackArtist(SceneArtist):
             # in the current round is thus decremented by one.
             self._move_data_rects = {
                 data: scene.layout.get_rects(data.time_minus_one())
-                for data in self._prev_move_data_rects} \
- \
+                for data in self._prev_move_data_rects}
+
             # Also include the moves that have just resolved (which may not
             # have existed in the last round).
             self._move_data_rects.update(
