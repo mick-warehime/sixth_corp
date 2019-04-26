@@ -1,14 +1,13 @@
 """Implementation of the CombatLogic class."""
 from typing import Dict, Iterable, List, Sequence
 
-from events.events_base import EventListener, EventType
 from models.characters.character_base import Character
 from models.characters.states import Attributes
 from models.combat.combat_stack import CombatStack
 from models.characters.moves_base import Move
 
 
-class CombatLogic(EventListener):
+class CombatLogic(object):
     """Class that manages all the business logic involved in combat.
 
     Specifically, this class handles initialization of characters at the
@@ -25,11 +24,6 @@ class CombatLogic(EventListener):
     @property
     def stack(self) -> CombatStack:
         return self._combat_stack
-
-    def notify(self, event: EventType) -> None:
-        # Add CombatFinished event, which causes this listener to finalize
-        # combat.
-        pass
 
     def start_round(self, moves: Sequence[Move]) -> None:
         """Update the characters and stack to start the next round."""
