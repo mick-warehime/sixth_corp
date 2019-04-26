@@ -87,8 +87,8 @@ class CombatStackArtist(SceneArtist):
         current_move_datas = [data for data in scene.layout.all_objects()
                               if isinstance(data, MoveData)]
 
-        # Each element of list is passed to the render function.
-        move_data_rects: List[Tuple[MoveData, List[Rect]]] = []
+        # Each element of this is passed to the render function.
+        stack_render_data: List[Tuple[MoveData, List[Rect]]] = []
 
         # Beginning of animation
         # The scene layout is instantaneously updated to match the end of the
@@ -108,7 +108,7 @@ class CombatStackArtist(SceneArtist):
             self._move_data_rects.update(
                 {data: scene.layout.get_rects(data)
                  for data in current_move_datas if data.time_left == 0})
-            move_data_rects = list(self._prev_move_data_rects.items())
+            stack_render_data = list(self._prev_move_data_rects.items())
             show_resolved = False
 
         # Middle of animation. Do not animate the first animation as there is
@@ -122,7 +122,7 @@ class CombatStackArtist(SceneArtist):
 
                 interp_rects = [_interpolate(scene.animation_progress, *old_new)
                                 for old_new in zip(prev_rects, new_rects)]
-                move_data_rects.append((data, interp_rects))  # type: ignore
+                stack_render_data.append((data, interp_rects))  # type: ignore
 
             show_resolved = False
 
@@ -136,15 +136,15 @@ class CombatStackArtist(SceneArtist):
                                           if data.time_left
                                           and not data.under_char}
 
-            move_data_rects = list(self._prev_move_data_rects.items())
+            stack_render_data = list(self._prev_move_data_rects.items())
             show_resolved = True
 
-        # Moves on the stack (not yet resolved)
-        for data, rects in move_data_rects:
+        # Render moves on the stack (not yet resolved)
+        for data, rects in stack_render_data:
             for rect in rects:
                 _render_move(data.move, data.time_left, rect, screen)
 
-        # Resolved moves
+        # Render resolved moves
         if show_resolved:
             for data in current_move_datas:
                 if data.time_left:
@@ -152,7 +152,7 @@ class CombatStackArtist(SceneArtist):
                 for rect in scene.layout.get_rects(data):
                     _render_move(data.move, None, rect, screen)
 
-        # Moves under characters
+        # Render moves under characters
         for data in current_move_datas:
             if not data.under_char:
                 continue
