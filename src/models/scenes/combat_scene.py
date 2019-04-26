@@ -89,10 +89,6 @@ class CombatScene(EventListener, Scene):
         return self._animation_progress
 
     @property
-    def combat_stack(self) -> CombatStack:
-        return self._combat_logic.stack
-
-    @property
     def selected_char(self) -> Optional[Character]:
         return self._selected_char
 
@@ -172,7 +168,7 @@ class CombatScene(EventListener, Scene):
         # We populate these columns with objects whose attributes (data) are
         # required to render the scene.
         characters = self.characters()
-        moves_times = self.combat_stack.moves_times_remaining()[::-1]
+        moves_times = self._combat_logic.stack.moves_times_remaining()[::-1]
 
         # player side layout
         player = characters[0]
@@ -197,7 +193,7 @@ class CombatScene(EventListener, Scene):
 
         # resolved moves
         resolved_size = 4
-        resolved_moves = self.combat_stack.resolved_moves[::-1]
+        resolved_moves = self._combat_logic.stack.resolved_moves[::-1]
         resolved_elems = [(MoveData(mv, 0), 1) for mv in resolved_moves]
         # Add a gap to ensure consistent rect sizes.
         if len(resolved_moves) < resolved_size:
