@@ -50,6 +50,10 @@ class Status(metaclass=ABCMeta):
         If not otherwise set, default is False."""
 
     @abstractmethod
+    def set_state(self, state: State, value: bool) -> None:
+        """Assign (or remove) a given state."""
+
+    @abstractmethod
     def get_attribute(self, attribute: AttributeType) -> int:
         """Value associated with an Attribute.
 

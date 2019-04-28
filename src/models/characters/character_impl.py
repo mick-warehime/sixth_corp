@@ -77,6 +77,9 @@ class _CombinedStatus(Status):
         return (self._base_status.has_state(state)
                 or self._inventory.grants_state(state))
 
+    def set_state(self, state: State, value: bool) -> None:
+        self._base_status.set_state(state, value)
+
     def get_attribute(self, attribute: AttributeType) -> int:
         modifier = self._inventory.total_modifier(attribute)
         value = self._base_status.get_attribute(attribute) + modifier

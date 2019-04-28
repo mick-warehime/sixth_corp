@@ -9,7 +9,7 @@ _BoundType = Union[int, Attributes, _BoundFun]
 
 
 class BasicStatus(Status):
-    """A Stateful object implemented using simple dictionaries."""
+    """A Stateful object implemented using sets and dictionaries."""
 
     def __init__(self) -> None:
         self._states: Set[State] = set()
@@ -60,6 +60,7 @@ class BasicStatus(Status):
         return int_fun
 
     def value_in_bounds(self, value: int, attribute: AttributeType) -> int:
+        """Bracket a given value within the bounds of a given attribute."""
         if attribute in self._attribute_bounds:
             lower, upper = self._attribute_bounds[attribute]
             l_val, u_val = lower(), upper()
