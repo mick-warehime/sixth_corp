@@ -1,5 +1,5 @@
 """Implementation of the combat stack."""
-from typing import List, NamedTuple, Sequence, Tuple
+from typing import List, NamedTuple, Tuple
 
 from models.characters.moves_base import Move
 
@@ -19,7 +19,7 @@ class CombatStack(object):
 
     resolved_moves: Moves that have just resolved since the last stack update.
 
-    update_stack: Increments time by one unit and adds new moves to the stack.
+    advance_time: Increments time by one unit.
 
     """
 
@@ -49,21 +49,18 @@ class CombatStack(object):
 
         return [(tm.move, tm.time_left) for tm in self._stack]
 
-    def update_stack(self, moves: Sequence[Move]) -> None:
-        """Update the combat stack according to character actions.
+    def advance_time(self) -> None:
+        """Advance time by one round.
 
-        Before putting moves on the stack, time is advanced by one round and the
-        prestack method (if specified in __init__) is called on each move. Moves
-        with duration>1 are added at multiple spots in the stack.
+        Moves whose time left is zero are moved to resolved_moves.
 
-        Args:
-            moves: Moves to add to the stack after advancing time.
+        resolved_moves() must be called at least once before each call of
+        advance_time, except after initialization.
 
         """
         # Phases:
         # 1. Check resolved_moves for execution.
         # 2. Advance time for moves already on the stack.
-        # 3. Add new moves to the stack.
 
         # 1. Check that we extracted the previously resolved moves.
         if not self._resolved_moves_called:
@@ -85,14 +82,7 @@ class CombatStack(object):
         self._stack = new_stack
         self._just_resolved = tuple(just_resolved)
 
-        # 3. Process and add new moves to the stack.
-        for move in moves:
-            duration = move.subroutine.duration()
-            time_left = move.subroutine.time_slots()
-            for i in range(duration):
-                self._add_move(move, time_left + i)
-
-    def _add_move(self, move: Move, time_left: int = None) -> None:
+    def add_move(self, move: Move, time_left: int = None) -> None:
         """Add a move to the stack.
 
         The move is placed on the stack according to its time to resolve. Moves

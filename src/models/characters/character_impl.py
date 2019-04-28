@@ -1,6 +1,7 @@
 """Basic class for player and enemies."""
 
 from functools import partial
+from typing import Callable, Sequence
 
 from pygame.rect import Rect
 
@@ -10,7 +11,8 @@ from models.characters.character_examples import CharacterData
 from models.characters.chassis import Chassis
 from models.characters.inventory import InventoryBase
 from models.characters.mods_base import build_mod
-from models.characters.states import Attributes, AttributeType, State, Status
+from models.characters.states import (Attributes, AttributeType, State, Status,
+                                      StatusEffect)
 from models.characters.status import BasicStatus
 from models.combat.ai_impl import build_ai
 
@@ -77,6 +79,9 @@ class _CombinedStatus(Status):
         return (self._base_status.has_state(state)
                 or self._inventory.grants_state(state))
 
+    def set_state(self, state: State, value: bool) -> None:
+        self._base_status.set_state(state, value)
+
     def get_attribute(self, attribute: AttributeType) -> int:
         modifier = self._inventory.total_modifier(attribute)
         value = self._base_status.get_attribute(attribute) + modifier
@@ -84,6 +89,16 @@ class _CombinedStatus(Status):
 
     def increment_attribute(self, attribute: AttributeType, delta: int) -> None:
         self._base_status.increment_attribute(attribute, delta)
+
+    def add_status_effect(self, effect: StatusEffect) -> None:
+        self._base_status.add_status_effect(effect)
+
+    def remove_status_effect(self, effect: StatusEffect) -> None:
+        self._base_status.remove_status_effect(effect)
+
+    def active_effects(self, check: Callable[[StatusEffect], bool] = None
+                       ) -> Sequence[StatusEffect]:
+        return self._base_status.active_effects(check)
 
 
 def build_character(data: CharacterData) -> _CharacterImpl:
