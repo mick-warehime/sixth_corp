@@ -1,6 +1,6 @@
 """Implementation of  BasicStatus"""
 from collections import defaultdict
-from typing import Callable, Dict, Tuple, Union
+from typing import Callable, Dict, Tuple, Union, Set
 
 from models.characters.states import Attributes, AttributeType, State, Status
 
@@ -12,7 +12,7 @@ class BasicStatus(Status):
     """A Stateful object implemented using simple dictionaries."""
 
     def __init__(self) -> None:
-        self._states: defaultdict = defaultdict(lambda: False)
+        self._states: Set[State] = set()
         self._attributes: defaultdict = defaultdict(lambda: 0)
         self._attribute_bounds: Dict[
             AttributeType, Tuple[_BoundFun, _BoundFun]] = {}
@@ -21,10 +21,13 @@ class BasicStatus(Status):
         """Whether object has a given state.
 
         If not otherwise set, default is False."""
-        return self._states[state]
+        return state in self._states
 
     def set_state(self, state: State, value: bool) -> None:
-        self._states[state] = value
+        if value:
+            self._states.add(state)
+        else:
+            self._states.discard(state)
 
     def get_attribute(self, attribute: AttributeType) -> int:
         """Value associated with an Attribute.
