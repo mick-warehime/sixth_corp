@@ -1,7 +1,11 @@
 """Abstract implementation of states and conditions."""
 from abc import ABCMeta, abstractmethod
+from collections import defaultdict
 from enum import Enum
-from typing import Union
+from typing import Dict, Union, NamedTuple, Tuple, Callable, Sequence, Iterable, \
+    FrozenSet, cast
+
+from frozendict import frozendict
 
 
 class State(Enum):
@@ -30,6 +34,15 @@ class Attributes(Enum):
     def __str__(self) -> str:
         return self.value
 
+    @property
+    def is_permanent(self) -> bool:
+        return _is_permanent[self]
+
+
+_is_permanent: Dict[Attributes, bool] = defaultdict(lambda: False)
+_is_permanent[Attributes.MAX_HEALTH] = True
+_is_permanent[Attributes.MAX_CPU] = True
+
 
 class Skill(Enum):
     STEALTH = 'stealth'
@@ -38,6 +51,66 @@ class Skill(Enum):
 
 
 AttributeType = Union[Attributes, Skill]
+
+
+class StatusEffect(NamedTuple):
+    """Affects stateful attributes or grants/prevents states.
+
+    Unlike States, a Stateful object may have more than one of the same status
+    effects.
+
+    Attributes:
+        label: A short description of the effect. This should not contain the
+            the attributes below.
+        states_granted: States granted by the effect. As long as the stateful
+            object has this effect, the specified states cannot be removed. When
+            the effect is removed the states are also lost unless something else
+            grants them.
+        states_prevented: States prevented by the effect. As long as a stateful
+            object has this effect, all states in states_prevented are set to
+            False and may not be set to True. This preempts states granted by
+            other StatusEffects.
+        attribute_modifiers: Attributes which are modified by this effect.
+            When Status.get_attribute is called, the corresponding
+            modifier is added at the end (but is still set within specified
+            bounds, as in implementation of BasicStatus). This means that a
+            positive modifier effectively increases the lower bound of an
+            attribute. Modifiers from multiple effects may stack. Modifiers
+            disappear when the effect is removed.
+    """
+    label: str
+    states_granted: FrozenSet[State]
+    states_prevented: FrozenSet[State]
+    attribute_modifiers: Dict[AttributeType, int]
+
+    @classmethod
+    def build(cls, label: str = 'unnamed effect',
+              states_granted: Union[State, Iterable[State]] = (),
+              states_prevented: Union[State, Iterable[State]] = (),
+              attribute_modifiers: Dict[AttributeType, int] = None
+              ) -> 'StatusEffect':
+        """Constructor for StatusEffects.
+
+        See class docstring for argument details.
+        """
+
+        if isinstance(states_granted, State):
+            states_granted = (states_granted,)
+        if isinstance(states_prevented, State):
+            states_prevented = (states_prevented,)
+        states_granted = frozenset(states_granted)
+        states_prevented = frozenset(states_prevented)
+
+        assert not (states_granted & states_prevented)
+
+        if attribute_modifiers is None:
+            attribute_modifiers = {}
+
+        # To ensure immutability and a well defined hash
+        attribute_modifiers = cast(Dict, frozendict(attribute_modifiers))
+
+        return StatusEffect(label, states_granted, states_prevented,
+                            attribute_modifiers)
 
 
 class Status(metaclass=ABCMeta):
@@ -62,6 +135,25 @@ class Status(metaclass=ABCMeta):
     @abstractmethod
     def increment_attribute(self, attribute: AttributeType, delta: int) -> None:
         """Increment an attribute by a fixed amount."""
+
+    @abstractmethod
+    def add_status_effect(self, effect: StatusEffect) -> None:
+        """Incorporate a StatusEffect.
+
+        The same effect may be added multiple times.
+        """
+
+    @abstractmethod
+    def remove_status_effect(self, effect: StatusEffect) -> None:
+        """Remove a single copy of a StatusEffect."""
+
+    @abstractmethod
+    def active_effects(self, check: Callable[[StatusEffect], bool] = None
+                       ) -> Sequence[StatusEffect]:
+        """Get all status effects matching a certain filter condition.
+
+         if check is None, then all status effects are returned.
+         """
 
 
 class Stateful(metaclass=ABCMeta):
