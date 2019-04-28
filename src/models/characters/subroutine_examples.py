@@ -83,7 +83,7 @@ def shield_buff(amount: int, duration: int = 1, cpu_slots: int = None,
     if duration > 1:
         description += ' for {} rounds'.format(duration)
     return build_subroutine(use_fun, can_use, cpu_slots, time_to_resolve,
-                            description, duration)
+                            description, duration, False)
 
 
 def direct_damage(damage: int, cpu_slots: int = None,
@@ -164,4 +164,4 @@ def damage_over_time(damage_per_round: int, duration: int = 2,
     if label:
         description = label + ' ' + description
     return build_subroutine(use_fun, can_use_fun, cpu_slots, time_to_resolve,
-                            description, duration)
+                            description, duration, single_use=False)

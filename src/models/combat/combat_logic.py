@@ -12,7 +12,8 @@ class CombatLogic(object):
 
     Specifically, this class handles initialization of characters at the
     beginning of combat, final processing at the end of combat, and ensures
-    that moves are implemented correctly during combat.
+    that moves are implemented correctly during combat. See the Subroutine
+    docstring for a description.
     """
 
     def __init__(self, characters: Sequence[Character]) -> None:
@@ -31,15 +32,17 @@ class CombatLogic(object):
         self._combat_stack.advance_time()
 
         # Process and add new moves to the stack.
-
         moves = [_make_unique(m) for m in moves]  # See _make_unique docstring
 
         for move in moves:
             _remove_user_cpu(move)
-            duration = move.subroutine.duration()
             time_left = move.subroutine.time_slots()
-            for i in range(duration):
-                self._combat_stack.add_move(move, time_left + i)
+            if not move.subroutine.single_use():
+                duration = move.subroutine.duration()
+                for i in range(duration):
+                    self._combat_stack.add_move(move, time_left + i)
+            else:
+                self._combat_stack.add_move(move, time_left)
 
     def end_round(self) -> None:
         """Apply finalizing logic at the end of a combat round."""
@@ -59,8 +62,7 @@ def _remove_user_cpu(move: Move) -> None:
     duration = move.subroutine.duration()
     _move_registry[move] = [0, duration]
 
-    assert cpu_slots <= move.user.status.get_attribute(
-        Attributes.CPU_AVAILABLE)
+    assert cpu_slots <= move.user.status.get_attribute(Attributes.CPU_AVAILABLE)
     move.user.status.increment_attribute(Attributes.CPU_AVAILABLE, -cpu_slots)
 
 
@@ -75,10 +77,10 @@ def _return_user_cpu(move: Move) -> None:
 def _initialize_characters(characters: Iterable[Character]) -> None:
     """Initialize character statuses for combat."""
     for char in characters:
-        # CPU -> MAX_CPU
+        # CPU --> MAX_CPU
         max_cpu = char.status.get_attribute(Attributes.MAX_CPU)
         char.status.increment_attribute(Attributes.CPU_AVAILABLE, max_cpu)
-        # SHIELD -> 0
+        # SHIELD --> 0
         shield = char.status.get_attribute(Attributes.SHIELD)
         char.status.increment_attribute(Attributes.SHIELD, -shield)
 
