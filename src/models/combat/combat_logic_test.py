@@ -4,10 +4,10 @@ from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character
 from models.characters.chassis import Chassis
 from models.characters.chassis_examples import ChassisTypes
-from models.characters.mods_base import build_mod
 from models.characters.moves_base import Move
 from models.characters.states import Attributes
-from models.characters.subroutine_examples import direct_damage
+from models.characters.subroutine_examples import direct_damage, \
+    damage_over_time
 from models.combat.combat_logic import CombatLogic
 
 
@@ -53,12 +53,12 @@ def test_direct_move_removes_and_returns_cpu(player, enemy):
         return enemy.status.get_attribute(Attributes.HEALTH)
 
     starting_cpu = get_cpu()
-    starting_HP = get_health()
+    starting_health = get_health()
     # Add move to stack and wait until it resolves.
     logic.start_round([move])
     for _ in range(time):
         assert get_cpu() == starting_cpu - cpu_used
-        assert get_health() == starting_HP
+        assert get_health() == starting_health
         logic.end_round()
         assert get_cpu() == starting_cpu - cpu_used
         logic.start_round([])
@@ -66,4 +66,37 @@ def test_direct_move_removes_and_returns_cpu(player, enemy):
     # When it resolves cpu should return and HP should go down.
     logic.end_round()
     assert get_cpu() == starting_cpu
-    assert get_health() == starting_HP - damage
+    assert get_health() == starting_health - damage
+
+
+def test_move_with_multi_turn_use(player, enemy):
+    duration = 3
+    damage_per_round = 1
+    cpu_used = 1
+    move = Move(damage_over_time(damage_per_round, duration, cpu_used,
+                                 time_to_resolve=0), player, enemy)
+
+    logic = CombatLogic([player, enemy])
+
+    def get_cpu():
+        return player.status.get_attribute(Attributes.CPU_AVAILABLE)
+
+    def get_health():
+        return enemy.status.get_attribute(Attributes.HEALTH)
+
+    starting_cpu = get_cpu()
+    starting_health = get_health()
+    # Add move to stack and wait until it resolves.
+    logic.start_round([move])
+    for rnd in range(duration - 1):
+        assert get_cpu() == starting_cpu - cpu_used
+        assert get_health() == starting_health - rnd * damage_per_round
+        logic.end_round()
+        assert get_cpu() == starting_cpu - cpu_used
+        assert get_health() == starting_health - (rnd + 1) * damage_per_round
+        logic.start_round([])
+
+    # When it resolves cpu should return and HP should go down.
+    logic.end_round()
+    assert get_cpu() == starting_cpu
+    assert get_health() == starting_health - duration * damage_per_round
