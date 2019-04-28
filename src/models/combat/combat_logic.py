@@ -27,11 +27,19 @@ class CombatLogic(object):
 
     def start_round(self, moves: Sequence[Move]) -> None:
         """Update the characters and stack to start the next round."""
+
+        self._combat_stack.advance_time()
+
+        # Process and add new moves to the stack.
+
         moves = [_make_unique(m) for m in moves]  # See _make_unique docstring
+
         for move in moves:
             _remove_user_cpu(move)
-
-        self._combat_stack.update_stack(moves)
+            duration = move.subroutine.duration()
+            time_left = move.subroutine.time_slots()
+            for i in range(duration):
+                self._combat_stack.add_move(move, time_left + i)
 
     def end_round(self) -> None:
         """Apply finalizing logic at the end of a combat round."""
