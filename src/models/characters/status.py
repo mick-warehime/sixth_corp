@@ -1,9 +1,9 @@
 """Implementation of  BasicStatus"""
 from collections import defaultdict
-from typing import Callable, Dict, Tuple, Union, Set, Sequence, List
+from typing import Callable, Dict, List, Sequence, Set, Tuple, Union
 
-from models.characters.states import Attributes, AttributeType, State, Status, \
-    StatusEffect
+from models.characters.states import (Attributes, AttributeType, State, Status,
+                                      StatusEffect)
 
 _BoundFun = Callable[[], int]
 _BoundType = Union[int, AttributeType, _BoundFun]
@@ -101,7 +101,7 @@ class BasicStatus(Status):
         value = self.value_in_bounds(value, attribute)
         self._attributes[attribute] = value
 
-    def _update_effect_states(self):
+    def _update_effect_states(self) -> None:
         self._states_prevented = set.union(
             *(set(eff.states_prevented) for eff in self._status_effects))
         self._states_from_effects = set.union(

@@ -11,8 +11,8 @@ from models.characters.character_examples import CharacterData
 from models.characters.chassis import Chassis
 from models.characters.inventory import InventoryBase
 from models.characters.mods_base import build_mod
-from models.characters.states import Attributes, AttributeType, State, Status, \
-    StatusEffect
+from models.characters.states import (Attributes, AttributeType, State, Status,
+                                      StatusEffect)
 from models.characters.status import BasicStatus
 from models.combat.ai_impl import build_ai
 

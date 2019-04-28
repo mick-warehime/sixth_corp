@@ -2,8 +2,8 @@
 from abc import ABCMeta, abstractmethod
 from collections import defaultdict
 from enum import Enum
-from typing import Dict, Union, NamedTuple, Tuple, Callable, Sequence, Iterable, \
-    FrozenSet, cast
+from typing import (Callable, Dict, FrozenSet, Iterable, NamedTuple, Sequence,
+                    Union, cast)
 
 from frozendict import frozendict
 

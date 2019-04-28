@@ -1,7 +1,7 @@
 """Tests of status.py"""
 import pytest
 
-from models.characters.states import State, Attributes, Skill, StatusEffect
+from models.characters.states import Attributes, Skill, State, StatusEffect
 from models.characters.status import BasicStatus
 
 
