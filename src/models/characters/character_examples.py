@@ -17,7 +17,7 @@ class CharacterData(NamedTuple):
     ai_type: AIType = AIType.Random
 
 
-_DRONE = CharacterData(ChassisTypes.SINGLE_LASER.data, 'drone')
+_DRONE = CharacterData(ChassisTypes.DRONE.data, 'drone')
 _HARMLESS = CharacterData(ChassisTypes.HARMLESS.data, 'harmless enemy')
 _USELESS = CharacterData(ChassisTypes.USELESS.data, 'useless enemy')
 
@@ -28,7 +28,7 @@ _HUMAN_PLAYER = CharacterData(ChassisTypes.NO_LEGS.data, 'Player 1',
                                ModTypes.REPAIR_NANITES.data,
                                ModTypes.FIRE_HELM.data,
                                ModTypes.BASIC_HULL_PLATING.data),
-                              'src/data/images/walle.png', AIType.Human)
+                              'src/data/images/walle.png', AIType.No_AI)
 
 
 class CharacterTypes(Enum):

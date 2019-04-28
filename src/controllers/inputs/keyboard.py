@@ -34,7 +34,8 @@ class Keyboard(EventListener):
         if self.get_binding(key_name) != BasicEvents.NONE:
             self.post_bound_event(key=key_name)
         else:
-            input_event = InputEvent(event_type=BasicEvents.KEYPRESS, key=key_name)
+            input_event = InputEvent(event_type=BasicEvents.KEYPRESS,
+                                     key=key_name)
             EventManager.post(input_event)
 
     def handle_mouse_click(self) -> None:

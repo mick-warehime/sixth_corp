@@ -14,7 +14,7 @@ from models.scenes.combat_scene import CombatScene
 def _create_enemy(health: int = 10) -> Character:
     char_data = CharacterData(
         ChassisData(attribute_modifiers={Attributes.MAX_HEALTH: health}))
-    return build_character(char_data)
+    return build_character(data=char_data)
 
 
 def _create_combat_controller(enemy) -> CombatSceneController:

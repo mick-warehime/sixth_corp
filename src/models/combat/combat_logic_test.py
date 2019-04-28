@@ -10,15 +10,20 @@ from models.combat.combat_logic import CombatLogic
 @pytest.fixture()
 def player_char():
     reset_player()
-    return get_player()
+    # remove all mods
+    player = get_player()
+    for mod in player.chassis.all_mods():
+        player.chassis.remove_mod(mod)
+
+    return player
 
 
 @pytest.fixture()
 def enemy():
-    return build_character(CharacterTypes.DRONE.data)
+    return build_character(data=CharacterTypes.DRONE.data)
 
 
-def test_combat_logic_initializes_CPU(player_char, enemy):
+def test_combat_logic_initializes_cpu(player_char, enemy):
     chars = [player_char, enemy]
     for char in chars:
         cpu = char.status.get_attribute(Attributes.CPU_AVAILABLE)
@@ -30,5 +35,3 @@ def test_combat_logic_initializes_CPU(player_char, enemy):
         actual = char.status.get_attribute(Attributes.CPU_AVAILABLE)
         expected = char.status.get_attribute(Attributes.MAX_CPU)
         assert actual == expected
-
-

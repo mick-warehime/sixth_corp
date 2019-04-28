@@ -53,7 +53,7 @@ class CombatScene(EventListener, Scene):
                  win_resolution: Resolution = None,
                  background_image: str = None) -> None:
         if enemy is None:
-            enemy = build_character(CharacterTypes.DRONE.data)
+            enemy = build_character(data=CharacterTypes.DRONE.data)
         self._enemy: Character = enemy
         super().__init__()
         self._player = get_player()

@@ -16,8 +16,8 @@ def test_shuffle_ai_only_provides_usable_moves():
     unusable = build_subroutine(can_use=False)
     char_data = CharacterData(
         ChassisData(subroutines_granted=(usable, unusable)))
-    user = build_character(char_data)
-    target = build_character(char_data)
+    user = build_character(data=char_data)
+    target = build_character(data=char_data)
     ai = build_ai(AIType.Shuffle)
     ai.set_user(user)
 
@@ -33,8 +33,8 @@ def test_shuffle_ai_moves_dont_repeat():
     char_data = CharacterData(ChassisData(
         subroutines_granted=(do_nothing_0, do_nothing_1, unusable)))
 
-    user = build_character(char_data)
-    target = build_character(char_data)
+    user = build_character(data=char_data)
+    target = build_character(data=char_data)
     ai = build_ai(AIType.Shuffle)
     ai.set_user(user)
 
@@ -55,8 +55,8 @@ def test_shuffle_ai_moves_dont_repeat():
 def test_no_valid_moves_means_do_nothing():
     no_subroutines = CharacterData(ChassisData())
 
-    user = build_character(no_subroutines)
-    target = build_character(no_subroutines)
+    user = build_character(data=no_subroutines)
+    target = build_character(data=no_subroutines)
     ai = build_ai(AIType.Shuffle)
     ai.set_user(user)
 

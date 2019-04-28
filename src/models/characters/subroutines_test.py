@@ -12,7 +12,7 @@ from models.characters.subroutines_base import build_subroutine
 
 @pytest.fixture()
 def character():
-    return build_character(CharacterData(ChassisTypes.NO_LEGS.data))
+    return build_character(data=CharacterData(ChassisTypes.NO_LEGS.data))
 
 
 def test_repair_subroutine(character: Character):
@@ -27,7 +27,7 @@ def test_repair_subroutine(character: Character):
 def test_fire_laser(character):
     damage = 3
     fire_laser = direct_damage(damage)
-    other_char = build_character(CharacterData(ChassisTypes.NO_LEGS.data))
+    other_char = build_character(data=CharacterData(ChassisTypes.NO_LEGS.data))
 
     assert not fire_laser.can_use(character, character)
     assert fire_laser.can_use(character, other_char)
