@@ -145,7 +145,7 @@ def build_subroutine(
         time_to_resolve: Union[int, Callable[[], int], partial] = 1,
         description: Union[str, Callable[[], str]] = 'unnamed subroutine',
         duration: Union[int, Callable[[], int]] = 0,
-        multi_use: Union[bool, Callable[[], bool]] = True,
+        multi_use: Union[bool, Callable[[], bool]] = False,
         after_effect: Callable[[Character, Character], None] = None
 ) -> Subroutine:
     """Factory function for Subroutines.

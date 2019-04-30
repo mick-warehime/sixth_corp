@@ -100,7 +100,8 @@ def adjust_attribute(attribute: Attributes, amount: int = 0,
     description += ' {} rounds'.format(duration)
 
     return build_subroutine(use_fun, can_use, cpu_slots, time_to_resolve,
-                            description, duration, after_effect=after_effect)
+                            description, duration, multi_use=False,
+                            after_effect=after_effect)
 
 
 def shield_buff(amount: int, num_rounds: int = 1, cpu_slots: int = None,
@@ -141,7 +142,7 @@ def shield_buff(amount: int, num_rounds: int = 1, cpu_slots: int = None,
     if num_rounds > 1:
         description += ' for {} rounds'.format(num_rounds)
     return build_subroutine(use_fun, can_use, cpu_slots, time_to_resolve,
-                            description, num_rounds - 1, False)
+                            description, num_rounds - 1, multi_use=True)
 
 
 def direct_damage(damage: int, cpu_slots: int = None,
