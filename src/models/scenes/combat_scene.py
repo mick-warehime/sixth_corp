@@ -160,10 +160,10 @@ class CombatScene(EventListener, Scene):
         """
 
         # The layout is broken up into 3 columns:
-        # 1. Player column, which shows player stats.
+        # 1. Player column, which shows player image and stats.
         # 2. Stack column, which shows moves on the stack and those which have
         # just resolved.
-        # 3. Enemy column, which shows enemy stats.
+        # 3. Enemy column, which shows enemy images and stats.
         # We populate these columns with objects whose attributes (data) are
         # required to render the scene.
         characters = self.characters()
@@ -231,7 +231,7 @@ def _character_layout(char: Character, all_moves: Sequence[Move]) -> Layout:
     move_layout = Layout([(m, 1) for m in moves])
     move_layout = Layout([(None, 1), (move_layout, 4), (None, 1)],
                          'horizontal')
-    full_elements = [(None, 1), (char_layout, 5), (None, 1),
+    full_elements = [(char_layout, 5), (None, 3),
                      (move_layout, min(move_space, len(moves)))]
     if len(moves) < move_space:
         full_elements.append((None, move_space - len(moves)))
