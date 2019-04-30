@@ -5,7 +5,8 @@ from models.characters.mods_base import ModData, SlotTypes
 from models.characters.states import Attributes, Skill, State
 from models.characters.subroutine_examples import (damage_over_time,
                                                    direct_damage, repair,
-                                                   shield_buff)
+                                                   shield_buff,
+                                                   adjust_attribute)
 
 
 class ModTypes(Enum):
@@ -17,6 +18,7 @@ class ModTypes(Enum):
     LASER_REPEATER = 'laser repeater'
     REPAIR_NANITES = 'self-repair nanites'
     SHIELD_GENERATOR = 'shield generator'
+    CPU_SCRAMBLER = 'CPU scrambler'
 
     @property
     def data(self) -> ModData:
@@ -28,6 +30,8 @@ _shoot_big = direct_damage(5, label='big laser')
 _shoot_many = damage_over_time(1, duration=3, time_to_resolve=1,
                                label='laser barrage')
 _shield_3_rounds = shield_buff(amount=1, duration=3, cpu_slots=1)
+_lower_cpu = adjust_attribute(Attributes.MAX_CPU, amount=-2, duration=2,
+                              cpu_slots=2, time_to_resolve=1, is_buff=False)
 
 _mod_types_to_data = {
     ModTypes.BASIC_HULL_PLATING: ModData(
@@ -46,6 +50,8 @@ _mod_types_to_data = {
     ModTypes.REPAIR_NANITES: ModData(subroutines_granted=(repair(5),),
                                      valid_slots=(SlotTypes.CHEST,)),
     ModTypes.SHIELD_GENERATOR: ModData(subroutines_granted=(_shield_3_rounds,),
-                                       valid_slots=(SlotTypes.CHEST,))
+                                       valid_slots=(SlotTypes.CHEST,)),
+    ModTypes.CPU_SCRAMBLER: ModData(subroutines_granted=(_lower_cpu,),
+                                    valid_slots=(SlotTypes.HEAD,))
 
 }

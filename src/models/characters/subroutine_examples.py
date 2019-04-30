@@ -1,7 +1,7 @@
 import math
 
 from models.characters.character_base import Character
-from models.characters.states import Attributes
+from models.characters.states import Attributes, StatusEffect
 from models.characters.subroutines_base import Subroutine, build_subroutine
 
 
@@ -41,6 +41,66 @@ def repair(amount: int) -> Subroutine:
 
     return build_subroutine(use_fun, can_use_fun, cpu_slots, time_slots,
                             description)
+
+
+def adjust_attribute(attribute: Attributes, amount: int = 0,
+                     duration: int = None,
+                     cpu_slots: int = None, time_to_resolve: int = 0,
+                     is_buff: bool = None
+                     ) -> Subroutine:
+    """Adjust a permanent attribute over a finite duration.
+
+    Permanent attributes may not be reduced below zero.
+
+    Args:
+        attribute: Attribute to be modified. attribute.is_permanent must be
+            True.
+        amount: How much to change the attribute by. May be positive or
+            negative.
+        duration: Number of rounds over which attribute is modified. Must be
+            non-negative.
+        cpu_slots: Number of CPU slots required to maintain the adjustment.
+            Default is math.abs(amount).
+        time_to_resolve: Number of rounds before modification is applied.
+        is_buff: Whether the adjustment is a 'buff' (i.e. helpful). If True,
+            then it may only be used on allies. If False, it may only be used
+            on enemies. By default the subroutine may be used on both.
+    """
+    if duration < 0:
+        raise ValueError('duration must be non-negative.')
+    if not attribute.is_permanent:
+        raise ValueError('Only permanent attributes may be modified.')
+
+    description = '{} {}'.format(amount, attribute.value)
+    if amount >= 0:
+        description = '+' + description
+
+    effect = StatusEffect.build(description,
+                                attribute_modifiers={attribute: amount})
+
+    def use_fun(user: Character, target: Character) -> None:
+        target.status.add_status_effect(effect)
+
+    def can_use(user: Character, target: Character) -> bool:
+        if is_buff is None:
+            return True
+        elif is_buff:
+            return target is user  # For now we assume user has no allies.
+        else:
+            return target is not user
+
+    def after_effect(user: Character, target: Character) -> None:
+        # If some other subroutine removes the effect first, this can cause
+        # an error.
+        target.status.remove_status_effect(effect)
+
+    if cpu_slots is None:
+        cpu_slots = abs(amount)
+
+    description += ' {} rounds'.format(duration)
+
+    return build_subroutine(use_fun, can_use, cpu_slots, time_to_resolve,
+                            description, duration, after_effect=after_effect)
 
 
 def shield_buff(amount: int, duration: int = 1, cpu_slots: int = None,
