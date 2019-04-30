@@ -58,11 +58,11 @@ def test_direct_move_removes_and_returns_cpu(player, enemy):
     # Add move to stack and wait until it resolves.
     logic.start_round([move])
     for _ in range(time):
-        assert get_cpu() == starting_cpu - cpu_used
         assert get_health() == starting_health
         logic.end_round()
         assert get_cpu() == starting_cpu - cpu_used
         logic.start_round([])
+        assert get_cpu() == starting_cpu - cpu_used
 
     # When it resolves cpu should return and HP should go down.
     logic.end_round()
@@ -90,12 +90,12 @@ def test_move_with_multi_turn_use(player, enemy):
     # Add move to stack and wait until it resolves.
     logic.start_round([move])
     for rnd in range(duration - 1):
-        assert get_cpu() == starting_cpu - cpu_used
         assert get_health() == starting_health - rnd * damage_per_round
         logic.end_round()
         assert get_cpu() == starting_cpu - cpu_used
         assert get_health() == starting_health - (rnd + 1) * damage_per_round
         logic.start_round([])
+        assert get_cpu() == starting_cpu - cpu_used
 
     # When it resolves cpu should return and HP should go down.
     logic.end_round()
