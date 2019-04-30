@@ -29,13 +29,19 @@ class CombatLogic(object):
     def start_round(self, moves: Sequence[Move]) -> None:
         """Update the characters and stack to start the next round."""
 
+        # Advance time for existing moves.
         self._combat_stack.advance_time()
+
+        for move in _move_lifetime_registry:
+            _move_lifetime_registry[move][0] += 1
 
         # Process and add new moves to the stack.
         moves = [_make_unique(m) for m in moves]  # See _make_unique docstring
 
         for move in moves:
+            _register_move(move)
             _remove_user_cpu(move)
+
             time_left = move.subroutine.time_slots()
             if not move.subroutine.single_use():
                 duration = move.subroutine.duration()
@@ -48,30 +54,35 @@ class CombatLogic(object):
         """Apply finalizing logic at the end of a combat round."""
         for move in self._combat_stack.resolved_moves():
             move.execute()
-            _return_user_cpu(move)
+            rounds_alive, rounds_max = _move_lifetime_registry[move]
+            if rounds_alive == rounds_max:
+                _return_user_cpu(move)
+                _move_lifetime_registry.pop(move)
 
 
 # For moves with multi-turn durations, we need to keep track of how many times
 # they have been executed so that we can return the CPU to the user exactly
-# when the final execution has occurred.
-_move_registry: Dict[Move, List[int]] = {}
+# when the final execution has occurred. We also apply any possible
+# after-effects.
+_move_lifetime_registry: Dict[Move, List[int]] = {}
+
+
+def _register_move(move: Move) -> None:
+    duration = move.subroutine.duration()
+    time_to_resolve = move.subroutine.time_slots()
+    _move_lifetime_registry[move] = [0, duration + time_to_resolve - 1]
 
 
 def _remove_user_cpu(move: Move) -> None:
     cpu_slots = move.subroutine.cpu_slots()
-    duration = move.subroutine.duration()
-    _move_registry[move] = [0, duration]
 
     assert cpu_slots <= move.user.status.get_attribute(Attributes.CPU_AVAILABLE)
     move.user.status.increment_attribute(Attributes.CPU_AVAILABLE, -cpu_slots)
 
 
 def _return_user_cpu(move: Move) -> None:
-    cpu_slots = move.subroutine.cpu_slots()
-    _move_registry[move][0] += 1
-    if _move_registry[move][0] == _move_registry[move][1]:
-        move.user.status.increment_attribute(Attributes.CPU_AVAILABLE,
-                                             cpu_slots)
+    move.user.status.increment_attribute(Attributes.CPU_AVAILABLE,
+                                         move.subroutine.cpu_slots())
 
 
 def _initialize_characters(characters: Iterable[Character]) -> None:
