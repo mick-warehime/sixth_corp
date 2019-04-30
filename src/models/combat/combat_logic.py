@@ -65,7 +65,7 @@ class CombatLogic(object):
             move.subroutine.after_effect(move.user, move.target)
             _move_lifetime_registry.pop(move)
 
-        _update_CPU_available(self._characters)
+        _update_cpu_available(self._characters)
 
     @staticmethod
     def all_moves_present() -> Tuple[Move, ...]:
@@ -91,7 +91,7 @@ def _register_move(move: Move) -> None:
     _move_lifetime_registry[move] = [0, duration + time_to_resolve - 1]
 
 
-def _update_CPU_available(characters: Iterable[Character]) -> None:
+def _update_cpu_available(characters: Iterable[Character]) -> None:
     cpu_att = Attributes.CPU_AVAILABLE
     # Start with all CPU at max value.
     for char in characters:
@@ -110,7 +110,7 @@ def _initialize_characters(characters: Iterable[Character]) -> None:
         shield = char.status.get_attribute(Attributes.SHIELD)
         char.status.increment_attribute(Attributes.SHIELD, -shield)
 
-    _update_CPU_available(characters)
+    _update_cpu_available(characters)
 
 
 def _make_unique(move: Move) -> Move:
