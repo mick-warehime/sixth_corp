@@ -1,5 +1,5 @@
 """Implementation of the CombatLogic class."""
-from typing import Dict, Iterable, List, Sequence
+from typing import Dict, Iterable, List, Sequence, Tuple
 
 from models.characters.character_base import Character
 from models.characters.moves_base import Move
@@ -66,6 +66,16 @@ class CombatLogic(object):
             _move_lifetime_registry.pop(move)
 
         _update_CPU_available(self._characters)
+
+    @staticmethod
+    def all_moves_present() -> Tuple[Move, ...]:
+        """All moves still being tracked.
+
+        This may include moves in the stack, moves that have just resolved,
+        and moves which have resolved but whose duration has not yet expired.
+        """
+
+        return tuple(_move_lifetime_registry)
 
 
 # For moves with multi-turn durations, we need to keep track of how many times
