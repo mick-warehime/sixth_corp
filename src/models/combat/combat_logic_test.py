@@ -130,3 +130,30 @@ def test_after_effect_occurs_at_end_of_move(player, enemy, multi_use, duration,
 
     logic.end_round()
     assert after_effect_calls
+
+
+@pytest.mark.parametrize('multi_use', [True, False])
+@pytest.mark.parametrize('duration', [0, 3])
+@pytest.mark.parametrize('time_to_resolve', [0, 2])
+def test_move_disappears_after_expected_time(player, enemy, multi_use, duration,
+                                             time_to_resolve):
+    move = Move(build_subroutine(time_to_resolve=time_to_resolve,
+                                 duration=duration, multi_use=multi_use),
+                player, enemy)
+
+    logic = CombatLogic([player, enemy])
+
+    logic.start_round([move])
+
+    # A unique copy of the move is created so that it may be properly tracked.
+    assert len(logic.all_moves_present()) == 1
+    move = logic.all_moves_present()[0]
+
+    for _ in range(time_to_resolve + duration):
+        logic.end_round()
+        assert move in logic.all_moves_present()
+        logic.start_round([])
+        assert move in logic.all_moves_present()
+
+    logic.end_round()
+    assert move not in logic.all_moves_present()
