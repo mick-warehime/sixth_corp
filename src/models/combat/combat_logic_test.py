@@ -8,6 +8,7 @@ from models.characters.moves_base import Move
 from models.characters.states import Attributes
 from models.characters.subroutine_examples import direct_damage, \
     damage_over_time
+from models.characters.subroutines_base import build_subroutine
 from models.combat.combat_logic import CombatLogic
 
 
@@ -100,3 +101,31 @@ def test_move_with_multi_turn_use(player, enemy):
     logic.end_round()
     assert get_cpu() == starting_cpu
     assert get_health() == starting_health - duration * damage_per_round
+
+
+def test_after_effect_occurs_at_end_of_move(player, enemy):
+    time_to_resolve = 2
+    duration = 3
+
+    after_effect_calls = []
+
+    def after_effect(user, target):
+        after_effect_calls.append(True)
+
+    move = Move(build_subroutine(time_to_resolve=time_to_resolve,
+                                 duration=duration, single_use=True,
+                                 after_effect=after_effect), player, enemy)
+
+    logic = CombatLogic([player, enemy])
+
+    logic.start_round([move])
+    assert not after_effect_calls
+
+    for _ in range(time_to_resolve + duration - 1):
+        logic.end_round()
+        assert not after_effect_calls
+        logic.start_round([])
+        assert not after_effect_calls
+
+    logic.end_round()
+    assert after_effect_calls

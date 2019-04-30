@@ -52,12 +52,20 @@ class CombatLogic(object):
 
     def end_round(self) -> None:
         """Apply finalizing logic at the end of a combat round."""
+        # Moves execute when they hit the bottom of the stack (time to resolve
+        # goes to zero)
         for move in self._combat_stack.resolved_moves():
             move.execute()
-            rounds_alive, rounds_max = _move_lifetime_registry[move]
-            if rounds_alive == rounds_max:
-                _return_user_cpu(move)
-                _move_lifetime_registry.pop(move)
+
+        # Moves must be tracked after they have been executed, as we must wait
+        # the move duration before we apply the moves' subroutine after-effect.
+        finished_moves = [m for m, (rounds, max_rounds) in
+                          _move_lifetime_registry.items()
+                          if rounds == max_rounds]
+        for move in finished_moves:
+            _return_user_cpu(move)
+            move.subroutine.after_effect(move.user, move.target)
+            _move_lifetime_registry.pop(move)
 
 
 # For moves with multi-turn durations, we need to keep track of how many times
