@@ -48,7 +48,7 @@ def _render_character(character: Character, screen: Screen, rect: Rect) -> None:
     screen.render_text(health_bar, font_size, x, y, GREEN, w=rect.w)
 
     # Draw name below image
-    y = rect.y + rect.h + 0.5*vert_spacing
+    y = rect.y + rect.h + 0.5 * vert_spacing
     screen.render_text(character.description(), font_size, x, y, GREEN,
                        w=rect.w)
 

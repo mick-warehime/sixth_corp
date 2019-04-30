@@ -32,8 +32,8 @@ class Subroutine(object):
         """Number of CPU slots required for use."""
 
     @abc.abstractmethod
-    def time_slots(self) -> int:
-        """Number of time slots required before subroutine takes effect."""
+    def time_to_resolve(self) -> int:
+        """Number of rounds required before subroutine takes effect."""
 
     @abc.abstractmethod
     def duration(self) -> int:
@@ -100,7 +100,7 @@ class _SubroutineImpl(Subroutine):
     def cpu_slots(self) -> int:
         return self._cpu_slot_fun()
 
-    def time_slots(self) -> int:
+    def time_to_resolve(self) -> int:
         return self._time_slot_fun()
 
     def description(self) -> str:

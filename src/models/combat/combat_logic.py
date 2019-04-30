@@ -41,7 +41,7 @@ class CombatLogic(object):
         for move in moves:
             _register_move(move)
 
-            time_left = move.subroutine.time_slots()
+            time_left = move.subroutine.time_to_resolve()
             if not move.subroutine.single_use():
                 duration = move.subroutine.duration()
                 for i in range(duration):
@@ -87,7 +87,7 @@ _move_lifetime_registry: Dict[Move, List[int]] = {}
 
 def _register_move(move: Move) -> None:
     duration = move.subroutine.duration()
-    time_to_resolve = move.subroutine.time_slots()
+    time_to_resolve = move.subroutine.time_to_resolve()
     _move_lifetime_registry[move] = [0, duration + time_to_resolve - 1]
 
 

@@ -27,7 +27,8 @@ class AITest(TestCase):
         for _ in range(100):
             move = ai.select_move([target])
             sub = move.subroutine
-            components = (sub.cpu_slots(), sub.time_slots(), sub.description())
+            components = (
+            sub.cpu_slots(), sub.time_to_resolve(), sub.description())
             move_comps.add(components)
 
         assert len(move_comps) == 1
