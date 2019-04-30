@@ -1,6 +1,7 @@
 """Implementation of  BasicStatus"""
 import math
 from collections import defaultdict
+from functools import reduce
 from typing import Callable, Dict, List, Sequence, Set, Tuple, Union, Optional
 
 from models.characters.states import (Attributes, AttributeType, State, Status,
@@ -108,10 +109,13 @@ class BasicStatus(Status):
         self._attributes[attribute] = value
 
     def _update_effect_states(self) -> None:
-        self._states_prevented = set.union(
-            *(set(eff.states_prevented) for eff in self._status_effects))
-        self._states_from_effects = set.union(
-            *(set(eff.states_granted) for eff in self._status_effects))
+        self._states_prevented = reduce(set.union,
+                                        (set(eff.states_prevented)
+                                         for eff in self._status_effects),
+                                        set())
+        self._states_from_effects = reduce(set.union,
+                                           (set(eff.states_granted) for eff in
+                                            self._status_effects), set())
         self._states_from_effects -= self._states_prevented
         self._states -= self._states_prevented
 
