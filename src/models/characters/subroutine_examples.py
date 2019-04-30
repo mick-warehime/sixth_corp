@@ -52,7 +52,7 @@ def shield_buff(amount: int, duration: int = 1, cpu_slots: int = None,
     Args:
         amount: Amount of shield added in a round. Must be non-negative.
         duration: Number of rounds the buff is invoked. The total shield value
-            does not stack and cannot be larger than amount. Must be positive.
+            does stacks. Must be positive.
         cpu_slots: CPU slots required. By default this is
             max(floor(sqrt(amount * duration) - sqrt(time_to_resolve)), 0)
         time_to_resolve: Time before shield occurs. By default the shield is
@@ -71,9 +71,7 @@ def shield_buff(amount: int, duration: int = 1, cpu_slots: int = None,
 
     def use_fun(user: Character, target: Character) -> None:
         # Shield cannot decrease nor can it be made larger than amount.
-        current_shield = user.status.get_attribute(Attributes.SHIELD)
-        inc = min(max(0, amount - current_shield), amount)
-        user.status.increment_attribute(Attributes.SHIELD, inc)
+        user.status.increment_attribute(Attributes.SHIELD, amount)
 
     if cpu_slots is None:
         cpu = math.sqrt(amount * duration) - math.sqrt(time_to_resolve)
