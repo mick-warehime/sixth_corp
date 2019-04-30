@@ -129,3 +129,20 @@ def test_status_effect_attribute_increments_stay_in_bounds():
     assert status.get_attribute(att) == upper
 
     assert len(status.active_effects()) == 3
+
+
+def test_status_effect_partial_bounds():
+    status = BasicStatus()
+
+    att = Attributes.HEALTH
+    lower, initial, upper = None, 1, 2
+    status.increment_attribute(att, initial)
+
+    assert status.get_attribute(att) == initial
+    status.set_attribute_bounds(att, lower, upper)
+
+    status.increment_attribute(att, upper + 1)
+    assert status.get_attribute(att) == upper
+
+    status.increment_attribute(att, -upper - 1)
+    assert status.get_attribute(att) == -1

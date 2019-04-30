@@ -1,12 +1,13 @@
 """Implementation of  BasicStatus"""
+import math
 from collections import defaultdict
-from typing import Callable, Dict, List, Sequence, Set, Tuple, Union
+from typing import Callable, Dict, List, Sequence, Set, Tuple, Union, Optional
 
 from models.characters.states import (Attributes, AttributeType, State, Status,
                                       StatusEffect)
 
 _BoundFun = Callable[[], int]
-_BoundType = Union[int, AttributeType, _BoundFun]
+_BoundType = Optional[Union[int, AttributeType, _BoundFun]]
 
 
 class BasicStatus(Status):
@@ -65,13 +66,18 @@ class BasicStatus(Status):
         if isinstance(lower, int) and isinstance(upper, int):
             assert lower <= upper
 
-        lower = self._parse_bound(lower)
-        upper = self._parse_bound(upper)
+        lower = self._parse_bound(lower, True)
+        upper = self._parse_bound(upper, False)
 
         self._attribute_bounds[attribute] = (lower, upper)
 
-    def _parse_bound(self, bound: _BoundType) -> _BoundFun:
-        if isinstance(bound, int):
+    def _parse_bound(self, bound: _BoundType, is_lower: bool) -> _BoundFun:
+        if bound is None:
+            bound = -math.inf if is_lower else math.inf
+
+            def int_fun() -> int:
+                return bound
+        elif isinstance(bound, int):
             def int_fun() -> int:
                 return bound  # type: ignore
         elif isinstance(bound, Attributes):

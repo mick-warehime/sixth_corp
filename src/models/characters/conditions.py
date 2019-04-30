@@ -67,7 +67,7 @@ class HasState(Condition):
 class IsDead(Condition):
 
     def check(self, target: Stateful) -> bool:
-        return not target.status.get_attribute(Attributes.HEALTH)
+        return target.status.get_attribute(Attributes.HEALTH) <= 0
 
 
 class FullHealth(Condition):
