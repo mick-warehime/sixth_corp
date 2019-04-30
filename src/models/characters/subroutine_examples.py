@@ -103,7 +103,7 @@ def adjust_attribute(attribute: Attributes, amount: int = 0,
                             description, duration, after_effect=after_effect)
 
 
-def shield_buff(amount: int, duration: int = 1, cpu_slots: int = None,
+def shield_buff(amount: int, num_rounds: int = 1, cpu_slots: int = None,
                 time_to_resolve: int = 0) -> Subroutine:
     """Adds a temporary damage shield buffer to the user.
 
@@ -111,7 +111,7 @@ def shield_buff(amount: int, duration: int = 1, cpu_slots: int = None,
 
     Args:
         amount: Amount of shield added in a round. Must be non-negative.
-        duration: Number of rounds the buff is invoked. The total shield value
+        num_rounds: Number of rounds the buff is invoked. The total shield value
             does stacks. Must be positive.
         cpu_slots: CPU slots required. By default this is
             max(floor(sqrt(amount * duration) - sqrt(time_to_resolve)), 0)
@@ -121,7 +121,7 @@ def shield_buff(amount: int, duration: int = 1, cpu_slots: int = None,
 
     if amount < 0:
         raise ValueError('shield amount must be non-negative')
-    if duration < 1:
+    if num_rounds < 1:
         raise ValueError('shield duration must be positive.')
     if time_to_resolve < 0:
         raise ValueError('shield time to resolve must be non-negative.')
@@ -134,14 +134,14 @@ def shield_buff(amount: int, duration: int = 1, cpu_slots: int = None,
         user.status.increment_attribute(Attributes.SHIELD, amount)
 
     if cpu_slots is None:
-        cpu = math.sqrt(amount * duration) - math.sqrt(time_to_resolve)
+        cpu = math.sqrt(amount * num_rounds) - math.sqrt(time_to_resolve)
         cpu_slots = max(0, int(cpu))
 
     description = '+{} shield'.format(amount)
-    if duration > 1:
-        description += ' for {} rounds'.format(duration)
+    if num_rounds > 1:
+        description += ' for {} rounds'.format(num_rounds)
     return build_subroutine(use_fun, can_use, cpu_slots, time_to_resolve,
-                            description, duration, False)
+                            description, num_rounds - 1, False)
 
 
 def direct_damage(damage: int, cpu_slots: int = None,
@@ -222,4 +222,4 @@ def damage_over_time(damage_per_round: int, duration: int = 2,
     if label:
         description = label + ' ' + description
     return build_subroutine(use_fun, can_use_fun, cpu_slots, time_to_resolve,
-                            description, duration, single_use=False)
+                            description, duration, multi_use=True)

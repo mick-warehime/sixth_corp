@@ -12,8 +12,8 @@ class CombatLogic(object):
 
     Specifically, this class handles initialization of characters at the
     beginning of combat, final processing at the end of combat, and ensures
-    that moves are implemented correctly during combat. See the Subroutine
-    docstring for a description.
+    that moves are implemented correctly during combat. See combat_notes.txt
+    for a summary of the combat logic.
     """
 
     def __init__(self, characters: Sequence[Character]) -> None:
@@ -42,9 +42,8 @@ class CombatLogic(object):
             _register_move(move)
 
             time_left = move.subroutine.time_to_resolve()
-            if not move.subroutine.single_use():
-                duration = move.subroutine.duration()
-                for i in range(duration):
+            if move.subroutine.multi_use():
+                for i in range(move.subroutine.duration() + 1):
                     self._combat_stack.add_move(move, time_left + i)
             else:
                 self._combat_stack.add_move(move, time_left)
@@ -88,7 +87,7 @@ _move_lifetime_registry: Dict[Move, List[int]] = {}
 def _register_move(move: Move) -> None:
     duration = move.subroutine.duration()
     time_to_resolve = move.subroutine.time_to_resolve()
-    _move_lifetime_registry[move] = [0, duration + time_to_resolve - 1]
+    _move_lifetime_registry[move] = [0, duration + time_to_resolve]
 
 
 def _update_cpu_available(characters: Iterable[Character]) -> None:

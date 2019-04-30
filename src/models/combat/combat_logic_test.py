@@ -89,7 +89,7 @@ def test_move_with_multi_turn_use(player, enemy):
     starting_health = get_health()
     # Add move to stack and wait until it resolves.
     logic.start_round([move])
-    for rnd in range(duration - 1):
+    for rnd in range(duration):
         assert get_health() == starting_health - rnd * damage_per_round
         logic.end_round()
         assert get_cpu() == starting_cpu - cpu_used
@@ -100,20 +100,21 @@ def test_move_with_multi_turn_use(player, enemy):
     # When it resolves cpu should return and HP should go down.
     logic.end_round()
     assert get_cpu() == starting_cpu
-    assert get_health() == starting_health - duration * damage_per_round
+    assert get_health() == starting_health - (duration + 1) * damage_per_round
 
 
-def test_after_effect_occurs_at_end_of_move(player, enemy):
-    time_to_resolve = 2
-    duration = 3
-
+@pytest.mark.parametrize('multi_use', [True, False])
+@pytest.mark.parametrize('duration', [0, 3])
+@pytest.mark.parametrize('time_to_resolve', [0, 2])
+def test_after_effect_occurs_at_end_of_move(player, enemy, multi_use, duration,
+                                            time_to_resolve):
     after_effect_calls = []
 
     def after_effect(user, target):
         after_effect_calls.append(True)
 
     move = Move(build_subroutine(time_to_resolve=time_to_resolve,
-                                 duration=duration, single_use=True,
+                                 duration=duration, multi_use=multi_use,
                                  after_effect=after_effect), player, enemy)
 
     logic = CombatLogic([player, enemy])
@@ -121,7 +122,7 @@ def test_after_effect_occurs_at_end_of_move(player, enemy):
     logic.start_round([move])
     assert not after_effect_calls
 
-    for _ in range(time_to_resolve + duration - 1):
+    for _ in range(time_to_resolve + duration):
         logic.end_round()
         assert not after_effect_calls
         logic.start_round([])
