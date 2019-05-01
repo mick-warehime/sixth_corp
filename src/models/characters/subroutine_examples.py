@@ -180,7 +180,7 @@ def direct_damage(damage: int, cpu_slots: int = None,
                             description)
 
 
-def damage_over_time(damage_per_round: int, duration: int = 2,
+def damage_over_time(damage_per_round: int, num_rounds: int = 2,
                      cpu_slots: int = None, time_to_resolve: int = None,
                      label: str = '') -> Subroutine:
     """Subroutine to deal damage over multiple rounds.
@@ -189,7 +189,7 @@ def damage_over_time(damage_per_round: int, duration: int = 2,
 
     Args:
         damage_per_round: Damage dealt per round, must be non-negative.
-        duration: The number of rounds that the damage is dealt. Default is 2.
+        num_rounds: The number of rounds that the damage is dealt. Default is 2.
             Must be positive.
         cpu_slots: CPU slots required. Default is
             1 + damage // (2 * time_to_resolve+1).
@@ -200,7 +200,7 @@ def damage_over_time(damage_per_round: int, duration: int = 2,
 
     if damage_per_round < 0:
         raise ValueError('damage must be non-negative.')
-    if duration <= 0:
+    if num_rounds <= 0:
         raise ValueError('duration must be positive.')
 
     if time_to_resolve is None:
@@ -208,8 +208,8 @@ def damage_over_time(damage_per_round: int, duration: int = 2,
 
     if cpu_slots is None:
         # CPU should grow with DPS, with less CPU for larger total time
-        total_damage = damage_per_round * duration
-        total_time = time_to_resolve + duration
+        total_damage = damage_per_round * num_rounds
+        total_time = time_to_resolve + num_rounds
         cpu_slots = 1 + total_damage // (2 * total_time)
 
     def use_fun(user: Character, target: Character) -> None:
@@ -218,9 +218,9 @@ def damage_over_time(damage_per_round: int, duration: int = 2,
     def can_use_fun(user: Character, target: Character) -> bool:
         return user is not target
 
-    description = '{} damage/{} turns'.format(damage_per_round * duration,
-                                              duration)
+    description = '{} damage/{} turns'.format(damage_per_round * num_rounds,
+                                              num_rounds)
     if label:
         description = label + ' ' + description
     return build_subroutine(use_fun, can_use_fun, cpu_slots, time_to_resolve,
-                            description, duration, multi_use=True)
+                            description, num_rounds - 1, multi_use=True)
