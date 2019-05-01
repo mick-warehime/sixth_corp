@@ -35,7 +35,7 @@ def _render_character(character: Character, screen: Screen, rect: Rect) -> None:
     # Draw shields if they exist above image
     shields = character.status.get_attribute(Attributes.SHIELD)
     if shields > 0:
-        y = rect.y - 3 * vert_spacing
+        y = rect.y - 2 * vert_spacing
         screen.render_text('Shield: {}'.format(shields), font_size, x, y,
                            LIGHT_BLUE, w=rect.w)
 
@@ -46,6 +46,13 @@ def _render_character(character: Character, screen: Screen, rect: Rect) -> None:
 
     y = rect.y - vert_spacing
     screen.render_text(health_bar, font_size, x, y, GREEN, w=rect.w)
+
+    # Draw status effects
+    effects = character.status.active_effects()
+    y -= vert_spacing * (len(effects) + 1)
+    for effect in effects:
+        y += vert_spacing
+        screen.render_text(effect.label, font_size, x, y, RED, w=rect.w)
 
     # Draw name below image
     y = rect.y + rect.h + 0.5 * vert_spacing
