@@ -142,6 +142,7 @@ class CombatScene(EventListener, Scene):
                 self._animation_progress = 0.0
             else:
                 self._combat_logic.end_round()
+                self._update_layout()
             self._first_turn = False
 
         # Animation in progress
@@ -151,6 +152,7 @@ class CombatScene(EventListener, Scene):
             if self._animation_progress >= 1.0:
                 self._animation_progress = None
                 self._combat_logic.end_round()
+                self._update_layout()
 
     def __str__(self) -> str:
         return 'CombatScene(enemy = {})'.format(str(self._enemy))
