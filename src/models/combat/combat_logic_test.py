@@ -6,8 +6,8 @@ from models.characters.chassis import Chassis
 from models.characters.chassis_examples import ChassisTypes
 from models.characters.moves_base import Move
 from models.characters.states import Attributes
-from models.characters.subroutine_examples import direct_damage, \
-    damage_over_time
+from models.characters.subroutine_examples import (damage_over_time,
+                                                   direct_damage)
 from models.characters.subroutines_base import build_subroutine
 from models.combat.combat_logic import CombatLogic
 

@@ -2,7 +2,7 @@
 import math
 from collections import defaultdict
 from functools import reduce
-from typing import Callable, Dict, List, Sequence, Set, Tuple, Union, Optional
+from typing import Callable, Dict, List, Optional, Sequence, Set, Tuple, Union
 
 from models.characters.states import (Attributes, AttributeType, State, Status,
                                       StatusEffect)
@@ -74,10 +74,10 @@ class BasicStatus(Status):
 
     def _parse_bound(self, bound: _BoundType, is_lower: bool) -> _BoundFun:
         if bound is None:
-            bound = -math.inf if is_lower else math.inf
+            bound = -math.inf if is_lower else math.inf  # type:ignore
 
             def int_fun() -> int:
-                return bound
+                return bound  # type:ignore
         elif isinstance(bound, int):
             def int_fun() -> int:
                 return bound  # type: ignore

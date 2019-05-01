@@ -17,4 +17,4 @@ class SettingsScene(Scene):
         return False
 
     def get_resolution(self) -> Resolution:
-        return None
+        return None  # type: ignore

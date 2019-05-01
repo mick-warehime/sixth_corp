@@ -1,6 +1,5 @@
 """Abstract implementation of states and conditions."""
 from abc import ABCMeta, abstractmethod
-from collections import defaultdict
 from enum import Enum
 from typing import (Callable, Dict, FrozenSet, Iterable, NamedTuple, Sequence,
                     Union, cast)

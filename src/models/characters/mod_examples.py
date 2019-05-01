@@ -3,10 +3,10 @@ from enum import Enum
 
 from models.characters.mods_base import ModData, SlotTypes
 from models.characters.states import Attributes, Skill, State
-from models.characters.subroutine_examples import (damage_over_time,
+from models.characters.subroutine_examples import (adjust_attribute,
+                                                   damage_over_time,
                                                    direct_damage, repair,
-                                                   shield_buff,
-                                                   adjust_attribute)
+                                                   shield_buff)
 
 
 class ModTypes(Enum):

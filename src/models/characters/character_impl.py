@@ -1,7 +1,7 @@
 """Basic class for player and enemies."""
 
 from functools import partial
-from typing import Callable, Sequence, Iterable
+from typing import Callable, Iterable, Sequence
 
 from pygame.rect import Rect
 
@@ -10,11 +10,11 @@ from models.characters.character_base import Character
 from models.characters.character_examples import CharacterData
 from models.characters.chassis import Chassis
 from models.characters.inventory import InventoryBase
-from models.characters.mods_base import build_mod, Mod
+from models.characters.mods_base import Mod, build_mod
 from models.characters.states import (Attributes, AttributeType, State, Status,
                                       StatusEffect)
 from models.characters.status import BasicStatus
-from models.combat.ai_impl import build_ai, AIType
+from models.combat.ai_impl import AIType, build_ai
 
 
 class _CharacterImpl(Character):
