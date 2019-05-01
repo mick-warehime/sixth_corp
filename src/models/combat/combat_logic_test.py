@@ -70,12 +70,14 @@ def test_direct_move_removes_and_returns_cpu(player, enemy):
     assert get_health() == starting_health - damage
 
 
-def test_move_with_multi_turn_use(player, enemy):
-    duration = 3
+@pytest.mark.parametrize('time_to_resolve', [0, 2])
+def test_move_with_multi_turn_use(player, enemy, time_to_resolve):
+    num_rounds = 3
     damage_per_round = 1
     cpu_used = 1
-    move = Move(damage_over_time(damage_per_round, duration, cpu_used,
-                                 time_to_resolve=0), player, enemy)
+    move = Move(damage_over_time(damage_per_round, num_rounds, cpu_used,
+                                 time_to_resolve=time_to_resolve),
+                player, enemy)
 
     logic = CombatLogic([player, enemy])
 
@@ -89,7 +91,16 @@ def test_move_with_multi_turn_use(player, enemy):
     starting_health = get_health()
     # Add move to stack and wait until it resolves.
     logic.start_round([move])
-    for rnd in range(duration):
+    assert get_cpu() == starting_cpu
+
+    # Wait rounds to resolve
+    for _ in range(time_to_resolve):
+        assert get_health() == starting_health
+        logic.end_round()
+        assert get_cpu() == starting_cpu - cpu_used
+        logic.start_round([])
+
+    for rnd in range(num_rounds - 1):
         assert get_health() == starting_health - rnd * damage_per_round
         logic.end_round()
         assert get_cpu() == starting_cpu - cpu_used
@@ -97,10 +108,10 @@ def test_move_with_multi_turn_use(player, enemy):
         logic.start_round([])
         assert get_cpu() == starting_cpu - cpu_used
 
-    # When it resolves cpu should return and HP should go down.
+    # When it finishes cpu should return and HP should go down.
     logic.end_round()
     assert get_cpu() == starting_cpu
-    assert get_health() == starting_health - (duration + 1) * damage_per_round
+    assert get_health() == starting_health - num_rounds * damage_per_round
 
 
 @pytest.mark.parametrize('multi_use', [True, False])

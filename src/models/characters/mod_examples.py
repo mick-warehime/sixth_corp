@@ -27,7 +27,7 @@ class ModTypes(Enum):
 
 _shoot_small = direct_damage(2, label='small laser')
 _shoot_big = direct_damage(5, label='big laser')
-_shoot_many = damage_over_time(1, duration=3, time_to_resolve=1,
+_shoot_many = damage_over_time(1, num_rounds=3, time_to_resolve=1,
                                label='laser barrage')
 _shield_3_rounds = shield_buff(amount=1, num_rounds=3, cpu_slots=1)
 _lower_cpu = adjust_attribute(Attributes.MAX_CPU, amount=-2, duration=2,
