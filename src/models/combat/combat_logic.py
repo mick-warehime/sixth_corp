@@ -22,9 +22,9 @@ class CombatLogic(object):
         self._combat_stack = CombatStack()
 
         # For moves with multi-turn durations, we need to keep track of how many
-        # times they have existed so that we can return the CPU to the user
+        # rounds they have existed so that we can return the CPU to the user
         # exactly when the final execution has occurred. We also apply any
-        # possible after-effects.
+        # possible after-effects at this time.
         self._move_lifetime_registry: Dict[Move, List[int]] = {}
         self._initialize_characters(self._characters)
 
