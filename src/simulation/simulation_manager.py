@@ -36,8 +36,8 @@ class SimulationManager(object):
 
         attacker_wins = 0
         for _ in range(n_runs):
-            attacker = build_character(attacker_data)
-            defender = build_character(defender_data)
+            attacker = build_character(data=attacker_data)
+            defender = build_character(data=defender_data)
             attacker_won = self._simulate_combat(attacker,  # type: ignore
                                                  defender)
             if attacker_won:

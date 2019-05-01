@@ -18,16 +18,17 @@ class AITest(TestCase):
     def test_no_valid_moves_gives_default_move(self, ai_type):
         unusable = build_subroutine(can_use=False)
         data = CharacterData(ChassisData(subroutines_granted=(unusable,)))
-        user = build_character(data)
+        user = build_character(data=data)
         ai = build_ai(ai_type)
         ai.set_user(user)
-        target = build_character(data)
+        target = build_character(data=data)
 
         move_comps = set()
         for _ in range(100):
             move = ai.select_move([target])
             sub = move.subroutine
-            components = (sub.cpu_slots(), sub.time_slots(), sub.description())
+            components = (
+                sub.cpu_slots(), sub.time_to_resolve(), sub.description())
             move_comps.add(components)
 
         assert len(move_comps) == 1

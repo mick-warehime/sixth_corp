@@ -1,7 +1,7 @@
 """Basic class for player and enemies."""
 
 from functools import partial
-from typing import Callable, Sequence
+from typing import Callable, Iterable, Sequence
 
 from pygame.rect import Rect
 
@@ -10,11 +10,11 @@ from models.characters.character_base import Character
 from models.characters.character_examples import CharacterData
 from models.characters.chassis import Chassis
 from models.characters.inventory import InventoryBase
-from models.characters.mods_base import build_mod
+from models.characters.mods_base import Mod, build_mod
 from models.characters.states import (Attributes, AttributeType, State, Status,
                                       StatusEffect)
 from models.characters.status import BasicStatus
-from models.combat.ai_impl import build_ai
+from models.combat.ai_impl import AIType, build_ai
 
 
 class _CharacterImpl(Character):
@@ -68,10 +68,10 @@ class _CombinedStatus(Status):
         # We use attribute getters for the composite object to set health and
         # CPU bounds. The base status is used to compute bounds.
         self._base_status.set_attribute_bounds(
-            Attributes.HEALTH, 0,
+            Attributes.HEALTH, None,
             partial(self.get_attribute, Attributes.MAX_HEALTH))
         self._base_status.set_attribute_bounds(
-            Attributes.CPU_AVAILABLE, 0,
+            Attributes.CPU_AVAILABLE, None,
             partial(self.get_attribute, Attributes.MAX_CPU))
         self._base_status.set_attribute_bounds(Attributes.SHIELD, 0, 1000000)
 
@@ -101,21 +101,45 @@ class _CombinedStatus(Status):
         return self._base_status.active_effects(check)
 
 
-def build_character(data: CharacterData) -> _CharacterImpl:
-    chassis = Chassis.from_data(data.chassis_data)
+def build_character(chassis: Chassis = None, ai_type: AIType = AIType.No_AI,
+                    mods: Iterable[Mod] = (),
+                    name: str = 'unnamed Character',
+                    image_path: str = 'src/data/images/drone.png',
+                    data: CharacterData = None) -> _CharacterImpl:
+    """Factory function for Characters.
 
-    ai = build_ai(data.ai_type)
-    char = _CharacterImpl(chassis, ai, data.image_path, name=data.name)
+    Args:
+        chassis: Character chassis. Default is the Drone chassis defined by
+           ChassisTypes.DRONE.
+        ai_type: AI assigned to the character. Default is NO_AI (human).
+        mods: Mods that the character initially picks up. These are picked up
+           in order. If a mod cannot be picked up an error is raised.
+        name: Character name.
+        image_path: Path to character image. Default is drone image.
+        data: (Optional) A CharacterData object containing all desired
+            properties. If this is passed, other arguments are ignored.
+
+    Returns:
+        A Character with the specified properties.
+    """
+    if data is not None:
+        chassis = Chassis.from_data(data.chassis_data)
+        mods = (build_mod(data=m_data) for m_data in data.mods)
+        return build_character(chassis, data.ai_type, mods, data.name,
+                               data.image_path)
+
+    ai = build_ai(ai_type)
+    char = _CharacterImpl(chassis, ai, image_path, name=name)
     ai.set_user(char)
 
-    for mod_data in data.mods:
-        mod = build_mod(data=mod_data)
+    for mod in mods:
         assert char.chassis.can_store(mod), 'Mod cannot be picked up.'
         char.chassis.attempt_store(mod)
 
+    # Initialize starting health and CPU
     health = char.status.get_attribute(Attributes.MAX_HEALTH)
     char.status.increment_attribute(Attributes.HEALTH, health)
-    CPU = char.status.get_attribute(Attributes.MAX_CPU)
-    char.status.increment_attribute(Attributes.CPU_AVAILABLE, CPU)
+    cpu = char.status.get_attribute(Attributes.MAX_CPU)
+    char.status.increment_attribute(Attributes.CPU_AVAILABLE, cpu)
 
     return char

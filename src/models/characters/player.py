@@ -15,4 +15,4 @@ def get_player() -> Character:
 
 def reset_player() -> None:
     global _player
-    _player = build_character(CharacterTypes.HUMAN_PLAYER.data)
+    _player = build_character(data=CharacterTypes.HUMAN_PLAYER.data)

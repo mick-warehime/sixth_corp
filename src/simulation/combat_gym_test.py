@@ -24,7 +24,8 @@ class CombatGymTest(TestCase):
         manager = CombatGym(attackers=attacker, defenders=two_defenders)
 
         max_health = manager.max_attribute()
-        self.assertEqual(manager.current_state(), ((max_health,), (max_health,), (max_health,)))
+        self.assertEqual(manager.current_state(),
+                         ((max_health,), (max_health,), (max_health,)))
 
     def test_state_space(self):
         health = 11
@@ -42,7 +43,8 @@ class CombatGymTest(TestCase):
 
         # Last state is all characters at full health
         max_health = manager.max_attribute()
-        self.assertEqual(states[-1], ((max_health,), (max_health,), (max_health,)))
+        self.assertEqual(states[-1],
+                         ((max_health,), (max_health,), (max_health,)))
 
         # 3 characters, each can have health states of 0, 1, ... , max_health
         n_states = (max_health + 1) ** 3  # 46656

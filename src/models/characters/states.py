@@ -1,6 +1,5 @@
 """Abstract implementation of states and conditions."""
 from abc import ABCMeta, abstractmethod
-from collections import defaultdict
 from enum import Enum
 from typing import (Callable, Dict, FrozenSet, Iterable, NamedTuple, Sequence,
                     Union, cast)
@@ -36,12 +35,10 @@ class Attributes(Enum):
 
     @property
     def is_permanent(self) -> bool:
-        return _is_permanent[self]
+        return self in _permanent_atts
 
 
-_is_permanent: Dict[Attributes, bool] = defaultdict(lambda: False)
-_is_permanent[Attributes.MAX_HEALTH] = True
-_is_permanent[Attributes.MAX_CPU] = True
+_permanent_atts = {Attributes.MAX_HEALTH, Attributes.MAX_CPU}
 
 
 class Skill(Enum):

@@ -9,7 +9,7 @@ from models.characters.subroutines_base import Subroutine
 
 
 def _subroutine_stats(subroutine: Subroutine) -> Tuple[int, int, str]:
-    return (subroutine.cpu_slots(), subroutine.time_slots(),
+    return (subroutine.cpu_slots(), subroutine.time_to_resolve(),
             subroutine.description())
 
 

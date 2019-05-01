@@ -35,7 +35,7 @@ def _render_character(character: Character, screen: Screen, rect: Rect) -> None:
     # Draw shields if they exist above image
     shields = character.status.get_attribute(Attributes.SHIELD)
     if shields > 0:
-        y = rect.y - 3 * vert_spacing
+        y = rect.y - 2 * vert_spacing
         screen.render_text('Shield: {}'.format(shields), font_size, x, y,
                            LIGHT_BLUE, w=rect.w)
 
@@ -44,17 +44,24 @@ def _render_character(character: Character, screen: Screen, rect: Rect) -> None:
     max_health = character.status.get_attribute(Attributes.MAX_HEALTH)
     health_bar = 'HP: {} / {}'.format(health, max_health)
 
-    y = rect.y - 2 * vert_spacing
+    y = rect.y - vert_spacing
     screen.render_text(health_bar, font_size, x, y, GREEN, w=rect.w)
 
-    # Draw CPU slots above image
+    # Draw status effects
+    effects = character.status.active_effects()
+    y -= vert_spacing * (len(effects) + 1)
+    for effect in effects:
+        y += vert_spacing
+        screen.render_text(effect.label, font_size, x, y, RED, w=rect.w)
+
+    # Draw name below image
+    y = rect.y + rect.h + 0.5 * vert_spacing
+    screen.render_text(character.description(), font_size, x, y, GREEN,
+                       w=rect.w)
+
+    # Draw CPU slots below name
     cpu = character.status.get_attribute(Attributes.CPU_AVAILABLE)
     max_cpu = character.status.get_attribute(Attributes.MAX_CPU)
     y += vert_spacing
     cpu_bar = 'CPU: {} / {}'.format(cpu, max_cpu)
     screen.render_text(cpu_bar, font_size, x, y, YELLOW, w=rect.w)
-
-    # Draw name below image
-    y = rect.y + rect.h
-    screen.render_text(character.description(), font_size, x, y, GREEN,
-                       w=rect.w)

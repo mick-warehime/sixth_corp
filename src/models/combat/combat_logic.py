@@ -1,5 +1,5 @@
 """Implementation of the CombatLogic class."""
-from typing import Dict, Iterable, List, Sequence
+from typing import Dict, Iterable, List, Sequence, Tuple
 
 from models.characters.character_base import Character
 from models.characters.moves_base import Move
@@ -12,14 +12,21 @@ class CombatLogic(object):
 
     Specifically, this class handles initialization of characters at the
     beginning of combat, final processing at the end of combat, and ensures
-    that moves are implemented correctly during combat.
+    that moves are implemented correctly during combat. See combat_notes.txt
+    for a summary of the combat logic.
     """
 
     def __init__(self, characters: Sequence[Character]) -> None:
         super().__init__()
         self._characters = tuple(characters)
-        _initialize_characters(self._characters)
         self._combat_stack = CombatStack()
+
+        # For moves with multi-turn durations, we need to keep track of how many
+        # times they have been executed so that we can return the CPU to the
+        # user exactly when the final execution has occurred. We also apply any
+        # possible after-effects.
+        self._move_lifetime_registry: Dict[Move, List[int]] = {}
+        self._initialize_characters(self._characters)
 
     @property
     def stack(self) -> CombatStack:
@@ -28,59 +35,77 @@ class CombatLogic(object):
     def start_round(self, moves: Sequence[Move]) -> None:
         """Update the characters and stack to start the next round."""
 
+        # Advance time for existing moves.
         self._combat_stack.advance_time()
 
-        # Process and add new moves to the stack.
+        for move in self._move_lifetime_registry:
+            self._move_lifetime_registry[move][0] += 1
 
+        # Process and add new moves to the stack.
         moves = [_make_unique(m) for m in moves]  # See _make_unique docstring
 
         for move in moves:
-            _remove_user_cpu(move)
-            duration = move.subroutine.duration()
-            time_left = move.subroutine.time_slots()
-            for i in range(duration):
-                self._combat_stack.add_move(move, time_left + i)
+            self._register_move(move)
+
+            time_left = move.subroutine.time_to_resolve()
+            if move.subroutine.multi_use():
+                for i in range(move.subroutine.duration() + 1):
+                    self._combat_stack.add_move(move, time_left + i)
+            else:
+                self._combat_stack.add_move(move, time_left)
 
     def end_round(self) -> None:
         """Apply finalizing logic at the end of a combat round."""
+        # Moves execute when they hit the bottom of the stack (time to resolve
+        # goes to zero)
         for move in self._combat_stack.resolved_moves():
             move.execute()
-            _return_user_cpu(move)
 
+        # Moves must be tracked after they have been executed, as we must wait
+        # the move duration before we apply the moves' subroutine after-effect.
+        finished_moves = [m for m, (rounds, max_rounds) in
+                          self._move_lifetime_registry.items()
+                          if rounds == max_rounds]
+        for move in finished_moves:
+            move.subroutine.after_effect(move.user, move.target)
+            self._move_lifetime_registry.pop(move)
 
-# For moves with multi-turn durations, we need to keep track of how many times
-# they have been executed so that we can return the CPU to the user exactly
-# when the final execution has occurred.
-_move_registry: Dict[Move, List[int]] = {}
+        self._update_cpu_available(self._characters)
 
+    def all_moves_present(self) -> Tuple[Move, ...]:
+        """All moves still being tracked.
 
-def _remove_user_cpu(move: Move) -> None:
-    cpu_slots = move.subroutine.cpu_slots()
-    duration = move.subroutine.duration()
-    _move_registry[move] = [0, duration]
+        This may include moves in the stack, moves that have just resolved,
+        and moves which have resolved but whose duration has not yet expired.
+        """
 
-    assert cpu_slots <= move.user.status.get_attribute(
-        Attributes.CPU_AVAILABLE)
-    move.user.status.increment_attribute(Attributes.CPU_AVAILABLE, -cpu_slots)
+        return tuple(self._move_lifetime_registry)
 
+    def _register_move(self, move: Move) -> None:
+        duration = move.subroutine.duration()
+        time_to_resolve = move.subroutine.time_to_resolve()
+        self._move_lifetime_registry[move] = [0, duration + time_to_resolve]
 
-def _return_user_cpu(move: Move) -> None:
-    cpu_slots = move.subroutine.cpu_slots()
-    _move_registry[move][0] += 1
-    if _move_registry[move][0] == _move_registry[move][1]:
-        move.user.status.increment_attribute(Attributes.CPU_AVAILABLE,
-                                             cpu_slots)
+    def _update_cpu_available(self, characters: Iterable[Character]) -> None:
+        cpu_att = Attributes.CPU_AVAILABLE
+        # Start with all CPU at max value.
+        for char in characters:
+            max_cpu = char.status.get_attribute(Attributes.MAX_CPU)
+            char.status.increment_attribute(cpu_att, max_cpu)
 
+        # Decrement CPU values for moves in progress.
+        for mv in self._move_lifetime_registry:
+            mv.user.status.increment_attribute(cpu_att,
+                                               -mv.subroutine.cpu_slots())
 
-def _initialize_characters(characters: Iterable[Character]) -> None:
-    """Initialize character statuses for combat."""
-    for char in characters:
-        # CPU -> MAX_CPU
-        max_cpu = char.status.get_attribute(Attributes.MAX_CPU)
-        char.status.increment_attribute(Attributes.CPU_AVAILABLE, max_cpu)
-        # SHIELD -> 0
-        shield = char.status.get_attribute(Attributes.SHIELD)
-        char.status.increment_attribute(Attributes.SHIELD, -shield)
+    def _initialize_characters(self, characters: Iterable[Character]) -> None:
+        """Initialize character statuses for combat."""
+        for char in characters:
+            # SHIELD --> 0
+            shield = char.status.get_attribute(Attributes.SHIELD)
+            char.status.increment_attribute(Attributes.SHIELD, -shield)
+
+        self._update_cpu_available(characters)
 
 
 def _make_unique(move: Move) -> Move:

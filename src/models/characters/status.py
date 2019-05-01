@@ -1,12 +1,14 @@
 """Implementation of  BasicStatus"""
+import math
 from collections import defaultdict
-from typing import Callable, Dict, List, Sequence, Set, Tuple, Union
+from functools import reduce
+from typing import Callable, Dict, List, Optional, Sequence, Set, Tuple, Union
 
 from models.characters.states import (Attributes, AttributeType, State, Status,
                                       StatusEffect)
 
 _BoundFun = Callable[[], int]
-_BoundType = Union[int, AttributeType, _BoundFun]
+_BoundType = Optional[Union[int, AttributeType, _BoundFun]]
 
 
 class BasicStatus(Status):
@@ -65,13 +67,18 @@ class BasicStatus(Status):
         if isinstance(lower, int) and isinstance(upper, int):
             assert lower <= upper
 
-        lower = self._parse_bound(lower)
-        upper = self._parse_bound(upper)
+        lower = self._parse_bound(lower, True)
+        upper = self._parse_bound(upper, False)
 
         self._attribute_bounds[attribute] = (lower, upper)
 
-    def _parse_bound(self, bound: _BoundType) -> _BoundFun:
-        if isinstance(bound, int):
+    def _parse_bound(self, bound: _BoundType, is_lower: bool) -> _BoundFun:
+        if bound is None:
+            bound = -math.inf if is_lower else math.inf  # type:ignore
+
+            def int_fun() -> int:
+                return bound  # type:ignore
+        elif isinstance(bound, int):
             def int_fun() -> int:
                 return bound  # type: ignore
         elif isinstance(bound, Attributes):
@@ -102,10 +109,13 @@ class BasicStatus(Status):
         self._attributes[attribute] = value
 
     def _update_effect_states(self) -> None:
-        self._states_prevented = set.union(
-            *(set(eff.states_prevented) for eff in self._status_effects))
-        self._states_from_effects = set.union(
-            *(set(eff.states_granted) for eff in self._status_effects))
+        self._states_prevented = reduce(set.union,
+                                        (set(eff.states_prevented)
+                                         for eff in self._status_effects),
+                                        set())
+        self._states_from_effects = reduce(set.union,
+                                           (set(eff.states_granted) for eff in
+                                            self._status_effects), set())
         self._states_from_effects -= self._states_prevented
         self._states -= self._states_prevented
 

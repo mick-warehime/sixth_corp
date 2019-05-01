@@ -27,7 +27,7 @@ def test_moves_remaining_correct_order():
     stack = CombatStack()
 
     for m in [move_2, move_3_A, move_3_B, move_1]:
-        stack.add_move(m, m.subroutine.time_slots())
+        stack.add_move(m, m.subroutine.time_to_resolve())
 
     actual = tuple(stack.moves_times_remaining())
     expected = ((move_1, 1), (move_2, 2), (move_3_A, 3), (move_3_B, 3))
@@ -39,7 +39,7 @@ def test_update_multiple_times_correct_stack():
     stack = CombatStack()
 
     for m in [move_2, move_3_A, move_3_B, move_1]:
-        stack.add_move(m, m.subroutine.time_slots())
+        stack.add_move(m, m.subroutine.time_to_resolve())
     assert stack.resolved_moves() == ()
 
     stack.advance_time()

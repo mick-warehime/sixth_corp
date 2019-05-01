@@ -54,7 +54,7 @@ class _AIImpl(AI):
 class AIType(Enum):
     Random = 'Random'
     Shuffle = 'Shuffle'
-    Human = 'Human'
+    No_AI = 'No AI'
 
     def selection_fun(self) -> SelectionFun:
         return _selectors[self]()
@@ -97,4 +97,4 @@ class _MoveIterator(object):
 
 _selectors = {AIType.Random: lambda: _random_choice,
               AIType.Shuffle: lambda: _MoveIterator().next_move,
-              AIType.Human: lambda: _raise_error}
+              AIType.No_AI: lambda: _raise_error}

@@ -53,7 +53,7 @@ class CombatScene(EventListener, Scene):
                  win_resolution: Resolution = None,
                  background_image: str = None) -> None:
         if enemy is None:
-            enemy = build_character(CharacterTypes.DRONE.data)
+            enemy = build_character(data=CharacterTypes.DRONE.data)
         self._enemy: Character = enemy
         super().__init__()
         self._player = get_player()
@@ -142,6 +142,7 @@ class CombatScene(EventListener, Scene):
                 self._animation_progress = 0.0
             else:
                 self._combat_logic.end_round()
+                self._update_layout()
             self._first_turn = False
 
         # Animation in progress
@@ -151,6 +152,7 @@ class CombatScene(EventListener, Scene):
             if self._animation_progress >= 1.0:
                 self._animation_progress = None
                 self._combat_logic.end_round()
+                self._update_layout()
 
     def __str__(self) -> str:
         return 'CombatScene(enemy = {})'.format(str(self._enemy))
@@ -160,24 +162,25 @@ class CombatScene(EventListener, Scene):
         """
 
         # The layout is broken up into 3 columns:
-        # 1. Player column, which shows player stats.
+        # 1. Player column, which shows player image and stats.
         # 2. Stack column, which shows moves on the stack and those which have
         # just resolved.
-        # 3. Enemy column, which shows enemy stats.
+        # 3. Enemy column, which shows enemy images and stats.
         # We populate these columns with objects whose attributes (data) are
         # required to render the scene.
         characters = self.characters()
-        moves_times = self._combat_logic.stack.moves_times_remaining()[::-1]
+        all_moves = self._combat_logic.all_moves_present()
 
         # player side layout
         player = characters[0]
 
-        player_layout = _character_layout(player, moves_times)
+        player_layout = _character_layout(player, all_moves)
         left_column = Layout([(None, 1), (player_layout, 1), (None, 1)],
                              'vertical')
 
         # stack layout
         # unresolved moves (and time to resolve)
+        moves_times = self._combat_logic.stack.moves_times_remaining()[::-1]
         num_moves = len(moves_times)
         stack_size = 6
         stack_elements = [(MoveData(*m_t), 1) for m_t in moves_times]
@@ -210,7 +213,7 @@ class CombatScene(EventListener, Scene):
 
         right_elements: List[Tuple[Any, int]] = [(None, 1)]
         for enemy in characters[1:]:
-            enemy_layout = _character_layout(enemy, moves_times)
+            enemy_layout = _character_layout(enemy, all_moves)
 
             right_elements.extend([(enemy_layout, 2), (None, 1)])
 
@@ -221,17 +224,16 @@ class CombatScene(EventListener, Scene):
             'horizontal', SCREEN_SIZE)
 
 
-def _character_layout(char: Character,
-                      moves_with_time: List[Tuple[Move, int]]) -> Layout:
+def _character_layout(char: Character, all_moves: Sequence[Move]) -> Layout:
     move_space = 3
     # Pull out all unique moves by the character
-    moves_set = {m for m, t in moves_with_time if m.user is char}
+    moves_set = {m for m in all_moves if m.user is char}
     moves = [MoveData(m, 0, True) for m in moves_set]
     char_layout = Layout([(None, 1), (char, 2), (None, 1)], 'horizontal')
     move_layout = Layout([(m, 1) for m in moves])
     move_layout = Layout([(None, 1), (move_layout, 4), (None, 1)],
                          'horizontal')
-    full_elements = [(None, 1), (char_layout, 5), (None, 1),
+    full_elements = [(char_layout, 5), (None, 3),
                      (move_layout, min(move_space, len(moves)))]
     if len(moves) < move_space:
         full_elements.append((None, move_space - len(moves)))

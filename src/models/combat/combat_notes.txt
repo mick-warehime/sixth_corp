@@ -1,0 +1,71 @@
+Summary of combat mechanics:
+
+
+Subroutines:
+
+Subroutines are actions that are carried out during combat. Each subroutine
+has a 'use' method that represents the action. This method is a function of both
+the subroutine's 'user' and its 'target' (which may be the same).
+
+Each subroutine has a finite time to resolve, which is the number of rounds it
+must spend in the stack before its 'use' method is invoked.
+
+Some subroutines also have a finite 'duration', which is the number of rounds
+*after* resolution in which the subroutine is still active. After this extra
+time has passed, the subroutine's 'after-effect' (another function) is invoked
+on the same user and target.
+
+Most subroutines are 'single-use', which means that their 'use' method
+is invoked once at resolution. 'multi-use' subroutines, on the other hand, have
+their 'use' invoked 1 + 'duration' times (first at resolution, then again
+for the next 'duration' rounds).
+
+Finally, all subroutines have a CPU requirement (cpu_slots()), which is
+deducted from the user's total CPU count as soon as the subroutine is added to
+the stack. The CPU is returned at the same time as the after-effect is invoked.
+
+Moves:
+
+A Move is a specification of user, target, and subroutine. Each move is
+presented on the screen in a single column called 'the stack'. A move's
+time_to_resolve, duration, etc. refers to its subroutine's corresponding
+attribute.
+
+
+The stack:
+
+An ordered list of moves carried out by all characters. The ordering is set
+by the time each move's subroutine has left to resolve: Moves with less time to
+resolve are lower on the stack. If two moves have the same time to resolve,
+their relative order is set by which has been added first to the stack. (Players
+and enemies add moves at the same time, but player moves take precedent.)
+
+Each round brings each move closer to resolving by one time unit. Moves resolve
+when the number of rounds spent in the stack equals their time to resolve
+(Move.subroutine.time_to_resolve()). The resolved moves are separated from the
+unresolved moves on the screen.
+
+Round structure:
+
+1. The round starts when all characters select a move (described below). First
+all moves already on the stack have their time advanced by one. Moves which have
+spent time on the stack equal to their time to resolve are moved to the resolved
+moves section.
+
+2. After updating the moves already on the stack, the new moves
+selected by the characters are added to the stack (in the order described
+above). Some moves have zero time to resolve, in which case they are moved
+directly to the resolved moves section (and are resolved before all others).
+
+3. An animation occurs in which all unresolved moves that existed in the
+previous round shift to their new positions in the stack/ resolved move section.
+
+4. The round ends. First all moves in the resolved part of the stack are
+executed (in stack order).
+
+5. Finished moves are removed from the game. A move is considered finished
+when the number of times advanced (step 2.) equals its subroutine's
+time_to_resolve + duration. When a move is removed from the game, its CPU cost
+is returned to the user and its after-effect is invoked.
+
+

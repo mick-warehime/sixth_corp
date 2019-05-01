@@ -41,7 +41,7 @@ _USELESS = ChassisData(
 
 class ChassisTypes(Enum):
     NO_LEGS = 'WallE'
-    SINGLE_LASER = 'drone'
+    DRONE = 'drone'
     HARMLESS = 'HARMLESS'
     USELESS = 'USELESS'
 
@@ -55,6 +55,6 @@ class ChassisTypes(Enum):
 
 _chassis_type_to_data: Dict[ChassisTypes, ChassisData] = {
     ChassisTypes.NO_LEGS: _NO_LEGS,
-    ChassisTypes.SINGLE_LASER: _SINGLE_LASER,
+    ChassisTypes.DRONE: _SINGLE_LASER,
     ChassisTypes.HARMLESS: _HARMLESS,
     ChassisTypes.USELESS: _USELESS}

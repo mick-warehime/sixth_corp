@@ -8,14 +8,14 @@ from models.characters.subroutine_examples import direct_damage
 from models.combat.ai_impl import AIType
 
 
-def get_combatant(health, subroutines, name, ai_type=AIType.Human) -> Character:
+def get_combatant(health, subroutines, name, ai_type=AIType.No_AI) -> Character:
     mod_data = ModData(attribute_modifiers={Attributes.MAX_HEALTH: health},
                        subroutines_granted=subroutines,
                        valid_slots=(SlotTypes.ARMS,))
     chassis_data = ChassisData({SlotTypes.ARMS: 10})
     char_data = CharacterData(chassis_data, name, (mod_data,), '', ai_type)
 
-    return build_character(char_data)
+    return build_character(data=char_data)
 
 
 def create_combat_group(group_size, health=10, damage=2, base_name='combatant',

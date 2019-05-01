@@ -8,6 +8,12 @@ from models.characters.character_base import Character
 
 class Subroutine(object):
     """An action that can be taken by a Character object on a Character object.
+
+    Intended usage of Subroutines within Moves is handled by the CombatLogic
+    class.
+
+    See combat_notes.txt for a summary of combat mechanics.
+
     """
 
     def _use(self, user: Character, target: Character) -> None:
@@ -16,7 +22,7 @@ class Subroutine(object):
 
     @abc.abstractmethod
     def can_use(self, user: Character, target: Character) -> bool:
-        """Whether the subroutine can be used."""
+        """Whether the subroutine can be used immediately."""
         raise NotImplementedError
 
     def use(self, user: Character, target: Character) -> None:
@@ -28,12 +34,28 @@ class Subroutine(object):
         """Number of CPU slots required for use."""
 
     @abc.abstractmethod
-    def time_slots(self) -> int:
-        """Number of time slots required before subroutine takes effect."""
+    def time_to_resolve(self) -> int:
+        """Number of rounds required before subroutine takes effect."""
 
     @abc.abstractmethod
     def duration(self) -> int:
-        """The number of rounds over which the subroutine use method is invoked.
+        """Number of rounds over which the subroutine lasts after resolving.
+        """
+
+    @abc.abstractmethod
+    def multi_use(self) -> bool:
+        """Whether the use() method should be invoked multiple rounds.
+
+        If True, then the use() method is invoked when the subroutine resolves,
+        then again for duration() more rounds.
+        """
+
+    @abc.abstractmethod
+    def after_effect(self, user: Character, target: Character) -> None:
+        """Function invoked when the subroutine duration expires.
+
+        Specifically, it is invoked d rounds after the subroutine is first used,
+        where d = subroutine.duration().
         """
 
     @abc.abstractmethod
@@ -41,7 +63,7 @@ class Subroutine(object):
         """"Description of the subroutine."""
 
     @abc.abstractmethod
-    def copy(self)->'Subroutine':
+    def copy(self) -> 'Subroutine':
         """Return a copy of the subroutine.
 
         Copies are not identified as equal, i.e.
@@ -57,13 +79,18 @@ class _SubroutineImpl(Subroutine):
                  cpu_slot_fun: Callable[[], int],
                  time_slot_fun: Callable[[], int],
                  description_fun: Callable[[], str],
-                 duration_fun: Callable[[], int]) -> None:
+                 duration_fun: Callable[[], int],
+                 multi_use_fun: Callable[[], bool],
+                 after_effect_fun: Callable[[Character, Character], None]
+                 ) -> None:
         self._use_fun = use_fun
         self._can_use_fun = can_use_fun
         self._cpu_slot_fun = cpu_slot_fun
         self._time_slot_fun = time_slot_fun
         self._description_fun = description_fun
-        self._duration = duration_fun
+        self._duration_fun = duration_fun
+        self._multi_use_fun = multi_use_fun
+        self._after_effect_fun = after_effect_fun
 
     def use(self, user: Character, target: Character) -> None:
         assert self.can_use(user, target)
@@ -75,19 +102,26 @@ class _SubroutineImpl(Subroutine):
     def cpu_slots(self) -> int:
         return self._cpu_slot_fun()
 
-    def time_slots(self) -> int:
+    def time_to_resolve(self) -> int:
         return self._time_slot_fun()
 
     def description(self) -> str:
         return self._description_fun()
 
     def duration(self) -> int:
-        return self._duration()
+        return self._duration_fun()
+
+    def multi_use(self) -> bool:
+        return self._multi_use_fun()
+
+    def after_effect(self, user: Character, target: Character) -> None:
+        self._after_effect_fun(user, target)
 
     def __copy__(self) -> Subroutine:
         return _SubroutineImpl(self._use_fun, self._can_use_fun,
                                self._cpu_slot_fun, self._time_slot_fun,
-                               self._description_fun, self._duration)
+                               self._description_fun, self._duration_fun,
+                               self._multi_use_fun, self._after_effect_fun)
 
     copy = __copy__
 
@@ -105,18 +139,20 @@ def _constant(value: Any) -> Any:
 
 
 def build_subroutine(
-        use_fun: Union[Callable[[Character, Character], None]] = None,
+        use_fun: Callable[[Character, Character], None] = None,
         can_use: Union[bool, Callable[[Character, Character], bool]] = True,
         num_cpu: Union[int, Callable[[], int], partial] = 1,
         time_to_resolve: Union[int, Callable[[], int], partial] = 1,
         description: Union[str, Callable[[], str]] = 'unnamed subroutine',
-        duration: Union[int, Callable[[], int]] = 1,
+        duration: Union[int, Callable[[], int]] = 0,
+        multi_use: Union[bool, Callable[[], bool]] = False,
+        after_effect: Callable[[Character, Character], None] = None
 ) -> Subroutine:
     """Factory function for Subroutines.
 
     Args:
         use_fun: Function to implement when subroutine is used. If not provided,
-            then the subroutine does nothing.
+            then the subroutine use() method does nothing.
         can_use: Function that determines whether the subroutine can be used
             once it has resolved. A boolean value (True/False) may also be
             specified.
@@ -128,11 +164,17 @@ def build_subroutine(
             integer.
         description: A short string description of the subroutine. This
             may be a string or a no-argument function that returns a string.
-        duration: The number of rounds over which the subroutine use method is
+        duration: The number of rounds over which the subroutine use() method is
             invoked.
+        multi_use: Whether the use() method should be invoked multiple times.
+            This may be a boolean or a no-argument function that returns a
+            boolean.
+        after_effect: Function invoked when the subroutine duration expires. By
+            default no effect occurs.
     """
 
     use_fun = _do_nothing if use_fun is None else use_fun
+    after_effect = _do_nothing if after_effect is None else after_effect
 
     if isinstance(can_use, bool):
         can_use = partial(_can_use_constant, value=can_use)
@@ -153,6 +195,9 @@ def build_subroutine(
     if isinstance(duration, int):
         duration = partial(_constant, value=duration)
 
+    if isinstance(multi_use, bool):
+        multi_use = partial(_constant, value=multi_use)
+
     return cast(Subroutine, _SubroutineImpl(use_fun, can_use, num_cpu,
                                             time_to_resolve, description,
-                                            duration))
+                                            duration, multi_use, after_effect))

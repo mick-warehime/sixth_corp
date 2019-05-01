@@ -100,7 +100,7 @@ def test_combat_scene_to_decision_scene():
         return DecisionScene('dummy scene for testing purposes', {})
 
     # combat scene with 1 health enemy
-    enemy = build_character(CharacterData(ChassisData(
+    enemy = build_character(data=CharacterData(ChassisData(
         attribute_modifiers={Attributes.MAX_HEALTH: 1}
     )))
     scene = combat_scene.CombatScene(

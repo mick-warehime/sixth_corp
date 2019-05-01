@@ -16,7 +16,7 @@ class CharacterTest(TestCase):
     def _character(self):
         chassis = ChassisData({SlotTypes.STORAGE: 10, _ACTIVE_SLOT: 10},
                               attribute_modifiers={Attributes.MAX_HEALTH: 10})
-        return build_character(CharacterData(chassis))
+        return build_character(data=CharacterData(chassis))
 
     def test_character_has_attributes(self):
         char = self._character()
