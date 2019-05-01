@@ -64,8 +64,9 @@ previous round shift to their new positions in the stack/ resolved move section.
 executed (in stack order).
 
 5. Finished moves are removed from the game. A move is considered finished
-when the number of times advanced (step 2.) equals its subroutine's
-time_to_resolve + duration. When a move is removed from the game, its CPU cost
-is returned to the user and its after-effect is invoked.
+when the number of times advanced (step 1) since it has been added to the stack
+(step 2) equals the sum of its time to resolve and its duration. When a move is
+removed from the game, its CPU cost is returned to the user and its after-effect
+is invoked.
 
 

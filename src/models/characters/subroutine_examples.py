@@ -113,7 +113,7 @@ def shield_buff(amount: int, num_rounds: int = 1, cpu_slots: int = None,
     Args:
         amount: Amount of shield added in a round. Must be non-negative.
         num_rounds: Number of rounds the buff is invoked. The total shield value
-            does stacks. Must be positive.
+            does stack. Must be positive.
         cpu_slots: CPU slots required. By default this is
             max(floor(sqrt(amount * duration) - sqrt(time_to_resolve)), 0)
         time_to_resolve: Time before shield occurs. By default the shield is
