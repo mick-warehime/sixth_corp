@@ -19,7 +19,7 @@ from models.scenes.skill_checks import Difficulty, skill_check
 
 def loading_scene() -> DecisionScene:
     options = {
-        's': DecisionOption('Start Game', swamp_scene),
+        's': DecisionOption('Start Game', start_scene),
         'x': DecisionOption('Settings', example_combat_scene)}
     return DecisionScene('6TH Corp', options,
                          background_image=BackgroundImages.LOADING.path,
@@ -33,8 +33,8 @@ def start_scene() -> DecisionScene:
 
     main_text = (
         'You are walking down the path to the city. You pass by a decaying sign'
-        ' pointing in the direction of an overgrown path. The sign says \n'
-        '"DANGER: Rogue drones in swamp".\n')
+        ' pointing in the direction of an overgrown path. The sign says '
+        '"DANGER: Rogue drones in swamp".')
     return DecisionScene(main_text, options)
 
 

@@ -28,7 +28,9 @@ class Screen(object):
     def render_text(
             self, text: str, font_size: int, x: int, y: int,
             color: ColorType, w: int = None, h: int = None) -> Rect:
-        """Render formatted text at a specific point on the screen.
+        r"""Render formatted text at a specific point on the screen.
+
+        Multi-line text must be handled using newline characters ('\n')
 
         Args:
             text: Text to be rendered.
@@ -50,10 +52,11 @@ class Screen(object):
     def render_text_in_rect(self, text: str, font_size: int, rect: Rect,
                             color: ColorType, center_x: bool = False,
                             center_y: bool = False) -> None:
-        """Render formatted text into a desired rect.
+        r"""Render formatted text into a desired rect.
 
         Multi-line text is automatically broken up to fit within the rect. If
-        it does not fit, the text is resized.
+        it does not fit, the text is resized. Newline characters ('\n') are
+        ignored
 
         Args:
             text: Text to be rendered.
