@@ -1,3 +1,7 @@
+from typing import Tuple
+
+ColorType = Tuple[int, int, int]
+
 DARK_GRAY = (50, 50, 50)
 LIGHT_GRAY = (150, 150, 150)
 RED = (255, 0, 0)

@@ -6,9 +6,8 @@ import pygame
 from pygame.rect import Rect
 
 from data import constants
+from data.colors import ColorType
 from views.pygame_images import load_image
-
-Color = List[int]
 
 
 class Screen(object):
@@ -20,7 +19,7 @@ class Screen(object):
             font_size: int,
             x: int,
             y: int,
-            color: Color,
+            color: ColorType,
             spacing: int) -> None:
         """Render a sequence of texts to the screen with vertical spacing."""
         pass
@@ -28,7 +27,7 @@ class Screen(object):
     @abstractmethod
     def render_text(
             self, text: str, font_size: int, x: int, y: int,
-            color: Color, w: int = None, h: int = None) -> Rect:
+            color: ColorType, w: int = None, h: int = None) -> Rect:
         """Adds text to the screen with a font_size, position and color.
 
         Args:
@@ -55,7 +54,7 @@ class Screen(object):
         pass
 
     @abstractmethod
-    def render_rect(self, rect: Rect, color: Color, width: int) -> None:
+    def render_rect(self, rect: Rect, color: ColorType, width: int) -> None:
         """Draws a rectangle onto the current screen.
 
         Args:
@@ -114,14 +113,14 @@ class _PygameScreen(Screen):
             font_size: int,
             x: int,
             y: int,
-            color: Color,
+            color: ColorType,
             spacing: int) -> None:
         for text in texts:
             self.render_text(text, font_size, x, y, color)
             y += spacing
 
     def render_text(self, text: str, font_size: int, x: int, y: int,
-                    color: Color, w: int = None, h: int = None) -> Rect:
+                    color: ColorType, w: int = None, h: int = None) -> Rect:
         font = self._font(font_size)
         rasterized = font.render(text, True, color)
 
@@ -151,7 +150,7 @@ class _PygameScreen(Screen):
             image = pygame.transform.scale(image, (w, h))
         self._screen.blit(image, rect)
 
-    def render_rect(self, rect: Rect, color: Color, width: int) -> None:
+    def render_rect(self, rect: Rect, color: ColorType, width: int) -> None:
         pygame.draw.rect(self._screen, color, rect, width)
 
     def clear(self) -> None:
