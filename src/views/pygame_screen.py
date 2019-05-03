@@ -1,14 +1,13 @@
 import os
 from abc import abstractmethod
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 import pygame
 from pygame.rect import Rect
 
 from data import constants
+from data.colors import ColorType
 from views.pygame_images import load_image
-
-Color = List[int]
 
 
 class Screen(object):
@@ -20,7 +19,7 @@ class Screen(object):
             font_size: int,
             x: int,
             y: int,
-            color: Color,
+            color: ColorType,
             spacing: int) -> None:
         """Render a sequence of texts to the screen with vertical spacing."""
         pass
@@ -28,8 +27,8 @@ class Screen(object):
     @abstractmethod
     def render_text(
             self, text: str, font_size: int, x: int, y: int,
-            color: Color, w: int = None, h: int = None) -> Rect:
-        """Adds text to the screen with a font_size, position and color.
+            color: ColorType, w: int = None, h: int = None) -> Rect:
+        """Render formatted text at a specific point on the screen.
 
         Args:
             text: Text to be rendered.
@@ -48,6 +47,26 @@ class Screen(object):
         pass
 
     @abstractmethod
+    def render_text_in_rect(self, text: str, font_size: int, rect: Rect,
+                            color: ColorType, center_x: bool = False,
+                            center_y: bool = False) -> None:
+        """Render formatted text into a desired rect.
+
+        Multi-line text is automatically broken up to fit within the rect. If
+        it does not fit, the text is resized.
+
+        Args:
+            text: Text to be rendered.
+            font_size: Size of text.
+            rect: The rect object containing the text. The rect must be wider
+                than the longest rendered word.
+            color: text color (RGB).
+            center_x: Whether to center the text horizontally in the rect.
+            center_y: Whether to center the text vertically in the rect.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
     def render_image(self, image_path: str, x: int, y: int, w: int,
                      h: int) -> None:
         """Adds an image to the screen at (x, y) with width, w, and height, h.
@@ -55,7 +74,7 @@ class Screen(object):
         pass
 
     @abstractmethod
-    def render_rect(self, rect: Rect, color: Color, width: int) -> None:
+    def render_rect(self, rect: Rect, color: ColorType, width: int) -> None:
         """Draws a rectangle onto the current screen.
 
         Args:
@@ -114,14 +133,14 @@ class _PygameScreen(Screen):
             font_size: int,
             x: int,
             y: int,
-            color: Color,
+            color: ColorType,
             spacing: int) -> None:
         for text in texts:
             self.render_text(text, font_size, x, y, color)
             y += spacing
 
     def render_text(self, text: str, font_size: int, x: int, y: int,
-                    color: Color, w: int = None, h: int = None) -> Rect:
+                    color: ColorType, w: int = None, h: int = None) -> Rect:
         font = self._font(font_size)
         rasterized = font.render(text, True, color)
 
@@ -141,6 +160,64 @@ class _PygameScreen(Screen):
         self._screen.blit(rasterized, rect)
         return rect
 
+    def render_text_in_rect(self, text: str, font_size: int, rect: Rect,
+                            color: ColorType, center_x: bool = False,
+                            center_y: bool = False) -> None:
+        font = self._font(font_size)
+
+        # We break up all the text into words, then populate lines until no more
+        # words can be fitted in the rect.
+        words = text.split(' ')[::-1]
+
+        lines = []
+        current_line = ''
+        while words:
+            bigger_line = current_line + ' ' + words[-1]
+            if font.size(bigger_line)[0] < rect.w:  # word can be added to line
+                current_line = bigger_line
+                words.pop()
+            else:  # make a new line
+                lines.append(current_line[1:])  # ignore first space
+                assert current_line, (
+                    'rect is too small to fit single word {}'.format(words[-1]))
+                current_line = ''
+        lines.append(current_line[1:])
+
+        # order all line surfaces paired with the rects that contain them
+        surfaces_rects: List[Tuple[pygame.Surface, Rect]] = []
+        y = rect.y
+
+        kwargs = {}
+        if center_x:
+            kwargs['centerx'] = rect.x + rect.w // 2
+        else:
+            kwargs['x'] = rect.x
+
+        for line in lines:
+            line_surf = font.render(line, True, color)
+
+            kwargs['y'] = y
+
+            line_rect = line_surf.get_rect(**kwargs)
+            y += line_rect.h
+            surfaces_rects.append((line_surf, line_rect))
+
+        # If text does not fit in rect, decrease font and call again
+        if y > rect.y + rect.h:
+            self.render_text_in_rect(text, font_size - 2, rect, color, center_x,
+                                     center_y)
+            return
+
+        # If y centering, shift each line down
+        if center_y:
+            text_height = y - rect.y
+            shift = (rect.h - text_height) // 2
+            for _, line_rect in surfaces_rects:
+                line_rect.y += shift
+
+        for line_surf, line_rect in surfaces_rects:
+            self._screen.blit(line_surf, line_rect)
+
     def render_image(self, image_path: str, x: int, y: int, w: int,
                      h: int) -> None:
         image = load_image(image_path)
@@ -151,7 +228,7 @@ class _PygameScreen(Screen):
             image = pygame.transform.scale(image, (w, h))
         self._screen.blit(image, rect)
 
-    def render_rect(self, rect: Rect, color: Color, width: int) -> None:
+    def render_rect(self, rect: Rect, color: ColorType, width: int) -> None:
         pygame.draw.rect(self._screen, color, rect, width)
 
     def clear(self) -> None:
