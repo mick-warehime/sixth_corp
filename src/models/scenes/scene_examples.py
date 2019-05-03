@@ -23,7 +23,8 @@ def loading_scene() -> DecisionScene:
         'x': DecisionOption('Settings', example_combat_scene)}
     return DecisionScene('6TH Corp', options,
                          background_image=BackgroundImages.LOADING.path,
-                         inventory_available=False)
+                         inventory_available=False, centered_prompt=True,
+                         centered_choices=True)
 
 
 def start_scene() -> DecisionScene:
@@ -67,8 +68,7 @@ def swamp_scene() -> DecisionScene:
         Skill.STEALTH)
     options = {
         '1': DecisionOption('Continue walking.', second_scene),
-        '2': DecisionOption('Attempt to deactivate the drone. (SNEAK MODERATE)',
-                            deactivate),
+        '2': DecisionOption('Attempt to deactivate the drone.', deactivate),
         '3': DecisionOption('Attack the drone', example_combat_scene)}
     return DecisionScene(main_text, options)
 

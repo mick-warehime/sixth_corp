@@ -1,8 +1,10 @@
 from functools import partial
-from typing import Dict, Sequence, Union
+from typing import Dict, Sequence, Union, NamedTuple, Optional, Tuple
 
-from data.constants import BackgroundImages
+from data.colors import GREEN, ColorType
+from data.constants import BackgroundImages, SCREEN_SIZE
 from events.events_base import DecisionEvent, EventListener, EventType
+from models.scenes.layouts import Layout
 from models.scenes.scenes_base import (Effect, Resolution, Scene,
                                        SceneConstructor)
 
@@ -26,12 +28,22 @@ class DecisionOption(Resolution):
         return self._next_scene_fun()
 
 
+class DecisionData(NamedTuple):
+    text: str
+    key: Optional[str]
+    centered: bool
+    is_prompt: bool = False
+    color: ColorType = GREEN
+
+
 class DecisionScene(EventListener, Scene):
     """A Scene that is resolved by the player making a choice."""
 
     def __init__(self, prompt: str, choices: Dict[str, DecisionOption],
                  background_image: str = None,
-                 inventory_available: bool = True) -> None:
+                 inventory_available: bool = True,
+                 centered_prompt: bool = False,
+                 centered_choices: bool = False) -> None:
         self.prompt = prompt
         super().__init__()
         self.choices = choices
@@ -42,10 +54,17 @@ class DecisionScene(EventListener, Scene):
             self._background_image = background_image
         self._inventory_available = inventory_available
 
+        self._layout: Layout = self._define_layout(centered_prompt,
+                                                   centered_choices)
+
     def notify(self, event: EventType) -> None:
         if isinstance(event, DecisionEvent) and self is event.scene:
             assert event.choice in self.choices
             self._choice = self.choices[event.choice]
+
+    @property
+    def layout(self) -> Layout:
+        return self._layout
 
     @property
     def inventory_available(self) -> bool:
@@ -65,6 +84,30 @@ class DecisionScene(EventListener, Scene):
         max_char = min(len(self.prompt), 40)
         return 'DecisionScene({}...)'.format(self.prompt[:max_char])
 
+    def _define_layout(self, centered_prompt: bool,
+                       centered_choices: bool) -> Layout:
+        # Layout is composed of the scene prompt/description, below which is
+        # the list of decisions.
+
+        prompt = DecisionData(self.prompt, None, centered_prompt,
+                              is_prompt=True)
+
+        choice_weight = 4
+        choice_elems = [(DecisionData(c.description, k, centered_choices), 1)
+                        for k, c in self.choices.items()]
+        if len(choice_elems) < choice_weight:
+            choice_elems.append((None, choice_weight - len(choice_elems)))
+        choice_layout = Layout(choice_elems)
+        choice_layout = Layout([(None, 1), (choice_layout, 8), (None, 1)],
+                               'horizontal')
+
+        middle = Layout(
+            [(None, 3), (prompt, 3), (None, 2), (choice_layout, choice_weight),
+             (None, 2)])
+
+        return Layout([(None, 1), (middle, 5), (None, 1)],
+                      direction='horizontal', dimensions=SCREEN_SIZE)
+
 
 def transition_to(
         next_scene_fun: SceneConstructor, description: str,
@@ -75,7 +118,7 @@ def transition_to(
         return DecisionScene(description,
                              {'1': DecisionOption('Continue', next_scene_fun,
                                                   effects)},
-                             inventory_available=False)
+                             inventory_available=False, centered_choices=True)
 
     return scene_fun
 
