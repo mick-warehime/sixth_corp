@@ -1,8 +1,8 @@
 from functools import partial
-from typing import Dict, Sequence, Union, NamedTuple, Optional, Tuple
+from typing import Dict, NamedTuple, Optional, Sequence, Union
 
 from data.colors import GREEN, ColorType
-from data.constants import BackgroundImages, SCREEN_SIZE
+from data.constants import SCREEN_SIZE, BackgroundImages
 from events.events_base import DecisionEvent, EventListener, EventType
 from models.scenes.layouts import Layout
 from models.scenes.scenes_base import (Effect, Resolution, Scene,

@@ -1,13 +1,10 @@
-from textwrap import wrap
-from typing import Callable, List, Union
+from typing import Callable, Union
 
 from pygame.rect import Rect
 
-from data.colors import GREEN
-from data.constants import TEXTWIDTH
-from models.scenes.decision_scene import DecisionScene, DecisionData
+from models.scenes.decision_scene import DecisionData, DecisionScene
 from models.scenes.scenes_base import Scene
-from views.artists.drawing_utils import rescale_horizontal, rescale_vertical
+from views.artists.drawing_utils import rescale_horizontal
 from views.artists.scene_artist_base import SceneArtist
 from views.pygame_screen import Screen
 
@@ -27,7 +24,7 @@ def _render_text_data(data: DecisionData, rect: Rect, screen: Screen) -> None:
         args = ['{}: {}'.format(data.key, data.text), _CHOICE_FONT_SIZE]
     args.extend([rect, data.color, data.centered])
 
-    screen.render_text_in_rect(*args)
+    screen.render_text_in_rect(*args)  # type: ignore
 
 
 class DecisionArtist(SceneArtist):
