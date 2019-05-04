@@ -13,18 +13,27 @@ from models.scenes.decision_scene import (DecisionOption, DecisionScene,
                                           from_transition, transition_to)
 from models.scenes.effects import IncrementAttribute, RestartGame
 from models.scenes.inventory_scene import InventoryScene
+from models.scenes.scene_arcs import space_arc
 from models.scenes.scenes_base import BasicResolution, Resolution, Scene
 from models.scenes.skill_checks import Difficulty, skill_check
 
 
 def loading_scene() -> DecisionScene:
     options = {
-        's': DecisionOption('Start Game', start_scene),
+        's': DecisionOption('Start Game', pre_start_scene),
         'x': DecisionOption('Settings', example_combat_scene)}
     return DecisionScene('6TH Corp', options,
                          background_image=BackgroundImages.LOADING.path,
                          inventory_available=False, centered_prompt=True,
                          centered_choices=True)
+
+
+def pre_start_scene():
+    prompt = 'Choose scene arc.'
+
+    return DecisionScene(prompt, {'1': DecisionOption('Swamp', start_scene),
+                                  '2': DecisionOption('Space trip',
+                                                      space_arc.intro)})
 
 
 def start_scene() -> DecisionScene:
