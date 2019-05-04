@@ -31,9 +31,10 @@ def loading_scene() -> DecisionScene:
 def pre_start_scene():
     prompt = 'Choose scene arc.'
 
-    return DecisionScene(prompt, {'1': DecisionOption('Swamp', start_scene),
-                                  '2': DecisionOption('Space trip',
-                                                      space_arc.intro)})
+    return DecisionScene(prompt,
+                         {'1': DecisionOption('Swamp', start_scene),
+                          '2': DecisionOption('Space trip',
+                                              space_arc.SpaceArc().intro)})
 
 
 def start_scene() -> DecisionScene:
