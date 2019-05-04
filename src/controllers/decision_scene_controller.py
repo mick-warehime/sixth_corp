@@ -37,7 +37,7 @@ class DecisionSceneController(Controller):
             for effect in resolution.effects:
                 logging.debug('Applying effect of type {}'.format(
                     effect.__class__.__name__))
-                effect.execute()
+                effect()
 
             self.deactivate()
 

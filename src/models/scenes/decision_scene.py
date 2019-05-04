@@ -5,23 +5,23 @@ from data.colors import GREEN, ColorType
 from data.constants import SCREEN_SIZE, BackgroundImages
 from events.events_base import DecisionEvent, EventListener, EventType
 from models.scenes.layouts import Layout
-from models.scenes.scenes_base import (Effect, Resolution, Scene,
-                                       SceneConstructor)
+from models.scenes.scenes_base import (Resolution, Scene, SceneConstructor,
+                                       EffectType)
 
 
 class DecisionOption(Resolution):
     """Resolves by calling a scene constructor function."""
 
     def __init__(self, description: str, next_scene_fun: SceneConstructor,
-                 effects: Union[Effect, Sequence[Effect]] = ()) -> None:
+                 effects: Union[EffectType, Sequence[EffectType]] = ()) -> None:
         self.description = description
-        if isinstance(effects, Effect):
+        if callable(effects):
             effects = (effects,)
         self._effects = tuple(effects)
         self._next_scene_fun = next_scene_fun
 
     @property
-    def effects(self) -> Sequence[Effect]:
+    def effects(self) -> Sequence[EffectType]:
         return self._effects
 
     def next_scene(self) -> Scene:
@@ -111,7 +111,8 @@ class DecisionScene(EventListener, Scene):
 
 def transition_to(
         next_scene_fun: SceneConstructor, description: str,
-        effects: Union[Effect, Sequence[Effect]] = ()) -> SceneConstructor:
+        effects: Union[EffectType, Sequence[EffectType]] = ()
+) -> SceneConstructor:
     """Adds a basic transition scene into another scene."""
 
     def scene_fun() -> DecisionScene:
@@ -125,5 +126,6 @@ def transition_to(
 
 # This is used as a decorator for a SceneConstructor.
 def from_transition(description: str,
-                    effects: Union[Effect, Sequence[Effect]] = ()) -> partial:
+                    effects: Union[
+                        EffectType, Sequence[EffectType]] = ()) -> partial:
     return partial(transition_to, description=description, effects=effects)
