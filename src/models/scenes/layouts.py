@@ -178,13 +178,15 @@ class Layout(object):
         # right (or bottom) edges of each rect.
         assert self._container is not None
         if self._direction == _LayoutDirections.HORIZONTAL:
-            pos_weight = float(x - self._container.x) / self._container.width
+            pos_weight = float(x - self._container.x)
         else:
-            pos_weight = float(y - self._container.y) / self._container.height
-        pos_weight *= self._total_weight
+            assert self._direction == _LayoutDirections.VERTICAL
+            pos_weight = float(y - self._container.y)
+        pos_weight *= (self._total_weight / self._container.width)
 
         if pos_weight < self._cumulative_weights[0]:
             return 0
+        # largest index of all weights less than pos_weight
         index = 0
         for index, _ in enumerate(w for w in self._cumulative_weights
                                   if w <= pos_weight):
