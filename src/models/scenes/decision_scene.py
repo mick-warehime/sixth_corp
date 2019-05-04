@@ -5,8 +5,8 @@ from data.colors import GREEN, ColorType
 from data.constants import SCREEN_SIZE, BackgroundImages
 from events.events_base import DecisionEvent, EventListener, EventType
 from models.scenes.layouts import Layout
-from models.scenes.scenes_base import (Resolution, Scene, SceneConstructor,
-                                       EffectType)
+from models.scenes.scenes_base import (EffectType, Resolution, Scene,
+                                       SceneConstructor)
 
 
 class DecisionOption(Resolution):

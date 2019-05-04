@@ -7,7 +7,7 @@ def restart_game() -> None:
 
 
 def increment_attribute(attribute: AttributeType, amount: int,
-                        target: Stateful = None):
+                        target: Stateful = None) -> None:
     """Increment an attribute of some Stateful object.
 
     Args:

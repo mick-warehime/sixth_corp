@@ -4,7 +4,7 @@ from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character
 from models.characters.player import get_player, reset_player
 from models.characters.states import Attributes
-from models.scenes.effects import restart_game, increment_attribute
+from models.scenes.effects import increment_attribute, restart_game
 
 
 @pytest.fixture(scope='function')

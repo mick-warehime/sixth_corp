@@ -11,7 +11,7 @@ from models.characters.subroutine_examples import direct_damage
 from models.scenes import combat_scene
 from models.scenes.decision_scene import (DecisionOption, DecisionScene,
                                           from_transition, transition_to)
-from models.scenes.effects import restart_game, increment_attribute
+from models.scenes.effects import increment_attribute, restart_game
 from models.scenes.inventory_scene import InventoryScene
 from models.scenes.scenes_base import BasicResolution, Resolution, Scene
 from models.scenes.skill_checks import Difficulty, skill_check
