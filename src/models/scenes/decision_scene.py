@@ -102,7 +102,7 @@ class DecisionScene(EventListener, Scene):
                                'horizontal')
 
         middle = Layout(
-            [(None, 3), (prompt, 3), (None, 2), (choice_layout, choice_weight),
+            [(None, 2), (prompt, 4), (None, 2), (choice_layout, choice_weight),
              (None, 2)])
 
         return Layout([(None, 1), (middle, 5), (None, 1)],
