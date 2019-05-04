@@ -52,14 +52,21 @@ def swamp_scene() -> DecisionScene:
                  'the curving form of a rogue drone. It is currently in '
                  'hibernation mode.')
 
-    def success() -> Scene:
-        load_loot_scene = partial(InventoryScene, success, _mini_laser)
+    def success(loot_scene: bool = True) -> Scene:
+        load_loot_scene = partial(InventoryScene, partial(success, False),
+                                  _mini_laser)
         gain_3 = IncrementAttribute(Attributes.CREDITS, 3)
+
+        if loot_scene:
+            return DecisionScene(
+                'After deactivating the drone, you pick up 3 credits and '
+                'dismantle it.',
+                {'1': DecisionOption('Loot the body.', load_loot_scene),
+                 '2': DecisionOption('Back to start.', start_scene, gain_3)})
         return DecisionScene(
             'After deactivating the drone, you pick up 3 credits and '
             'dismantle it.',
-            {'1': DecisionOption('Loot the body.', load_loot_scene),
-             '2': DecisionOption('Back to start.', start_scene, gain_3)})
+            {'1': DecisionOption('Back to start.', start_scene, gain_3)})
 
     deactivate = skill_check(
         Difficulty.VERY_EASY, success,
@@ -81,9 +88,9 @@ def second_scene() -> DecisionScene:
             player.status.get_attribute(Attributes.MAX_HEALTH)))
 
     options = {
-        '0': DecisionOption('Gain 1 HP', second_scene,
+        '1': DecisionOption('Gain 1 HP', second_scene,
                             IncrementAttribute(Attributes.HEALTH, 1)),
-        '1': DecisionOption('Lose 1 HP', second_scene,
+        '2': DecisionOption('Lose 1 HP', second_scene,
                             IncrementAttribute(Attributes.HEALTH, -1))
     }
     return DecisionScene(main_text, options)
