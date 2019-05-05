@@ -1,7 +1,5 @@
-import logging
 
 from controllers.controller import Controller
-from events.event_utils import post_scene_change
 from events.events_base import (BasicEvents, EventManager, EventType,
                                 InputEvent, InventorySelectionEvent,
                                 InventoryTransferEvent)
@@ -19,14 +17,6 @@ class InventoryController(Controller):
         if isinstance(event, InputEvent):
             if event.event_type == BasicEvents.MOUSE_CLICK:
                 self._handle_mouse_click(event)
-
-        if self._scene.is_resolved():
-            resolution = self._scene.get_resolution()
-            for effect in resolution.effects:
-                effect()
-            logging.debug('Exiting inventory scene.')
-            self.deactivate()
-            post_scene_change(resolution.next_scene())
 
     def _handle_mouse_click(self, event: InputEvent) -> None:
         x = event.mouse[0]

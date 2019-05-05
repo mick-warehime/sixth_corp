@@ -1,3 +1,5 @@
+import logging
+
 from controllers.controller import Controller
 from controllers.controller_factory import build_controller
 from events.event_utils import post_scene_change
@@ -31,6 +33,15 @@ class SceneMachine(EventListener):
 
             if new_scene is not None:
                 post_scene_change(new_scene)
+
+        # Check for scene resolution:
+        if event == BasicEvents.TICK and self._current_scene.is_resolved():
+            resolution = self._current_scene.get_resolution()
+            for effect in resolution.effects:
+                effect()
+            logging.debug('Scene {} resolved.'.format(self._current_scene))
+
+            post_scene_change(resolution.next_scene())
 
         # Update scene and current controller
         if isinstance(event, NewSceneEvent):
