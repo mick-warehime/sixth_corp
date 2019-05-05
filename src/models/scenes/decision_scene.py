@@ -4,9 +4,10 @@ from typing import Dict, NamedTuple, Optional, Sequence, Union
 from data.colors import GREEN, ColorType
 from data.constants import SCREEN_SIZE, BackgroundImages
 from events.events_base import DecisionEvent, EventListener, EventType
+from models.scenes.inventory_scene import InventoryScene
 from models.scenes.layouts import Layout
-from models.scenes.scenes_base import (EffectType, Resolution, Scene,
-                                       SceneConstructor)
+from models.scenes.scenes_base import (BasicResolution, EffectType, Resolution,
+                                       Scene, SceneConstructor)
 
 
 class DecisionOption(Resolution):
@@ -44,10 +45,10 @@ class DecisionScene(EventListener, Scene):
                  inventory_available: bool = True,
                  centered_prompt: bool = False,
                  centered_choices: bool = False) -> None:
-        self.prompt = prompt
+        self._prompt = prompt
         super().__init__()
         self.choices = choices
-        self._choice: DecisionOption = None
+        self._choice: Resolution = None
         if background_image is None:
             self._background_image: str = BackgroundImages.CITY.path
         else:
@@ -70,6 +71,21 @@ class DecisionScene(EventListener, Scene):
     def inventory_available(self) -> bool:
         return self._inventory_available
 
+    def select_inventory(self) -> None:
+        """Chooses the inventory scene as the scene resolution."""
+
+        if self.inventory_available:
+            def reload_self() -> DecisionScene:
+                # We must reset choice to None so that we don't immediately
+                # bounce back to the inventory scene when self is reloaded.
+                self._choice = None
+                return self
+
+            def inv_scene() -> InventoryScene:
+                return InventoryScene(reload_self)
+
+            self._choice = BasicResolution(inv_scene)
+
     @property
     def background_image(self) -> str:
         return self._background_image
@@ -77,19 +93,19 @@ class DecisionScene(EventListener, Scene):
     def is_resolved(self) -> bool:
         return self._choice is not None
 
-    def get_resolution(self) -> DecisionOption:
+    def get_resolution(self) -> Resolution:
         return self._choice
 
     def __str__(self) -> str:
-        max_char = min(len(self.prompt), 40)
-        return 'DecisionScene({}...)'.format(self.prompt[:max_char])
+        max_char = min(len(self._prompt), 40)
+        return 'DecisionScene({}...)'.format(self._prompt[:max_char])
 
     def _define_layout(self, centered_prompt: bool,
                        centered_choices: bool) -> Layout:
         # Layout is composed of the scene prompt/description, below which is
         # the list of decisions.
 
-        prompt = DecisionData(self.prompt, None, centered_prompt,
+        prompt = DecisionData(self._prompt, None, centered_prompt,
                               is_prompt=True)
 
         choice_weight = 4

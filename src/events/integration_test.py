@@ -67,6 +67,9 @@ def test_making_choices_removes_listener():
     del scene_0
     event_utils.simulate_key_press('s')
 
+    # The scene machine only changes scenes on a tick
+    EventManager.post(BasicEvents.TICK)
+
     assert not any(isinstance(l, DecisionScene) for l in EventManager.listeners)
     assert not any(isinstance(l, DecisionSceneController)
                    for l in EventManager.listeners)
@@ -213,6 +216,8 @@ def test_inventory_scene_control_flow():
     # Load loot scene
     event_utils.post_scene_change(start_scene())
     event_utils.simulate_key_press('1')
+    # The scene machine only changes scenes during a game tick
+    EventManager.post(BasicEvents.TICK)
 
     assert isinstance(_get_active_controller(), InventoryController)
     inv_scene = _get_current_scene()
