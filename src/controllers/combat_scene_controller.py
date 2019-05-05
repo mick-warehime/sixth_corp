@@ -1,7 +1,6 @@
 import logging
 
 from controllers.controller import Controller
-from events.event_utils import post_scene_change
 from events.events_base import (BasicEvents, EventManager, EventType,
                                 InputEvent, MoveExecutedEvent,
                                 SelectCharacterEvent, SelectPlayerMoveEvent)
@@ -25,11 +24,9 @@ class CombatSceneController(Controller):
 
         if isinstance(event, InputEvent):
             self._handle_input(event)
-            self._check_for_resolution()
         elif isinstance(event, MoveExecutedEvent):
             if event.is_attacker_move:
                 EventManager.post(SelectCharacterEvent(None))
-            self._check_for_resolution()
 
     def _handle_input(self, input_event: InputEvent) -> None:
         if input_event.event_type == BasicEvents.MOUSE_CLICK:
@@ -66,12 +63,3 @@ class CombatSceneController(Controller):
             logging.debug(
                 'MOUSE: Deselected: {}'.format(self.scene.selected_char))
             EventManager.post(SelectCharacterEvent(None))
-
-    def _check_for_resolution(self) -> None:
-        if self.scene.is_resolved():
-            resolution = self.scene.get_resolution()
-            for effect in resolution.effects:
-                effect()
-            logging.debug('Combat scene resolved.')
-            self.deactivate()
-            post_scene_change(resolution.next_scene())
