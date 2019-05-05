@@ -1,8 +1,13 @@
+import logging
+
 from controllers.controller import Controller
 from controllers.controller_factory import build_controller
 from events.event_utils import post_scene_change
 from events.events_base import (BasicEvents, EventListener, EventType,
                                 NewSceneEvent)
+from models.characters.conditions import IsDead
+from models.characters.player import get_player
+from models.scenes.scene_examples import game_over_scene
 from models.scenes.scenes_base import Scene
 from models.scenes.settings_scene import SettingsScene
 
@@ -31,6 +36,19 @@ class SceneMachine(EventListener):
 
             if new_scene is not None:
                 post_scene_change(new_scene)
+
+        # Check for scene resolution:
+        if event == BasicEvents.TICK and self._current_scene.is_resolved():
+            resolution = self._current_scene.get_resolution()
+            for effect in resolution.effects:
+                effect()
+            logging.debug('Scene {} resolved.'.format(self._current_scene))
+
+            if IsDead().check(get_player()):
+                post_scene_change(game_over_scene())
+                return
+
+            post_scene_change(resolution.next_scene())
 
         # Update scene and current controller
         if isinstance(event, NewSceneEvent):

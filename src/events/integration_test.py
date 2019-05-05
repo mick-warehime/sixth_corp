@@ -9,6 +9,7 @@ from controllers.controller import Controller
 from controllers.decision_scene_controller import DecisionSceneController
 from controllers.game import Game, initialize_pygame
 from controllers.inventory_controller import InventoryController
+from data.keybindings import Keybindings
 from events import event_utils
 from events.events_base import BasicEvents, EventManager
 from models.characters.character_examples import CharacterData
@@ -25,17 +26,19 @@ from models.scenes.inventory_scene import InventoryScene, SlotHeader, SlotRow
 from models.scenes.scenes_base import BasicResolution, Scene
 from views.view_manager import ViewManager
 
-# Ensure that working directory is sixth_corp
-os.chdir(dirname(dirname(dirname(abspath(__file__)))))
-
-initialize_pygame()
-
-# Turn off game animations
-combat_scene.ANIMATION = False
-
 
 # Errors in other test modules may cause the EventManager to not be empty.
 def setup_module(module):
+    # Ensure that working directory is sixth_corp
+    os.chdir(dirname(dirname(dirname(abspath(__file__)))))
+    # Turn off game animations
+    combat_scene.ANIMATION = False
+
+    initialize_pygame(no_UI=True)
+
+    # Tests in other modules may change the bindings.
+    Keybindings().load()
+
     EventManager.listeners.clear()
 
 
@@ -66,6 +69,9 @@ def test_making_choices_removes_listener():
     del ctl
     del scene_0
     event_utils.simulate_key_press('s')
+
+    # The scene machine only changes scenes on a tick
+    EventManager.post(BasicEvents.TICK)
 
     assert not any(isinstance(l, DecisionScene) for l in EventManager.listeners)
     assert not any(isinstance(l, DecisionSceneController)
@@ -213,6 +219,8 @@ def test_inventory_scene_control_flow():
     # Load loot scene
     event_utils.post_scene_change(start_scene())
     event_utils.simulate_key_press('1')
+    # The scene machine only changes scenes during a game tick
+    EventManager.post(BasicEvents.TICK)
 
     assert isinstance(_get_active_controller(), InventoryController)
     inv_scene = _get_current_scene()
