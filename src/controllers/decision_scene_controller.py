@@ -1,6 +1,6 @@
 from controllers.controller import Controller
-from events.events_base import (BasicEvents, DecisionEvent, EventManager,
-                                EventType, InputEvent)
+from events.events_base import (DecisionEvent, EventManager, EventType,
+                                InputEvent)
 from models.scenes.decision_scene import DecisionScene
 
 
@@ -16,6 +16,3 @@ class DecisionSceneController(Controller):
             # Player chooses a choice
             if event.key in self._scene.choices:
                 EventManager.post(DecisionEvent(event.key, self._scene))
-
-        elif event == BasicEvents.INVENTORY:
-            self._scene.select_inventory()

@@ -3,7 +3,8 @@ from typing import Dict, NamedTuple, Optional, Sequence, Union
 
 from data.colors import GREEN, ColorType
 from data.constants import SCREEN_SIZE, BackgroundImages
-from events.events_base import DecisionEvent, EventListener, EventType
+from events.events_base import (BasicEvents, DecisionEvent, EventListener,
+                                EventType)
 from models.scenes.inventory_scene import InventoryScene
 from models.scenes.layouts import Layout
 from models.scenes.scenes_base import (BasicResolution, EffectType, Resolution,
@@ -62,6 +63,8 @@ class DecisionScene(EventListener, Scene):
         if isinstance(event, DecisionEvent) and self is event.scene:
             assert event.choice in self.choices
             self._choice = self.choices[event.choice]
+        elif event == BasicEvents.INVENTORY:
+            self._select_inventory()
 
     @property
     def layout(self) -> Layout:
@@ -71,7 +74,7 @@ class DecisionScene(EventListener, Scene):
     def inventory_available(self) -> bool:
         return self._inventory_available
 
-    def select_inventory(self) -> None:
+    def _select_inventory(self) -> None:
         """Chooses the inventory scene as the scene resolution."""
 
         if self.inventory_available:

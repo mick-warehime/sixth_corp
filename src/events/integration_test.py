@@ -9,6 +9,7 @@ from controllers.controller import Controller
 from controllers.decision_scene_controller import DecisionSceneController
 from controllers.game import Game, initialize_pygame
 from controllers.inventory_controller import InventoryController
+from data.keybindings import Keybindings
 from events import event_utils
 from events.events_base import BasicEvents, EventManager
 from models.characters.character_examples import CharacterData
@@ -36,6 +37,7 @@ combat_scene.ANIMATION = False
 
 # Errors in other test modules may cause the EventManager to not be empty.
 def setup_module(module):
+    Keybindings().load()  # Tests in other modules may change the bindings.
     EventManager.listeners.clear()
 
 
