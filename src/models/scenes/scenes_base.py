@@ -20,11 +20,7 @@ class Scene(metaclass=abc.ABCMeta):
         """The path to the background image."""
 
 
-class Effect(object):
-    """Implements some action on the game world."""
-
-    def execute(self) -> None:
-        raise NotImplementedError
+EffectType = Callable[[], None]
 
 
 class Resolution(object):
@@ -34,7 +30,7 @@ class Resolution(object):
         raise NotImplementedError
 
     @property
-    def effects(self) -> Sequence[Effect]:
+    def effects(self) -> Sequence[EffectType]:
         """These are implemented when the resolution occurs."""
         raise NotImplementedError
 
@@ -42,7 +38,7 @@ class Resolution(object):
 class BasicResolution(Resolution):
 
     def __init__(self, scene_fun: Callable[[], Scene],
-                 effect_seq: Tuple[Effect, ...] = ()) -> None:
+                 effect_seq: Tuple[EffectType, ...] = ()) -> None:
         self._scene_fun = scene_fun
         self._effect_seq = effect_seq
 
@@ -50,7 +46,7 @@ class BasicResolution(Resolution):
         return self._scene_fun()
 
     @property
-    def effects(self) -> Sequence[Effect]:
+    def effects(self) -> Sequence[EffectType]:
         return self._effect_seq
 
 

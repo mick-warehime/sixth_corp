@@ -71,7 +71,7 @@ class CombatSceneController(Controller):
         if self.scene.is_resolved():
             resolution = self.scene.get_resolution()
             for effect in resolution.effects:
-                effect.execute()
+                effect()
             logging.debug('Combat scene resolved.')
             self.deactivate()
             post_scene_change(resolution.next_scene())

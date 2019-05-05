@@ -11,7 +11,7 @@ from models.characters.subroutine_examples import direct_damage
 from models.scenes import combat_scene
 from models.scenes.decision_scene import (DecisionOption, DecisionScene,
                                           from_transition, transition_to)
-from models.scenes.effects import IncrementAttribute, RestartGame
+from models.scenes.effects import increment_attribute, restart_game
 from models.scenes.inventory_scene import InventoryScene
 from models.scenes.scene_arcs import space_arc
 from models.scenes.scenes_base import BasicResolution, Resolution, Scene
@@ -65,7 +65,7 @@ def swamp_scene() -> DecisionScene:
     def success(loot_scene: bool = True) -> Scene:
         load_loot_scene = partial(InventoryScene, partial(success, False),
                                   _mini_laser)
-        gain_3 = IncrementAttribute(Attributes.CREDITS, 3)
+        gain_3 = partial(increment_attribute, Attributes.CREDITS, 3)
 
         if loot_scene:
             return DecisionScene(
@@ -99,9 +99,9 @@ def second_scene() -> DecisionScene:
 
     options = {
         '1': DecisionOption('Gain 1 HP', second_scene,
-                            IncrementAttribute(Attributes.HEALTH, 1)),
+                            partial(increment_attribute, Attributes.HEALTH, 1)),
         '2': DecisionOption('Lose 1 HP', second_scene,
-                            IncrementAttribute(Attributes.HEALTH, -1))
+                            partial(increment_attribute, Attributes.HEALTH, -1))
     }
     return DecisionScene(main_text, options)
 
@@ -119,7 +119,7 @@ def example_combat_scene() -> 'combat_scene.CombatScene':
 
 def game_over_scene() -> DecisionScene:
     prompt = 'Game over. You loose.'
-    options = {'1': DecisionOption('Play again.', loading_scene, RestartGame())}
+    options = {'1': DecisionOption('Play again.', loading_scene, restart_game)}
     return DecisionScene(prompt, options)
 
 

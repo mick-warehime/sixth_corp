@@ -23,7 +23,7 @@ class InventoryController(Controller):
         if self._scene.is_resolved():
             resolution = self._scene.get_resolution()
             for effect in resolution.effects:
-                effect.execute()
+                effect()
             logging.debug('Exiting inventory scene.')
             self.deactivate()
             post_scene_change(resolution.next_scene())
