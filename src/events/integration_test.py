@@ -26,18 +26,19 @@ from models.scenes.inventory_scene import InventoryScene, SlotHeader, SlotRow
 from models.scenes.scenes_base import BasicResolution, Scene
 from views.view_manager import ViewManager
 
-# Ensure that working directory is sixth_corp
-os.chdir(dirname(dirname(dirname(abspath(__file__)))))
-
-initialize_pygame()
-
-# Turn off game animations
-combat_scene.ANIMATION = False
-
 
 # Errors in other test modules may cause the EventManager to not be empty.
 def setup_module(module):
-    Keybindings().load()  # Tests in other modules may change the bindings.
+    # Ensure that working directory is sixth_corp
+    os.chdir(dirname(dirname(dirname(abspath(__file__)))))
+    # Turn off game animations
+    combat_scene.ANIMATION = False
+
+    initialize_pygame()
+
+    # Tests in other modules may change the bindings.
+    Keybindings().load()
+
     EventManager.listeners.clear()
 
 
