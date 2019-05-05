@@ -35,7 +35,6 @@ def setup_module(module):
     combat_scene.ANIMATION = False
 
     initialize_pygame(no_UI=True)
-    print('Initialized pygame?')
 
     # Tests in other modules may change the bindings.
     Keybindings().load()
