@@ -12,7 +12,7 @@ from models.scenes.layouts import Layout
 from models.scenes.scenes_base import BasicResolution, Resolution, Scene
 
 
-class SlotHeader(NamedTuple):
+class SlotHeaderInfo(NamedTuple):
     """Data represented in the header row of an inventory slot."""
     slot: SlotTypes
     capacity: int
@@ -23,7 +23,7 @@ class SlotHeader(NamedTuple):
         return len(self.mods)
 
 
-class SlotRow(NamedTuple):
+class SlotRowInfo(NamedTuple):
     """Data represented by single row of an inventory slot."""
     mod: Mod
     is_selected: bool
@@ -195,7 +195,7 @@ class InventoryScene(Scene, EventListener):
             mod_info_layout = Layout()  # nothing to display
 
         # Ground inventory
-        header = SlotHeader(SlotTypes.GROUND, 0, tuple(self._mods_on_ground))
+        header = SlotHeaderInfo(SlotTypes.GROUND, 0, tuple(self._mods_on_ground))
 
         loot_layout = self._slot_layout(header, num_rows=6)
         loot_layout = Layout([(None, 1), (loot_layout, 3), (None, 1)],
@@ -210,15 +210,15 @@ class InventoryScene(Scene, EventListener):
         # Gap at top for information display.
         self._layout = Layout([(None, 1), (layout, 14)], dimensions=SCREEN_SIZE)
 
-    def _slot_layout(self, slot_data: SlotHeader,
+    def _slot_layout(self, slot_data: SlotHeaderInfo,
                      num_rows: int = None) -> Layout:
         """Vertical layout storing a single slot's data."""
 
         # First row is just basic slot information
-        elements: List[Tuple[Union[SlotHeader, SlotRow], int]] = []
+        elements: List[Tuple[Union[SlotHeaderInfo, SlotRowInfo], int]] = []
         elements.append((slot_data, 1))
         for mod in slot_data.mods:
-            elements.append((SlotRow(mod, mod is self._selected_mod), 1))
+            elements.append((SlotRowInfo(mod, mod is self._selected_mod), 1))
 
         # Add padding to ensure consistent row sizes
         num_rows = _DEFAULT_ROWS_PER_SLOT if num_rows is None else num_rows
@@ -232,6 +232,6 @@ class InventoryScene(Scene, EventListener):
 _DEFAULT_ROWS_PER_SLOT = 4
 
 
-def _slot_header(slot: SlotTypes, chassis: Chassis) -> SlotHeader:
-    return SlotHeader(slot, chassis.slot_capacities[slot],
-                      chassis.mods_in_slot(slot))
+def _slot_header(slot: SlotTypes, chassis: Chassis) -> SlotHeaderInfo:
+    return SlotHeaderInfo(slot, chassis.slot_capacities[slot],
+                          chassis.mods_in_slot(slot))

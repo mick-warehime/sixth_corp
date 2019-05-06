@@ -9,7 +9,7 @@ from models.scenes.settings_scene import SettingsScene
 from views.artists.background_artist import BackgroundArtist
 from views.artists.character_artist import CharacterArtist
 from views.artists.combat_options_artist import CombatOptionsArtist
-from views.artists.combat_stack_artist import CombatStackArtist
+from views.artists.combat_stack_artist import CombatArtist
 from views.artists.decision_artist import DecisionArtist
 from views.artists.inventory_artist import InventoryArtist
 from views.artists.overlay_artist import OverlayArtist
@@ -48,7 +48,7 @@ def _build_scene_artists(scene: Scene) -> List[SceneArtist]:
     if isinstance(scene, CombatScene):
         artists = [BackgroundArtist(scene), OverlayArtist(),
                    CharacterArtist(), CombatOptionsArtist(),
-                   CombatStackArtist()]
+                   CombatArtist()]
     elif isinstance(scene, DecisionScene):
         artists = [BackgroundArtist(scene), OverlayArtist(), DecisionArtist()]
     elif isinstance(scene, SettingsScene):

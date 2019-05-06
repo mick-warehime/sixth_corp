@@ -7,7 +7,7 @@ from data.keybindings import Keybindings
 from events.events_base import BasicEvents
 from models.characters.mods_base import SlotTypes
 from models.scenes.inventory_scene import (InventoryScene, SelectedModInfo,
-                                           SlotHeader, SlotRow)
+                                           SlotHeaderInfo, SlotRowInfo)
 from models.scenes.scenes_base import Scene
 from views.artists.drawing_utils import rescale_horizontal, rescale_vertical
 from views.artists.scene_artist_base import SceneArtist
@@ -19,7 +19,7 @@ _ERROR_FONT_SIZE, = rescale_horizontal(40)
 _TEXT_COLOR = BLUE
 
 
-def _render_slot_header(slot_data: SlotHeader, rect: Rect,
+def _render_slot_header(slot_data: SlotHeaderInfo, rect: Rect,
                         selected_mod_slots: List[SlotTypes],
                         screen: Screen) -> None:
     # Render the header for a given slot category, including storage capacity.
@@ -42,7 +42,7 @@ def _render_slot_header(slot_data: SlotHeader, rect: Rect,
                        rect.h)
 
 
-def _render_mod_slot(slot_data: SlotRow, rect: Rect, screen: Screen) -> None:
+def _render_mod_slot(slot_data: SlotRowInfo, rect: Rect, screen: Screen) -> None:
     # Render a row representing a given equipped or stored mod.
 
     screen.render_rect(rect, LIGHT_GRAY, 0)
@@ -147,10 +147,10 @@ class InventoryArtist(SceneArtist):
                 continue
 
             rects = layout.get_rects(obj)
-            if isinstance(obj, SlotHeader):
+            if isinstance(obj, SlotHeaderInfo):
                 assert len(rects) == 1
                 _render_slot_header(obj, rects[0], selected_mod_slots, screen)
-            elif isinstance(obj, SlotRow):
+            elif isinstance(obj, SlotRowInfo):
                 assert len(rects) == 1
                 _render_mod_slot(obj, rects[0], screen)
             elif isinstance(obj, SelectedModInfo):

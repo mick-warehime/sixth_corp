@@ -5,7 +5,7 @@ from pygame.rect import Rect
 
 from data.colors import DARK_GRAY, LIGHT_GRAY, RED, WHITE, YELLOW
 from models.characters.moves_base import Move
-from models.scenes.combat_scene import CombatScene, MoveData
+from models.scenes.combat_scene import CombatScene, MoveInfo
 from models.scenes.scenes_base import Scene
 from views.artists.drawing_utils import rescale_horizontal
 from views.artists.scene_artist_base import SceneArtist
@@ -74,22 +74,23 @@ def _interpolate(progress: float, rect_prev: Rect,
     return Rect(x, y, w, h)
 
 
-class CombatStackArtist(SceneArtist):
+class CombatArtist(SceneArtist):
 
     def __init__(self) -> None:
-        self._prev_move_data_rects: Dict[MoveData, List[Rect]] = {}
-        self._move_data_rects: Dict[MoveData, List[Rect]] = {}
+        self._prev_move_data_rects: Dict[MoveInfo, List[Rect]] = {}
+        self._move_data_rects: Dict[MoveInfo, List[Rect]] = {}
         self._first_animation = True
 
     def render(self, screen: Screen, scene: Scene) -> None:
         assert isinstance(scene, CombatScene)
 
+        self._render_moves(scene, screen)
+
+    def _render_moves(self, scene, screen):
         current_move_datas = [data for data in scene.layout.all_objects()
-                              if isinstance(data, MoveData)]
-
+                              if isinstance(data, MoveInfo)]
         # Each key_value pair is passed to the render function.
-        stack_render_data: Dict[MoveData, List[Rect]] = {}
-
+        stack_render_data: Dict[MoveInfo, List[Rect]] = {}
         # Beginning of animation
         # As soon as moves are selected, the scene layout is instantly updated
         # to match the end of the animation. In order to animate we must keep

@@ -36,13 +36,13 @@ def _valid_moves(user: Character, targets: Sequence[Character]) -> List[Move]:
             Attributes.CPU_AVAILABLE)]
 
 
-class MoveData(NamedTuple):
+class MoveInfo(NamedTuple):
     """Data required to represent a move on the screen."""
     move: Move
     time_left: int
     under_char: bool = False  # whether to put this move under the character.
 
-    def time_minus_one(self) -> 'MoveData':
+    def time_minus_one(self) -> 'MoveInfo':
         return self._replace(time_left=self.time_left - 1)
 
 
@@ -190,7 +190,7 @@ class CombatScene(EventListener, Scene):
         moves_times = self._combat_logic.stack.moves_times_remaining()[::-1]
         num_moves = len(moves_times)
         stack_size = 6
-        stack_elements = [(MoveData(*m_t), 1) for m_t in moves_times]
+        stack_elements = [(MoveInfo(*m_t), 1) for m_t in moves_times]
         # Add a gap rect so that rects are always scaled to the same size by
         # the layout.
         if num_moves <= stack_size:
@@ -203,7 +203,7 @@ class CombatScene(EventListener, Scene):
         # resolved moves
         resolved_size = 4
         resolved_moves = self._combat_logic.stack.resolved_moves()[::-1]
-        resolved_elems = [(MoveData(mv, 0), 1) for mv in resolved_moves]
+        resolved_elems = [(MoveInfo(mv, 0), 1) for mv in resolved_moves]
         # Add a gap to ensure consistent rect sizes.
         if len(resolved_moves) < resolved_size:
             resolved_elems.append((None, resolved_size - len(resolved_moves)))
@@ -235,7 +235,10 @@ def _character_layout(char: Character, all_moves: Sequence[Move]) -> Layout:
     move_space = 3
     # Pull out all unique moves by the character
     moves_set = {m for m in all_moves if m.user is char}
-    moves = [MoveData(m, 0, True) for m in moves_set]
+    moves = [MoveInfo(m, 0, True) for m in moves_set]
+
+
+
     char_layout = Layout([(None, 1), (char, 2), (None, 1)], 'horizontal')
     move_layout = Layout([(m, 1) for m in moves])
     move_layout = Layout([(None, 1), (move_layout, 4), (None, 1)],
