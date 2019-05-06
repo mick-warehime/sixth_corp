@@ -17,6 +17,7 @@ class State(Enum):
     ON_FIRE = 'on fire'
     FROZEN = 'frozen'
     SLEEPY = 'sleepy'
+    IS_PLAYER = 'is player character'
 
     def __str__(self) -> str:
         return self.value

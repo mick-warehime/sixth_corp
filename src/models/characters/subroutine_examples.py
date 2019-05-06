@@ -1,7 +1,7 @@
 import math
 
 from models.characters.character_base import Character
-from models.characters.states import Attributes, StatusEffect
+from models.characters.states import Attributes, StatusEffect, State
 from models.characters.subroutines_base import Subroutine, build_subroutine
 
 
@@ -19,6 +19,21 @@ def damage_target(amount: int, target: Character) -> None:
     target.status.increment_attribute(Attributes.HEALTH, -health_reduction)
 
 
+def user_is_target(user: Character, target: Character) -> bool:
+    """Returns True if user is target."""
+    return user is target
+
+
+def same_team(user: Character, target: Character) -> bool:
+    """Returns True if user and target are on the same team.
+
+    We assume that the player character has no allies.
+    """
+
+    is_plyr = State.IS_PLAYER
+    return user.status.has_state(is_plyr) == target.status.has_state(is_plyr)
+
+
 def repair(amount: int) -> Subroutine:
     """Self repair subroutine.
 
@@ -31,15 +46,12 @@ def repair(amount: int) -> Subroutine:
     def use_fun(user: Character, target: Character) -> None:
         target.status.increment_attribute(Attributes.HEALTH, amount)
 
-    def can_use_fun(user: Character, target: Character) -> bool:
-        return user is target
-
     cpu_slots = max(1, amount // 2)
     time_slots = max(1, amount // 2)
 
     description = 'Repair {}'.format(amount)
 
-    return build_subroutine(use_fun, can_use_fun, cpu_slots, time_slots,
+    return build_subroutine(use_fun, user_is_target, cpu_slots, time_slots,
                             description)
 
 
@@ -85,9 +97,9 @@ def adjust_attribute(attribute: Attributes, amount: int = 0,
         if is_buff is None:
             return True
         elif is_buff:
-            return target is user  # For now we assume user has no allies.
+            return same_team(user, target)
         else:
-            return target is not user
+            return not same_team(user, target)
 
     def after_effect(user: Character, target: Character) -> None:
         # If some other subroutine removes the effect first, this can cause
@@ -106,7 +118,7 @@ def adjust_attribute(attribute: Attributes, amount: int = 0,
 
 def shield_buff(amount: int, num_rounds: int = 1, cpu_slots: int = None,
                 time_to_resolve: int = 0) -> Subroutine:
-    """Adds a temporary damage shield buffer to the user.
+    """Adds a temporary damage shield buffer to the user or an ally.
 
     The shield fizzles either at the end of combat.
 
@@ -127,12 +139,9 @@ def shield_buff(amount: int, num_rounds: int = 1, cpu_slots: int = None,
     if time_to_resolve < 0:
         raise ValueError('shield time to resolve must be non-negative.')
 
-    def can_use(user: Character, target: Character) -> bool:
-        return user is target
-
     def use_fun(user: Character, target: Character) -> None:
         # Shield cannot decrease nor can it be made larger than amount.
-        user.status.increment_attribute(Attributes.SHIELD, amount)
+        target.status.increment_attribute(Attributes.SHIELD, amount)
 
     if cpu_slots is None:
         cpu = math.sqrt(amount * num_rounds) - math.sqrt(time_to_resolve)
@@ -141,7 +150,7 @@ def shield_buff(amount: int, num_rounds: int = 1, cpu_slots: int = None,
     description = '+{} shield'.format(amount)
     if num_rounds > 1:
         description += ' for {} rounds'.format(num_rounds)
-    return build_subroutine(use_fun, can_use, cpu_slots, time_to_resolve,
+    return build_subroutine(use_fun, same_team, cpu_slots, time_to_resolve,
                             description, num_rounds - 1, multi_use=True)
 
 
@@ -171,7 +180,7 @@ def direct_damage(damage: int, cpu_slots: int = None,
         damage_target(damage, target)
 
     def can_use_fun(user: Character, target: Character) -> bool:
-        return user is not target
+        return not same_team(user, target)
 
     description = '{} damage'.format(damage, time_to_resolve)
     if label:
@@ -216,7 +225,7 @@ def damage_over_time(damage_per_round: int, num_rounds: int = 2,
         damage_target(damage_per_round, target)
 
     def can_use_fun(user: Character, target: Character) -> bool:
-        return user is not target
+        return not same_team(user, target)
 
     description = '{} damage/{} turns'.format(damage_per_round * num_rounds,
                                               num_rounds)

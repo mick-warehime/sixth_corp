@@ -5,7 +5,7 @@ from models.characters.character_impl import build_character
 from models.characters.chassis import Chassis
 from models.characters.chassis_examples import ChassisTypes
 from models.characters.moves_base import Move
-from models.characters.states import Attributes
+from models.characters.states import Attributes, State
 from models.characters.subroutine_examples import (damage_over_time,
                                                    direct_damage)
 from models.characters.subroutines_base import build_subroutine
@@ -16,7 +16,9 @@ from models.combat.combat_logic import CombatLogic
 def player():
     # Player character with zero initial mods.
     chassis = Chassis.from_data(ChassisTypes.NO_LEGS.data)
-    return build_character(chassis, name='player')
+    player = build_character(chassis, name='player')
+    player.status.set_state(State.IS_PLAYER,True)
+    return player
 
 
 @pytest.fixture()
