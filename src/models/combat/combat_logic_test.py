@@ -17,7 +17,7 @@ def player():
     # Player character with zero initial mods.
     chassis = Chassis.from_data(ChassisTypes.NO_LEGS.data)
     player = build_character(chassis, name='player')
-    player.status.set_state(State.IS_PLAYER,True)
+    player.status.set_state(State.IS_PLAYER, True)
     return player
 
 

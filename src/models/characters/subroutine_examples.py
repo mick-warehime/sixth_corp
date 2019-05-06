@@ -1,7 +1,7 @@
 import math
 
 from models.characters.character_base import Character
-from models.characters.states import Attributes, StatusEffect, State
+from models.characters.states import Attributes, State, StatusEffect
 from models.characters.subroutines_base import Subroutine, build_subroutine
 
 
