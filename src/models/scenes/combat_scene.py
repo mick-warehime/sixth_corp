@@ -49,12 +49,12 @@ class MoveData(NamedTuple):
 class CombatScene(EventListener, Scene):
     """Represents and updates all model data involved during a combat."""
 
-    def __init__(self, enemy: Character = None,
+    def __init__(self, enemies: Sequence[Character] = None,
                  win_resolution: Resolution = None,
                  background_image: str = None) -> None:
-        if enemy is None:
-            enemy = build_character(data=CharacterTypes.DRONE.data)
-        self._enemy: Character = enemy
+        if enemies is None:
+            enemies = (build_character(data=CharacterTypes.DRONE.data),)
+        self._enemies: Tuple[Character, ...] = tuple(enemies)
         super().__init__()
         self._player = get_player()
 
@@ -104,7 +104,7 @@ class CombatScene(EventListener, Scene):
 
         The player is always returned first.
         """
-        return self._player, self._enemy
+        return (self._player,) + tuple(self._enemies)
 
     def available_moves(self) -> List[Move]:
         """All player moves that may be added to the combat stack.
@@ -117,11 +117,16 @@ class CombatScene(EventListener, Scene):
         return _valid_moves(self._player, [self._selected_char])
 
     def is_resolved(self) -> bool:
-        return IsDead().check(self._enemy) or IsDead().check(self._player)
+        is_dead = IsDead()
+        if all(is_dead.check(c) for c in self._enemies):
+            return True
+
+        return is_dead.check(self._player)
 
     def get_resolution(self) -> Resolution:
         assert self.is_resolved()
-        if IsDead().check(self._enemy):
+        is_dead = IsDead()
+        if all(is_dead.check(e) for e in self._enemies):
             return self._win_resolution
         assert IsDead().check(self._player)
         return scene_examples.ResolutionTypes.GAME_OVER.resolution
@@ -132,7 +137,9 @@ class CombatScene(EventListener, Scene):
 
         # Add new moves to the combat stack and start animation
         if isinstance(event, SelectPlayerMoveEvent):
-            moves = [event.move, self._enemy.ai.select_move([self._player])]
+            characters = self.characters()
+            moves = [event.move]
+            moves.extend(e.ai.select_move(characters) for e in self._enemies)
             self._combat_logic.start_round(moves)
             self._update_layout()
             self._selected_char = None
@@ -155,7 +162,7 @@ class CombatScene(EventListener, Scene):
                 self._update_layout()
 
     def __str__(self) -> str:
-        return 'CombatScene(enemy = {})'.format(str(self._enemy))
+        return 'CombatScene(enemy = {})'.format(str(self._enemies))
 
     def _update_layout(self) -> None:
         """Update the screen layout according to moves and characters in scene.
