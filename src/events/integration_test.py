@@ -12,9 +12,8 @@ from controllers.inventory_controller import InventoryController
 from data.keybindings import Keybindings
 from events import event_utils
 from events.events_base import BasicEvents, EventManager
-from models.characters.character_examples import CharacterData
 from models.characters.character_impl import build_character
-from models.characters.chassis import ChassisData, Chassis
+from models.characters.chassis import Chassis
 from models.characters.conditions import IsDead
 from models.characters.mods_base import Mod, SlotTypes, build_mod
 from models.characters.player import get_player, reset_player
