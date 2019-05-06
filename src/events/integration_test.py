@@ -110,7 +110,7 @@ def test_combat_scene_to_decision_scene():
         attribute_modifiers={Attributes.MAX_HEALTH: 1}
     )))
     scene = combat_scene.CombatScene(
-        enemy, win_resolution=BasicResolution(dummy_scene))
+        [enemy], win_resolution=BasicResolution(dummy_scene))
     event_utils.post_scene_change(scene)
 
     assert isinstance(_get_active_controller(), CombatSceneController)

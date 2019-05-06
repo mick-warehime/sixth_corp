@@ -18,7 +18,7 @@ def _create_enemy(health: int = 10) -> Character:
 
 
 def _create_combat_controller(enemy) -> CombatSceneController:
-    return cast(CombatSceneController, build_controller(CombatScene(enemy)))
+    return cast(CombatSceneController, build_controller(CombatScene([enemy])))
 
 
 def _click_on_char(char: Character, controller: CombatSceneController):
