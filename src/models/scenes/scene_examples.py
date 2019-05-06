@@ -8,7 +8,7 @@ from models.characters.mods_base import Mod, SlotTypes, build_mod
 from models.characters.player import get_player
 from models.characters.states import Attributes, Skill
 from models.characters.subroutine_examples import direct_damage
-from models.scenes import combat_scene
+from models.scenes.combat_scene import CombatScene
 from models.scenes.decision_scene import (DecisionOption, DecisionScene,
                                           from_transition, transition_to)
 from models.scenes.effects import increment_attribute, restart_game
@@ -19,22 +19,20 @@ from models.scenes.skill_checks import Difficulty, skill_check
 
 
 def loading_scene() -> DecisionScene:
+    # intro scene
+    def intro() -> DecisionScene:
+        return DecisionScene('Choose scene arc.',
+                             {'1': DecisionOption('Swamp', start_scene),
+                              '2': DecisionOption('Space trip',
+                                                  space_arc.SpaceArc().intro)})
+
     options = {
-        's': DecisionOption('Start Game', pre_start_scene),
-        'x': DecisionOption('Settings', example_combat_scene)}
+        's': DecisionOption('Start Game', intro),
+        'x': DecisionOption('Settings', intro)}
     return DecisionScene('6TH Corp', options,
                          background_image=BackgroundImages.LOADING.path,
                          inventory_available=False, centered_prompt=True,
                          centered_choices=True)
-
-
-def pre_start_scene():
-    prompt = 'Choose scene arc.'
-
-    return DecisionScene(prompt,
-                         {'1': DecisionOption('Swamp', start_scene),
-                          '2': DecisionOption('Space trip',
-                                              space_arc.SpaceArc().intro)})
 
 
 def start_scene() -> DecisionScene:
@@ -106,7 +104,7 @@ def second_scene() -> DecisionScene:
     return DecisionScene(main_text, options)
 
 
-def example_combat_scene() -> 'combat_scene.CombatScene':
+def example_combat_scene() -> 'CombatScene':
     restart = transition_to(start_scene, 'Back to beginning!')
 
     loot_scene = partial(InventoryScene, prev_scene_loader=restart,
@@ -114,7 +112,8 @@ def example_combat_scene() -> 'combat_scene.CombatScene':
     victory = BasicResolution(transition_to(loot_scene,
                                             'Victory! You loot the body.'))
 
-    return combat_scene.CombatScene(win_resolution=victory)
+    return CombatScene(win_resolution=victory,
+                       loss_resolution=BasicResolution(game_over_scene))
 
 
 def game_over_scene() -> DecisionScene:
