@@ -4,7 +4,7 @@ from controllers.controller import Controller
 from events.events_base import (BasicEvents, EventManager, EventType,
                                 InputEvent, MoveExecutedEvent,
                                 SelectCharacterEvent, SelectPlayerMoveEvent)
-from models.scenes.combat_scene import CombatScene
+from models.scenes.combat_scene import CombatScene, CharacterInfo
 
 COMBAT_KEYBOARD_INPUTS = [str(i) for i in range(9)]
 
@@ -51,9 +51,9 @@ class CombatSceneController(Controller):
 
         # Check if a character was newly clicked.
         clicked_obj = self.scene.layout.object_at(x, y)
-        if clicked_obj in self.scene.characters():
-            if self.scene.selected_char != clicked_obj:
-                EventManager.post(SelectCharacterEvent(clicked_obj))
+        if isinstance(clicked_obj, CharacterInfo):
+            if not clicked_obj.is_selected:
+                EventManager.post(SelectCharacterEvent(clicked_obj.character))
                 logging.debug('MOUSE: Selected: {}'.format(clicked_obj))
                 return
 

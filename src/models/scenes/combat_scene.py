@@ -46,6 +46,13 @@ class MoveInfo(NamedTuple):
         return self._replace(time_left=self.time_left - 1)
 
 
+class CharacterInfo(NamedTuple):
+    """Data required to represent a character on the screen."""
+    character: Character
+    is_alive: bool
+    is_selected: bool
+
+
 class CombatScene(EventListener, Scene):
     """Represents and updates all model data involved during a combat."""
 
@@ -57,8 +64,9 @@ class CombatScene(EventListener, Scene):
         self._enemies: Tuple[Character, ...] = tuple(enemies)
         super().__init__()
         self._player = get_player()
+        self._characters = (self._player,) + self._enemies
 
-        self._combat_logic = CombatLogic(self.characters())
+        self._combat_logic = CombatLogic(self._characters)
 
         if win_resolution is None:
             win_resolution = scene_examples.ResolutionTypes.RESTART.resolution
@@ -99,13 +107,6 @@ class CombatScene(EventListener, Scene):
     def background_image(self) -> str:
         return self._background_image
 
-    def characters(self) -> Tuple[Character, ...]:
-        """All characters in the scene.
-
-        The player is always returned first.
-        """
-        return (self._player,) + tuple(self._enemies)
-
     def available_moves(self) -> List[Move]:
         """All player moves that may be added to the combat stack.
 
@@ -137,9 +138,10 @@ class CombatScene(EventListener, Scene):
 
         # Add new moves to the combat stack and start animation
         if isinstance(event, SelectPlayerMoveEvent):
-            characters = self.characters()
+
             moves = [event.move]
-            moves.extend(e.ai.select_move(characters) for e in self._enemies)
+            moves.extend(e.ai.select_move(self._characters)
+                         for e in self._enemies)
             self._combat_logic.start_round(moves)
             self._update_layout()
             self._selected_char = None
@@ -175,13 +177,13 @@ class CombatScene(EventListener, Scene):
         # 3. Enemy column, which shows enemy images and stats.
         # We populate these columns with objects whose attributes (data) are
         # required to render the scene.
-        characters = self.characters()
+        characters = self._characters
         all_moves = self._combat_logic.all_moves_present()
 
         # player side layout
         player = characters[0]
 
-        player_layout = _character_layout(player, all_moves)
+        player_layout = self._character_layout(player, all_moves)
         left_column = Layout([(None, 1), (player_layout, 1), (None, 1)],
                              'vertical')
 
@@ -220,7 +222,7 @@ class CombatScene(EventListener, Scene):
 
         right_elements: List[Tuple[Any, int]] = [(None, 1)]
         for enemy in characters[1:]:
-            enemy_layout = _character_layout(enemy, all_moves)
+            enemy_layout = self._character_layout(enemy, all_moves)
 
             right_elements.extend([(enemy_layout, 2), (None, 1)])
 
@@ -230,22 +232,27 @@ class CombatScene(EventListener, Scene):
             [(left_column, 2), (middle_column, 3), (right_column, 2)],
             'horizontal', SCREEN_SIZE)
 
+    def _character_layout(self, char: Character,
+                          all_moves: Sequence[Move]) -> Layout:
+        # Construct info object
+        is_dead = IsDead()
 
-def _character_layout(char: Character, all_moves: Sequence[Move]) -> Layout:
-    move_space = 3
-    # Pull out all unique moves by the character
-    moves_set = {m for m in all_moves if m.user is char}
-    moves = [MoveInfo(m, 0, True) for m in moves_set]
+        char_info = CharacterInfo(char, not is_dead.check(char),
+                                  char is self._selected_char)
 
+        move_space = 3
+        # Pull out all unique moves by the character
+        moves_set = {m for m in all_moves if m.user is char}
+        moves = [MoveInfo(m, 0, True) for m in moves_set]
 
+        char_layout = Layout([(None, 1), (char_info, 2), (None, 1)],
+                             'horizontal')
+        move_layout = Layout([(m, 1) for m in moves])
+        move_layout = Layout([(None, 1), (move_layout, 4), (None, 1)],
+                             'horizontal')
+        full_elements = [(char_layout, 5), (None, 3),
+                         (move_layout, min(move_space, len(moves)))]
+        if len(moves) < move_space:
+            full_elements.append((None, move_space - len(moves)))
 
-    char_layout = Layout([(None, 1), (char, 2), (None, 1)], 'horizontal')
-    move_layout = Layout([(m, 1) for m in moves])
-    move_layout = Layout([(None, 1), (move_layout, 4), (None, 1)],
-                         'horizontal')
-    full_elements = [(char_layout, 5), (None, 3),
-                     (move_layout, min(move_space, len(moves)))]
-    if len(moves) < move_space:
-        full_elements.append((None, move_space - len(moves)))
-
-    return Layout(full_elements)
+        return Layout(full_elements)

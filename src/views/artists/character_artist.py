@@ -3,7 +3,7 @@ from pygame.rect import Rect
 from data.colors import GREEN, LIGHT_BLUE, RED, YELLOW
 from models.characters.character_base import Character
 from models.characters.states import Attributes
-from models.scenes.combat_scene import CombatScene
+from models.scenes.combat_scene import CombatScene, CharacterInfo
 from models.scenes.scenes_base import Scene
 from views.artists.drawing_utils import rescale_vertical
 from views.artists.scene_artist_base import SceneArtist
@@ -15,8 +15,13 @@ class CharacterArtist(SceneArtist):
 
     def render(self, screen: Screen, scene: Scene) -> None:
         assert isinstance(scene, CombatScene)
-        for char in scene.characters():
-            rects = scene.layout.get_rects(char)
+
+        char_infos = [data for data in scene.layout.all_objects()
+                      if isinstance(data, CharacterInfo)]
+
+        for info in char_infos:
+            char = info.character
+            rects = scene.layout.get_rects(info)
             assert len(rects) == 1
 
             rect = rects[0]
