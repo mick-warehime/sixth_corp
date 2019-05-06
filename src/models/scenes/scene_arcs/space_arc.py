@@ -4,15 +4,12 @@ import string
 from models.characters.character_base import Character
 from models.characters.character_impl import build_character
 from models.characters.chassis import Chassis
-from models.characters.chassis_examples import ChassisTypes
 from models.characters.mods_base import build_mod
 from models.characters.states import Attributes
-from models.characters.subroutine_examples import repair, user_is_target, \
-    direct_damage, damage_over_time
+from models.characters.subroutine_examples import damage_over_time, same_team
 from models.characters.subroutines_base import build_subroutine
 from models.combat.ai_impl import AIType
 from models.scenes.decision_scene import DecisionScene, DecisionOption
-from models.scenes import scene_examples
 
 
 class SpaceArc(object):
@@ -108,7 +105,7 @@ def _heal_over_time():
     rounds = 3
     desc = 'repair +2 for {} rounds'.format(rounds)
 
-    return build_subroutine(use_fun, user_is_target, 1, 1, desc, rounds - 1,
+    return build_subroutine(use_fun, same_team, 1, 1, desc, rounds - 1,
                             True)
 
 
@@ -122,7 +119,7 @@ def medical_bot(number: int) -> Character:
     base_mod = build_mod(subroutines_granted=[_heal_over_time(), _bone_drill()],
                          attribute_modifiers={Attributes.MAX_HEALTH: 4,
                                               Attributes.MAX_CPU: 2})
-    chassis = Chassis(base_mod=base_mod)
+    chassis = Chassis({}, base_mod=base_mod)
     name = 'med_bot {}'.format(number)
     build_character(chassis, AIType.Random, name=name,
-                    image_path='src/data/images/')
+                    image_path='src/data/images/medbot.png')
