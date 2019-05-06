@@ -15,7 +15,7 @@ class SpaceArc(object):
     def __init__(self, seed: int = 11):
         # We should figure out where to put the random seed
         random.seed(seed)
-        self._time_until_landing = 4
+        self._time_until_landing = 3
 
     def intro(self) -> DecisionScene:
         chars = string.ascii_uppercase + string.digits
@@ -41,11 +41,8 @@ class SpaceArc(object):
 
         Game history and randomness is used to provide choices.
         """
-        # Each time we return to the staging area corresponds to having
-        # completed one scene.
-        self._time_until_landing -= 1
 
-        prompt = ('You enter the staging area. The wall monitor indicates that'
+        prompt = ('You enter the staging area. The wall monitor indicates that '
                   'there are {} hours until the ship lands on Mars.')
 
         cryo = DecisionOption('The cryo-chambers look promising.',
@@ -55,6 +52,9 @@ class SpaceArc(object):
 
         return DecisionScene(prompt.format(self._time_until_landing), {
             '1': cryo, '2': scene_2})
+
+    def _decrement_time_left(self) -> None:
+        self._time_until_landing -= 1
 
     def cryo_chambers(self) -> DecisionScene:
         prompt = ('You enter the cryo-chambers, where all human personnel are'
@@ -68,18 +68,20 @@ class SpaceArc(object):
         # choices
         hack = DecisionOption('Hack the systems so that only the rival factions'
                               ' expire, and make it look like the medical robot'
-                              'was at fault.', scene_examples.pre_start_scene)
+                              'was at fault.', self.staging_area,
+                              self._decrement_time_left)
 
         help = DecisionOption('Provide technical support to the medical robot.'
-                              ' All human life is precious.',
-                              scene_examples.pre_start_scene)
+                              ' All human life is precious.', self.staging_area,
+                              self._decrement_time_left)
         disable = DecisionOption('Attempt to disable the medical robot to '
                                  'access its encryption key.',
-                                 scene_examples.pre_start_scene)
+                                 self.staging_area, self._decrement_time_left)
 
         return DecisionScene(prompt, {'1': hack, '2': help, '3': disable})
 
     def scene_2(self) -> DecisionScene:
         return DecisionScene('Something with space unicorns',
                              {'1': DecisionOption('Back to staging area',
-                                                  self.staging_area)})
+                                                  self.staging_area,
+                                                  self._decrement_time_left)})
