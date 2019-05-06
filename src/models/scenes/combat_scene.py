@@ -13,7 +13,6 @@ from models.characters.player import get_player
 from models.characters.states import Attributes
 from models.characters.subroutines_base import build_subroutine
 from models.combat.combat_logic import CombatLogic
-from models.scenes import scene_examples
 from models.scenes.layouts import Layout
 from models.scenes.scenes_base import Resolution, Scene
 
@@ -51,6 +50,7 @@ class CombatScene(EventListener, Scene):
 
     def __init__(self, enemies: Sequence[Character] = None,
                  win_resolution: Resolution = None,
+                 loss_resolution: Resolution = None,
                  background_image: str = None) -> None:
         if enemies is None:
             enemies = (build_character(data=CharacterTypes.DRONE.data),)
@@ -60,9 +60,8 @@ class CombatScene(EventListener, Scene):
 
         self._combat_logic = CombatLogic(self.characters())
 
-        if win_resolution is None:
-            win_resolution = scene_examples.ResolutionTypes.RESTART.resolution
         self._win_resolution = win_resolution
+        self._loss_resolution = loss_resolution
 
         self._selected_char: Character = None
 
@@ -127,9 +126,13 @@ class CombatScene(EventListener, Scene):
         assert self.is_resolved()
         is_dead = IsDead()
         if all(is_dead.check(e) for e in self._enemies):
+            assert self._win_resolution is not None, (
+                'win resolution unspecified at init.')
             return self._win_resolution
         assert IsDead().check(self._player)
-        return scene_examples.ResolutionTypes.GAME_OVER.resolution
+        assert self._loss_resolution is not None, (
+            'loss resolution unspecified at init.')
+        return self._loss_resolution
 
     def notify(self, event: EventType) -> None:
         if isinstance(event, SelectCharacterEvent):
