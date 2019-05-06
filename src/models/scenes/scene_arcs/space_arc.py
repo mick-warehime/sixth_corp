@@ -1,6 +1,16 @@
 import random
 import string
 
+from models.characters.character_base import Character
+from models.characters.character_impl import build_character
+from models.characters.chassis import Chassis
+from models.characters.chassis_examples import ChassisTypes
+from models.characters.mods_base import build_mod
+from models.characters.states import Attributes
+from models.characters.subroutine_examples import repair, user_is_target, \
+    direct_damage, damage_over_time
+from models.characters.subroutines_base import build_subroutine
+from models.combat.ai_impl import AIType
 from models.scenes.decision_scene import DecisionScene, DecisionOption
 from models.scenes import scene_examples
 
@@ -85,3 +95,34 @@ class SpaceArc(object):
                              {'1': DecisionOption('Back to staging area',
                                                   self.staging_area,
                                                   self._decrement_time_left)})
+
+
+def medical_bot_combat():
+    pass
+
+
+def _heal_over_time():
+    def use_fun(user: Character, target: Character) -> None:
+        target.status.increment_attribute(Attributes.HEALTH, 2)
+
+    rounds = 3
+    desc = 'repair +2 for {} rounds'.format(rounds)
+
+    return build_subroutine(use_fun, user_is_target, 1, 1, desc, rounds - 1,
+                            True)
+
+
+def _bone_drill():
+    return damage_over_time(1, 3, 1, 1, 'bone drill')
+
+
+def medical_bot(number: int) -> Character:
+    """Construct a medical robot character"""
+
+    base_mod = build_mod(subroutines_granted=[_heal_over_time(), _bone_drill()],
+                         attribute_modifiers={Attributes.MAX_HEALTH: 4,
+                                              Attributes.MAX_CPU: 2})
+    chassis = Chassis(base_mod=base_mod)
+    name = 'med_bot {}'.format(number)
+    build_character(chassis, AIType.Random, name=name,
+                    image_path='src/data/images/')
