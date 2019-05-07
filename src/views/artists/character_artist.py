@@ -23,9 +23,6 @@ class CharacterArtist(SceneArtist):
 
             rect = rects[0]
             _render_character(info, screen, rect)
-            # Draw selection
-            if info.is_selected:
-                screen.render_rect(rect, RED, 2)
 
 
 def _render_character(info: CharacterInfo, screen: Screen, rect: Rect) -> None:
@@ -34,30 +31,34 @@ def _render_character(info: CharacterInfo, screen: Screen, rect: Rect) -> None:
     font_size = rescale_vertical(30)[0]
     vert_spacing = font_size
     x = rect.x
-    # Draw shields if they exist above image
 
-    if info.shields > 0:
-        y = rect.y - 2 * vert_spacing
-        screen.render_text('Shield: {}'.format(info.shields), font_size, x, y,
-                           LIGHT_BLUE, w=rect.w)
-
-    # Draw health above image
+    # health above image
     health_bar = 'HP: {} / {}'.format(info.health, info.max_health)
 
     y = rect.y - vert_spacing
     screen.render_text(health_bar, font_size, x, y, GREEN, w=rect.w)
 
-    # Draw status effects
+    # Draw shields if they exist above health
+    if info.shields > 0:
+        y = rect.y - 2 * vert_spacing
+        screen.render_text('Shield: {}'.format(info.shields), font_size, x, y,
+                           LIGHT_BLUE, w=rect.w)
+
+    # Status effects above health/shields
     y -= vert_spacing * (len(info.active_effects) + 1)
     for effect in info.active_effects:
         y += vert_spacing
         screen.render_text(effect.label, font_size, x, y, RED, w=rect.w)
 
-    # Draw name below image
+    # Name below image
     y = rect.y + rect.h + 0.5 * vert_spacing
     screen.render_text(info.description, font_size, x, y, GREEN, w=rect.w)
 
-    # Draw CPU slots below name
+    # CPU slots below name
     y += vert_spacing
     cpu_bar = 'CPU: {} / {}'.format(info.cpu, info.max_cpu)
     screen.render_text(cpu_bar, font_size, x, y, YELLOW, w=rect.w)
+
+    # Selection box
+    if info.is_selected:
+        screen.render_rect(rect, RED, 2)
