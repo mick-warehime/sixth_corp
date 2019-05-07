@@ -10,7 +10,7 @@ from models.characters.character_impl import build_character
 from models.characters.conditions import IsDead
 from models.characters.moves_base import Move
 from models.characters.player import get_player
-from models.characters.states import Attributes
+from models.characters.states import Attributes, StatusEffect
 from models.characters.subroutines_base import build_subroutine
 from models.combat.combat_logic import CombatLogic
 from models.scenes import scene_examples
@@ -49,6 +49,14 @@ class MoveInfo(NamedTuple):
 class CharacterInfo(NamedTuple):
     """Data required to represent a character on the screen."""
     character: Character
+    shields: int
+    health: int
+    max_health: int
+    cpu: int
+    max_cpu: int
+    active_effects: Tuple[StatusEffect, ...]
+    description: str
+    image_path: str
     is_alive: bool
     is_selected: bool
 
@@ -231,19 +239,15 @@ class CombatScene(EventListener, Scene):
 
     def _character_layout(self, char: Character,
                           all_moves: Sequence[Move]) -> Layout:
-        # Construct info object
-        is_dead = IsDead()
 
-        char_info = CharacterInfo(char, not is_dead.check(char),
-                                  char is self._selected_char)
+        char_layout = Layout([(None, 1), (self._character_info(char), 2),
+                              (None, 1)], 'horizontal')
 
         move_space = 3
         # Pull out all unique moves by the character
         moves_set = {m for m in all_moves if m.user is char}
         moves = [MoveInfo(m, 0, True) for m in moves_set]
 
-        char_layout = Layout([(None, 1), (char_info, 2), (None, 1)],
-                             'horizontal')
         move_layout = Layout([(m, 1) for m in moves])
         move_layout = Layout([(None, 1), (move_layout, 4), (None, 1)],
                              'horizontal')
@@ -253,3 +257,19 @@ class CombatScene(EventListener, Scene):
             full_elements.append((None, move_space - len(moves)))
 
         return Layout(full_elements)
+
+    def _character_info(self, char: Character) -> CharacterInfo:
+
+        def attr_value(attr: Attributes) -> int:
+            return char.status.get_attribute(attr)
+
+        return CharacterInfo(char, attr_value(Attributes.SHIELD),
+                             attr_value(Attributes.HEALTH),
+                             attr_value(Attributes.MAX_HEALTH),
+                             attr_value(Attributes.CPU_AVAILABLE),
+                             attr_value(Attributes.MAX_CPU),
+                             tuple(char.status.active_effects()),
+                             char.description(),
+                             char.image_path,
+                             not IsDead().check(char),
+                             char is self._selected_char)
