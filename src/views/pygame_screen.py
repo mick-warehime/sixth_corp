@@ -100,7 +100,7 @@ class Screen(object):
 
     @abstractmethod
     def render_line(self, start: Tuple[int, int], end: Tuple[int, int],
-                    color: ColorType, thickness: int = 2):
+                    color: ColorType, thickness: int = 2) -> None:
         """Draw a line on the screen."""
 
 
@@ -169,7 +169,7 @@ class _PygameScreen(Screen):
         return rect
 
     def render_line(self, start: Tuple[int, int], end: Tuple[int, int],
-                    color: ColorType, thickness: int = 2):
+                    color: ColorType, thickness: int = 2) -> None:
         pygame.draw.line(self._screen, color, start, end, thickness)
 
     def render_text_in_rect(self, text: str, font_size: int, rect: Rect,
