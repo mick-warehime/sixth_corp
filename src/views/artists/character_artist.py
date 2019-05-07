@@ -62,3 +62,12 @@ def _render_character(info: CharacterInfo, screen: Screen, rect: Rect) -> None:
     # Selection box
     if info.is_selected:
         screen.render_rect(rect, RED, 2)
+
+    # X out dead character
+    if info.is_dead:
+        start = rect.x, rect.y
+        end = rect.x + rect.w, rect.y + rect.h
+        screen.render_line(start, end, RED, 4)
+
+        start, end = (start[0], end[1]), (end[0], start[1])
+        screen.render_line(start, end, RED, 4)

@@ -57,7 +57,7 @@ class CharacterInfo(NamedTuple):
     active_effects: Tuple[StatusEffect, ...]
     description: str
     image_path: str
-    is_alive: bool
+    is_dead: bool
     is_selected: bool
 
 
@@ -271,5 +271,5 @@ class CombatScene(EventListener, Scene):
                              tuple(char.status.active_effects()),
                              char.description(),
                              char.image_path,
-                             not IsDead().check(char),
+                             IsDead().check(char),
                              char is self._selected_char)
