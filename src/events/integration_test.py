@@ -21,8 +21,10 @@ from models.characters.states import Attributes
 from models.characters.subroutine_examples import direct_damage
 from models.scenes import combat_scene
 from models.scenes.decision_scene import DecisionOption, DecisionScene
-from models.scenes.inventory_scene import InventoryScene, SlotHeaderInfo, SlotRowInfo
+from models.scenes.inventory_scene import InventoryScene, SlotHeaderInfo, \
+    SlotRowInfo
 from models.scenes.scenes_base import BasicResolution, Scene
+from util.testing_util import click_on_char, selected_char
 from views.view_manager import ViewManager
 
 
@@ -137,10 +139,9 @@ def test_combat_scene_to_decision_scene():
     # Kill each enemy
     for enemy in enemies:
         # click enemy
-        enemy_pos = scene.layout.get_rects(enemy)[0].center
-        event_utils.simulate_mouse_click(*enemy_pos)
+        click_on_char(enemy, scene.layout)
 
-        assert enemy is scene.selected_char
+        assert enemy is selected_char(scene.layout)
 
         # select the fire laser ability
         laser_ind = [ind for ind, move in enumerate(scene.available_moves())

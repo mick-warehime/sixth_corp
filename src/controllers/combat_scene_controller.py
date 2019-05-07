@@ -59,7 +59,4 @@ class CombatSceneController(Controller):
 
         logging.debug('MOUSE: Clicked nothing.')
         # if no character was clicked clear field
-        if self.scene.selected_char is not None:
-            logging.debug(
-                'MOUSE: Deselected: {}'.format(self.scene.selected_char))
-            EventManager.post(SelectCharacterEvent(None))
+        EventManager.post(SelectCharacterEvent(None))

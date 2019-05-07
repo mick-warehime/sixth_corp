@@ -27,7 +27,7 @@ class CharacterArtist(SceneArtist):
             rect = rects[0]
             _render_character(char, screen, rect)
             # Draw selection
-            if char == scene.selected_char:
+            if info.is_selected:
                 screen.render_rect(rect, RED, 2)
 
 

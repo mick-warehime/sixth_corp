@@ -96,10 +96,6 @@ class CombatScene(EventListener, Scene):
         return self._animation_progress
 
     @property
-    def selected_char(self) -> Optional[Character]:
-        return self._selected_char
-
-    @property
     def layout(self) -> Layout:
         return self._layout
 
@@ -135,6 +131,7 @@ class CombatScene(EventListener, Scene):
     def notify(self, event: EventType) -> None:
         if isinstance(event, SelectCharacterEvent):
             self._selected_char = event.character
+            self._update_layout()
 
         # Add new moves to the combat stack and start animation
         if isinstance(event, SelectPlayerMoveEvent):
@@ -143,8 +140,8 @@ class CombatScene(EventListener, Scene):
             moves.extend(e.ai.select_move(self._characters)
                          for e in self._enemies)
             self._combat_logic.start_round(moves)
-            self._update_layout()
             self._selected_char = None
+            self._update_layout()
 
             # If animation enabled, start progress. Otherwise execute moves.
             if ANIMATION and not self._first_turn:
