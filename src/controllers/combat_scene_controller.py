@@ -4,7 +4,7 @@ from controllers.controller import Controller
 from events.events_base import (BasicEvents, EventManager, EventType,
                                 InputEvent, MoveExecutedEvent,
                                 SelectCharacterEvent, SelectPlayerMoveEvent)
-from models.scenes.combat_scene import CombatScene, CharacterInfo
+from models.scenes.combat_scene import CharacterInfo, CombatScene
 
 COMBAT_KEYBOARD_INPUTS = [str(i) for i in range(9)]
 

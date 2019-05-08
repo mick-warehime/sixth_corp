@@ -3,7 +3,8 @@ from controllers.controller import Controller
 from events.events_base import (BasicEvents, EventManager, EventType,
                                 InputEvent, InventorySelectionEvent,
                                 InventoryTransferEvent)
-from models.scenes.inventory_scene import InventoryScene, SlotHeaderInfo, SlotRowInfo
+from models.scenes.inventory_scene import (InventoryScene, SlotHeaderInfo,
+                                           SlotRowInfo)
 
 
 class InventoryController(Controller):
