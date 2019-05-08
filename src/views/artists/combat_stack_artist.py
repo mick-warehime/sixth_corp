@@ -92,7 +92,7 @@ class CombatArtist(SceneArtist):
     def __init__(self) -> None:
         self._prev_move_data_rects: Dict[MoveInfo, List[Rect]] = {}
         self._move_data_rects: Dict[MoveInfo, List[Rect]] = {}
-        self._first_animation = True
+        self._animation_start = True
 
     def render(self, screen: Screen, scene: Scene) -> None:
         assert isinstance(scene, CombatScene)
@@ -113,9 +113,9 @@ class CombatArtist(SceneArtist):
         # animation the rects from the previous layout are matched with rects
         # in the new layout to get an interpolated rect that is used in
         # rendering.
-        if scene.animation_progress is not None and self._first_animation:
+        if scene.animation_progress is not None and self._animation_start:
             logging.debug('Animation start')
-            self._first_animation = False
+            self._animation_start = False
             # We only consider moves that existed in the previous round,
             # excluding those that resolved.
             to_remove = [data for data in self._prev_move_data_rects
@@ -134,11 +134,11 @@ class CombatArtist(SceneArtist):
             self._move_data_rects.update(
                 {data: scene.layout.get_rects(data)
                  for data in current_move_datas if data.time_left == 0})
+
             stack_render_data = self._prev_move_data_rects
 
-        # Middle of animation. Do not animate the first animation as there is
-        # nothing to draw.
-        elif scene.animation_progress is not None and not self._first_animation:
+        # Middle of animation.
+        elif scene.animation_progress is not None and not self._animation_start:
             # interpolate prev and new rects based on animation progress
             for data, prev_rects in self._prev_move_data_rects.items():
                 new_rects = self._move_data_rects[data]
@@ -152,7 +152,7 @@ class CombatArtist(SceneArtist):
         # No animation, show resolved moves and current layout.
         else:
             assert scene.animation_progress is None
-            self._first_animation = True
+            self._animation_start = True
 
             self._prev_move_data_rects = {data: scene.layout.get_rects(data)
                                           for data in current_move_datas
