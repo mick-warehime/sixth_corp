@@ -101,6 +101,8 @@ class CombatArtist(SceneArtist):
 
         self._render_moves(scene, screen)
 
+        _render_combat_options(scene, screen)
+
     def _render_moves(self, scene: CombatScene, screen: Screen) -> None:
         current_move_datas = [data for data in scene.layout.all_objects()
                               if isinstance(data, MoveInfo)]
@@ -173,6 +175,19 @@ class CombatArtist(SceneArtist):
             assert len(rects) == 1
             _render_move(data.move, None, rects[0], screen,
                          small_text=True, CPU_not_time=True)
+
+
+def _render_combat_options(scene: CombatScene, screen: Screen) -> None:
+    x, font_size, spacing = rescale_horizontal(450, 35, 50)
+    y, = rescale_vertical(700)
+
+    text = ['{}: {} ({} rounds, {} CPU)'.format(
+        i + 1, m.subroutine.description(), m.subroutine.time_to_resolve(),
+        m.subroutine.cpu_slots())
+        for i, m in enumerate(scene.available_moves())]
+
+    screen.render_texts(text, font_size=font_size, x=x, y=y,
+                        color=GREEN, spacing=spacing)
 
 
 def _render_character(info: CharacterInfo, screen: Screen, rect: Rect) -> None:
