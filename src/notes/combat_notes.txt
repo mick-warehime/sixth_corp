@@ -60,13 +60,17 @@ directly to the resolved moves section (and are resolved before all others).
 3. An animation occurs in which all unresolved moves that existed in the
 previous round shift to their new positions in the stack/ resolved move section.
 
-4. The round ends. First all moves in the resolved part of the stack are
+4. The round ends. All moves in the resolved part of the stack are
 executed (in stack order).
 
-5. Finished moves are removed from the game. A move is considered finished
-when the number of times advanced (step 1) since it has been added to the stack
-(step 2) equals the sum of its time to resolve and its duration. When a move is
-removed from the game, its CPU cost is returned to the user and its after-effect
-is invoked.
+5. All characters in the combat which are dead are removed.
+
+6. Finished moves are removed from the game. A move is considered finished if
+either of two conditions are met:
+    a. The number of times advanced (step 1) since it has been added to the
+    stack (step 2) equals the sum of its time to resolve and its duration.
+    b. The move's user is been removed from the game (likely from death).
+When a move is removed from the game, its CPU cost is returned to the user
+(if alive) and its after-effect is invoked.
 
 

@@ -30,7 +30,8 @@ class DecisionOption(Resolution):
         return self._next_scene_fun()
 
 
-class DecisionData(NamedTuple):
+class DecisionInfo(NamedTuple):
+    """All information needed to render some decision text."""
     text: str
     key: Optional[str]
     centered: bool
@@ -108,11 +109,11 @@ class DecisionScene(EventListener, Scene):
         # Layout is composed of the scene prompt/description, below which is
         # the list of decisions.
 
-        prompt = DecisionData(self._prompt, None, centered_prompt,
+        prompt = DecisionInfo(self._prompt, None, centered_prompt,
                               is_prompt=True)
 
         choice_weight = 4
-        choice_elems = [(DecisionData(c.description, k, centered_choices), 1)
+        choice_elems = [(DecisionInfo(c.description, k, centered_choices), 1)
                         for k, c in self.choices.items()]
         if len(choice_elems) < choice_weight:
             choice_elems.append((None, choice_weight - len(choice_elems)))
