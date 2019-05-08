@@ -10,7 +10,7 @@ from models.characters.character_impl import build_character
 from models.characters.conditions import IsDead
 from models.characters.moves_base import Move
 from models.characters.player import get_player
-from models.characters.states import Attributes
+from models.characters.states import Attributes, StatusEffect
 from models.characters.subroutines_base import build_subroutine
 from models.combat.combat_logic import CombatLogic
 from models.scenes import scene_examples
@@ -36,14 +36,29 @@ def _valid_moves(user: Character, targets: Sequence[Character]) -> List[Move]:
             Attributes.CPU_AVAILABLE)]
 
 
-class MoveData(NamedTuple):
+class MoveInfo(NamedTuple):
     """Data required to represent a move on the screen."""
     move: Move
     time_left: int
     under_char: bool = False  # whether to put this move under the character.
 
-    def time_minus_one(self) -> 'MoveData':
+    def time_minus_one(self) -> 'MoveInfo':
         return self._replace(time_left=self.time_left - 1)
+
+
+class CharacterInfo(NamedTuple):
+    """Data required to represent a character on the screen."""
+    character: Character
+    shields: int
+    health: int
+    max_health: int
+    cpu: int
+    max_cpu: int
+    active_effects: Tuple[StatusEffect, ...]
+    description: str
+    image_path: str
+    is_dead: bool
+    is_selected: bool
 
 
 class CombatScene(EventListener, Scene):
@@ -57,8 +72,9 @@ class CombatScene(EventListener, Scene):
         self._enemies: Tuple[Character, ...] = tuple(enemies)
         super().__init__()
         self._player = get_player()
+        self._characters = (self._player,) + self._enemies
 
-        self._combat_logic = CombatLogic(self.characters())
+        self._combat_logic = CombatLogic(self._characters)
 
         if win_resolution is None:
             win_resolution = scene_examples.ResolutionTypes.RESTART.resolution
@@ -88,23 +104,12 @@ class CombatScene(EventListener, Scene):
         return self._animation_progress
 
     @property
-    def selected_char(self) -> Optional[Character]:
-        return self._selected_char
-
-    @property
     def layout(self) -> Layout:
         return self._layout
 
     @property
     def background_image(self) -> str:
         return self._background_image
-
-    def characters(self) -> Tuple[Character, ...]:
-        """All characters in the scene.
-
-        The player is always returned first.
-        """
-        return (self._player,) + tuple(self._enemies)
 
     def available_moves(self) -> List[Move]:
         """All player moves that may be added to the combat stack.
@@ -134,15 +139,17 @@ class CombatScene(EventListener, Scene):
     def notify(self, event: EventType) -> None:
         if isinstance(event, SelectCharacterEvent):
             self._selected_char = event.character
+            self._update_layout()
 
         # Add new moves to the combat stack and start animation
         if isinstance(event, SelectPlayerMoveEvent):
-            characters = self.characters()
+
             moves = [event.move]
-            moves.extend(e.ai.select_move(characters) for e in self._enemies)
+            moves.extend(e.ai.select_move(self._characters)
+                         for e in self._enemies)
             self._combat_logic.start_round(moves)
-            self._update_layout()
             self._selected_char = None
+            self._update_layout()
 
             # If animation enabled, start progress. Otherwise execute moves.
             if ANIMATION and not self._first_turn:
@@ -175,13 +182,13 @@ class CombatScene(EventListener, Scene):
         # 3. Enemy column, which shows enemy images and stats.
         # We populate these columns with objects whose attributes (data) are
         # required to render the scene.
-        characters = self.characters()
+        characters = self._characters
         all_moves = self._combat_logic.all_moves_present()
 
         # player side layout
         player = characters[0]
 
-        player_layout = _character_layout(player, all_moves)
+        player_layout = self._character_layout(player, all_moves)
         left_column = Layout([(None, 1), (player_layout, 1), (None, 1)],
                              'vertical')
 
@@ -190,7 +197,7 @@ class CombatScene(EventListener, Scene):
         moves_times = self._combat_logic.stack.moves_times_remaining()[::-1]
         num_moves = len(moves_times)
         stack_size = 6
-        stack_elements = [(MoveData(*m_t), 1) for m_t in moves_times]
+        stack_elements = [(MoveInfo(*m_t), 1) for m_t in moves_times]
         # Add a gap rect so that rects are always scaled to the same size by
         # the layout.
         if num_moves <= stack_size:
@@ -203,7 +210,7 @@ class CombatScene(EventListener, Scene):
         # resolved moves
         resolved_size = 4
         resolved_moves = self._combat_logic.stack.resolved_moves()[::-1]
-        resolved_elems = [(MoveData(mv, 0), 1) for mv in resolved_moves]
+        resolved_elems = [(MoveInfo(mv, 0), 1) for mv in resolved_moves]
         # Add a gap to ensure consistent rect sizes.
         if len(resolved_moves) < resolved_size:
             resolved_elems.append((None, resolved_size - len(resolved_moves)))
@@ -220,7 +227,7 @@ class CombatScene(EventListener, Scene):
 
         right_elements: List[Tuple[Any, int]] = [(None, 1)]
         for enemy in characters[1:]:
-            enemy_layout = _character_layout(enemy, all_moves)
+            enemy_layout = self._character_layout(enemy, all_moves)
 
             right_elements.extend([(enemy_layout, 2), (None, 1)])
 
@@ -230,19 +237,39 @@ class CombatScene(EventListener, Scene):
             [(left_column, 2), (middle_column, 3), (right_column, 2)],
             'horizontal', SCREEN_SIZE)
 
+    def _character_layout(self, char: Character,
+                          all_moves: Sequence[Move]) -> Layout:
 
-def _character_layout(char: Character, all_moves: Sequence[Move]) -> Layout:
-    move_space = 3
-    # Pull out all unique moves by the character
-    moves_set = {m for m in all_moves if m.user is char}
-    moves = [MoveData(m, 0, True) for m in moves_set]
-    char_layout = Layout([(None, 1), (char, 2), (None, 1)], 'horizontal')
-    move_layout = Layout([(m, 1) for m in moves])
-    move_layout = Layout([(None, 1), (move_layout, 4), (None, 1)],
-                         'horizontal')
-    full_elements = [(char_layout, 5), (None, 3),
-                     (move_layout, min(move_space, len(moves)))]
-    if len(moves) < move_space:
-        full_elements.append((None, move_space - len(moves)))
+        char_layout = Layout([(None, 1), (self._character_info(char), 2),
+                              (None, 1)], 'horizontal')
 
-    return Layout(full_elements)
+        move_space = 3
+        # Pull out all unique moves by the character
+        moves_set = {m for m in all_moves if m.user is char}
+        moves = [MoveInfo(m, 0, True) for m in moves_set]
+
+        move_layout = Layout([(m, 1) for m in moves])
+        move_layout = Layout([(None, 1), (move_layout, 4), (None, 1)],
+                             'horizontal')
+        full_elements = [(char_layout, 5), (None, 3),
+                         (move_layout, min(move_space, len(moves)))]
+        if len(moves) < move_space:
+            full_elements.append((None, move_space - len(moves)))
+
+        return Layout(full_elements)
+
+    def _character_info(self, char: Character) -> CharacterInfo:
+
+        def attr_value(attr: Attributes) -> int:
+            return char.status.get_attribute(attr)
+
+        return CharacterInfo(char, attr_value(Attributes.SHIELD),
+                             attr_value(Attributes.HEALTH),
+                             attr_value(Attributes.MAX_HEALTH),
+                             attr_value(Attributes.CPU_AVAILABLE),
+                             attr_value(Attributes.MAX_CPU),
+                             tuple(char.status.active_effects()),
+                             char.description(),
+                             char.image_path,
+                             IsDead().check(char),
+                             char is self._selected_char)

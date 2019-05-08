@@ -21,8 +21,10 @@ from models.characters.states import Attributes
 from models.characters.subroutine_examples import direct_damage
 from models.scenes import combat_scene
 from models.scenes.decision_scene import DecisionOption, DecisionScene
-from models.scenes.inventory_scene import InventoryScene, SlotHeader, SlotRow
+from models.scenes.inventory_scene import (InventoryScene, SlotHeaderInfo,
+                                           SlotRowInfo)
 from models.scenes.scenes_base import BasicResolution, Scene
+from util.testing_util import click_on_char, selected_char
 from views.view_manager import ViewManager
 
 
@@ -137,10 +139,9 @@ def test_combat_scene_to_decision_scene():
     # Kill each enemy
     for enemy in enemies:
         # click enemy
-        enemy_pos = scene.layout.get_rects(enemy)[0].center
-        event_utils.simulate_mouse_click(*enemy_pos)
+        click_on_char(enemy, scene.layout)
 
-        assert enemy is scene.selected_char
+        assert enemy is selected_char(scene.layout)
 
         # select the fire laser ability
         laser_ind = [ind for ind, move in enumerate(scene.available_moves())
@@ -181,7 +182,7 @@ def _slot_header_position(slot: SlotTypes, scene: InventoryScene
 
     capacity = chassis.slot_capacities[slot]
     mods = chassis.mods_in_slot(slot)
-    header = SlotHeader(slot, capacity, mods)
+    header = SlotHeaderInfo(slot, capacity, mods)
 
     rects = scene.layout.get_rects(header)
     assert len(rects) == 1
@@ -190,9 +191,9 @@ def _slot_header_position(slot: SlotTypes, scene: InventoryScene
 
 
 def _mod_slot_position(mod: Mod, scene: InventoryScene) -> Tuple[int, int]:
-    rects = scene.layout.get_rects(SlotRow(mod, False))
+    rects = scene.layout.get_rects(SlotRowInfo(mod, False))
     if not rects:
-        rects = scene.layout.get_rects(SlotRow(mod, True))
+        rects = scene.layout.get_rects(SlotRowInfo(mod, True))
 
     assert len(rects) == 1
     return rects[0].center

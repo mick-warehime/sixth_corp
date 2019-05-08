@@ -98,6 +98,11 @@ class Screen(object):
         """Makes sure any render/clear calls have been posted to the screen."""
         pass
 
+    @abstractmethod
+    def render_line(self, start: Tuple[int, int], end: Tuple[int, int],
+                    color: ColorType, thickness: int = 2) -> None:
+        """Draw a line on the screen."""
+
 
 class _PygameScreen(Screen):
     _screen: pygame.Surface = None
@@ -162,6 +167,10 @@ class _PygameScreen(Screen):
 
         self._screen.blit(rasterized, rect)
         return rect
+
+    def render_line(self, start: Tuple[int, int], end: Tuple[int, int],
+                    color: ColorType, thickness: int = 2) -> None:
+        pygame.draw.line(self._screen, color, start, end, thickness)
 
     def render_text_in_rect(self, text: str, font_size: int, rect: Rect,
                             color: ColorType, center_x: bool = False,
