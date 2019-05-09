@@ -1,5 +1,5 @@
-from models.characters.conditions import HasState, IsDead
-from models.characters.states import Attributes, State, Stateful
+from models.characters.conditions import status_condition
+from models.characters.states import State, Stateful
 from models.characters.status import BasicStatus
 
 
@@ -16,44 +16,74 @@ class _DummyStateful(Stateful):
         self._status = BasicStatus()
 
 
-def test_condition_and():
+def test_status_condition_simple():
+    on_fire = status_condition(lambda t: t.status.has_state(State.ON_FIRE))
+
     stateful = _DummyStateful()
 
-    cond = HasState(State.ON_FIRE) & IsDead()
-    assert not cond.check(stateful)
+    assert not on_fire(stateful)
+
     stateful.status.set_state(State.ON_FIRE, True)
-    assert cond.check(stateful)
 
-    assert not (cond & HasState(State.FROZEN)).check(stateful)
+    assert on_fire(stateful)
 
 
-def test_condition_or():
+def test_status_condition_or():
+    on_fire = status_condition(lambda t: t.status.has_state(State.ON_FIRE))
+    is_sleepy = status_condition(lambda t: t.status.has_state(State.SLEEPY))
+    sleepy_or_on_fire = is_sleepy | on_fire
+
     stateful = _DummyStateful()
 
-    cond = HasState(State.ON_FIRE) | IsDead()
-    assert cond.check(stateful)
-    stateful.status.increment_attribute(Attributes.HEALTH, 1)
-    assert not cond.check(stateful)
+    assert not sleepy_or_on_fire(stateful)
 
-    stateful.status.set_state(State.FROZEN, True)
-    assert (cond | HasState(State.FROZEN)).check(stateful)
+    stateful.status.set_state(State.ON_FIRE, True)
+
+    assert sleepy_or_on_fire(stateful)
+
+    stateful.status.set_state(State.ON_FIRE, False)
+    stateful.status.set_state(State.SLEEPY, True)
+
+    assert sleepy_or_on_fire(stateful)
+
+    stateful.status.set_state(State.ON_FIRE, True)
+    stateful.status.set_state(State.SLEEPY, True)
+
+    assert sleepy_or_on_fire(stateful)
 
 
-def test_condition_not():
+def test_status_condition_and():
+    on_fire = status_condition(lambda t: t.status.has_state(State.ON_FIRE))
+    is_sleepy = status_condition(lambda t: t.status.has_state(State.SLEEPY))
+    sleepy_or_on_fire = is_sleepy & on_fire
+
     stateful = _DummyStateful()
-    cond = HasState(State.ON_FIRE)
 
-    assert ~cond.check(stateful)
-    assert (~cond).check(stateful)
-    assert not (cond & ~cond).check(stateful)
-    assert (cond | ~cond).check(stateful)
+    assert not sleepy_or_on_fire(stateful)
+
+    stateful.status.set_state(State.ON_FIRE, True)
+
+    assert not sleepy_or_on_fire(stateful)
+
+    stateful.status.set_state(State.ON_FIRE, False)
+    stateful.status.set_state(State.SLEEPY, True)
+
+    assert not sleepy_or_on_fire(stateful)
+
+    stateful.status.set_state(State.ON_FIRE, True)
+    stateful.status.set_state(State.SLEEPY, True)
+
+    assert sleepy_or_on_fire(stateful)
 
 
-def test_alive_to_dead():
+def test_status_condition_not():
+    not_on_fire = ~ status_condition(
+        lambda t: t.status.has_state(State.ON_FIRE))
+
     stateful = _DummyStateful()
 
-    assert IsDead().check(stateful)
-    stateful.status.increment_attribute(Attributes.HEALTH, 3)
-    assert not IsDead().check(stateful)
-    stateful.status.increment_attribute(Attributes.HEALTH, -3)
-    assert IsDead().check(stateful)
+    assert not_on_fire(stateful)
+
+    stateful.status.set_state(State.ON_FIRE, True)
+
+    assert not not_on_fire(stateful)

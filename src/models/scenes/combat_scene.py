@@ -7,7 +7,7 @@ from events.events_base import (BasicEvents, EventListener, EventType,
 from models.characters.character_base import Character
 from models.characters.character_examples import CharacterTypes
 from models.characters.character_impl import build_character
-from models.characters.conditions import IsDead
+from models.characters.conditions import is_dead
 from models.characters.moves_base import Move
 from models.characters.player import get_player
 from models.characters.states import Attributes, StatusEffect
@@ -121,18 +121,16 @@ class CombatScene(EventListener, Scene):
         return _valid_moves(self._player, [self._selected_char])
 
     def is_resolved(self) -> bool:
-        is_dead = IsDead()
-        if all(is_dead.check(c) for c in self._enemies):
+        if all(is_dead(c) for c in self._enemies):
             return True
 
-        return is_dead.check(self._player)
+        return is_dead(self._player)
 
     def get_resolution(self) -> Resolution:
         assert self.is_resolved()
-        is_dead = IsDead()
-        if all(is_dead.check(e) for e in self._enemies):
+        if all(is_dead(e) for e in self._enemies):
             return self._win_resolution
-        assert IsDead().check(self._player)
+        assert is_dead(self._player)
         return scene_examples.ResolutionTypes.GAME_OVER.resolution
 
     def notify(self, event: EventType) -> None:
@@ -272,5 +270,5 @@ class CombatScene(EventListener, Scene):
                              tuple(char.status.active_effects()),
                              char.description(),
                              char.image_path,
-                             IsDead().check(char),
+                             is_dead(char),
                              char is self._selected_char)
