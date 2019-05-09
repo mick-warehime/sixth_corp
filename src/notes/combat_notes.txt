@@ -69,7 +69,8 @@ executed (in stack order).
 either of two conditions are met:
     a. The number of times advanced (step 1) since it has been added to the
     stack (step 2) equals the sum of its time to resolve and its duration.
-    b. The move's user is been removed from the game (likely from death).
+    b. The move's user or target has been removed from combat (likely from
+    death).
 When a move is removed from the game, its CPU cost is returned to the user
 (if alive) and its after-effect is invoked.
 
