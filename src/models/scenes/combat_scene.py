@@ -72,9 +72,8 @@ class CombatScene(EventListener, Scene):
         self._enemies: Tuple[Character, ...] = tuple(enemies)
         super().__init__()
         self._player = get_player()
-        self._characters = (self._player,) + self._enemies
 
-        self._combat_logic = CombatLogic(self._characters)
+        self._combat_logic = CombatLogic((self._player,) + self._enemies)
 
         self._win_resolution = win_resolution
         self._loss_resolution = loss_resolution
@@ -138,15 +137,19 @@ class CombatScene(EventListener, Scene):
 
     def notify(self, event: EventType) -> None:
         if isinstance(event, SelectCharacterEvent):
-            self._selected_char = event.character
-            self._update_layout()
+            # Cannot select dead characters
+            char = event.character
+            if char in self._combat_logic.active_characters() or char is None:
+                self._selected_char = char
+                self._update_layout()
 
         # Add new moves to the combat stack and start animation
         if isinstance(event, SelectPlayerMoveEvent):
 
             moves = [event.move]
-            moves.extend(e.ai.select_move(self._characters)
-                         for e in self._enemies)
+            active_chars = self._combat_logic.active_characters()
+            moves.extend(e.ai.select_move(active_chars)
+                         for e in self._enemies if e in active_chars)
             self._combat_logic.start_round(moves)
             self._selected_char = None
             self._update_layout()
@@ -182,7 +185,7 @@ class CombatScene(EventListener, Scene):
         # 3. Enemy column, which shows enemy images and stats.
         # We populate these columns with objects whose attributes (data) are
         # required to render the scene.
-        characters = self._characters
+        characters = (self._player,) + self._enemies
         all_moves = self._combat_logic.all_moves_present()
 
         # player side layout
