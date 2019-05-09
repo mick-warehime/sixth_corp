@@ -2,7 +2,7 @@
 from typing import Dict, Iterable, List, Sequence, Tuple
 
 from models.characters.character_base import Character
-from models.characters.conditions import is_dead, is_alive
+from models.characters.conditions import is_alive, is_dead
 from models.characters.moves_base import Move
 from models.characters.states import Attributes
 from models.combat.combat_stack import CombatStack

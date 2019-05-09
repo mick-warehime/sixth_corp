@@ -1,20 +1,21 @@
 import random
 import string
 from functools import partial
+from typing import List
 
 from models.characters.character_base import Character
 from models.characters.character_impl import build_character
 from models.characters.chassis import Chassis
 from models.characters.mod_examples import ModTypes
-from models.characters.mods_base import build_mod
+from models.characters.mods_base import Mod, build_mod
 from models.characters.states import Attributes
 from models.characters.subroutine_examples import damage_over_time, same_team
-from models.characters.subroutines_base import build_subroutine
+from models.characters.subroutines_base import Subroutine, build_subroutine
 from models.combat.ai_impl import AIType
 from models.scenes import scene_examples
 from models.scenes.combat_scene import CombatScene
-from models.scenes.decision_scene import DecisionScene, DecisionOption, \
-    transition_to
+from models.scenes.decision_scene import (DecisionOption, DecisionScene,
+                                          transition_to)
 from models.scenes.inventory_scene import InventoryScene
 from models.scenes.scenes_base import BasicResolution
 
@@ -107,7 +108,7 @@ class SpaceArc(object):
     def medical_bot_combat(self) -> CombatScene:
         enemies = [_medical_bot(k) for k in range(2)]
 
-        def loot():
+        def loot() -> List[Mod]:
             return [build_mod(data=ModTypes.REPAIR_NANITES.data)]
 
         loot_scene = partial(InventoryScene, self.staging_area, loot)
@@ -120,7 +121,7 @@ class SpaceArc(object):
                            BasicResolution(scene_examples.game_over_scene))
 
 
-def _heal_over_time():
+def _heal_over_time() -> Subroutine:
     def use_fun(user: Character, target: Character) -> None:
         target.status.increment_attribute(Attributes.HEALTH, 1)
 
@@ -135,7 +136,7 @@ def _heal_over_time():
     return build_subroutine(use_fun, can_use, 1, 1, desc, rounds - 1, True)
 
 
-def _bone_drill():
+def _bone_drill() -> Subroutine:
     return damage_over_time(1, 3, 1, 1, 'bone drill')
 
 
