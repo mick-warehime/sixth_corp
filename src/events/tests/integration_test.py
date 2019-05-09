@@ -14,7 +14,7 @@ from events import event_utils
 from events.events_base import BasicEvents, EventManager
 from models.characters.character_impl import build_character
 from models.characters.chassis import Chassis
-from models.characters.conditions import IsDead
+from models.characters.conditions import is_dead
 from models.characters.mods_base import Mod, SlotTypes, build_mod
 from models.characters.player import get_player, reset_player
 from models.characters.states import Attributes
@@ -147,7 +147,7 @@ def test_combat_scene_to_decision_scene():
         laser_ind = [ind for ind, move in enumerate(scene.available_moves())
                      if move.subroutine is shoot_laser][0]
         event_utils.simulate_key_press(str(laser_ind + 1))
-        assert IsDead().check(enemy)
+        assert is_dead(enemy)
 
     # check that scene has ended
     assert scene.is_resolved()

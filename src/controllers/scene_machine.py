@@ -6,7 +6,7 @@ from controllers.controller_factory import build_controller
 from events.event_utils import post_scene_change
 from events.events_base import (BasicEvents, EventListener, EventType,
                                 NewSceneEvent)
-from models.characters.conditions import IsDead
+from models.characters.conditions import is_dead
 from models.characters.player import get_player
 from models.scenes.scene_examples import game_over_scene
 from models.scenes.scenes_base import Scene
@@ -47,7 +47,7 @@ class SceneMachine(EventListener):
                     effect()
                 logging.debug('Scene {} resolved.'.format(self._current_scene))
 
-                if IsDead().check(get_player()):
+                if is_dead(get_player()):
                     post_scene_change(game_over_scene())
                     return
 
