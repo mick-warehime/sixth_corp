@@ -25,7 +25,6 @@ _HUMAN_PLAYER = CharacterData(ChassisTypes.NO_LEGS.data, 'Player 1',
                               (ModTypes.SMALL_LASER.data,
                                ModTypes.LASER_REPEATER.data,
                                ModTypes.SHIELD_GENERATOR.data,
-                               ModTypes.REPAIR_NANITES.data,
                                ModTypes.CPU_SCRAMBLER.data,
                                ModTypes.BASIC_HULL_PLATING.data),
                               'src/data/images/walle.png', AIType.No_AI)
