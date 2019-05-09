@@ -10,7 +10,7 @@ from models.scenes.combat_scene import CombatScene
 from models.scenes.scene_examples import loading_scene
 
 # Ensure that working directory is sixth_corp
-os.chdir(dirname(dirname(dirname(os.path.abspath(__file__)))))
+os.chdir(dirname(dirname(dirname(dirname(os.path.abspath(__file__))))))
 
 
 def test_initializing_game_adds_listeners():

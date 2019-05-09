@@ -5,7 +5,7 @@ from unittest.mock import MagicMock
 
 import pygame
 
-from controllers.inputs.keyboard import Keyboard
+from controllers.keyboard import Keyboard
 from events.events_base import (BasicEvents, EventListener, EventManager,
                                 EventType, InputEvent)
 

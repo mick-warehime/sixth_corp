@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 
 from controllers.controller import Controller
 from controllers.controller_factory import build_controller
@@ -17,16 +18,16 @@ class SceneMachine(EventListener):
 
     def __init__(self) -> None:
         super().__init__()
-        self._current_controller: Controller = None
+        self._current_controller: Optional[Controller] = None
 
-        self._current_game_scene: Scene = None  # not inventory or settings.
-        self._current_scene: Scene = None
+        self._current_game_scene: Optional[Scene] = None  # not SettingsScene.
+        self._current_scene: Optional[Scene] = None
 
     def notify(self, event: EventType) -> None:
 
         # toggle between settings scene and game scene
         if event == BasicEvents.SETTINGS:
-            new_scene: Scene = None
+            new_scene: Optional[Scene] = None
             # go to temp scene
             if self._current_scene is self._current_game_scene:
                 new_scene = SettingsScene()
@@ -38,17 +39,19 @@ class SceneMachine(EventListener):
                 post_scene_change(new_scene)
 
         # Check for scene resolution:
-        if event == BasicEvents.TICK and self._current_scene.is_resolved():
-            resolution = self._current_scene.get_resolution()
-            for effect in resolution.effects:
-                effect()
-            logging.debug('Scene {} resolved.'.format(self._current_scene))
+        if event == BasicEvents.TICK:
+            assert self._current_scene is not None, 'No scene loaded.'
+            if self._current_scene.is_resolved():
+                resolution = self._current_scene.get_resolution()
+                for effect in resolution.effects:
+                    effect()
+                logging.debug('Scene {} resolved.'.format(self._current_scene))
 
-            if IsDead().check(get_player()):
-                post_scene_change(game_over_scene())
-                return
+                if IsDead().check(get_player()):
+                    post_scene_change(game_over_scene())
+                    return
 
-            post_scene_change(resolution.next_scene())
+                post_scene_change(resolution.next_scene())
 
         # Update scene and current controller
         if isinstance(event, NewSceneEvent):
@@ -65,4 +68,5 @@ class SceneMachine(EventListener):
 
     @property
     def controller(self) -> Controller:
+        assert self._current_controller is not None, 'No controller defined.'
         return self._current_controller

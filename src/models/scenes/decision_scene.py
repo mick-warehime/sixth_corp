@@ -1,5 +1,6 @@
 from functools import partial
-from typing import Dict, NamedTuple, Optional, Sequence, Union
+from typing import (Any, Dict, List, NamedTuple, Optional, Sequence, Tuple,
+                    Union)
 
 from data.colors import GREEN, ColorType
 from data.constants import SCREEN_SIZE, BackgroundImages
@@ -50,7 +51,7 @@ class DecisionScene(EventListener, Scene):
         self._prompt = prompt
         super().__init__()
         self.choices = choices
-        self._choice: Resolution = None
+        self._choice: Optional[Resolution] = None
         if background_image is None:
             self._background_image: str = BackgroundImages.CITY.path
         else:
@@ -98,6 +99,7 @@ class DecisionScene(EventListener, Scene):
         return self._choice is not None
 
     def get_resolution(self) -> Resolution:
+        assert self._choice is not None
         return self._choice
 
     def __str__(self) -> str:
@@ -113,8 +115,9 @@ class DecisionScene(EventListener, Scene):
                               is_prompt=True)
 
         choice_weight = 4
-        choice_elems = [(DecisionInfo(c.description, k, centered_choices), 1)
-                        for k, c in self.choices.items()]
+        choice_elems: List[Tuple[Any, int]] = [
+            (DecisionInfo(c.description, k, centered_choices), 1)
+            for k, c in self.choices.items()]
         if len(choice_elems) < choice_weight:
             choice_elems.append((None, choice_weight - len(choice_elems)))
         choice_layout = Layout(choice_elems)
