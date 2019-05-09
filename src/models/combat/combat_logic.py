@@ -2,6 +2,7 @@
 from typing import Dict, Iterable, List, Sequence, Tuple
 
 from models.characters.character_base import Character
+from models.characters.conditions import is_alive, is_dead
 from models.characters.moves_base import Move
 from models.characters.states import Attributes
 from models.combat.combat_stack import CombatStack
@@ -19,6 +20,8 @@ class CombatLogic(object):
     def __init__(self, characters: Sequence[Character]) -> None:
         super().__init__()
         self._characters = tuple(characters)
+        self._active_characters = tuple(c for c in self._characters
+                                        if is_alive(c))
         self._combat_stack = CombatStack()
 
         # For moves with multi-turn durations, we need to keep track of how many
@@ -61,16 +64,22 @@ class CombatLogic(object):
         for move in self._combat_stack.resolved_moves():
             move.execute()
 
-        # Moves must be tracked after they have been executed, as we must wait
-        # the move duration before we apply the moves' subroutine after-effect.
+        # Remove finished moves from tracking and apply their after-effects.
         finished_moves = [m for m, (rounds, max_rounds) in
                           self._move_lifetime_registry.items()
-                          if rounds == max_rounds]
+                          if rounds == max_rounds or is_dead(m.user)
+                          or is_dead(m.target)]
+
         for move in finished_moves:
             move.subroutine.after_effect(move.user, move.target)
             self._move_lifetime_registry.pop(move)
+        self._combat_stack.remove_moves(
+            lambda m: is_dead(m.user) or is_dead(m.target))
 
         self._update_cpu_available(self._characters)
+
+        self._active_characters = tuple(c for c in self._characters
+                                        if is_alive(c))
 
     def all_moves_present(self) -> Tuple[Move, ...]:
         """All moves still being tracked.
@@ -80,6 +89,9 @@ class CombatLogic(object):
         """
 
         return tuple(self._move_lifetime_registry)
+
+    def active_characters(self) -> Tuple[Character, ...]:
+        return self._active_characters
 
     def _register_move(self, move: Move) -> None:
         duration = move.subroutine.duration()

@@ -93,7 +93,6 @@ class _SubroutineImpl(Subroutine):
         self._after_effect_fun = after_effect_fun
 
     def use(self, user: Character, target: Character) -> None:
-        assert self.can_use(user, target)
         self._use_fun(user, target)
 
     def can_use(self, user: Character, target: Character) -> bool:

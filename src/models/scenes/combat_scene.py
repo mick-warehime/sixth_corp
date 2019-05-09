@@ -13,7 +13,6 @@ from models.characters.player import get_player
 from models.characters.states import Attributes, StatusEffect
 from models.characters.subroutines_base import build_subroutine
 from models.combat.combat_logic import CombatLogic
-from models.scenes import scene_examples
 from models.scenes.layouts import Layout
 from models.scenes.scenes_base import Resolution, Scene
 
@@ -66,19 +65,18 @@ class CombatScene(EventListener, Scene):
 
     def __init__(self, enemies: Sequence[Character] = None,
                  win_resolution: Resolution = None,
+                 loss_resolution: Resolution = None,
                  background_image: str = None) -> None:
         if enemies is None:
             enemies = (build_character(data=CharacterTypes.DRONE.data),)
         self._enemies: Tuple[Character, ...] = tuple(enemies)
         super().__init__()
         self._player = get_player()
-        self._characters = (self._player,) + self._enemies
 
-        self._combat_logic = CombatLogic(self._characters)
+        self._combat_logic = CombatLogic((self._player,) + self._enemies)
 
-        if win_resolution is None:
-            win_resolution = scene_examples.ResolutionTypes.RESTART.resolution
         self._win_resolution = win_resolution
+        self._loss_resolution = loss_resolution
 
         self._selected_char: Optional[Character] = None
 
@@ -129,21 +127,29 @@ class CombatScene(EventListener, Scene):
     def get_resolution(self) -> Resolution:
         assert self.is_resolved()
         if all(is_dead(e) for e in self._enemies):
+            assert self._win_resolution is not None, (
+                'win resolution unspecified at init.')
             return self._win_resolution
         assert is_dead(self._player)
-        return scene_examples.ResolutionTypes.GAME_OVER.resolution
+        assert self._loss_resolution is not None, (
+            'loss resolution unspecified at init.')
+        return self._loss_resolution
 
     def notify(self, event: EventType) -> None:
         if isinstance(event, SelectCharacterEvent):
-            self._selected_char = event.character
-            self._update_layout()
+            # Cannot select dead characters
+            char = event.character
+            if char in self._combat_logic.active_characters() or char is None:
+                self._selected_char = char
+                self._update_layout()
 
         # Add new moves to the combat stack and start animation
         if isinstance(event, SelectPlayerMoveEvent):
 
             moves = [event.move]
-            moves.extend(e.ai.select_move(self._characters)
-                         for e in self._enemies)
+            active_chars = self._combat_logic.active_characters()
+            moves.extend(e.ai.select_move(active_chars)
+                         for e in self._enemies if e in active_chars)
             self._combat_logic.start_round(moves)
             self._selected_char = None
             self._update_layout()
@@ -179,7 +185,7 @@ class CombatScene(EventListener, Scene):
         # 3. Enemy column, which shows enemy images and stats.
         # We populate these columns with objects whose attributes (data) are
         # required to render the scene.
-        characters = self._characters
+        characters = (self._player,) + self._enemies
         all_moves = self._combat_logic.all_moves_present()
 
         # player side layout

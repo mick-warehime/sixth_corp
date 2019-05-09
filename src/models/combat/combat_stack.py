@@ -1,5 +1,5 @@
 """Implementation of the combat stack."""
-from typing import List, NamedTuple, Tuple
+from typing import Callable, List, NamedTuple, Tuple
 
 from models.characters.moves_base import Move
 
@@ -113,3 +113,12 @@ class CombatStack(object):
         new_stack.extend(self._stack[(index + 1):])
 
         self._stack = new_stack
+
+    def remove_moves(self, condition: Callable[[Move], bool]) -> None:
+        """Remove all moves from the stack satisfying a given condition.
+
+        This does not affect resolved moves.
+        """
+        to_remove = [mt for mt in self._stack if condition(mt.move)]
+        for mt in to_remove:
+            self._stack.remove(mt)
