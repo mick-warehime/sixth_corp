@@ -1,77 +1,70 @@
-import abc
-from typing import Any
+from typing import Any, Callable, NamedTuple, Tuple
 
-from models.characters.states import Attributes, State, Stateful
+from models.characters.states import Attributes, Stateful
+
+BoolFun = Callable[[Stateful], bool]
 
 
-class Condition(metaclass=abc.ABCMeta):
-    """Represents a boolean statement that can be tested on Stateful objects.
+class _StatusConditionImpl(NamedTuple):
+    """Internal implementation of StatusCondition.
+
+    See the factory function status_condition for a summary.
+    """
+    and_clauses: Tuple[BoolFun, ...]
+
+    def __call__(self, target: Stateful) -> bool:
+        return all(clause(target) for clause in self.and_clauses)
+
+    def __and__(self, other: Any) -> 'StatusCondition':
+        if not isinstance(other, _StatusConditionImpl):
+            return NotImplemented
+        return _StatusConditionImpl(self.and_clauses + other.and_clauses)
+
+    def __or__(self, other: Any) -> 'StatusCondition':
+        if not isinstance(other, _StatusConditionImpl):
+            return NotImplemented
+
+        return _StatusConditionImpl((lambda t: self(t) or other(t),))
+
+    def __invert__(self) -> 'StatusCondition':
+        def not_self(target: Stateful) -> bool:
+            return any(not clause(target) for clause in self.and_clauses)
+
+        return _StatusConditionImpl((not_self,))
+
+
+StatusCondition = _StatusConditionImpl
+
+
+def status_condition(bool_fun: Callable[[Stateful], bool]) -> StatusCondition:
+    """Factory function for StatusConditions.
+
+    These are callables denoting boolean expressions single stateful objects.
+    Also implemented are the logical AND (&), NOT (~) and OR (|) operations
+    between StatusConditions.
+
+    Args:
+        bool_fun: The boolean function used to encode a single clause
+            StatusCondition.
+
+    Returns:
+        A callable object equivalent to bool_fun that allows logical operations.
+
     """
 
-    @abc.abstractmethod
-    def check(self, target: Stateful) -> bool:
-        """Evaluate this on a Stateful object to determine condition value."""
-
-    def __and__(self, other: Any) -> '_And':
-        if not isinstance(other, Condition):
-            return NotImplemented
-        return _And(self, other)
-
-    def __or__(self, other: Any) -> '_Or':
-        if not isinstance(other, Condition):
-            return NotImplemented
-        return _Or(self, other)
-
-    def __invert__(self) -> '_Not':
-        return _Not(self)
+    return _StatusConditionImpl((bool_fun,))
 
 
-class _And(Condition):
-    """Conditional AND of one or more Conditions."""
-
-    def __init__(self, first: Condition, second: Condition) -> None:
-        self._conditions = (first, second)
-
-    def check(self, target: Stateful) -> bool:
-        return all(c.check(target) for c in self._conditions)
+is_dead = status_condition(
+    lambda s: s.status.get_attribute(Attributes.HEALTH) <= 0)
+is_alive = ~ is_dead
 
 
-class _Or(Condition):
-    """Conditional OR of one or more Conditions."""
-
-    def __init__(self, first: Condition, second: Condition) -> None:
-        self._conditions = (first, second)
-
-    def check(self, target: Stateful) -> bool:
-        return any(c.check(target) for c in self._conditions)
+def _is_hurt(target: Stateful) -> bool:
+    value = target.status.get_attribute
+    return value(Attributes.HEALTH) < value(Attributes.MAX_HEALTH)
 
 
-class _Not(Condition):
+is_hurt = status_condition(_is_hurt)
 
-    def __init__(self, condition: Condition) -> None:
-        self._condition = condition
-
-    def check(self, target: Stateful) -> bool:
-        return not self._condition.check(target)
-
-
-class HasState(Condition):
-
-    def __init__(self, state: State) -> None:
-        self._state = state
-
-    def check(self, target: Stateful) -> bool:
-        return target.status.has_state(self._state)
-
-
-class IsDead(Condition):
-
-    def check(self, target: Stateful) -> bool:
-        return target.status.get_attribute(Attributes.HEALTH) <= 0
-
-
-class FullHealth(Condition):
-
-    def check(self, target: Stateful) -> bool:
-        value = target.status.get_attribute
-        return value(Attributes.HEALTH) == value(Attributes.MAX_HEALTH)
+at_full_health = ~ is_hurt

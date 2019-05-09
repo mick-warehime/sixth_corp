@@ -3,7 +3,7 @@ from unittest import TestCase
 from models.characters.character_examples import CharacterData
 from models.characters.character_impl import build_character
 from models.characters.chassis import ChassisData
-from models.characters.conditions import IsDead
+from models.characters.conditions import is_dead
 from models.characters.mods_base import SlotTypes, build_mod
 from models.characters.states import Attributes, State
 from models.characters.subroutine_examples import direct_damage
@@ -26,7 +26,7 @@ class CharacterTest(TestCase):
         char = self._character()
         health = char.status.get_attribute(Attributes.HEALTH)
         char.status.increment_attribute(Attributes.HEALTH, -health)
-        self.assertTrue(IsDead().check(char))
+        self.assertTrue(is_dead(char))
 
     def test_character_state_change(self):
         char = self._character()
