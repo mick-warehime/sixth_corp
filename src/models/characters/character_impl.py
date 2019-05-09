@@ -9,6 +9,7 @@ from models.characters.ai_base import AI
 from models.characters.character_base import Character
 from models.characters.character_examples import CharacterData
 from models.characters.chassis import Chassis
+from models.characters.chassis_examples import ChassisTypes
 from models.characters.inventory import InventoryBase
 from models.characters.mods_base import Mod, build_mod
 from models.characters.states import (Attributes, AttributeType, State, Status,
@@ -129,6 +130,8 @@ def build_character(chassis: Chassis = None, ai_type: AIType = AIType.No_AI,
                                data.image_path)
 
     ai = build_ai(ai_type)
+    if chassis is None:
+        chassis = Chassis.from_data(ChassisTypes.DRONE.data)
     char = _CharacterImpl(chassis, ai, image_path, name=name)
     ai.set_user(char)
 

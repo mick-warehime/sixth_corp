@@ -1,10 +1,10 @@
 import os
 import sys
-from typing import Callable
+from typing import Callable, Optional
 
 import pygame
 
-from controllers.inputs.keyboard import Keyboard
+from controllers.keyboard import Keyboard
 from controllers.scene_machine import SceneMachine
 from data import constants
 from events.events_base import (BasicEvents, EventListener, EventManager,
@@ -25,7 +25,7 @@ def initialize_pygame(no_UI: bool = False) -> None:
 
 class Game(EventListener):
     """Stores sceneMachine and keyboard, handles framerate and quit event."""
-    keyboard: Keyboard = None
+    keyboard: Optional[Keyboard] = None
 
     def __init__(self) -> None:
         super(Game, self).__init__()

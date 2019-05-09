@@ -1,5 +1,5 @@
 import logging
-from typing import Callable, Iterable, List, NamedTuple, Tuple, Union
+from typing import Any, Callable, Iterable, List, NamedTuple, Optional, Tuple
 
 from data.constants import SCREEN_SIZE, BackgroundImages
 from events.events_base import (BasicEvents, EventListener, EventType,
@@ -49,8 +49,7 @@ class InventoryScene(Scene, EventListener):
         super().__init__()
         self._background_image = BackgroundImages.INVENTORY.path
         self._player = get_player()
-        self._layout: Layout = None
-        self._selected_mod: Mod = None
+        self._selected_mod: Optional[Mod] = None
         if loot_mods is not None:
             self._mods_on_ground = list(loot_mods())
         else:
@@ -101,7 +100,7 @@ class InventoryScene(Scene, EventListener):
         return self._layout
 
     @property
-    def selected_mod(self) -> Mod:
+    def selected_mod(self) -> Optional[Mod]:
         return self._selected_mod
 
     @property
@@ -195,7 +194,8 @@ class InventoryScene(Scene, EventListener):
             mod_info_layout = Layout()  # nothing to display
 
         # Ground inventory
-        header = SlotHeaderInfo(SlotTypes.GROUND, 0, tuple(self._mods_on_ground))
+        header = SlotHeaderInfo(SlotTypes.GROUND, 0,
+                                tuple(self._mods_on_ground))
 
         loot_layout = self._slot_layout(header, num_rows=6)
         loot_layout = Layout([(None, 1), (loot_layout, 3), (None, 1)],
@@ -215,18 +215,17 @@ class InventoryScene(Scene, EventListener):
         """Vertical layout storing a single slot's data."""
 
         # First row is just basic slot information
-        elements: List[Tuple[Union[SlotHeaderInfo, SlotRowInfo], int]] = []
-        elements.append((slot_data, 1))
+        elems: List[Tuple[Any, int]] = [(slot_data, 1)]
         for mod in slot_data.mods:
-            elements.append((SlotRowInfo(mod, mod is self._selected_mod), 1))
+            elems.append((SlotRowInfo(mod, mod is self._selected_mod), 1))
 
         # Add padding to ensure consistent row sizes
         num_rows = _DEFAULT_ROWS_PER_SLOT if num_rows is None else num_rows
 
-        if len(elements) < num_rows:
-            elements.append((None, num_rows - len(elements)))
+        if len(elems) < num_rows:
+            elems.append((None, num_rows - len(elems)))
 
-        return Layout(elements)
+        return Layout(elems)
 
 
 _DEFAULT_ROWS_PER_SLOT = 4

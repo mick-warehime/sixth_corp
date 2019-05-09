@@ -9,7 +9,7 @@ from data.keybindings import Keybindings
 from events.events_base import BasicEvents
 
 # Ensure that working directory is sixth_corp
-os.chdir(dirname(dirname(dirname(os.path.abspath(__file__)))))
+os.chdir(dirname(dirname(dirname(dirname(os.path.abspath(__file__))))))
 
 
 class KeybindingsTest(TestCase):

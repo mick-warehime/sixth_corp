@@ -56,7 +56,7 @@ def repair(amount: int) -> Subroutine:
 
 
 def adjust_attribute(attribute: Attributes, amount: int = 0,
-                     duration: int = None,
+                     duration: int = 0,
                      cpu_slots: int = None, time_to_resolve: int = 0,
                      is_buff: bool = None
                      ) -> Subroutine:
