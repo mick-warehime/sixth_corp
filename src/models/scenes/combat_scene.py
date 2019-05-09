@@ -79,9 +79,8 @@ class CombatScene(EventListener, Scene):
         self._win_resolution = win_resolution
         self._loss_resolution = loss_resolution
 
-        self._selected_char: Character = None
+        self._selected_char: Optional[Character] = None
 
-        self._layout: Layout = None
         self._update_layout()
 
         # Rect positions
@@ -91,7 +90,7 @@ class CombatScene(EventListener, Scene):
             self._background_image = background_image
 
         # Animation data
-        self._animation_progress: float = None
+        self._animation_progress: Optional[float] = None
         self._first_turn = True
 
     @property
@@ -163,7 +162,7 @@ class CombatScene(EventListener, Scene):
             self._first_turn = False
 
         # Animation in progress
-        if event == BasicEvents.TICK and self.animation_progress is not None:
+        if event == BasicEvents.TICK and self._animation_progress is not None:
             self._animation_progress += 1.0 / _ticks_per_animation
             # Execute moves once animation is finished
             if self._animation_progress >= 1.0:
@@ -200,20 +199,22 @@ class CombatScene(EventListener, Scene):
         moves_times = self._combat_logic.stack.moves_times_remaining()[::-1]
         num_moves = len(moves_times)
         stack_size = 6
-        stack_elements = [(MoveInfo(*m_t), 1) for m_t in moves_times]
+        stack_elems: List[Tuple[Any, int]] = [(MoveInfo(*m_t), 1)
+                                              for m_t in moves_times]
         # Add a gap rect so that rects are always scaled to the same size by
         # the layout.
         if num_moves <= stack_size:
-            stack_elements.append((None, stack_size - num_moves))
+            stack_elems.append((None, stack_size - num_moves))
 
-        unresolved = Layout(stack_elements, 'vertical')
+        unresolved = Layout(stack_elems, 'vertical')
         unresolved = Layout([(None, 1), (unresolved, 5), (None, 1)],
                             'horizontal')
 
         # resolved moves
         resolved_size = 4
         resolved_moves = self._combat_logic.stack.resolved_moves()[::-1]
-        resolved_elems = [(MoveInfo(mv, 0), 1) for mv in resolved_moves]
+        resolved_elems: List[Tuple[Any, int]] = [(MoveInfo(mv, 0), 1) for mv in
+                                                 resolved_moves]
         # Add a gap to ensure consistent rect sizes.
         if len(resolved_moves) < resolved_size:
             resolved_elems.append((None, resolved_size - len(resolved_moves)))

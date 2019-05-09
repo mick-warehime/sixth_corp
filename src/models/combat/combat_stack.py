@@ -82,7 +82,7 @@ class CombatStack(object):
         self._stack = new_stack
         self._just_resolved = tuple(just_resolved)
 
-    def add_move(self, move: Move, time_left: int = None) -> None:
+    def add_move(self, move: Move, time_left: int) -> None:
         """Add a move to the stack.
 
         The move is placed on the stack according to its time to resolve. Moves

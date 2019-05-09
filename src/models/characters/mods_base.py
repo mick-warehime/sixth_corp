@@ -82,6 +82,8 @@ class _ModImpl(Mod):
             description: str = 'unnamed mod') -> None:
         self._slots = set(valid_slots)
         self._states = states_granted
+        if attribute_modifiers is None:
+            attribute_modifiers = {}
         self._attr_mods = attribute_modifiers.copy()
         self._subroutines = subroutines_granted
         self._description = description

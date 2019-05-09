@@ -2,7 +2,7 @@ import random
 from enum import Enum
 from itertools import product
 from random import choice
-from typing import Callable, Sequence, Set
+from typing import Callable, Optional, Sequence, Set
 
 from models.characters.ai_base import AI
 from models.characters.character_base import Character
@@ -28,10 +28,11 @@ class _AIImpl(AI):
             select_move_fun: Function that selected the next move in a combat.
                 Takes a sequence of (valid) moves as input.
         """
-        self._user: Character = None
+        self._user: Optional[Character] = None
         self._select_move_fun = select_move_fun
 
     def select_move(self, targets: Sequence[Character]) -> Move:
+        assert self._user is not None, 'User not specified.'
         # Valid moves are those which can be used immediately and do not cost
         # more cpu_slots than available.
         slots = self._user.status.get_attribute(Attributes.CPU_AVAILABLE)
