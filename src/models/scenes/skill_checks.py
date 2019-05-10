@@ -10,19 +10,38 @@ from models.characters.states import AttributeType
 
 
 class Difficulty(Enum):
-    IMPOSSIBLE = -3
-    VERY_HARD = -2
-    HARD = -1
+    IMPOSSIBLE = 3
+    VERY_HARD = 2
+    HARD = 1
     MODERATE = 0
-    EASY = 1
-    VERY_EASY = 2
-    TRIVIAL = 3
+    EASY = -1
+    VERY_EASY = -2
+    TRIVIAL = -3
 
     @property
     def success_prob(self) -> float:
         return _difficulty_probs[self]
 
-    def adjust(self, modifier: int) -> 'Difficulty':
+    def __add__(self, other: Any) -> 'Difficulty':
+        if not isinstance(other, int):
+            return NotImplemented
+        return self._adjust(other)
+
+    def __sub__(self, other: Any) -> 'Difficulty':
+        if not isinstance(other, int):
+            return NotImplemented
+        return self._adjust(-other)
+
+    def _adjust(self, modifier: int) -> 'Difficulty':
+        """Adjust difficulty of check.
+
+        Args:
+            modifier: Integer modifier. Positive corresponds to more difficult.
+
+        Returns:
+            A new difficulty rating.
+
+        """
         new_value = self.value + modifier
         new_value = min(new_value, 3)
         new_value = max(new_value, -3)
@@ -33,9 +52,8 @@ class Difficulty(Enum):
         player = get_player()
         modifier = sum(player.status.get_attribute(a)
                        for a in attrs)  # type: ignore
-        effective_difficulty = self.adjust(modifier)
 
-        return random.random() < effective_difficulty.success_prob
+        return random.random() < (self - modifier).success_prob
 
 
 _difficulty_probs = {k: v for k, v in
