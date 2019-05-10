@@ -10,12 +10,12 @@ random.seed(0)
 
 
 @pytest.mark.parametrize("base,modifier,expected",
-                         [(Difficulty.MODERATE, -2, Difficulty.VERY_HARD),
-                          (Difficulty.IMPOSSIBLE, -1, Difficulty.IMPOSSIBLE),
-                          (Difficulty.IMPOSSIBLE, 2, Difficulty.HARD),
-                          (Difficulty.MODERATE, 100, Difficulty.TRIVIAL)])
+                         [(Difficulty.MODERATE, 2, Difficulty.VERY_HARD),
+                          (Difficulty.IMPOSSIBLE, 1, Difficulty.IMPOSSIBLE),
+                          (Difficulty.IMPOSSIBLE, -2, Difficulty.HARD),
+                          (Difficulty.MODERATE, -100, Difficulty.TRIVIAL)])
 def test_difficulty_adjustments(base, modifier, expected):
-    assert base.adjust(modifier) == expected
+    assert base + modifier == expected
 
 
 @pytest.mark.parametrize('difficulty', [d for d in Difficulty])
