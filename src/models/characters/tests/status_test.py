@@ -1,7 +1,7 @@
 """Tests of status.py"""
 import pytest
 
-from models.characters.states import Attributes, Skill, State, StatusEffect
+from models.characters.states import Attributes, Skills, State, StatusEffect
 from models.characters.status import BasicStatus
 
 
@@ -21,7 +21,7 @@ def test_basic_status_states():
     assert not status.has_state(state)
 
 
-@pytest.mark.parametrize('att', [Attributes.HEALTH, Skill.MECHANICS])
+@pytest.mark.parametrize('att', [Attributes.HEALTH, Skills.MECHANICS])
 @pytest.mark.parametrize('bound', [2, Attributes.MAX_HEALTH, lambda: 2])
 def test_basis_status_attribute_increment_bounds(att, bound):
     status = BasicStatus()

@@ -3,15 +3,15 @@ from typing import Dict
 
 from models.characters.chassis import ChassisData
 from models.characters.mods_base import SlotTypes
-from models.characters.states import Attributes, Skill, State
+from models.characters.states import Attributes, Skills, State
 from models.characters.subroutine_examples import direct_damage
 from models.characters.subroutines_base import build_subroutine
 
 _NO_LEGS = ChassisData(
     slot_capacities={SlotTypes.HEAD: 1, SlotTypes.CHEST: 3, SlotTypes.ARMS: 2,
                      SlotTypes.STORAGE: 10},
-    attribute_modifiers={Attributes.MAX_HEALTH: 10, Skill.STEALTH: 1,
-                         Skill.MECHANICS: 1, Attributes.MAX_CPU: 4})
+    attribute_modifiers={Attributes.MAX_HEALTH: 10, Skills.STEALTH: 1,
+                         Skills.MECHANICS: 1, Attributes.MAX_CPU: 4})
 
 _shoot_laser = direct_damage(2, label='small laser')
 

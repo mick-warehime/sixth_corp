@@ -2,7 +2,7 @@
 from enum import Enum
 
 from models.characters.mods_base import ModData, SlotTypes
-from models.characters.states import Attributes, Skill, State
+from models.characters.states import Attributes, Skills, State
 from models.characters.subroutine_examples import (adjust_attribute,
                                                    damage_over_time,
                                                    direct_damage, repair,
@@ -39,7 +39,7 @@ _mod_types_to_data = {
         valid_slots=(SlotTypes.CHEST,)),
     ModTypes.FIRE_HELM: ModData(states_granted=(State.ON_FIRE,),
                                 valid_slots=(SlotTypes.HEAD,)),
-    ModTypes.CAMOUFLAGE_PAINT: ModData(attribute_modifiers={Skill.STEALTH: 1},
+    ModTypes.CAMOUFLAGE_PAINT: ModData(attribute_modifiers={Skills.STEALTH: 1},
                                        valid_slots=(SlotTypes.CHEST,)),
     ModTypes.SMALL_LASER: ModData(subroutines_granted=(_shoot_small,),
                                   valid_slots=(SlotTypes.ARMS,)),
