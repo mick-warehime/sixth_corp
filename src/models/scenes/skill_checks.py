@@ -4,7 +4,7 @@ from enum import Enum
 from typing import Sequence, Union
 
 from models.characters.player import get_player
-from models.characters.states import Skills
+from models.characters.states import Skills, AttributeType
 from models.scenes.scenes_base import Scene, SceneConstructor
 
 
@@ -27,34 +27,15 @@ class Difficulty(Enum):
         new_value = max(new_value, -3)
         return Difficulty(new_value)
 
+    def sample_success(self, *attrs: AttributeType) -> bool:
+        """Sample success probability accounting for player skill modifiers."""
+        player = get_player()
+        modifier = sum(player.status.get_attribute(a)
+                       for a in attrs)  # type: ignore
+        effective_difficulty = self.adjust(modifier)
+
+        return random.random() < effective_difficulty.success_prob
+
 
 _difficulty_probs = {k: v for k, v in
                      zip(Difficulty, [0, 1 / 8, 1 / 4, 1 / 2, 3 / 4, 7 / 8, 1])}
-
-
-def skill_check(
-        difficulty: Difficulty, success: SceneConstructor,
-        failure: SceneConstructor,
-        modifiers: Union[Skills, Sequence[Skills]] = ()) -> SceneConstructor:
-    """Returns a scene constructing function that implements a skill check.
-
-    Args:
-        difficulty: The base skill check difficulty.
-        success: Constructor to call if skill check passes.
-        failure: Constructor to call if skill check fails.
-        modifiers: Ability(ies) that modify the skill check.
-    """
-    if isinstance(modifiers, Skills):
-        modifiers = [modifiers]
-
-    def scene_builder() -> Scene:
-        modifier = sum(
-            get_player().status.get_attribute(a) for a in
-            modifiers)  # type: ignore
-        effective_difficulty = difficulty.adjust(modifier)
-
-        if random.random() < effective_difficulty.success_prob:
-            return success()
-        return failure()
-
-    return scene_builder

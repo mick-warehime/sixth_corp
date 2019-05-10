@@ -15,7 +15,7 @@ from models.scenes.effects import increment_attribute, restart_game
 from models.scenes.inventory_scene import InventoryScene
 from models.scenes.scene_arcs import space_arc
 from models.scenes.scenes_base import BasicResolution, Resolution, Scene
-from models.scenes.skill_checks import Difficulty, skill_check
+from models.scenes.skill_checks import Difficulty
 
 
 def loading_scene() -> DecisionScene:
@@ -76,14 +76,16 @@ def swamp_scene() -> DecisionScene:
             'dismantle it.',
             {'1': DecisionOption('Back to start.', start_scene, gain_3)})
 
-    deactivate = skill_check(
-        Difficulty.VERY_EASY, success,
-        transition_to(example_combat_scene,
-                      'The drone awakens. Prepare to fight!'),
-        Skills.STEALTH)
+    if Difficulty.EASY.sample_success(Skills.STEALTH):
+        deactivate_outcome = success
+    else:
+        deactivate_outcome = transition_to(
+            example_combat_scene, 'The drone awakens. Prepare to fight!')
+
     options = {
         '1': DecisionOption('Continue walking.', second_scene),
-        '2': DecisionOption('Attempt to deactivate the drone.', deactivate),
+        '2': DecisionOption('Attempt to deactivate the drone.',
+                            deactivate_outcome),
         '3': DecisionOption('Attack the drone', example_combat_scene)}
     return DecisionScene(main_text, options)
 
