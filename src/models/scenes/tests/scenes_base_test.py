@@ -5,7 +5,8 @@ from unittest.mock import Mock
 
 import pytest
 
-from models.scenes.scenes_base import Scene, Resolution, ProbabilisticResolution
+from models.scenes.scenes_base import (ProbabilisticResolution, Resolution,
+                                       Scene)
 
 
 def _mock_resolution(label) -> Mock:
