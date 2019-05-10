@@ -1,11 +1,12 @@
 """Implementation of skill checks."""
 import random
+from bisect import bisect_left
 from enum import Enum
-from typing import Sequence, Union
+from itertools import accumulate
+from typing import Any, Sequence, Tuple
 
 from models.characters.player import get_player
-from models.characters.states import Skill
-from models.scenes.scenes_base import Scene, SceneConstructor
+from models.characters.states import AttributeType
 
 
 class Difficulty(Enum):
@@ -27,34 +28,42 @@ class Difficulty(Enum):
         new_value = max(new_value, -3)
         return Difficulty(new_value)
 
+    def sample_success(self, *attrs: AttributeType) -> bool:
+        """Sample success probability accounting for player skill modifiers."""
+        player = get_player()
+        modifier = sum(player.status.get_attribute(a)
+                       for a in attrs)  # type: ignore
+        effective_difficulty = self.adjust(modifier)
+
+        return random.random() < effective_difficulty.success_prob
+
 
 _difficulty_probs = {k: v for k, v in
                      zip(Difficulty, [0, 1 / 8, 1 / 4, 1 / 2, 3 / 4, 7 / 8, 1])}
 
 
-def skill_check(
-        difficulty: Difficulty, success: SceneConstructor,
-        failure: SceneConstructor,
-        modifiers: Union[Skill, Sequence[Skill]] = ()) -> SceneConstructor:
-    """Returns a scene constructing function that implements a skill check.
+def sample_weights(weighted_objects: Sequence[Tuple[Any, int]]) -> Any:
+    """Return a probabilistic sample based on weights.
+
+    Each possible outcome is given a positive weight. Its relative
+    probability is its weight divided by the sum of all weights.
 
     Args:
-        difficulty: The base skill check difficulty.
-        success: Constructor to call if skill check passes.
-        failure: Constructor to call if skill check fails.
-        modifiers: Ability(ies) that modify the skill check.
+        weighted_objects: A sequence of outcome,weight pairs.
+    Returns:
+        One of the outcomes in weighted_objects, with probability matching its
+        relative weight.
     """
-    if isinstance(modifiers, Skill):
-        modifiers = [modifiers]
 
-    def scene_builder() -> Scene:
-        modifier = sum(
-            get_player().status.get_attribute(a) for a in
-            modifiers)  # type: ignore
-        effective_difficulty = difficulty.adjust(modifier)
+    assert weighted_objects, 'At least one resolution must be specified.'
+    assert all(rw[1] >= 0 for rw in weighted_objects), (
+        'weights must be positive, got {}'.format(weighted_objects))
 
-        if random.random() < effective_difficulty.success_prob:
-            return success()
-        return failure()
+    # Sample outcomes according to weight.
+    cum_weights = list(accumulate((rw[1] for rw in weighted_objects),
+                                  lambda a, b: a + b))
+    num = random.randint(0, cum_weights[-1] - 1) + 1
+    index = bisect_left(cum_weights, num)
 
-    return scene_builder
+    assert index < len(weighted_objects), (num, index)
+    return weighted_objects[index][0]

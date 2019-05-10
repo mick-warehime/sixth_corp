@@ -1,9 +1,8 @@
 """Basic interfaces for scenes, effects, and resolutions."""
 import abc
-import random
-from bisect import bisect_left
-from itertools import accumulate
 from typing import Callable, Sequence, Tuple
+
+from models.scenes.skill_checks import sample_weights
 
 
 class Scene(metaclass=abc.ABCMeta):
@@ -66,18 +65,7 @@ class ProbabilisticResolution(Resolution):
 
     def __init__(self,
                  resolutions_weights: Sequence[Tuple[Resolution, int]]) -> None:
-        assert resolutions_weights, 'At least one resolution must be specified.'
-        assert all(rw[1] >= 0 for rw in resolutions_weights), (
-            'weights must be positive, got {}'.format(resolutions_weights))
-
-        # Sample resolutions according to weight.
-        cum_weights = list(accumulate((rw[1] for rw in resolutions_weights),
-                                      lambda a, b: a + b))
-        num = random.randint(0, cum_weights[-1]-1) + 1
-        index = bisect_left(cum_weights, num)
-
-        assert index < len(resolutions_weights), (num, index)
-        self._sampled_res: Resolution = resolutions_weights[index][0]
+        self._sampled_res: Resolution = sample_weights(resolutions_weights)
 
     def next_scene(self) -> Scene:
         return self._sampled_res.next_scene()

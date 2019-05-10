@@ -42,13 +42,13 @@ class Attributes(Enum):
 _permanent_atts = {Attributes.MAX_HEALTH, Attributes.MAX_CPU}
 
 
-class Skill(Enum):
+class Skills(Enum):
     STEALTH = 'stealth'
     SPEECH = 'speech'
     MECHANICS = 'mechanics'
 
 
-AttributeType = Union[Attributes, Skill]
+AttributeType = Union[Attributes, Skills]
 
 
 class StatusEffect(NamedTuple):

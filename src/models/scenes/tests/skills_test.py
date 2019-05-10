@@ -1,8 +1,9 @@
 import random
+from collections import Counter
 
 import pytest
 
-from models.scenes.skill_checks import Difficulty, skill_check
+from models.scenes.skill_checks import Difficulty, sample_weights
 
 # To ensure deterministic tests
 random.seed(0)
@@ -17,24 +18,34 @@ def test_difficulty_adjustments(base, modifier, expected):
     assert base.adjust(modifier) == expected
 
 
-@pytest.mark.parametrize('difficulty', Difficulty)
+@pytest.mark.parametrize('difficulty', [d for d in Difficulty])
 def test_skill_check_statistics(difficulty):
     num_calls = 1000
-    call_counts = {'success': 0, 'failure': 0}
-
-    def on_success():
-        call_counts['success'] += 1
-        return None
-
-    def on_failure():
-        call_counts['failure'] += 1
-        return None
-
-    scene_fun = skill_check(difficulty, on_success, on_failure)
+    counts = Counter()
 
     for _ in range(num_calls):
-        scene_fun()
+        if difficulty.sample_success():
+            counts['success'] += 1
+        else:
+            counts['failure'] += 1
 
-    assert sum(call_counts.values()) == num_calls
-    error = call_counts['success'] / num_calls - difficulty.success_prob
+    assert sum(counts.values()) == num_calls
+    error = counts['success'] / num_calls - difficulty.success_prob
     assert abs(error) < 50 / num_calls
+
+
+def test_sample_weights_correct_probability():
+    random.seed(11)  # to ensure determinism
+    weights = 0, 2, 1, 5
+    keys_weights = list(enumerate(weights))
+
+    counter = Counter()
+    num_samples = 1000
+    for _ in range(num_samples):
+        counter[sample_weights(keys_weights)] += 1
+
+    actual = [counter[k] / num_samples for k in range(len(weights))]
+    total = sum(weights)
+    expected = [w / total for w in weights]
+
+    assert pytest.approx(expected, abs=0.1) == actual
