@@ -14,7 +14,8 @@ from models.scenes.decision_scene import (DecisionOption, DecisionScene,
 from models.scenes.effects import increment_attribute, restart_game
 from models.scenes.inventory_scene import InventoryScene
 from models.scenes.scene_arcs import space_arc
-from models.scenes.scenes_base import BasicResolution, Resolution, Scene
+from models.scenes.scenes_base import (BasicResolution, Resolution, Scene,
+                                       SceneConstructor)
 from models.scenes.skill_checks import Difficulty
 
 
@@ -77,7 +78,7 @@ def swamp_scene() -> DecisionScene:
             {'1': DecisionOption('Back to start.', start_scene, gain_3)})
 
     if Difficulty.EASY.sample_success(Skills.STEALTH):
-        deactivate_outcome = success
+        deactivate_outcome: SceneConstructor = success
     else:
         deactivate_outcome = transition_to(
             example_combat_scene, 'The drone awakens. Prepare to fight!')

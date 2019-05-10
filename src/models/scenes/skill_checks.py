@@ -3,7 +3,7 @@ import random
 from bisect import bisect_left
 from enum import Enum
 from itertools import accumulate
-from typing import Sequence, Tuple, Any
+from typing import Any, Sequence, Tuple
 
 from models.characters.player import get_player
 from models.characters.states import AttributeType

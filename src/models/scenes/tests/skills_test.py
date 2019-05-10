@@ -3,7 +3,7 @@ from collections import Counter
 
 import pytest
 
-from models.scenes.skill_checks import Difficulty
+from models.scenes.skill_checks import Difficulty, sample_weights
 
 # To ensure deterministic tests
 random.seed(0)
@@ -32,3 +32,20 @@ def test_skill_check_statistics(difficulty):
     assert sum(counts.values()) == num_calls
     error = counts['success'] / num_calls - difficulty.success_prob
     assert abs(error) < 50 / num_calls
+
+
+def test_sample_weights_correct_probability():
+    random.seed(11)  # to ensure determinism
+    weights = 0, 2, 1, 5
+    keys_weights = list(enumerate(weights))
+
+    counter = Counter()
+    num_samples = 1000
+    for _ in range(num_samples):
+        counter[sample_weights(keys_weights)] += 1
+
+    actual = [counter[k] / num_samples for k in range(len(weights))]
+    total = sum(weights)
+    expected = [w / total for w in weights]
+
+    assert pytest.approx(expected, abs=0.1) == actual
